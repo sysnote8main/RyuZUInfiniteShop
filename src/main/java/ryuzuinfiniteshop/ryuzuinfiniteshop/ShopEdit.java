@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.PersistentUtil;
 
 public class ShopEdit implements Listener {
+    //ショップの編集画面を開く
     @EventHandler
     public void openShopEditor(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
