@@ -9,7 +9,10 @@ public class ShopLocation {
 
     }
 
-    public ShopLocation(Location loc) {
-
+    private static String toPath(Location loc) {
+        return loc.getWorld().toString() + "," +
+                loc.getX() + "," +
+                loc.getY() + "," +
+                loc.getZ() + ",";
     }
 }

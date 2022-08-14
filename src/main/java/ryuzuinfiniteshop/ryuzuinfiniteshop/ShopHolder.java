@@ -8,13 +8,23 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ShopHolder implements InventoryHolder {
-    public List<String> tags;
-    public enum ShopType{Main,twotoone,fourtofour}
-    public ShopType type;
 
-    public ShopHolder(ShopType type , String... tags) {
+    public enum ShopMode {Edit, Trade}
+
+    public List<String> tags;
+
+    public int page = 1;
+    public ShopMode mode;
+
+    public ShopHolder(ShopMode mode, String... tags) {
         this.tags = Arrays.asList(tags);
-        this.type = type;
+        this.mode = mode;
+    }
+
+    public ShopHolder(ShopMode mode, int page, String... tags) {
+        this.tags = Arrays.asList(tags);
+        this.mode = mode;
+        this.page = page;
     }
 
     @Override
