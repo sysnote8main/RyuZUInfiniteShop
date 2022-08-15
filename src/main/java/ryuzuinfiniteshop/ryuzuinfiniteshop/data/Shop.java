@@ -54,6 +54,10 @@ public class Shop {
         return trades;
     }
 
+    public String getID() {
+        return LocationUtil.toStringFromLocation(location);
+    }
+
     public ShopGui getPage(int page) {
         if (page <= 0) return null;
         if (!pages.get(0).existPage(page)) return null;
@@ -108,7 +112,7 @@ public class Shop {
     public Entity spawnNPC(YamlConfiguration config) {
         EntityType entityType = EntityType.valueOf(config.getString("EntityType"));
         Entity entity = location.getWorld().spawnEntity(location, entityType);
-        PersistentUtil.setNMSTag(entity, "Shop", LocationUtil.toStringFromLocation(location));
+        PersistentUtil.setNMSTag(entity, "Shop", getID());
         return location.getWorld().spawnEntity(location, entityType);
     }
 
@@ -118,6 +122,10 @@ public class Shop {
 
     public ItemStack getEquipmentItem(int slot) {
         return this.equipments[slot];
+    }
+
+    public void setEquipmentItem(ItemStack item , int slot) {
+        this.equipments[slot] = item;
     }
     public ItemStack getEquipmentDisplayItem(int slot) {
         return getEquipmentItem(slot).getType().equals(Material.AIR) ?

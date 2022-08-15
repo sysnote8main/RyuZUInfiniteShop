@@ -1,12 +1,14 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop;
 
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.EditorListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.Editor.EditorListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.OpenListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.TradeListener;
 
 public final class RyuZUInfiniteShop extends JavaPlugin {
     private static RyuZUInfiniteShop plugin;
+    public final static String prefix = ChatColor.GOLD + "[RyuZUInfiniteShop]";
 
     @Override
     public void onEnable() {
