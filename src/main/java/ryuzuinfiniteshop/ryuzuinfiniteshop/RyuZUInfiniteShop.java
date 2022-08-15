@@ -2,8 +2,10 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop;
 
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.Editor.ChangeDisplayNameListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.Editor.ChangeEquipmentListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.Editor.EditorListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.OpenListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.OpenShopListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.TradeListener;
 
 public final class RyuZUInfiniteShop extends JavaPlugin {
@@ -29,7 +31,9 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
 
     public static void registerEvents() {
         getPlugin().getServer().getPluginManager().registerEvents(new TradeListener(), getPlugin());
-        getPlugin().getServer().getPluginManager().registerEvents(new OpenListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new OpenShopListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new EditorListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new ChangeDisplayNameListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new ChangeEquipmentListener(), getPlugin());
     }
 }

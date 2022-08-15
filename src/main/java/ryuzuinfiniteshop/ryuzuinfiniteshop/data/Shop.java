@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui2to1;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ItemUtil;
@@ -28,6 +29,8 @@ public class Shop {
     private final Location location;
     private final ShopType type;
     private final List<ShopTrade> trades;
+
+    private List<ShopEditorMainPage> editors = new ArrayList<>();
     public List<ShopGui> pages = new ArrayList<>();
 
     public ItemStack[] equipments = new ItemStack[6];
@@ -47,6 +50,7 @@ public class Shop {
         List<ConfigurationSection> trades = (List<ConfigurationSection>) config.getList("Trades");
         this.trades = trades.stream().map(ShopTrade::new).collect(Collectors.toList());
         setPages();
+        setEditors();
         Arrays.fill(equipments , new ItemStack(Material.AIR));
     }
 
@@ -67,6 +71,17 @@ public class Shop {
     public void setPages() {
         for (int i = 0; i < getPageCount(); i++) {
             this.pages.add(new ShopGui2to1(this, i));
+        }
+    }
+
+    public ShopEditorMainPage getEditor(int page) {
+        if (page <= 0) return null;
+        return editors.get(page);
+    }
+
+    public void setEditors() {
+        for(int i = 0 ; i < pages.size() / 18 ; i++) {
+            this.editors.add(new ShopEditorMainPage(this , i));
         }
     }
 

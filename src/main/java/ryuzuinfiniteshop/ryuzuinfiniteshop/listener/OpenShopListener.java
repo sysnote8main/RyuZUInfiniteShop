@@ -19,7 +19,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.PersistentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ShopUtil;
 
-public class OpenListener implements Listener {
+public class OpenShopListener implements Listener {
 
     //ショップを開く
     @EventHandler
