@@ -1,12 +1,12 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.gui;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.JavaUtil;
 
@@ -18,7 +18,7 @@ public class ShopGui4to4 extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopHolder.ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode), 9 * 6);
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode), 9 * 6, "ショップ ページ" + getPage());
 
         ItemStack filler = ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE , "");
         for (int i = 0; i < 6; i++) {

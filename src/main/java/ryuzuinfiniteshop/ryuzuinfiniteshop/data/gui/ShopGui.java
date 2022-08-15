@@ -1,10 +1,9 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.gui;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui;
 
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 
 import java.util.ArrayList;
 import java.util.List;

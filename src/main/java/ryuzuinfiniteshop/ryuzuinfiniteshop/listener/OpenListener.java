@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listener;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,16 +11,15 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ShopUtil;
 
-import java.util.Arrays;
-import java.util.Collection;
-
-public class ShopOpen implements Listener {
+public class OpenListener implements Listener {
 
     //ショップを開く
     @EventHandler
@@ -29,24 +28,23 @@ public class ShopOpen implements Listener {
         Player p = event.getPlayer();
         String id = PersistentUtil.getNMSStringTag(entity , "Shop");
         if(id == null) return;
-        Shop shop = ShopSystem.getShop(id);
+        Shop shop = TradeListener.getShop(id);
         p.openInventory(shop.getPage(1).getInventory(ShopHolder.ShopMode.Trade));
+        event.setCancelled(true);
     }
 
     //ショップのページ切り替え
     @EventHandler
     public void changePage(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        if (!(event.getWhoClicked() instanceof Player)) return;
-        Player p = (Player) event.getWhoClicked();
         if (event.getClickedInventory() != null) return;
-        InventoryHolder holder = event.getView().getTopInventory().getHolder();
-        if (holder == null) return;
-        ShopHolder shopholder = (ShopHolder) holder;
-        if (!shopholder.mode.equals(ShopHolder.ShopMode.Trade)) return;
-        Shop shop = ShopSystem.getShop(shopholder.tags.get(0));
-        if (shop == null) return;
+        if(!ShopUtil.isShopTradeInventory(event)) return;
+
+        //必要なデータを取得
+        Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
+        ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
+        Shop shop = TradeListener.getShop(shopholder.tags.get(0));
 
         //ページ切り替え
         boolean fail = false;
@@ -70,24 +68,24 @@ public class ShopOpen implements Listener {
             p.playSound(p.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 2);
             setTradeStatus(p , shopholder , shop);
         }
+        event.setCancelled(true);
     }
 
     //ショップのステータスの更新
     @EventHandler
     public void updateStatus(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        if (!(event.getWhoClicked() instanceof Player)) return;
-        Player p = (Player) event.getWhoClicked();
         if (event.getClickedInventory() != null) return;
-        InventoryHolder holder = event.getView().getTopInventory().getHolder();
-        if (!event.getClickedInventory().equals(event.getView().getBottomInventory())) return;
-        if (holder == null) return;
-        ShopHolder shopholder = (ShopHolder) holder;
-        if (!shopholder.mode.equals(ShopHolder.ShopMode.Trade)) return;
-        Shop shop = ShopSystem.getShop(shopholder.tags.get(0));
-        if (shop == null) return;
+        if(!ShopUtil.isShopTradeInventory(event)) return;
+
+        //必要なデータを取得
+        Player p = (Player) event.getWhoClicked();
+        ClickType type = event.getClick();
+        ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
+        Shop shop = TradeListener.getShop(shopholder.tags.get(0));
 
         setTradeStatus(p , shopholder , shop);
+        event.setCancelled(true);
     }
 
     //それぞれの取引が可能か表示

@@ -1,22 +1,18 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listener;
 
 import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.inventory.InventoryHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ShopUtil;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-public class ShopSystem implements Listener {
+public class TradeListener implements Listener {
     private static HashMap<String , Shop> shops = new HashMap<>();
 
     public static Shop getShop(String id) {
@@ -27,16 +23,14 @@ public class ShopSystem implements Listener {
     @EventHandler
     public void onTrade(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        if (!(event.getWhoClicked() instanceof Player)) return;
-        Player p = (Player) event.getWhoClicked();
         if (event.getClickedInventory() == null) return;
-        InventoryHolder holder = event.getView().getTopInventory().getHolder();
-        if (holder == null) return;
-        ShopHolder shopholder = (ShopHolder) holder;
-        if (!shopholder.mode.equals(ShopHolder.ShopMode.Trade)) return;
-        Shop shop = ShopSystem.getShop(shopholder.tags.get(0));
-        if (shop == null) return;
+        if(!ShopUtil.isShopTradeInventory(event)) return;
+
+        //必要なデータを取得
+        Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
+        ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
+        Shop shop = TradeListener.getShop(shopholder.tags.get(0));
 
         //取引
         int times = 1;
@@ -51,5 +45,6 @@ public class ShopSystem implements Listener {
                 break;
         }
         shop.getPage(shopholder.page).getTrade(shopholder.page).trade(p, times);
+        event.setCancelled(true);
     }
 }

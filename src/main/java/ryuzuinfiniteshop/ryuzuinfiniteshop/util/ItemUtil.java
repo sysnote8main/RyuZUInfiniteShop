@@ -26,4 +26,13 @@ public class ItemUtil {
         item.setItemMeta(meta);
         return item;
     }
+
+    public static ItemStack getNamedItem(Material material , String name , String... lore) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(name);
+        meta.setLore(Arrays.asList(lore));
+        item.setItemMeta(meta);
+        return item;
+    }
 }

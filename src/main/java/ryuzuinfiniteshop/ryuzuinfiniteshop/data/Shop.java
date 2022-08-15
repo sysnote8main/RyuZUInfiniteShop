@@ -1,18 +1,23 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.data;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.gui.ShopGui;
+import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui2to1;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.LocationUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.PersistentUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,10 +26,12 @@ public class Shop {
 
     private final Entity npc;
     private final Location location;
-
     private final ShopType type;
     private final List<ShopTrade> trades;
     public List<ShopGui> pages = new ArrayList<>();
+
+    public ItemStack[] equipments = new ItemStack[6];
+
 
     public Shop(File file) {
         YamlConfiguration config = new YamlConfiguration();
@@ -39,6 +46,8 @@ public class Shop {
         this.type = ShopType.valueOf(config.getString("ShopType"));
         List<ConfigurationSection> trades = (List<ConfigurationSection>) config.getList("Trades");
         this.trades = trades.stream().map(ShopTrade::new).collect(Collectors.toList());
+        setPages();
+        Arrays.fill(equipments , new ItemStack(Material.AIR));
     }
 
     public List<ShopTrade> getTrades() {
@@ -49,6 +58,26 @@ public class Shop {
         if (page <= 0) return null;
         if (!pages.get(0).existPage(page)) return null;
         return pages.get(page);
+    }
+
+    public void setPages() {
+        for (int i = 0; i < getPageCount(); i++) {
+            this.pages.add(new ShopGui2to1(this, i));
+        }
+    }
+
+    public int getLimitSize() {
+        return getShopType().equals(ShopType.TwotoOne) ? 12 : 6;
+    }
+
+    public boolean isLimitPage(int page) {
+        return getPage(page).getTrades().size() == getLimitSize();
+    }
+
+    public int getPageCount() {
+        int size = getTrades().size() / getLimitSize();
+        if (getTrades().size() % getLimitSize() != 0) size++;
+        return size;
     }
 
     public ShopType getShopType() {
@@ -69,17 +98,30 @@ public class Shop {
     }
 
     public void removeNPC() {
-        npc.remove();
+        this.npc.remove();
+    }
+
+    public Entity getNPC() {
+        return this.npc;
     }
 
     public Entity spawnNPC(YamlConfiguration config) {
         EntityType entityType = EntityType.valueOf(config.getString("EntityType"));
         Entity entity = location.getWorld().spawnEntity(location, entityType);
-        PersistentUtil.setNMSTag(entity , "Shop" , LocationUtil.toStringFromLocation(location));
+        PersistentUtil.setNMSTag(entity, "Shop", LocationUtil.toStringFromLocation(location));
         return location.getWorld().spawnEntity(location, entityType);
     }
 
     public List<ConfigurationSection> getTradesConfig() {
         return getTrades().stream().map(ShopTrade::getConfig).collect(Collectors.toList());
+    }
+
+    public ItemStack getEquipmentItem(int slot) {
+        return this.equipments[slot];
+    }
+    public ItemStack getEquipmentDisplayItem(int slot) {
+        return getEquipmentItem(slot).getType().equals(Material.AIR) ?
+                ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, "ヘルメット") :
+                getEquipmentItem(slot);
     }
 }

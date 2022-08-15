@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.data;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
