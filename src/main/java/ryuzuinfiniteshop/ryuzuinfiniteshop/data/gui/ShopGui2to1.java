@@ -10,7 +10,20 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.JavaUtil;
 
-public class ShopGui2to1 extends ShopGui {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ShopGui2to1 extends ShopTradeGui {
+
+    private static final List<Integer> displayslot = new ArrayList<>();
+
+    static {
+        for (int i = 0; i < 6; i++) {
+            displayslot.add(i * 9 + 2);
+            displayslot.add(i * 9 + 4);
+            displayslot.add(i * 9 + 7);
+        }
+    }
 
     public ShopGui2to1(Shop shop, int page) {
         super(shop, page);
@@ -18,7 +31,7 @@ public class ShopGui2to1 extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopHolder.ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode , getPage()), 9 * 6 , "ショップ ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), getPage(), ShopGui.class.getName()), 9 * 6 , "ショップ ページ" + getPage());
 
         ItemStack filler = ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE , "");
 
@@ -40,14 +53,12 @@ public class ShopGui2to1 extends ShopGui {
     }
 
     @Override
-    public ShopTrade getTrade(int slot) {
+    public int getTradeNumber(int slot) {
         int mod9 = slot % 9;
-        if (mod9 == 4) return null;
+        if (mod9 == 4) return -1;
         int quootient9 = slot / 9;
         int front = mod9 / 4;
-        int tradenumber = quootient9 * 2 + front;
-        if (getTrades().size() - 1 <= tradenumber) return null;
-        return getTrades().get(tradenumber);
+        return quootient9 * 2 + front;
     }
 
     @Override
@@ -56,7 +67,12 @@ public class ShopGui2to1 extends ShopGui {
     }
 
     @Override
-    public boolean existPage(int page) {
+    public boolean existTrade(int page) {
         return getTrades().size() > (page - 1) * 12;
+    }
+
+    @Override
+    public boolean isDisplayItem(int slot) {
+        return displayslot.contains(slot);
     }
 }

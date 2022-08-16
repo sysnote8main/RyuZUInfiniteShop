@@ -11,6 +11,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.TradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ShopUtil;
 
@@ -25,17 +28,19 @@ public class ChangeDisplayNameListener implements Listener {
     @EventHandler
     public void changeDisplay(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        if (event.getClickedInventory() != null) return;
-        if (!ShopUtil.isShopEditInventory(event)) return;
+        ShopGui gui = ShopUtil.getShopGui(event);
+        if (gui == null) return;
+        if(!(gui instanceof ShopEditorMainPage)) return;
+        if (!ShopUtil.isEditMode(event)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
-        ClickType type = event.getClick();
         ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
-        Shop shop = TradeListener.getShop(shopholder.tags.get(0));
+        Shop shop = shopholder.getShop();
         int slot = event.getSlot();
         if (slot != 5 * 9 + 8) return;
 
+        //チャット入力待機
         namingTime.put(p.getUniqueId(), System.currentTimeMillis());
         namingShop.put(p.getUniqueId(), shop.getID());
         p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "ページに設定する名前をチャットに入力してください");
@@ -43,7 +48,8 @@ public class ChangeDisplayNameListener implements Listener {
         p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "カラーコードを使う際は'&'か'{color:R,G,B}'を使用してください");
         p.playSound(p.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 2);
 
-        event.setCancelled(true);
+        //GUI操作処理
+        ShopUtil.playClickEffect(event);
     }
 
     @EventHandler

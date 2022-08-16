@@ -28,6 +28,26 @@ public class ShopTrade {
         this.take = (ItemStack[]) config.get("take");
     }
 
+    public ShopTrade(Inventory inv, int slot, Shop.ShopType type) {
+        if (type.equals(Shop.ShopType.TwotoOne)) {
+            this.give = new ItemStack[]{inv.getItem(slot), inv.getItem(slot + 1)};
+            this.take = new ItemStack[]{inv.getItem(slot + 3)};
+        } else {
+            this.give = new ItemStack[]{inv.getItem(slot), inv.getItem(slot + 1), inv.getItem(slot + 2), inv.getItem(slot + 3)};
+            this.take = new ItemStack[]{inv.getItem(slot + 5), inv.getItem(slot + 6), inv.getItem(slot + 7), inv.getItem(slot + 8)};
+        }
+    }
+
+    public void setTrade(Inventory inv, int slot, Shop.ShopType type) {
+        if (type.equals(Shop.ShopType.TwotoOne)) {
+            this.give = new ItemStack[]{inv.getItem(slot), inv.getItem(slot + 1)};
+            this.take = new ItemStack[]{inv.getItem(slot + 3)};
+        } else {
+            this.give = new ItemStack[]{inv.getItem(slot), inv.getItem(slot + 1), inv.getItem(slot + 2), inv.getItem(slot + 3)};
+            this.take = new ItemStack[]{inv.getItem(slot + 5), inv.getItem(slot + 6), inv.getItem(slot + 7), inv.getItem(slot + 8)};
+        }
+    }
+
     public Result trade(Player p) {
         Inventory inv = p.getInventory();
         Result result = Result.Success;
@@ -36,8 +56,8 @@ public class ShopTrade {
             if (take[i] == null) continue;
             inv.remove(take[i]);
         }
-        if(affordTrade(p)) result = Result.Lack;
-        if(hasEnoughSpace(p)) result = Result.Full;
+        if (affordTrade(p)) result = Result.Lack;
+        if (hasEnoughSpace(p)) result = Result.Full;
 
         playResultEffect(p, result);
 

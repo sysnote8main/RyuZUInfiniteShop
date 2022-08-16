@@ -8,6 +8,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ShopUtil;
 
 import java.util.HashMap;
@@ -23,14 +25,17 @@ public class TradeListener implements Listener {
     @EventHandler
     public void onTrade(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        if (event.getClickedInventory() == null) return;
-        if(!ShopUtil.isShopTradeInventory(event)) return;
+        ShopGui gui = ShopUtil.getShopGui(event);
+        if (gui == null) return;
+        if(!(gui instanceof ShopTradeGui)) return;
+        if (!ShopUtil.isTradeMode(event)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
         ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
-        Shop shop = TradeListener.getShop(shopholder.tags.get(0));
+        Shop shop = shopholder.getShop();
+        int slot = event.getSlot();
 
         //取引
         int times = 1;
@@ -44,7 +49,9 @@ public class TradeListener implements Listener {
                 times = 100;
                 break;
         }
-        shop.getPage(shopholder.page).getTrade(shopholder.page).trade(p, times);
-        event.setCancelled(true);
+        shop.getPage(shopholder.getPage()).getTrade(slot).trade(p, times);
+
+        //GUI操作処理
+        ShopUtil.playClickEffect(event);
     }
 }

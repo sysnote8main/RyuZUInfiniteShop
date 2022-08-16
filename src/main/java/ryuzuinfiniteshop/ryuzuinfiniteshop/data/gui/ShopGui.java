@@ -17,28 +17,18 @@ public abstract class ShopGui {
     public ShopGui (Shop shop , int page) {
         this.shop = shop;
         this.page = page;
-        setTrades(page);
     }
 
     public int getPage() {
         return page;
     }
+
     public Shop getShop() {
         return shop;
     }
 
-    public abstract void setTrades(int page);
+    public abstract Inventory getInventory(ShopHolder.ShopMode mode);
 
-    public List<ShopTrade> getTrades() {
-        return trades;
-    }
-
-    public abstract ShopTrade getTrade(int slot);
-
-    public Inventory getInventory(ShopHolder.ShopMode mode) {
-        return getInventory(mode);
-    }
-
-    public abstract boolean existPage(int page);
+    public abstract boolean existTrade(int page);
 
 }
