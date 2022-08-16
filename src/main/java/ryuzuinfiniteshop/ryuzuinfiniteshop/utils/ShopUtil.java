@@ -1,16 +1,20 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.TradeListener;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,13 +42,18 @@ public class ShopUtil {
         if (inv == null) return false;
         InventoryHolder holder = inv.getHolder();
         if (holder == null) return false;
+        if (!(holder instanceof ShopHolder)) return false;
         ShopHolder shopholder = (ShopHolder) holder;
         Shop shop = shopholder.getShop();
         return shop != null;
     }
 
+    public static Inventory getSecureInventory(InventoryClickEvent event) {
+        return event.getClickedInventory() == null ? event.getView().getTopInventory() : event.getClickedInventory();
+    }
+
     public static ShopGui getShopGui(InventoryClickEvent event) {
-        return getShopGui(event.getClickedInventory());
+        return getShopGui(getSecureInventory(event));
     }
 
     public static ShopGui getShopGui(Inventory inv) {
@@ -57,11 +66,11 @@ public class ShopUtil {
     }
 
     public static boolean isEditMode(InventoryClickEvent event) {
-        return isEditMode(event.getView().getTopInventory());
+        return isEditMode(getSecureInventory(event));
     }
 
     public static boolean isTradeMode(InventoryClickEvent event) {
-        return isTradeMode(event.getClickedInventory());
+        return isTradeMode(getSecureInventory(event));
     }
 
     public static boolean isEditMode(Inventory inv) {
@@ -103,5 +112,21 @@ public class ShopUtil {
             return getItemSet(inv, slot, 2).length != 0 && inv.getItem(slot + 3) != null;
         else
             return getItemSet(inv, slot, 4).length != 0 && getItemSet(inv, slot + 5, 4).length != 0;
+    }
+
+    public static void loadAllShops() {
+        TradeListener.getShops().clear();
+        File directory = FileUtil.initializeFolder("shops");
+        File[] ItemFiles = directory.listFiles();
+        if(ItemFiles == null) return;
+        for (File f : ItemFiles) {
+            new Shop(f);
+        }
+    }
+
+    public static void removeAllNPC() {
+        for(Shop shop : TradeListener.getShops().values()) {
+            shop.getNPC().remove();
+        }
     }
 }

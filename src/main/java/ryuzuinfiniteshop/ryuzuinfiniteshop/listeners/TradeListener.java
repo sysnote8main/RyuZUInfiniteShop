@@ -20,6 +20,10 @@ import java.util.HashMap;
 public class TradeListener implements Listener {
     private static HashMap<String, Shop> shops = new HashMap<>();
 
+    public static HashMap<String, Shop> getShops() {
+        return shops;
+    }
+
     public static Shop getShop(String id) {
         return shops.get(id);
     }
@@ -53,12 +57,13 @@ public class TradeListener implements Listener {
         Shop shop = shopholder.getShop();
         int slot = event.getSlot();
 
+        if(shop.getPage(shopholder.getPage()).getTrade(slot) == null) return;
+
         //取引
         int times = 1;
         switch (type) {
             case SHIFT_RIGHT:
             case SHIFT_LEFT:
-                p.playSound(p.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 2);
                 times = 10;
                 break;
             case MIDDLE:

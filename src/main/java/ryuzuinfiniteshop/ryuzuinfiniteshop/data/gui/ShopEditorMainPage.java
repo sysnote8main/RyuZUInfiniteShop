@@ -31,11 +31,6 @@ public class ShopEditorMainPage extends ShopGui {
         return inv;
     }
 
-    @Override
-    public boolean existTrade(int page) {
-        return getTrades().size() > (page - 1) * 12;
-    }
-
     public List<ShopTrade> getTrades() {
         return this.trades;
     }
@@ -55,12 +50,12 @@ public class ShopEditorMainPage extends ShopGui {
     }
 
     private void setTradesPage(Inventory inv) {
-        int max = Math.min(17, getShop().getTradePageCount() - (getPage() - 1) * 18);
+        int max = Math.min(18, getShop().getTradePageCount() - (getPage() - 1) * 18);
         for (int i = 0; i < max; i++) {
-            inv.setItem(i, ItemUtil.getNamedItem(Material.LIME_STAINED_GLASS_PANE, ChatColor.GREEN + "ページ" + i));
+            inv.setItem(i, ItemUtil.getNamedItem(Material.LIME_STAINED_GLASS_PANE, ChatColor.GREEN + "ページ" + (i + 1)));
         }
-        if (max != 17 && getShop().isLimitPage(max))
-            inv.setItem(max, ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.WHITE + "新規ページ"));
+        if (max != 18 && getShop().isLimitPage(max))
+            inv.setItem(max - 1, ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.WHITE + "新規ページ"));
     }
 
     private void setDisplayName(Inventory inv) {

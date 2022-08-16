@@ -10,9 +10,12 @@ import java.util.List;
 
 public abstract class ShopTradeGui extends ShopGui {
 
-    public ShopTradeGui(Shop shop , int page) {
-        super(shop , page);
-        setTrades(page);
+    public ShopTradeGui(Shop shop, int page) {
+        super(shop, page);
+        if (getShop().getTrades().size() == 0)
+            this.trades = new ArrayList<>();
+        else
+            setTrades(page);
     }
 
     public List<ShopTrade> getTrades() {
@@ -20,8 +23,12 @@ public abstract class ShopTradeGui extends ShopGui {
     }
 
     public ShopTrade getTrade(int number) {
-        if(getShop().getTrades().size() <= number) return null;
+        if (getTrades().size() <= number) return null;
         return getTrades().get(getTradeNumber(number));
+    }
+
+    public boolean existTrade() {
+        return getTrades().size() > (getPage() - 1) * getShop().getLimitSize();
     }
 
     public abstract int getTradeNumber(int slot);

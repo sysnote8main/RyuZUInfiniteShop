@@ -11,8 +11,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui2to1;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui4to4;
@@ -34,10 +34,10 @@ import java.util.stream.Collectors;
 public class Shop {
     public enum ShopType {TwotoOne, FourtoFour}
 
-    private final Entity npc;
-    private final Location location;
-    private final ShopType type;
-    private List<ShopTrade> trades;
+    private Entity npc;
+    private Location location;
+    private ShopType type;
+    private List<ShopTrade> trades = new ArrayList<>();
     private boolean lock = false;
     private boolean editting = false;
     private List<ShopEditorMainPage> editors = new ArrayList<>();
@@ -52,16 +52,16 @@ public class Shop {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+        this.location = LocationUtil.toLocationFromString(file.getName().replace(".yml", ""));
         spawnNPC(config);
-        this.location = LocationUtil.toLocationFromString(file.getName());
-        this.npc = spawnNPC(config);
-        initializeLivingEntitiy();
         this.type = ShopType.valueOf(config.getString("ShopType"));
         List<ConfigurationSection> trades = (List<ConfigurationSection>) config.getList("Trades");
         this.trades = trades.stream().map(ShopTrade::new).collect(Collectors.toList());
         updateTradeContents();
         Arrays.fill(equipments, new ItemStack(Material.AIR));
-        TradeListener.addShop(getID() , this);
+        createTradeNewPage();
+        createEdotorNewPage();
+        TradeListener.addShop(getID(), this);
     }
 
     public Shop(Location location) {
@@ -72,13 +72,14 @@ public class Shop {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        spawnNPC(config);
         this.location = location;
-        this.npc = spawnNPC(config);
         this.type = ShopType.TwotoOne;
+        spawnNPC(config);
         Arrays.fill(equipments, new ItemStack(Material.AIR));
         saveYaml();
-        TradeListener.addShop(getID() , this);
+        createTradeNewPage();
+        createEdotorNewPage();
+        TradeListener.addShop(getID(), this);
     }
 
     public void updateTradeContents() {
@@ -108,12 +109,12 @@ public class Shop {
 
     public ShopTradeGui getPage(int page) {
         if (page <= 0) return null;
-        if (!pages.get(0).existTrade(page)) return null;
-        return pages.get(page);
+        // if (!pages.get(0).existTrade(page)) return null;
+        return pages.get(page - 1);
     }
 
     public void setTradePages() {
-        for (int i = 0; i < getTradePageCount(); i++) {
+        for (int i = 0; i < getTradePageCountFromTradesCount(); i++) {
             if (type.equals(ShopType.TwotoOne))
                 pages.add(new ShopGui2to1(this, i));
             else
@@ -123,7 +124,7 @@ public class Shop {
 
     public ShopEditorMainPage getEditor(int page) {
         if (page <= 0) return null;
-        return editors.get(page);
+        return editors.get(page - 1);
     }
 
     public void setEditors() {
@@ -141,14 +142,22 @@ public class Shop {
     }
 
     public int getTradePageCount() {
-        int size = getTrades().size() / getLimitSize();
-        if (getTrades().size() % getLimitSize() != 0) size++;
-        return size;
+        return pages.size();
     }
 
     public int getEditorPageCount() {
-        int size = getTradePageCount() / 18;
-        if (getTrades().size() % getLimitSize() != 0) size++;
+        return editors.size();
+    }
+
+    public int getTradePageCountFromTradesCount() {
+        int size = trades.size() / getLimitSize();
+        if (trades.size() % getLimitSize() != 0) size++;
+        return size;
+    }
+
+    public int getEditorPageCountFromTradesCount() {
+        int size = getTradePageCountFromTradesCount() / 18;
+        if (getTradePageCountFromTradesCount() % 18 != 0) size++;
         return size;
     }
 
@@ -161,12 +170,26 @@ public class Shop {
         return isLimitPage(pages.size() - 1);
     }
 
-    public void addTradePage() {
+    public void createTradeNewPage() {
         if (!ableCreateNewPage()) return;
         if (type.equals(ShopType.TwotoOne))
             pages.add(new ShopGui2to1(this, getTradePageCount() + 1));
         else
             pages.add(new ShopGui4to4(this, getTradePageCount() + 1));
+    }
+
+    public boolean ableEditorNewPage() {
+        if (editors.isEmpty()) return true;
+        return editors.size() < getEditorPageCountFromTradesCount();
+    }
+
+    public void createEdotorNewPage() {
+        if (!ableEditorNewPage()) return;
+        editors.add(new ShopEditorMainPage(this, getEditorPageCount() + 1));
+    }
+
+    public void addTrade(Inventory inv, int slot) {
+        trades.add(new ShopTrade(inv, slot, type));
     }
 
     public void saveYaml() {
@@ -208,13 +231,14 @@ public class Shop {
         return this.npc;
     }
 
-    public Entity spawnNPC(YamlConfiguration config) {
-        EntityType entityType = EntityType.valueOf(config.getString("EntityType", "Villager"));
-        Entity entity = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entityType);
-        entity.setSilent(true);
-        entity.setInvulnerable(true);
-        PersistentUtil.setNMSTag(entity, "Shop", getID());
-        return location.getWorld().spawnEntity(location, entityType);
+    public void spawnNPC(YamlConfiguration config) {
+        EntityType entityType = EntityType.valueOf(config.getString("EntityType", "VILLAGER"));
+        Entity npc = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entityType);
+        this.npc = npc;
+        npc.setSilent(true);
+        npc.setInvulnerable(true);
+        PersistentUtil.setNMSTag(npc, "Shop", getID());
+        initializeLivingEntitiy();
     }
 
     public void initializeLivingEntitiy() {

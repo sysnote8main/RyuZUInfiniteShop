@@ -28,15 +28,15 @@ public class ChangeEquipmentListener implements Listener {
         Shop shop = shopholder.getShop();
         int slot = event.getSlot();
 
+        if(!ShopUtil.getEquipmentsSlot().containsKey(slot)) return;
+
         //装備を変更
         if((type.isRightClick() || type.isLeftClick()) && !type.isShiftClick()) {
-            if(ShopUtil.getEquipmentsSlot().containsValue(slot)) {
-                event.setCurrentItem(event.getCursor());
-                shop.setEquipmentItem(event.getCursor() , ShopUtil.getEquipmentsSlot().get(slot));
+            event.setCurrentItem(event.getCursor());
+            shop.setEquipmentItem(event.getCursor() , ShopUtil.getEquipmentsSlot().get(slot));
 
-                //GUI操作処理
-                ShopUtil.playClickEffect(event);
-            }
+            //GUI操作処理
+            ShopUtil.playClickEffect(event);
         }
     }
 }

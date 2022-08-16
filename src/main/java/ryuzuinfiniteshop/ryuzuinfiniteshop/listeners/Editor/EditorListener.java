@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,6 +24,7 @@ public class EditorListener implements Listener {
     public void openShopEditor(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
+        if(!p.isSneaking()) return;
         String id = PersistentUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;
         Shop shop = TradeListener.getShop(id);
@@ -49,18 +51,22 @@ public class EditorListener implements Listener {
 
     //編集画面を閉じたとき、ロックを解除する
     @EventHandler
-    public void onEdit(InventoryCloseEvent event) {
+    public void releaseEdittingLock(InventoryCloseEvent event) {
         //インベントリがショップなのかチェック
         Inventory inv = event.getInventory();
         ShopGui gui = ShopUtil.getShopGui(inv);
         if (gui == null) return;
-        if (!(gui instanceof ShopTradeGui)) return;
+        if (!(gui instanceof ShopEditorMainPage)) return;
         if (!ShopUtil.isEditMode(inv)) return;
 
         //必要なデータを取得
+        Player p = (Player) event.getPlayer();
         ShopHolder shopholder = (ShopHolder) inv.getHolder();
         Shop shop = shopholder.getShop();
 
         shop.setEditting(false);
+
+        //音を出す
+        p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_CLOSE, 1, 2);
     }
 }

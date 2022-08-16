@@ -37,9 +37,12 @@ public class EditTradePageListener implements Listener {
         //取引を上書きし、取引として成立しないものは削除する
         List<ShopTrade> emptytrades = new ArrayList<>();
         for (int i = 0; i < 9 * 6; i += shop.getShopType().equals(Shop.ShopType.TwotoOne) ? 4 : 9) {
-            if (shop.getShopType().equals(Shop.ShopType.TwotoOne) && i % 2 == 0) i++;
+            if (shop.getShopType().equals(Shop.ShopType.TwotoOne) && i % 2 == 1) i++;
             ShopTrade trade = ((ShopTradeGui) gui).getTrade(((ShopTradeGui) gui).getTradeNumber(i));
-            if (ShopUtil.isAvailableTrade(inv, i, shop.getShopType()))
+            boolean available = ShopUtil.isAvailableTrade(inv, i, shop.getShopType());
+            if (trade == null && available)
+                shop.addTrade(inv , i);
+            else if (available)
                 trade.setTrade(inv, i, shop.getShopType());
             else
                 emptytrades.add(trade);
@@ -73,11 +76,11 @@ public class EditTradePageListener implements Listener {
 
     //ショップの取引編集ページを開く
     @EventHandler
-    public void changeDisplay(InventoryClickEvent event) {
+    public void openTradePage(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
         ShopGui gui = ShopUtil.getShopGui(event);
         if (gui == null) return;
-        if(!(gui instanceof ShopEditorMainPage)) return;
+        if (!(gui instanceof ShopEditorMainPage)) return;
         if (!ShopUtil.isEditMode(event)) return;
 
         //必要なデータを取得
@@ -86,15 +89,15 @@ public class EditTradePageListener implements Listener {
         Shop shop = shopholder.getShop();
         int slot = event.getSlot();
         if (slot < 0 || 17 < slot) return;
-        if (slot >= (shop.getTradePageCount() - shopholder.getPage() * 18) + (shop.ableCreateNewPage() ? 1 : 0)) return;
+        if (slot >= (shop.getTradePageCount() - (shopholder.getPage() - 1) * 18) + (shop.ableCreateNewPage() ? 1 : 0))
+            return;
 
         //取引編集ページを開く
-        if (shop.ableCreateNewPage() && slot + 1 == shop.getTradePageCount()) {
-            shop.addTradePage();
+        if (shop.ableCreateNewPage() && slot + 1 == shop.getTradePageCountFromTradesCount()) {
+            shop.createTradeNewPage();
             p.openInventory(shop.getPage(slot + 1).getInventory(ShopHolder.ShopMode.Edit));
-        }
-        else
-            p.openInventory(shop.getEditor(slot + (shopholder.getPage() - 1) * 18).getInventory(ShopHolder.ShopMode.Edit));
+        } else
+            p.openInventory(shop.getPage(slot + (shopholder.getPage() - 1) * 18 + 1).getInventory(ShopHolder.ShopMode.Edit));
 
         //GUI操作処理
         ShopUtil.playClickEffect(event);

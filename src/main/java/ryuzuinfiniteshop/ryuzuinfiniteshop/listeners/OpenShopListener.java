@@ -29,6 +29,7 @@ public class OpenShopListener implements Listener {
     public void openShop(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
+        if(p.isSneaking()) return;
         String id = PersistentUtil.getNMSStringTag(entity , "Shop");
         if(id == null) return;
         Shop shop = TradeListener.getShop(id);
@@ -45,6 +46,7 @@ public class OpenShopListener implements Listener {
         if (gui == null) return;
         if(!(gui instanceof ShopTradeGui)) return;
         if (!ShopUtil.isTradeMode(event)) return;
+        if(event.getClickedInventory() != null) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
@@ -90,7 +92,6 @@ public class OpenShopListener implements Listener {
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
-        ClickType type = event.getClick();
         ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
         Shop shop = shopholder.getShop();
 

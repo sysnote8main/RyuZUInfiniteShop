@@ -28,7 +28,4 @@ public abstract class ShopGui {
     }
 
     public abstract Inventory getInventory(ShopHolder.ShopMode mode);
-
-    public abstract boolean existTrade(int page);
-
 }

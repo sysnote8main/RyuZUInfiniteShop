@@ -1,6 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -33,7 +34,7 @@ public class ShopGui2to1 extends ShopTradeGui {
     public Inventory getInventory(ShopHolder.ShopMode mode) {
         Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), getPage(), ShopGui.class.getName()), 9 * 6 , "ショップ ページ" + getPage());
 
-        ItemStack filler = ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE , "");
+        ItemStack filler = ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE , ChatColor.BLACK + "");
 
         for (int i = 0; i < 6; i++) {
             inv.setItem(i * 9 + 2, filler);
@@ -64,11 +65,6 @@ public class ShopGui2to1 extends ShopTradeGui {
     @Override
     public void setTrades(int page) {
         this.trades = JavaUtil.splitList(getShop().getTrades() , 12)[page - 1];
-    }
-
-    @Override
-    public boolean existTrade(int page) {
-        return getTrades().size() > (page - 1) * 12;
     }
 
     @Override
