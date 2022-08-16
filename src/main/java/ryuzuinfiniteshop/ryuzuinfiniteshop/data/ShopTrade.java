@@ -45,8 +45,8 @@ public class ShopTrade {
     public Result getResult(Player p) {
         Result result = Result.Success;
 
-        if (!hasEnoughSpace(p)) result = Result.Full;
         if (!affordTrade(p)) result = Result.Lack;
+        else if (!hasEnoughSpace(p)) result = Result.Full;
 
         return result;
     }

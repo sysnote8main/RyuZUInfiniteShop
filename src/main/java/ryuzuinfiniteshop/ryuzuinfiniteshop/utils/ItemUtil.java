@@ -26,7 +26,7 @@ public class ItemUtil {
         HashMap<ItemStack, Integer> capacity = new HashMap<>();
         Arrays.stream(inventory.getContents())
                 .filter(Objects::nonNull)
-                .filter(give::containsKey)
+                .filter(item -> give.keySet().stream().anyMatch(i -> item.isSimilar(i)))
                 .forEach(item -> capacity.put(item, (item.getType().getMaxStackSize() - item.getAmount()) + capacity.getOrDefault(item, 0)));
         give.keySet().forEach(item -> give.put(item, give.get(item) - capacity.get(item)));
         int needslot = give.keySet().stream().mapToInt(item -> {
@@ -44,8 +44,11 @@ public class ItemUtil {
         HashMap<ItemStack, Integer> need = new HashMap<>();
         Arrays.stream(items).filter(Objects::nonNull).forEach(item -> need.put(item, item.getAmount() + need.getOrDefault(item, 0)));
         HashMap<ItemStack, Integer> has = new HashMap<>();
-        Arrays.stream(inventory.getContents()).filter(need::containsKey).forEach(item -> has.put(item, item.getAmount() + has.getOrDefault(item, 0)));
-        return need.keySet().stream().anyMatch(item -> !has.containsKey(item) || has.get(item) < need.get(item));
+        if(Arrays.stream(inventory.getContents()).noneMatch(item -> need.keySet().stream().anyMatch(i -> item.isSimilar(i)))) return false;
+        Arrays.stream(inventory.getContents())
+                .filter(Objects::nonNull)
+                .forEach(item -> has.put(item, item.getAmount() + has.getOrDefault(item, 0)));
+        return need.keySet().stream().noneMatch(item -> has.get(item) < need.get(item));
     }
 
     //アイテムを含んでいるか調べる
