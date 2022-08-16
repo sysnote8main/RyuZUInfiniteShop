@@ -40,9 +40,11 @@ public class ShopGui4to4 extends ShopTradeGui {
         for (int i = 0; i < getTrades().size(); i++) {
             ShopTrade trade = getTrades().get(i);
             int slot = i * 9;
-            for (int j = 0; j < 4; j++) {
-                inv.setItem(slot + j, trade.give[j]);
-                inv.setItem(slot + j + 5, trade.take[j]);
+            for (int j = 0; j < trade.take.length; j++) {
+                inv.setItem(slot + j, trade.take[j]);
+            }
+            for (int j = 0; j < trade.give.length; j++) {
+                inv.setItem(slot + j + 5, trade.give[j]);
             }
         }
 
@@ -54,11 +56,6 @@ public class ShopGui4to4 extends ShopTradeGui {
         int mod9 = slot % 9;
         if (mod9 == 4) return -1;
         return slot / 9;
-    }
-
-    @Override
-    public void setTrades(int page) {
-        this.trades = JavaUtil.splitList(getShop().getTrades(), 6)[page - 1];
     }
 
     @Override

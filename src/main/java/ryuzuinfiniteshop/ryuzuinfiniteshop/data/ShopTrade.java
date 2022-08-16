@@ -29,44 +29,36 @@ public class ShopTrade {
     }
 
     public ShopTrade(Inventory inv, int slot, Shop.ShopType type) {
-        if (type.equals(Shop.ShopType.TwotoOne)) {
-            this.give = new ItemStack[]{inv.getItem(slot), inv.getItem(slot + 1)};
-            this.take = new ItemStack[]{inv.getItem(slot + 3)};
-        } else {
-            this.give = new ItemStack[]{inv.getItem(slot), inv.getItem(slot + 1), inv.getItem(slot + 2), inv.getItem(slot + 3)};
-            this.take = new ItemStack[]{inv.getItem(slot + 5), inv.getItem(slot + 6), inv.getItem(slot + 7), inv.getItem(slot + 8)};
-        }
+        setTrade(inv, slot, type);
     }
 
     public void setTrade(Inventory inv, int slot, Shop.ShopType type) {
         if (type.equals(Shop.ShopType.TwotoOne)) {
-            this.give = new ItemStack[]{inv.getItem(slot), inv.getItem(slot + 1)};
-            this.take = new ItemStack[]{inv.getItem(slot + 3)};
+            this.take = ItemUtil.getItemSet(inv, slot, 2);
+            this.give = new ItemStack[]{inv.getItem(slot + 3)};
         } else {
-            this.give = new ItemStack[]{inv.getItem(slot), inv.getItem(slot + 1), inv.getItem(slot + 2), inv.getItem(slot + 3)};
-            this.take = new ItemStack[]{inv.getItem(slot + 5), inv.getItem(slot + 6), inv.getItem(slot + 7), inv.getItem(slot + 8)};
+            this.take = ItemUtil.getItemSet(inv, slot, 4);
+            this.give = ItemUtil.getItemSet(inv, slot + 4, 4);
         }
+    }
+
+    public Result getResult(Player p) {
+        Result result = Result.Success;
+
+        if (!hasEnoughSpace(p)) result = Result.Full;
+        if (!affordTrade(p)) result = Result.Lack;
+
+        return result;
     }
 
     public Result trade(Player p) {
         Inventory inv = p.getInventory();
-        Result result = Result.Success;
-
-        for (int i = 0; i < 4; i++) {
-            if (take[i] == null) continue;
-            inv.remove(take[i]);
-        }
-        if (affordTrade(p)) result = Result.Lack;
-        if (hasEnoughSpace(p)) result = Result.Full;
-
-        playResultEffect(p, result);
+        Result result = getResult(p);
 
         //アイテムを追加する
         if (result == Result.Success) {
-            for (int i = 0; i < 4; i++) {
-                if (give[i] == null) continue;
-                inv.addItem(give[i]);
-            }
+            inv.removeItem(take);
+            inv.addItem(give);
         }
         return result;
     }
@@ -79,39 +71,30 @@ public class ShopTrade {
                 break;
             }
         }
+        //結果に対するエフェクトを表示
+        playResultEffect(p, result);
         return result;
     }
 
     //アイテムを追加できるかチェックする
-    public boolean affordTrade(Player p) {
-        for (int i = 0; i < 4; i++) {
-            if (give[i] == null) continue;
-            if (!ItemUtil.canGive(p.getInventory(), give[i])) {
-                return false;
-            }
-        }
-        return true;
+    public boolean hasEnoughSpace(Player p) {
+        return ItemUtil.ableGive(p.getInventory(), give);
     }
 
-    //アイテムを消費する
-    public boolean hasEnoughSpace(Player p) {
-        for (int i = 0; i < 4; i++) {
-            if (take[i] == null) continue;
-            if (!p.getInventory().contains(take[i], take[i].getAmount())) {
-                return false;
-            }
-        }
-        return true;
+    //アイテムを所持しているか確認する
+    public boolean affordTrade(Player p) {
+        return ItemUtil.contains(p.getInventory(), take);
     }
 
     public void playResultEffect(Player p, Result result) {
         switch (result) {
             case Lack:
                 p.sendMessage(ChatColor.RED + "アイテムが足りません");
+                p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
                 break;
             case Full:
                 p.sendMessage(ChatColor.RED + "インベントリに十分な空きがありません");
-                p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+                p.playSound(p.getLocation(), Sound.BLOCK_GLASS_BREAK, 0.5f, 2);
                 break;
             case Success:
                 p.playSound(p.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 2);

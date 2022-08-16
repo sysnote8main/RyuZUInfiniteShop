@@ -56,8 +56,9 @@ public class TradeListener implements Listener {
         ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
         Shop shop = shopholder.getShop();
         int slot = event.getSlot();
+        int tradenumber = ((ShopTradeGui) gui).getTradeNumber(slot);
 
-        if(shop.getPage(shopholder.getPage()).getTrade(slot) == null) return;
+        if(shop.getPage(shopholder.getPage()).getTrade(tradenumber) == null) return;
 
         //取引
         int times = 1;
@@ -70,9 +71,9 @@ public class TradeListener implements Listener {
                 times = 100;
                 break;
         }
-        shop.getPage(shopholder.getPage()).getTrade(slot).trade(p, times);
+        shop.getPage(shopholder.getPage()).getTrade(tradenumber).trade(p, times);
 
-        //GUI操作処理
-        ShopUtil.playClickEffect(event);
+        //イベントキャンセル
+        event.setCancelled(true);
     }
 }

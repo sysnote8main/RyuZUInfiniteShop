@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -7,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
@@ -37,11 +39,11 @@ public class EditTradePageListener implements Listener {
         //取引を上書きし、取引として成立しないものは削除する
         List<ShopTrade> emptytrades = new ArrayList<>();
         for (int i = 0; i < 9 * 6; i += shop.getShopType().equals(Shop.ShopType.TwotoOne) ? 4 : 9) {
-            if (shop.getShopType().equals(Shop.ShopType.TwotoOne) && i % 2 == 1) i++;
+            if (shop.getShopType().equals(Shop.ShopType.TwotoOne) && i % 9 == 4) i++;
             ShopTrade trade = ((ShopTradeGui) gui).getTrade(((ShopTradeGui) gui).getTradeNumber(i));
             boolean available = ShopUtil.isAvailableTrade(inv, i, shop.getShopType());
             if (trade == null && available)
-                shop.addTrade(inv , i);
+                shop.addTrade(inv, i);
             else if (available)
                 trade.setTrade(inv, i, shop.getShopType());
             else
@@ -52,8 +54,8 @@ public class EditTradePageListener implements Listener {
         //ショップを更新する
         shop.updateTradeContents();
 
-        //エディターのメインページに戻る
-        p.openInventory(shop.getEditor(gui.getPage() / 18 + 1).getInventory(ShopHolder.ShopMode.Edit));
+        //1tick送らせてエディターのメインページに戻る
+        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> p.openInventory(shop.getEditor(gui.getPage() / 18 + 1).getInventory(ShopHolder.ShopMode.Edit)), 1L);
 
         //音を出す
         p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_CLOSE, 1, 2);

@@ -44,7 +44,6 @@ public class Shop {
     private List<ShopTradeGui> pages = new ArrayList<>();
     public ItemStack[] equipments = new ItemStack[6];
 
-
     public Shop(File file) {
         YamlConfiguration config = new YamlConfiguration();
         try {
@@ -59,8 +58,6 @@ public class Shop {
         this.trades = trades.stream().map(ShopTrade::new).collect(Collectors.toList());
         updateTradeContents();
         Arrays.fill(equipments, new ItemStack(Material.AIR));
-        createTradeNewPage();
-        createEdotorNewPage();
         TradeListener.addShop(getID(), this);
     }
 
@@ -77,14 +74,31 @@ public class Shop {
         spawnNPC(config);
         Arrays.fill(equipments, new ItemStack(Material.AIR));
         saveYaml();
-        createTradeNewPage();
-        createEdotorNewPage();
+        createFirstPage();
         TradeListener.addShop(getID(), this);
     }
 
     public void updateTradeContents() {
+        if (trades.size() == 0)
+            createFirstPage();
+        else
+            setGuis();
+    }
+
+    public void setGuis() {
         setTradePages();
         setEditors();
+    }
+
+    public void createFirstPage() {
+        pages.clear();
+        editors.clear();
+        createNewPage();
+    }
+
+    public void createNewPage() {
+        createTradeNewPage();
+        createEdotorNewPage();
     }
 
     public void removeTrade(int number) {
@@ -109,12 +123,13 @@ public class Shop {
 
     public ShopTradeGui getPage(int page) {
         if (page <= 0) return null;
-        // if (!pages.get(0).existTrade(page)) return null;
+        if (page > pages.size()) return null;
         return pages.get(page - 1);
     }
 
     public void setTradePages() {
-        for (int i = 0; i < getTradePageCountFromTradesCount(); i++) {
+        pages.clear();
+        for (int i = 1; i <= getTradePageCountFromTradesCount(); i++) {
             if (type.equals(ShopType.TwotoOne))
                 pages.add(new ShopGui2to1(this, i));
             else
@@ -128,7 +143,8 @@ public class Shop {
     }
 
     public void setEditors() {
-        for (int i = 0; i < pages.size() / 18; i++) {
+        editors.clear();
+        for (int i = 1; i <= getEditorPageCountFromTradesCount(); i++) {
             editors.add(new ShopEditorMainPage(this, i));
         }
     }
@@ -167,7 +183,7 @@ public class Shop {
 
     public boolean ableCreateNewPage() {
         if (trades.isEmpty()) return true;
-        return isLimitPage(pages.size() - 1);
+        return isLimitPage(pages.size());
     }
 
     public void createTradeNewPage() {

@@ -1,13 +1,10 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 
 import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
@@ -15,9 +12,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.TradeListener;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class ShopUtil {
     private static final HashMap<Integer, Integer> equipmentslots = new HashMap<>();
@@ -98,20 +93,11 @@ public class ShopUtil {
         return equipmentslots;
     }
 
-    public static ItemStack[] getItemSet(Inventory inv, int slot, int lengh) {
-        List<ItemStack> set = new ArrayList<>();
-        for (int i = 0; i < lengh; i++) {
-            if (inv.getItem(slot + i) == null) continue;
-            set.add(inv.getItem(slot + i));
-        }
-        return set.toArray(new ItemStack[lengh]);
-    }
-
     public static boolean isAvailableTrade(Inventory inv, int slot, Shop.ShopType type) {
         if (type.equals(Shop.ShopType.TwotoOne))
-            return getItemSet(inv, slot, 2).length != 0 && inv.getItem(slot + 3) != null;
+            return ItemUtil.getItemSet(inv, slot, 2).length != 0 && inv.getItem(slot + 3) != null;
         else
-            return getItemSet(inv, slot, 4).length != 0 && getItemSet(inv, slot + 5, 4).length != 0;
+            return ItemUtil.getItemSet(inv, slot, 4).length != 0 && ItemUtil.getItemSet(inv, slot + 5, 4).length != 0;
     }
 
     public static void loadAllShops() {

@@ -45,9 +45,10 @@ public class ShopGui2to1 extends ShopTradeGui {
         for (int i = 0; i < getTrades().size(); i++) {
             ShopTrade trade = getTrades().get(i);
             int slot = (i / 2) * 9 + (i % 2 == 1 ? 5 : 0);
-            inv.setItem(slot, trade.give[0]);
-            inv.setItem(slot + 1, trade.give[1]);
-            inv.setItem(slot + 3, trade.take[0]);
+            for(int k = 0 ; k < trade.take.length ; k++) {
+                inv.setItem(slot + k, trade.take[k]);
+            }
+            inv.setItem(slot + 3, trade.give[0]);
         }
 
         return inv;
@@ -60,11 +61,6 @@ public class ShopGui2to1 extends ShopTradeGui {
         int quootient9 = slot / 9;
         int front = mod9 / 4;
         return quootient9 * 2 + front;
-    }
-
-    @Override
-    public void setTrades(int page) {
-        this.trades = JavaUtil.splitList(getShop().getTrades() , 12)[page - 1];
     }
 
     @Override
