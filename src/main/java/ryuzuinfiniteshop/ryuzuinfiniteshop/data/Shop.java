@@ -25,10 +25,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Shop {
@@ -54,8 +51,7 @@ public class Shop {
         this.location = LocationUtil.toLocationFromString(file.getName().replace(".yml", ""));
         spawnNPC(config);
         this.type = ShopType.valueOf(config.getString("ShopType"));
-        List<ConfigurationSection> trades = (List<ConfigurationSection>) config.getList("Trades");
-        this.trades = trades.stream().map(ShopTrade::new).collect(Collectors.toList());
+        this.trades = config.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, ArrayList<ItemStack>>) tradeconfig)).collect(Collectors.toList());
         updateTradeContents();
         Arrays.fill(equipments, new ItemStack(Material.AIR));
         TradeListener.addShop(getID(), this);

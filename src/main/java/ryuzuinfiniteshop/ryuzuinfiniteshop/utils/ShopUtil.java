@@ -115,4 +115,10 @@ public class ShopUtil {
             shop.getNPC().remove();
         }
     }
+
+    public static void saveAllShops() {
+        for(Shop shop : TradeListener.getShops().values()) {
+            shop.saveYaml();
+        }
+    }
 }

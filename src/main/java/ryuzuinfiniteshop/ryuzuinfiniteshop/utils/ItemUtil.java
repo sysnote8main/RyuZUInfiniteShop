@@ -22,14 +22,13 @@ public class ItemUtil {
     public static boolean ableGive(Inventory inventory, ItemStack... items) {
         if (items == null) return true;
         HashMap<ItemStack, Integer> give = new HashMap<>();
-        Arrays.stream(items).forEach(item -> give.put(item, give.getOrDefault(item, 0)));
+        Arrays.stream(items).forEach(item -> give.put(item, containsCount(items , item)));
         HashMap<ItemStack, Integer> capacity = new HashMap<>();
-        Arrays.stream(inventory.getContents())
-                .filter(Objects::nonNull)
-                .filter(item -> give.keySet().stream().anyMatch(i -> item.isSimilar(i)))
-                .forEach(item -> capacity.put(item, (item.getType().getMaxStackSize() - item.getAmount()) + capacity.getOrDefault(item, 0)));
+        give.keySet().forEach(item -> capacity.put(item , capacityCount(inventory.getContents() , item)));
         give.keySet().forEach(item -> give.put(item, give.get(item) - capacity.get(item)));
-        int needslot = give.keySet().stream().mapToInt(item -> {
+        int needslot = give.keySet().stream()
+                .filter(item -> give.get(item) > 0)
+                .mapToInt(item -> {
             int size = give.get(item) / item.getType().getMaxStackSize();
             if (give.get(item) % item.getType().getMaxStackSize() != 0) size++;
             return size;
@@ -42,20 +41,26 @@ public class ItemUtil {
     public static boolean contains(Inventory inventory, ItemStack... items) {
         if (items == null) return true;
         HashMap<ItemStack, Integer> need = new HashMap<>();
-        Arrays.stream(items).filter(Objects::nonNull).forEach(item -> need.put(item, item.getAmount() + need.getOrDefault(item, 0)));
+        Arrays.stream(items).filter(Objects::nonNull).forEach(item -> need.put(item, containsCount(inventory.getContents() , item)));
         HashMap<ItemStack, Integer> has = new HashMap<>();
-        if(Arrays.stream(inventory.getContents()).noneMatch(item -> need.keySet().stream().anyMatch(i -> item.isSimilar(i)))) return false;
-        Arrays.stream(inventory.getContents())
-                .filter(Objects::nonNull)
-                .forEach(item -> has.put(item, item.getAmount() + has.getOrDefault(item, 0)));
+        if (need.keySet().stream().anyMatch(item -> Arrays.stream(inventory.getContents()).noneMatch(item::isSimilar))) return false;
+        need.keySet().forEach(item -> has.put(item, containsCount(inventory.getContents() , item)));
         return need.keySet().stream().noneMatch(item -> has.get(item) < need.get(item));
     }
 
     //アイテムを含んでいるか調べる
     public static boolean contains(Inventory inventory, ItemStack item) {
         if (item == null) return true;
-        int sum = Arrays.stream(inventory.getContents()).filter(Objects::nonNull).filter(i -> i.isSimilar(item)).mapToInt(ItemStack::getAmount).sum();
+        int sum = containsCount(inventory.getContents(), item);
         return item.getAmount() <= sum;
+    }
+
+    public static int containsCount(ItemStack[] contents, ItemStack item) {
+        return Arrays.stream(contents).filter(Objects::nonNull).filter(i -> i.isSimilar(item)).mapToInt(ItemStack::getAmount).sum();
+    }
+
+    public static int capacityCount(ItemStack[] contents, ItemStack item) {
+        return Arrays.stream(contents).filter(Objects::nonNull).filter(i -> i.isSimilar(item)).mapToInt(i -> i.getType().getMaxStackSize() - i.getAmount()).sum();
     }
 
     //名前付きアイテムを返す

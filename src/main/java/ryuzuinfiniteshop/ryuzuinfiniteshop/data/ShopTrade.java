@@ -9,6 +9,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class ShopTrade {
     public enum Result {Lack, Full, Success}
 
@@ -21,6 +24,11 @@ public class ShopTrade {
         config.set("take", take);
 
         return config;
+    }
+
+    public ShopTrade(HashMap<String, ArrayList<ItemStack>> config) {
+        this.give = config.get("give").toArray(new ItemStack[0]);
+        this.take = config.get("take").toArray(new ItemStack[0]);
     }
 
     public ShopTrade(ConfigurationSection config) {
