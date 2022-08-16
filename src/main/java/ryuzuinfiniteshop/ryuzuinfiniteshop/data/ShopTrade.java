@@ -7,7 +7,7 @@ import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 
 public class ShopTrade {
     public enum Result {Lack, Full, Success}

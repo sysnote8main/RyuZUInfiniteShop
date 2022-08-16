@@ -8,8 +8,8 @@ import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 import java.util.List;
 

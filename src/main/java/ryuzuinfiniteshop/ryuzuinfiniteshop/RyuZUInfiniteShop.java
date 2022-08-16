@@ -1,12 +1,13 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop;
 
+import com.github.ryuzu.ryuzucommandsgenerator.RyuZUCommandsGenerator;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.Editor.ChangeDisplayNameListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.Editor.ChangeEquipmentListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.Editor.EditorListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.OpenShopListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.TradeListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor.ChangeDisplayNameListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor.ChangeEquipmentListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor.EditorListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.OpenShopListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.TradeListener;
 
 public final class RyuZUInfiniteShop extends JavaPlugin {
     private static RyuZUInfiniteShop plugin;
@@ -17,7 +18,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         // Plugin startup logic
         plugin = this;
         registerEvents();
-
+        new RyuZUCommandsGenerator(this);
     }
 
     @Override

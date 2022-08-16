@@ -12,13 +12,16 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui2to1;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui4to4;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.LocationUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.TradeListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.FileUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.LocationUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,11 +55,30 @@ public class Shop {
         spawnNPC(config);
         this.location = LocationUtil.toLocationFromString(file.getName());
         this.npc = spawnNPC(config);
+        initializeLivingEntitiy();
         this.type = ShopType.valueOf(config.getString("ShopType"));
         List<ConfigurationSection> trades = (List<ConfigurationSection>) config.getList("Trades");
         this.trades = trades.stream().map(ShopTrade::new).collect(Collectors.toList());
         updateTradeContents();
         Arrays.fill(equipments, new ItemStack(Material.AIR));
+        TradeListener.addShop(getID() , this);
+    }
+
+    public Shop(Location location) {
+        File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
+        YamlConfiguration config = new YamlConfiguration();
+        try {
+            config.load(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        spawnNPC(config);
+        this.location = location;
+        this.npc = spawnNPC(config);
+        this.type = ShopType.TwotoOne;
+        Arrays.fill(equipments, new ItemStack(Material.AIR));
+        saveYaml();
+        TradeListener.addShop(getID() , this);
     }
 
     public void updateTradeContents() {
@@ -147,8 +169,10 @@ public class Shop {
             pages.add(new ShopGui4to4(this, getTradePageCount() + 1));
     }
 
-    public void saveYaml(File file) {
+    public void saveYaml() {
+        File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
         YamlConfiguration config = new YamlConfiguration();
+
         config.set("EntityType", npc.getType().toString());
         config.set("ShopType", type.toString());
         config.set("Trades", getTradesConfig());
@@ -185,10 +209,18 @@ public class Shop {
     }
 
     public Entity spawnNPC(YamlConfiguration config) {
-        EntityType entityType = EntityType.valueOf(config.getString("EntityType"));
-        Entity entity = location.getWorld().spawnEntity(location, entityType);
+        EntityType entityType = EntityType.valueOf(config.getString("EntityType", "Villager"));
+        Entity entity = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entityType);
+        entity.setSilent(true);
+        entity.setInvulnerable(true);
         PersistentUtil.setNMSTag(entity, "Shop", getID());
         return location.getWorld().spawnEntity(location, entityType);
+    }
+
+    public void initializeLivingEntitiy() {
+        if (!(npc instanceof LivingEntity)) return;
+        LivingEntity livnpc = (LivingEntity) npc;
+        livnpc.setAI(false);
     }
 
     public List<ConfigurationSection> getTradesConfig() {
@@ -241,12 +273,12 @@ public class Shop {
     }
 
     public boolean isAvailableShop(Player p) {
-        if(isLock() && !p.hasPermission("ris.op")) {
+        if (isLock() && !p.hasPermission("ris.op")) {
             p.sendMessage(ChatColor.RED + "現在このショップはロックされています");
             p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
             return false;
         }
-        if(isEditting()) {
+        if (isEditting()) {
             p.sendMessage(ChatColor.RED + "現在このショップは編集中です");
             p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
             return false;

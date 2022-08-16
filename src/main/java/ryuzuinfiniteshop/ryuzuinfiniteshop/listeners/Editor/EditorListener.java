@@ -1,29 +1,21 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.Editor;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.Inventory;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.TradeListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.PersistentUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ShopUtil;
-
-import java.util.ArrayList;
-import java.util.List;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.TradeListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 public class EditorListener implements Listener {
     //ショップの編集画面を開く

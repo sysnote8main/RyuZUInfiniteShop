@@ -7,8 +7,8 @@ import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +49,10 @@ public class ShopGui4to4 extends ShopTradeGui {
     }
 
     @Override
-    public ShopTrade getTrade(int slot) {
+    public int getTradeNumber(int slot) {
         int mod9 = slot % 9;
-        if (mod9 == 4) return null;
-        int tradenumber = slot / 9;
-        if (getTrades().size() - 1 <= tradenumber) return null;
-        return getTrades().get(tradenumber);
+        if (mod9 == 4) return -1;
+        return slot / 9;
     }
 
     @Override

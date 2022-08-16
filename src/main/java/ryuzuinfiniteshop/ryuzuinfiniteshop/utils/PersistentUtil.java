@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.util;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;

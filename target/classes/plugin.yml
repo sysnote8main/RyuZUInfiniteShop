@@ -3,3 +3,13 @@ version: 1.0.0
 main: ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop
 api-version: 1.13
 description: 無限にページを作成できるShopPluginです
+
+permissions:
+  ris.player:
+    default: true
+  ris.op:
+    default: op
+  ris.*:
+    children:
+      ris.op: true
+      ris.player: true

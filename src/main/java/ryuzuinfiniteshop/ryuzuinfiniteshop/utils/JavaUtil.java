@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.util;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 
 import java.util.ArrayList;
 import java.util.List;

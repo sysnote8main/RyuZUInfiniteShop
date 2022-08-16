@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listener;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,9 +18,9 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.PersistentUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 public class OpenShopListener implements Listener {
 
