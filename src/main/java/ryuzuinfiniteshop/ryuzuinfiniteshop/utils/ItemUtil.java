@@ -28,10 +28,10 @@ public class ItemUtil {
                 .filter(Objects::nonNull)
                 .filter(give::containsKey)
                 .forEach(item -> capacity.put(item, (item.getType().getMaxStackSize() - item.getAmount()) + capacity.getOrDefault(item, 0)));
-        capacity.keySet().forEach(item -> capacity.put(item, give.get(item) - capacity.get(item)));
-        int needslot = capacity.keySet().stream().mapToInt(item -> {
-            int size = capacity.get(item) / item.getType().getMaxStackSize();
-            if (capacity.get(item) % item.getType().getMaxStackSize() != 0) size++;
+        give.keySet().forEach(item -> give.put(item, give.get(item) - capacity.get(item)));
+        int needslot = give.keySet().stream().mapToInt(item -> {
+            int size = give.get(item) / item.getType().getMaxStackSize();
+            if (give.get(item) % item.getType().getMaxStackSize() != 0) size++;
             return size;
         }).sum();
         int emptyslot = (int) Arrays.stream(inventory.getContents()).filter(Objects::isNull).count();
@@ -42,10 +42,10 @@ public class ItemUtil {
     public static boolean contains(Inventory inventory, ItemStack... items) {
         if (items == null) return true;
         HashMap<ItemStack, Integer> need = new HashMap<>();
-        Arrays.stream(items).forEach(item -> need.put(item, need.getOrDefault(item, 0)));
+        Arrays.stream(items).filter(Objects::nonNull).forEach(item -> need.put(item, item.getAmount() + need.getOrDefault(item, 0)));
         HashMap<ItemStack, Integer> has = new HashMap<>();
         Arrays.stream(inventory.getContents()).filter(need::containsKey).forEach(item -> has.put(item, item.getAmount() + has.getOrDefault(item, 0)));
-        return Arrays.stream(inventory.getContents()).anyMatch(item -> has.get(item) < need.get(item));
+        return need.keySet().stream().anyMatch(item -> !has.containsKey(item) || has.get(item) < need.get(item));
     }
 
     //アイテムを含んでいるか調べる
