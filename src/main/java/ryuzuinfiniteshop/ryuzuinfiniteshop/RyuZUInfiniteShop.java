@@ -2,7 +2,6 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop;
 
 import com.github.ryuzu.ryuzucommandsgenerator.RyuZUCommandsGenerator;
 import org.bukkit.ChatColor;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.commands.SpawnCommand;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.CancelDamageNPC;
@@ -10,15 +9,10 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors.ChangeDisplayNameLi
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors.ChangeEquipmentListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors.EditMainPageListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors.EditTradePageListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.CancelItemMoveListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.CancelItemMoveListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.OpenShopListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ClassUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
-
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.stream.Collectors;
 
 public final class RyuZUInfiniteShop extends JavaPlugin {
     private static RyuZUInfiniteShop plugin;

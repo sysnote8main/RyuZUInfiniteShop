@@ -35,6 +35,9 @@ public class Shop {
     private List<ShopEditorMainPage> editors = new ArrayList<>();
     private List<ShopTradeGui> pages = new ArrayList<>();
     public ItemStack[] equipments = new ItemStack[6];
+    public String diplayname;
+    public boolean invisible = false;
+
 
     public Shop(File file) {
         YamlConfiguration config = new YamlConfiguration();
@@ -317,12 +320,12 @@ public class Shop {
     public boolean isAvailableShop(Player p) {
         if (isLock() && !p.hasPermission("ris.op")) {
             p.sendMessage(ChatColor.RED + "現在このショップはロックされています");
-            p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
+            SoundUtil.playFailSound(p);
             return false;
         }
         if (isEditting()) {
             p.sendMessage(ChatColor.RED + "現在このショップは編集中です");
-            p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
+            SoundUtil.playFailSound(p);
             return false;
         }
         return true;

@@ -6,6 +6,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.PlayerInventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
@@ -24,6 +25,7 @@ public class ShopUtil {
 
     public static boolean isShopInventory(Inventory inv) {
         if (inv == null) return false;
+        if (inv instanceof PlayerInventory) return false;
         InventoryHolder holder = inv.getHolder();
         if (holder == null) return false;
         if (!(holder instanceof ShopHolder)) return false;
@@ -65,17 +67,6 @@ public class ShopUtil {
     public static boolean isTradeMode(Inventory inv) {
         if (!isShopInventory(inv)) return false;
         return ((ShopHolder) inv.getHolder()).getShopMode().equals(ShopHolder.ShopMode.Trade);
-    }
-
-    public static void playClickEffect(InventoryClickEvent event) {
-        if (!isShopInventory(event)) return;
-        Player p = (Player) event.getWhoClicked();
-
-        //音を出す
-        p.playSound(p.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 2);
-
-        //イベントをキャンセル
-        event.setCancelled(true);
     }
 
     public static boolean isAvailableTrade(Inventory inv, int slot, Shop.ShopType type) {

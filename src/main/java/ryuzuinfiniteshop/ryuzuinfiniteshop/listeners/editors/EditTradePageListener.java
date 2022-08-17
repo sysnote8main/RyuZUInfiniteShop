@@ -1,8 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,8 +15,8 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +41,7 @@ public class EditTradePageListener implements Listener {
         List<ShopTrade> emptytrades = new ArrayList<>();
         for (int i = 0; i < 9 * 6; i += shop.getShopType().equals(Shop.ShopType.TwotoOne) ? 4 : 9) {
             if (shop.getShopType().equals(Shop.ShopType.TwotoOne) && i % 9 == 4) i++;
-            ShopTrade trade = ((ShopTradeGui) gui).getTrade(((ShopTradeGui) gui).getTradeNumber(i));
+            ShopTrade trade = ((ShopTradeGui) gui).getTradeFromSlot(i);
             boolean available = ShopUtil.isAvailableTrade(inv, i, shop.getShopType());
             if (trade == null && available)
                 shop.addTrade(inv, i);
@@ -61,7 +59,7 @@ public class EditTradePageListener implements Listener {
         Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> p.openInventory(shop.getEditor(gui.getPage() / 18 + 1).getInventory(ShopHolder.ShopMode.Edit)), 1L);
 
         //音を出す
-        p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_CLOSE, 1, 2);
+        SoundUtil.playCloseShopSound(p);
     }
 
     //ディスプレイをクリックしたときイベントをキャンセルする
@@ -74,7 +72,6 @@ public class EditTradePageListener implements Listener {
         if (!ShopUtil.isEditMode(event)) return;
         int slot = event.getSlot();
         if (!((ShopTradeGui) gui).isDisplayItem(slot)) return;
-
         //イベントキャンセル
         event.setCancelled(true);
     }
@@ -87,6 +84,7 @@ public class EditTradePageListener implements Listener {
         if (gui == null) return;
         if (!(gui instanceof ShopEditorMainPage)) return;
         if (!ShopUtil.isEditMode(event)) return;
+        if (event.getClickedInventory() == null) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
@@ -110,7 +108,7 @@ public class EditTradePageListener implements Listener {
         } else
             p.openInventory(shop.getPage(editormainpage.getTradePageNumber(slot)).getInventory(ShopHolder.ShopMode.Edit));
 
-        //GUI操作処理
-        ShopUtil.playClickEffect(event);
+        //音を出す
+        SoundUtil.playClickShopSound(p);
     }
 }

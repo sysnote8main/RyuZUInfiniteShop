@@ -21,6 +21,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 
 public class OpenShopListener implements Listener {
     //ショップを開く
@@ -77,9 +78,9 @@ public class OpenShopListener implements Listener {
                 p.openInventory(shop.getPage(shopholder.getPage() + 1).getInventory(mode));
         }
         if (fail) {
-            p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+            SoundUtil.playFailSound(p);
         } else {
-            p.playSound(p.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 2);
+            SoundUtil.playClickShopSound(p);
             if(mode.equals(ShopHolder.ShopMode.Trade)) setTradeStatus(p, shopholder, shop);
         }
 
@@ -123,8 +124,7 @@ public class OpenShopListener implements Listener {
             int baseslot = shop.getShopType().equals(Shop.ShopType.TwotoOne) ?
                     (i / 2) * 9 + (i % 2 == 1 ? 5 : 0) :
                     i * 9;
-            int tradenumber = gui.getTradeNumber(baseslot) + (page - 1) * shop.getLimitSize();
-            ShopTrade trade = shop.getPage(page).getTrade(tradenumber);
+            ShopTrade trade = gui.getTradeFromSlot(baseslot);
             ShopTrade.Result result = trade.getResult(p);
             switch (result){
                 case Lack:

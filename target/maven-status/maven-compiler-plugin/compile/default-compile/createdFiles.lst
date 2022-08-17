@@ -10,6 +10,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\gui\ShopGui.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\Shop$ShopType.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\LocationUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\PersistentUtil.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\CancelItemMoveListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeEquipmentListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\gui\ShopEditorMainPage.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\CancelDamageNPC.class
@@ -29,7 +30,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeDisplayNameListener.
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopHolder$ShopMode.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\schedulers\RyuZUBaseTask.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\trades\TradeListener.class
-ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\trades\CancelItemMoveListener.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\utils\SoundUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\FileUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopTrade$Result.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ClassUtil.class

@@ -52,10 +52,8 @@ public class ShopGui4to4 extends ShopTradeGui {
     }
 
     @Override
-    public int getTradeNumber(int slot) {
-        int mod9 = slot % 9;
-        if (mod9 == 4) return -1;
-        return slot / 9;
+    public ShopTrade getTradeFromSlot(int slot) {
+        return getTrade(slot / 9 + 1);
     }
 
     @Override

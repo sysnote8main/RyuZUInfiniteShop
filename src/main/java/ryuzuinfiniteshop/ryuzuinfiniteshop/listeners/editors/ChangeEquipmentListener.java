@@ -1,6 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +15,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 
 //ショップのNPCの装備を変更する
 public class ChangeEquipmentListener implements Listener {
@@ -36,19 +38,18 @@ public class ChangeEquipmentListener implements Listener {
 
         //装備を変更
         if ((type.isRightClick() || type.isLeftClick()) && !type.isShiftClick()) {
-            if (event.getCursor() == null || event.getCursor().getType().equals(Material.AIR)) {
-                if (shop.getEquipmentItem(EquipmentUtil.getEquipmentSlotNumber(EquipmentUtil.getEquipmentSlot(slot))) == null) {
-                    event.setCancelled(true);
+            if (ItemUtil.isAir(event.getCursor())) {
+                if (ItemUtil.isAir(shop.getEquipmentItem(EquipmentUtil.getEquipmentSlotNumber(EquipmentUtil.getEquipmentSlot(slot)))))
                     return;
-                } else
+                 else
                     event.setCurrentItem(EquipmentUtil.getEquipmentDisplayItem(EquipmentUtil.getEquipmentSlot(slot)));
             } else
                 event.setCurrentItem(ItemUtil.getOneItemStack(event.getCursor()));
 
             shop.setEquipmentItem(ItemUtil.getOneItemStack(event.getCursor()), EquipmentUtil.getEquipmentSlotNumber(EquipmentUtil.getEquipmentSlot(slot)));
 
-            //GUI操作処理
-            ShopUtil.playClickEffect(event);
+            //音を出す
+            SoundUtil.playClickShopSound(p);
         }
     }
 }

@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class ItemUtil {
     public static boolean contains(Inventory inventory, ItemStack... items) {
         if (items == null) return true;
         HashMap<ItemStack, Integer> need = new HashMap<>();
-        Arrays.stream(items).filter(Objects::nonNull).forEach(item -> need.put(item, containsCount(inventory.getContents() , item)));
+        Arrays.stream(items).filter(Objects::nonNull).forEach(item -> need.put(item, containsCount(items , item)));
         HashMap<ItemStack, Integer> has = new HashMap<>();
         if (need.keySet().stream().anyMatch(item -> Arrays.stream(getContents(inventory)).noneMatch(item::isSimilar))) return false;
         need.keySet().forEach(item -> has.put(item, containsCount(getContents(inventory) , item)));
@@ -57,6 +58,10 @@ public class ItemUtil {
         ItemStack copy = new ItemStack(item);
         copy.setAmount(1);
         return copy;
+    }
+
+    public static boolean isAir(@Nullable ItemStack item) {
+        return item == null || item.getType().equals(Material.AIR);
     }
 
     //アイテムを含んでいるか調べる

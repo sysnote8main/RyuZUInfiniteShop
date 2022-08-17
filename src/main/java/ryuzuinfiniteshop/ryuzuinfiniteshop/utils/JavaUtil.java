@@ -1,5 +1,8 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,6 @@ public class JavaUtil {
     }
 
     public static <T> T getOrDefault(@Nullable T obj, T defaultobj) {
-        return obj == null ? defaultobj : obj;
+        return obj == null || (obj instanceof ItemStack && ((ItemStack)obj).getType().equals(Material.AIR)) ? defaultobj : obj;
     }
 }

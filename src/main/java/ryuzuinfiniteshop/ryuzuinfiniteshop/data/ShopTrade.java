@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,14 +99,14 @@ public class ShopTrade {
         switch (result) {
             case Lack:
                 p.sendMessage(ChatColor.RED + "アイテムが足りません");
-                p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+                SoundUtil.playFailSound(p);
                 break;
             case Full:
                 p.sendMessage(ChatColor.RED + "インベントリに十分な空きがありません");
-                p.playSound(p.getLocation(), Sound.BLOCK_GLASS_BREAK, 0.5f, 2);
+                SoundUtil.playCautionSound(p);
                 break;
             case Success:
-                p.playSound(p.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 2);
+                SoundUtil.playClickShopSound(p);
                 break;
         }
     }

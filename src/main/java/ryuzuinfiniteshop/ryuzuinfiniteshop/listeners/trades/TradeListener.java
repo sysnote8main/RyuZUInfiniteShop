@@ -2,7 +2,6 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +10,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.LocationUtil;
@@ -66,9 +66,9 @@ public class TradeListener implements Listener {
         ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
         Shop shop = shopholder.getShop();
         int slot = event.getSlot();
-        int tradenumber = ((ShopTradeGui) gui).getTradeNumber(slot);
+        ShopTrade trade = ((ShopTradeGui) gui).getTradeFromSlot(slot);
 
-        if(shop.getPage(shopholder.getPage()).getTrade(tradenumber) == null) return;
+        if(trade == null) return;
 
         //取引
         int times = 1;
@@ -81,7 +81,7 @@ public class TradeListener implements Listener {
                 times = 100;
                 break;
         }
-        shop.getPage(shopholder.getPage()).getTrade(tradenumber).trade(p, times);
+        trade.trade(p, times);
 
         //イベントキャンセル
         event.setCancelled(true);
