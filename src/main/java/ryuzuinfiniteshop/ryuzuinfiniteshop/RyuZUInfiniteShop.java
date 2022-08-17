@@ -4,13 +4,13 @@ import com.github.ryuzu.ryuzucommandsgenerator.RyuZUCommandsGenerator;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.commands.SpawnCommand;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.CancelItemMoveListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor.ChangeDisplayNameListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor.ChangeEquipmentListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor.EditTradePageListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor.EditorListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.OpenShopListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.TradeListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.CancelItemMoveListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors.ChangeDisplayNameListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors.ChangeEquipmentListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors.EditTradePageListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors.EditMainPageListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.OpenShopListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 public final class RyuZUInfiniteShop extends JavaPlugin {
@@ -41,7 +41,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
     public static void registerEvents() {
         getPlugin().getServer().getPluginManager().registerEvents(new TradeListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new OpenShopListener(), getPlugin());
-        getPlugin().getServer().getPluginManager().registerEvents(new EditorListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new EditMainPageListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new EditTradePageListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeDisplayNameListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeEquipmentListener(), getPlugin());

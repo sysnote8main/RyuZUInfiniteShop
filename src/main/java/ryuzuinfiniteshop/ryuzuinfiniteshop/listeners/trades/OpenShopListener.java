@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

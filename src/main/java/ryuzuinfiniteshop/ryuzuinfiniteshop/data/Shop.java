@@ -13,15 +13,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui2to1;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui4to4;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.TradeListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.FileUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.LocationUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.*;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,15 +43,25 @@ public class Shop {
             e.printStackTrace();
         }
         this.location = LocationUtil.toLocationFromString(file.getName().replace(".yml", ""));
-        spawnNPC(config);
+        spawnNPC(EntityType.valueOf(config.getString("EntityType", "VILLAGER")));
         this.type = ShopType.valueOf(config.getString("ShopType"));
+        this.lock = config.getBoolean("Lock");
         this.trades = config.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, ArrayList<ItemStack>>) tradeconfig)).collect(Collectors.toList());
         updateTradeContents();
-        Arrays.fill(equipments, new ItemStack(Material.AIR));
+        this.equipments = ((ArrayList<ItemStack>) config.getList("Trades")).toArray(new ItemStack[0]);
         TradeListener.addShop(getID(), this);
     }
 
     public Shop(Location location) {
+        initializeShop(location);
+    }
+
+    public Shop(Location location , EntityType entitytype) {
+        initializeShop(location,entitytype);
+        saveYaml();
+    }
+
+    public void initializeShop(Location location,EntityType entitytype) {
         File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
         YamlConfiguration config = new YamlConfiguration();
         try {
@@ -67,9 +71,24 @@ public class Shop {
         }
         this.location = location;
         this.type = ShopType.TwotoOne;
-        spawnNPC(config);
+        spawnNPC(entitytype);
         Arrays.fill(equipments, new ItemStack(Material.AIR));
-        saveYaml();
+        createFirstPage();
+        TradeListener.addShop(getID(), this);
+    }
+
+    public void initializeShop(Location location) {
+        File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
+        YamlConfiguration config = new YamlConfiguration();
+        try {
+            config.load(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        this.location = location;
+        this.type = ShopType.TwotoOne;
+        spawnNPC(EntityType.valueOf(config.getString("EntityType", "VILLAGER")));
+        Arrays.fill(equipments, new ItemStack(Material.AIR));
         createFirstPage();
         TradeListener.addShop(getID(), this);
     }
@@ -210,6 +229,8 @@ public class Shop {
 
         config.set("EntityType", npc.getType().toString());
         config.set("ShopType", type.toString());
+        config.set("Equipments", equipments);
+        config.set("Lock", lock);
         config.set("Trades", getTradesConfig());
 
         try {
@@ -243,9 +264,9 @@ public class Shop {
         return this.npc;
     }
 
-    public void spawnNPC(YamlConfiguration config) {
-        EntityType entityType = EntityType.valueOf(config.getString("EntityType", "VILLAGER"));
-        Entity npc = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entityType);
+    public void spawnNPC(EntityType entitytype) {
+        if(npc != null) npc.remove();
+        Entity npc = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entitytype);
         this.npc = npc;
         npc.setSilent(true);
         npc.setInvulnerable(true);

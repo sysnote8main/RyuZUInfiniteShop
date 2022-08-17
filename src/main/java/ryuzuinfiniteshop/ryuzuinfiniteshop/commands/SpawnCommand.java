@@ -3,7 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.commands;
 import com.github.ryuzu.ryuzucommandsgenerator.CommandsGenerator;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.TradeListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
 
 public class SpawnCommand {
     public static void registerCommand() {

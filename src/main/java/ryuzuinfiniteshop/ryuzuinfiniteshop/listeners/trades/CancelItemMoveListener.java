@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,7 +20,7 @@ public class CancelItemMoveListener implements Listener {
         Inventory inv = event.getView().getTopInventory();
         ShopGui gui = ShopUtil.getShopGui(inv);
         if (gui == null) return;
-        if (ShopUtil.isEditMode(inv)) return;
+        if (!ShopUtil.isTradeMode(inv)) return;
 
         //キャンセルイベント
         event.setCancelled(true);

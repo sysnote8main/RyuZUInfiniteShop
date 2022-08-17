@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.utils.scheduler;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.utils.schedulers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,7 +32,11 @@ public class ChangeEquipmentListener implements Listener {
 
         //装備を変更
         if((type.isRightClick() || type.isLeftClick()) && !type.isShiftClick()) {
-            event.setCurrentItem(event.getCursor());
+            if(event.getCursor() == null) {
+                event.setCurrentItem(shop.getEquipmentDisplayItem(ShopUtil.getEquipmentsSlot().get(slot)));
+            } else {
+                event.setCurrentItem(event.getCursor());
+            }
             shop.setEquipmentItem(event.getCursor() , ShopUtil.getEquipmentsSlot().get(slot));
 
             //GUI操作処理

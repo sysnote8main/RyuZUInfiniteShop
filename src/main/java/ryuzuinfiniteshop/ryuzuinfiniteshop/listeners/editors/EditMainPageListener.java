@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors;
 
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -13,12 +13,11 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.TradeListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
-public class EditorListener implements Listener {
+public class EditMainPageListener implements Listener {
     //ショップの編集画面を開く
     @EventHandler
     public void openShopEditor(PlayerInteractEntityEvent event) {
@@ -35,16 +34,14 @@ public class EditorListener implements Listener {
 
     //エディターをクリックしたとき、イベントをキャンセルする
     @EventHandler
-    public void changeDisplay(InventoryClickEvent event) {
+    public void cancelAffectItem(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
         ShopGui gui = ShopUtil.getShopGui(event);
         if (gui == null) return;
         if(!(gui instanceof ShopEditorMainPage)) return;
         if (!ShopUtil.isEditMode(event)) return;
-
-        //必要なデータを取得
-        int slot = event.getSlot();
-        if (slot != 5 * 9 + 8) return;
+        if (event.getClickedInventory() == null) return;
+        if (!event.getClickedInventory().equals(event.getView().getTopInventory())) return;
 
         event.setCancelled(true);
     }

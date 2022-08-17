@@ -1,6 +1,8 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,6 +17,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 import java.util.ArrayList;
@@ -88,18 +91,24 @@ public class EditTradePageListener implements Listener {
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
+        ShopEditorMainPage editormainpage = (ShopEditorMainPage) gui;
         Shop shop = shopholder.getShop();
         int slot = event.getSlot();
-        if (slot < 0 || 17 < slot) return;
-        if (slot >= (shop.getTradePageCount() - (shopholder.getPage() - 1) * 18) + (shop.ableCreateNewPage() ? 1 : 0))
-            return;
+
+        int lastslot = editormainpage.getTradeLastSlotNumber();
+        int newslot = editormainpage.getTradeNewSlotNumber();
+        int page = editormainpage.getTradePageNumber(slot);
+
+        //存在するページなのかチェック
+        if(page == 0) return;
+        if (slot > lastslot && slot != newslot) return;
 
         //取引編集ページを開く
-        if (shop.ableCreateNewPage() && slot + 1 == shop.getTradePageCountFromTradesCount()) {
+        if (slot == newslot) {
             shop.createTradeNewPage();
-            p.openInventory(shop.getPage(slot + 1).getInventory(ShopHolder.ShopMode.Edit));
+            p.openInventory(shop.getPage(page).getInventory(ShopHolder.ShopMode.Edit));
         } else
-            p.openInventory(shop.getPage(slot + (shopholder.getPage() - 1) * 18 + 1).getInventory(ShopHolder.ShopMode.Edit));
+            p.openInventory(shop.getPage(editormainpage.getTradePageNumber(slot)).getInventory(ShopHolder.ShopMode.Edit));
 
         //GUI操作処理
         ShopUtil.playClickEffect(event);

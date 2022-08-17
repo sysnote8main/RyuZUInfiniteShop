@@ -1,9 +1,10 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.Editor;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -12,6 +13,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 import java.util.HashMap;
@@ -49,7 +51,7 @@ public class ChangeDisplayNameListener implements Listener {
         ShopUtil.playClickEffect(event);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void changeDisplay(AsyncPlayerChatEvent event) {
         Player p = event.getPlayer();
         if (!namingTime.containsKey(p.getUniqueId())) return;
@@ -61,6 +63,8 @@ public class ChangeDisplayNameListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "名前が設定されました");
             p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
         }
+        Shop shop = TradeListener.getShop(namingShop.get(p.getUniqueId()));
+        shop.getNPC().setCustomName(event.getMessage());
         namingTime.remove(p.getUniqueId());
         namingShop.remove(p.getUniqueId());
         event.setCancelled(true);
