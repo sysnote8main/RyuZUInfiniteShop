@@ -8,8 +8,8 @@ import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 import java.util.List;
 
@@ -44,15 +44,15 @@ public class ShopEditorMainPage extends ShopGui {
     //エディターに装備を置く
     private void setEquipment(Inventory inv) {
         if (getShop().getNPC() instanceof LivingEntity) {
-            for (Integer slot : ShopUtil.getEquipmentsSlot().keySet()) {
-                inv.setItem(slot, getShop().getEquipmentDisplayItem(ShopUtil.getEquipmentsSlot().get(slot)));
+            for (Integer slot : EquipmentUtil.getEquipmentsSlot().keySet()) {
+                inv.setItem(slot, getShop().getEquipmentDisplayItem(EquipmentUtil.getEquipmentSlot(slot)));
             }
         }
     }
 
     private void setTradesPage(Inventory inv) {
-        int last = getTradeLastSlotNumber();
-        for (int i = 0; i < last; i++) {
+        int lastslot = getTradeLastSlotNumber();
+        for (int i = 0; i <= lastslot; i++) {
             inv.setItem(i, ItemUtil.getNamedItem(Material.LIME_STAINED_GLASS_PANE, ChatColor.GREEN + "ページ" + getTradePageNumber(i)));
         }
         int newslot = getTradeNewSlotNumber();
@@ -65,13 +65,17 @@ public class ShopEditorMainPage extends ShopGui {
         inv.setItem(5 * 9 + 8, ItemUtil.getNamedItem(Material.NAME_TAG, diplayname));
     }
 
+    public int getTradePageRawNumber(int slot) {
+        return slot + 1 + (getPage() - 1) * 18;
+    }
+
     public int getTradePageNumber(int slot) {
-        int page = slot + 1 + (getPage() - 1) * 18;
+        int page = getTradePageRawNumber(slot);
         return page <= getShop().getTradePageCount() ? page : 0;
     }
 
     public int getTradeLastSlotNumber() {
-        return Math.min(17, getShop().getTradePageCount() - (getPage() - 1) * 18);
+        return Math.min(17, getShop().getTradePageCount() - 1 - (getPage() - 1) * 18);
     }
 
     public int getTradeNewSlotNumber() {

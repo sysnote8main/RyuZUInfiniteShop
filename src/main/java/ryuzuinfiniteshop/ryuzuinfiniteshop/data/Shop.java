@@ -11,6 +11,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.*;
@@ -48,7 +49,8 @@ public class Shop {
         this.lock = config.getBoolean("Lock");
         this.trades = config.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, ArrayList<ItemStack>>) tradeconfig)).collect(Collectors.toList());
         updateTradeContents();
-        this.equipments = ((ArrayList<ItemStack>) config.getList("Trades")).toArray(new ItemStack[0]);
+        this.equipments = ((ArrayList<ItemStack>) config.getList("Equipments")).toArray(new ItemStack[0]);
+        updateEquipments();
         TradeListener.addShop(getID(), this);
     }
 
@@ -56,12 +58,12 @@ public class Shop {
         initializeShop(location);
     }
 
-    public Shop(Location location , EntityType entitytype) {
-        initializeShop(location,entitytype);
+    public Shop(Location location, EntityType entitytype) {
+        initializeShop(location, entitytype);
         saveYaml();
     }
 
-    public void initializeShop(Location location,EntityType entitytype) {
+    public void initializeShop(Location location, EntityType entitytype) {
         File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
         YamlConfiguration config = new YamlConfiguration();
         try {
@@ -229,7 +231,7 @@ public class Shop {
 
         config.set("EntityType", npc.getType().toString());
         config.set("ShopType", type.toString());
-        config.set("Equipments", equipments);
+        config.set("Equipments", Arrays.stream(equipments).map(equipment -> JavaUtil.getOrDefault(equipment , new ItemStack(Material.AIR))).collect(Collectors.toList()));
         config.set("Lock", lock);
         config.set("Trades", getTradesConfig());
 
@@ -265,7 +267,7 @@ public class Shop {
     }
 
     public void spawnNPC(EntityType entitytype) {
-        if(npc != null) npc.remove();
+        if (npc != null) npc.remove();
         Entity npc = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entitytype);
         this.npc = npc;
         npc.setSilent(true);
@@ -293,36 +295,19 @@ public class Shop {
         updateEquipments();
     }
 
-    public ItemStack getEquipmentDisplayItem(int slot) {
-        String name = null;
-        switch (slot) {
-            case 0:
-                name = "メインハンド";
-                break;
-            case 1:
-                name = "ヘルメット";
-                break;
-            case 2:
-                name = "チェストプレート";
-                break;
-            case 3:
-                name = "レギンス";
-                break;
-            case 4:
-                name = "ブーツ";
-                break;
-            case 5:
-                name = "オフハンド";
-                break;
-        }
-
-        return getEquipmentItem(slot).getType().equals(Material.AIR) ?
-                ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, name) :
-                getEquipmentItem(slot);
+    public ItemStack getEquipmentDisplayItem(EquipmentSlot slot) {
+        return JavaUtil.getOrDefault(getEquipmentItem(EquipmentUtil.getEquipmentSlotNumber(slot)), EquipmentUtil.getEquipmentDisplayItem(slot));
     }
 
     public void updateEquipments() {
-        if (npc instanceof LivingEntity) ((LivingEntity) npc).getEquipment().setArmorContents(equipments);
+        if (npc instanceof LivingEntity) {
+            LivingEntity livnpc = ((LivingEntity) npc);
+            for (Integer i : EquipmentUtil.getEquipmentsSlot().keySet()) {
+                EquipmentSlot slot = EquipmentUtil.getEquipmentSlot(i);
+                int number = EquipmentUtil.getEquipmentSlotNumber(slot);
+                livnpc.getEquipment().setItem(slot, equipments[number]);
+            }
+        }
     }
 
     public boolean isAvailableShop() {

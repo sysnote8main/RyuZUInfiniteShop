@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -39,6 +40,15 @@ public class TradeListener implements Listener {
             return;
         }
         new Shop(loc);
+    }
+
+    public static void createNewShop(Player p , EntityType entitytype) {
+        Location loc = p.getLocation();
+        if (shops.containsKey(LocationUtil.toStringFromLocation(loc))) {
+            p.sendMessage(ChatColor.RED + "既にその場所にはショップが存在します");
+            return;
+        }
+        new Shop(loc , entitytype);
     }
 
     //ショップで購入する

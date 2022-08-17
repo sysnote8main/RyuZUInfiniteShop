@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
@@ -12,20 +13,8 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
 
 import java.io.File;
-import java.util.HashMap;
 
 public class ShopUtil {
-    private static final HashMap<Integer, Integer> equipmentslots = new HashMap<>();
-
-    static {
-        equipmentslots.put(2 * 9 + 2, 1);
-        equipmentslots.put(3 * 9 + 2, 2);
-        equipmentslots.put(4 * 9 + 2, 3);
-        equipmentslots.put(5 * 9 + 2, 4);
-        equipmentslots.put(3 * 9 + 1, 0);
-        equipmentslots.put(3 * 9 + 3, 5);
-    }
-
     public static boolean isShopInventory(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return false;
         Player p = (Player) event.getWhoClicked();
@@ -89,10 +78,6 @@ public class ShopUtil {
         event.setCancelled(true);
     }
 
-    public static HashMap<Integer, Integer> getEquipmentsSlot() {
-        return equipmentslots;
-    }
-
     public static boolean isAvailableTrade(Inventory inv, int slot, Shop.ShopType type) {
         if (type.equals(Shop.ShopType.TwotoOne))
             return ItemUtil.getItemSet(inv, slot, 2).length != 0 && inv.getItem(slot + 3) != null;
@@ -106,7 +91,7 @@ public class ShopUtil {
         File[] ItemFiles = directory.listFiles();
         if(ItemFiles == null) return;
         for (File f : ItemFiles) {
-            new Shop(f);
+            if(f.getName().endsWith(".yml")) new Shop(f);
         }
     }
 

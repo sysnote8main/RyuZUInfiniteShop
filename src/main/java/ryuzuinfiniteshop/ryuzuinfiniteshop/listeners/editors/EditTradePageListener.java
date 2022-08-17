@@ -97,7 +97,7 @@ public class EditTradePageListener implements Listener {
 
         int lastslot = editormainpage.getTradeLastSlotNumber();
         int newslot = editormainpage.getTradeNewSlotNumber();
-        int page = editormainpage.getTradePageNumber(slot);
+        int page = editormainpage.getTradePageRawNumber(slot);
 
         //存在するページなのかチェック
         if(page == 0) return;

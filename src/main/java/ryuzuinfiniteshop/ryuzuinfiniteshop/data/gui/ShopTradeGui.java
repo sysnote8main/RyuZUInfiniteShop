@@ -13,7 +13,7 @@ public abstract class ShopTradeGui extends ShopGui {
 
     public ShopTradeGui(Shop shop, int page) {
         super(shop, page);
-        if(shop.getTrades().size() != 0) setTrades();
+        if(!(!existTrades() && shop.getTradePageCount() + 1 == getPage() && shop.getTrades().size() % shop.getLimitSize() == 0)) setTrades();
     }
 
     public List<ShopTrade> getTrades() {
@@ -30,8 +30,8 @@ public abstract class ShopTradeGui extends ShopGui {
         this.trades = JavaUtil.splitList(getShop().getTrades() , getShop().getLimitSize())[getPage() - 1];
     }
 
-    public boolean existTrade() {
-        return getTrades().size() > (getPage() - 1) * getShop().getLimitSize();
+    public boolean existTrades() {
+        return getTrades().size() > (getPage() - 2) * getShop().getLimitSize();
     }
 
     public abstract int getTradeNumber(int slot);

@@ -2,7 +2,9 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.commands;
 
 import com.github.ryuzu.ryuzucommandsgenerator.CommandsGenerator;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
 
 public class SpawnCommand {
@@ -31,7 +33,31 @@ public class SpawnCommand {
                         data.sendMessage(ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                         return false;
                     }
-                    return true;
+                    return data.getArgs().length == 1;
+                }
+        );
+
+        CommandsGenerator.registerCommand("ris.spawn",
+                data -> {
+                    TradeListener.createNewShop((Player) data.getSender() , EntityType.valueOf(data.getArgs()[1].toUpperCase()));
+                    data.sendMessage(ChatColor.GREEN + "ショップを設置しました");
+                },
+                "ris.op",
+                data -> {
+                    try {
+                        EntityType.valueOf(data.getArgs()[1].toUpperCase());
+                        return true;
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("有効なEntityTypeを入力して下さい");
+                        return false;
+                    }
+                },
+                data -> {
+                    if (!(data.getSender() instanceof Player)) {
+                        data.sendMessage(ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
+                        return false;
+                    }
+                    return data.getArgs().length != 1;
                 }
         );
     }

@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,5 +24,9 @@ public class JavaUtil {
         }
 
         return splitted;
+    }
+
+    public static <T> T getOrDefault(@Nullable T obj, T defaultobj) {
+        return obj == null ? defaultobj : obj;
     }
 }

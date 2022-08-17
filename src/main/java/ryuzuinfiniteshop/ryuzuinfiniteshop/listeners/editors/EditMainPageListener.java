@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
@@ -27,6 +28,7 @@ public class EditMainPageListener implements Listener {
         String id = PersistentUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;
         Shop shop = TradeListener.getShop(id);
+        if (shop.isEditting()) return;
         p.openInventory(shop.getEditor(1).getInventory(ShopHolder.ShopMode.Edit));
 
         shop.setEditting(true);
@@ -42,6 +44,19 @@ public class EditMainPageListener implements Listener {
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
         if (!event.getClickedInventory().equals(event.getView().getTopInventory())) return;
+
+        event.setCancelled(true);
+    }
+
+    //エディターにアイテムを入れることを阻止する
+    @EventHandler
+    public void cancelAffectItem(InventoryDragEvent event) {
+        //インベントリがショップなのかチェック
+        ShopGui gui = ShopUtil.getShopGui(event.getInventory());
+        if (gui == null) return;
+        if(!(gui instanceof ShopEditorMainPage)) return;
+        if(event.getInventory().equals(event.getView().getBottomInventory())) return;
+        if (!ShopUtil.isEditMode(event.getInventory())) return;
 
         event.setCancelled(true);
     }

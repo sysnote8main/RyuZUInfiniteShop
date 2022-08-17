@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
@@ -22,7 +23,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 public class OpenShopListener implements Listener {
-
     //ショップを開く
     @EventHandler
     public void openShop(PlayerInteractEntityEvent event) {
@@ -46,15 +46,15 @@ public class OpenShopListener implements Listener {
         //インベントリがショップなのかチェック
         ShopGui gui = ShopUtil.getShopGui(event);
         if (gui == null) return;
-        if (!(gui instanceof ShopTradeGui)) return;
-        if (!ShopUtil.isTradeMode(event)) return;
         if (event.getClickedInventory() != null) return;
+        if (!ShopUtil.isTradeMode(event)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
         ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
         Shop shop = shopholder.getShop();
+        ShopHolder.ShopMode mode = shopholder.getShopMode();
 
         //ページ切り替え
         boolean fail = false;
@@ -62,23 +62,29 @@ public class OpenShopListener implements Listener {
             if (shop.getPage(shopholder.getPage() - 1) == null)
                 fail = true;
             else
-                p.openInventory(shop.getPage(shopholder.getPage() - 1).getInventory(ShopHolder.ShopMode.Trade));
+                p.openInventory(shop.getPage(shopholder.getPage() - 1).getInventory(mode));
         }
         if (type.isRightClick()) {
-            if (shop.getPage(shopholder.getPage() + 1) == null)
+            if (shop.getPage(shopholder.getPage() + 1) == null) {
                 fail = true;
+                if(gui instanceof ShopEditorMainPage && shop.ableCreateNewPage()) {
+                    shop.createTradeNewPage();
+                    p.openInventory(shop.getPage(shopholder.getPage() + 1).getInventory(mode));
+                    fail = false;
+                }
+            }
             else
-                p.openInventory(shop.getPage(shopholder.getPage() + 1).getInventory(ShopHolder.ShopMode.Trade));
+                p.openInventory(shop.getPage(shopholder.getPage() + 1).getInventory(mode));
         }
         if (fail) {
             p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
         } else {
             p.playSound(p.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 2);
-            setTradeStatus(p, shopholder, shop);
+            if(mode.equals(ShopHolder.ShopMode.Trade)) setTradeStatus(p, shopholder, shop);
         }
 
-        //GUI操作処理
-        ShopUtil.playClickEffect(event);
+        //イベントキャンセル
+        event.setCancelled(true);
     }
 
     //ショップのステータスの更新
@@ -106,18 +112,18 @@ public class OpenShopListener implements Listener {
     public void setTradeStatus(Player p, ShopHolder holder, Shop shop) {
         int page = holder.getPage();
         Inventory inv = p.getOpenInventory().getTopInventory();
-        ShopGui gui = ShopUtil.getShopGui(inv);
+        ShopTradeGui gui = (ShopTradeGui) ShopUtil.getShopGui(inv);
 
         ItemStack status1 = ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "購入可能");
         ItemStack status2 = ItemUtil.getNamedItem(Material.RED_STAINED_GLASS_PANE, ChatColor.RED + "アイテムが足りません");
         ItemStack status3 = ItemUtil.getNamedItem(Material.YELLOW_STAINED_GLASS_PANE, ChatColor.YELLOW + "インベントリに十分な空きがありません");
 
         int addslot = shop.getShopType().equals(Shop.ShopType.TwotoOne) ? 2 : 4;
-        for (int i = 0; i < shop.getPage(page).getTrades().size(); i++) {
+        for (int i = 0; i < gui.getTrades().size(); i++) {
             int baseslot = shop.getShopType().equals(Shop.ShopType.TwotoOne) ?
                     (i / 2) * 9 + (i % 2 == 1 ? 5 : 0) :
                     i * 9;
-            int tradenumber = ((ShopTradeGui) gui).getTradeNumber(baseslot);
+            int tradenumber = gui.getTradeNumber(baseslot) + (page - 1) * shop.getLimitSize();
             ShopTrade trade = shop.getPage(page).getTrade(tradenumber);
             ShopTrade.Result result = trade.getResult(p);
             switch (result){

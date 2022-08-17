@@ -1,8 +1,10 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
@@ -14,7 +16,7 @@ public class ItemUtil {
         if (inventory.firstEmpty() != -1) return true;
         if (item == null) return true;
         int stackSize = item.getType().getMaxStackSize();
-        int sum = Arrays.stream(inventory.getContents()).filter(Objects::nonNull).filter(i -> i.isSimilar(item)).mapToInt(i -> stackSize - i.getAmount()).sum();
+        int sum = Arrays.stream(getContents(inventory)).filter(Objects::nonNull).filter(i -> i.isSimilar(item)).mapToInt(i -> stackSize - i.getAmount()).sum();
         return item.getAmount() <= sum;
     }
 
@@ -23,9 +25,7 @@ public class ItemUtil {
         if (items == null) return true;
         HashMap<ItemStack, Integer> give = new HashMap<>();
         Arrays.stream(items).forEach(item -> give.put(item, containsCount(items , item)));
-        HashMap<ItemStack, Integer> capacity = new HashMap<>();
-        give.keySet().forEach(item -> capacity.put(item , capacityCount(inventory.getContents() , item)));
-        give.keySet().forEach(item -> give.put(item, give.get(item) - capacity.get(item)));
+        give.replaceAll((i, v) -> give.get(i) - capacityCount(getContents(inventory), i));
         int needslot = give.keySet().stream()
                 .filter(item -> give.get(item) > 0)
                 .mapToInt(item -> {
@@ -33,7 +33,7 @@ public class ItemUtil {
             if (give.get(item) % item.getType().getMaxStackSize() != 0) size++;
             return size;
         }).sum();
-        int emptyslot = (int) Arrays.stream(inventory.getContents()).filter(Objects::isNull).count();
+        int emptyslot = (int) Arrays.stream(getContents(inventory)).filter(Objects::isNull).count();
         return needslot <= emptyslot;
     }
 
@@ -43,15 +43,26 @@ public class ItemUtil {
         HashMap<ItemStack, Integer> need = new HashMap<>();
         Arrays.stream(items).filter(Objects::nonNull).forEach(item -> need.put(item, containsCount(inventory.getContents() , item)));
         HashMap<ItemStack, Integer> has = new HashMap<>();
-        if (need.keySet().stream().anyMatch(item -> Arrays.stream(inventory.getContents()).noneMatch(item::isSimilar))) return false;
-        need.keySet().forEach(item -> has.put(item, containsCount(inventory.getContents() , item)));
+        if (need.keySet().stream().anyMatch(item -> Arrays.stream(getContents(inventory)).noneMatch(item::isSimilar))) return false;
+        need.keySet().forEach(item -> has.put(item, containsCount(getContents(inventory) , item)));
         return need.keySet().stream().noneMatch(item -> has.get(item) < need.get(item));
+    }
+
+    public static ItemStack[] getContents(Inventory inventory) {
+        ItemStack[] contents = inventory.getContents();
+        return inventory instanceof PlayerInventory ? Arrays.copyOf(contents , contents.length - 5) : contents;
+    }
+
+    public static ItemStack getOneItemStack(ItemStack item) {
+        ItemStack copy = new ItemStack(item);
+        copy.setAmount(1);
+        return copy;
     }
 
     //アイテムを含んでいるか調べる
     public static boolean contains(Inventory inventory, ItemStack item) {
         if (item == null) return true;
-        int sum = containsCount(inventory.getContents(), item);
+        int sum = containsCount(getContents(inventory), item);
         return item.getAmount() <= sum;
     }
 
