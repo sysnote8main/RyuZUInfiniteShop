@@ -97,7 +97,6 @@ public class EditTradePageListener implements Listener {
         int page = editormainpage.getTradePageRawNumber(slot);
 
         //存在するページなのかチェック
-        if(page == 0) return;
         if (slot > lastslot && slot != newslot) return;
 
         //取引編集ページを開く

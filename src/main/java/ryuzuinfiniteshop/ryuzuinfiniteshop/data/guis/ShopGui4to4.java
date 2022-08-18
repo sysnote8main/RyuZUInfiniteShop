@@ -52,7 +52,7 @@ public class ShopGui4to4 extends ShopTradeGui {
     }
 
     @Override
-    public Inventory getInventory(Player p, ShopHolder.ShopMode mode) {
+    public Inventory getInventory(ShopHolder.ShopMode mode, Player p) {
         Inventory inv = getInventory(mode);
         if (mode.equals(ShopHolder.ShopMode.Trade)) setTradeStatus(p, inv);
         return inv;

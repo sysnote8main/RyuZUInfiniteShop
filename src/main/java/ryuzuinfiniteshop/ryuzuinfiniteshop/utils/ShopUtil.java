@@ -1,19 +1,31 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Ageable;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.PlayerInventory;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.AgeableShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.PoweredableShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.VillagerableShop;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 
 public class ShopUtil {
+    private static HashMap<String, Shop> shops = new HashMap<>();
+
     public static boolean isShopInventory(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return false;
         Player p = (Player) event.getWhoClicked();
@@ -76,24 +88,61 @@ public class ShopUtil {
     }
 
     public static void loadAllShops() {
-        TradeListener.getShops().clear();
+        getShops().clear();
         File directory = FileUtil.initializeFolder("shops");
         File[] ItemFiles = directory.listFiles();
-        if(ItemFiles == null) return;
+        if (ItemFiles == null) return;
         for (File f : ItemFiles) {
-            if(f.getName().endsWith(".yml")) new Shop(f);
+            if (f.getName().endsWith(".yml"))  {
+                YamlConfiguration config = new YamlConfiguration();
+                try {
+                    config.load(f);
+                } catch (IOException | InvalidConfigurationException e) {
+                    e.printStackTrace();
+                }
+                createShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")) , EntityType.valueOf(config.getString("EntityType")));
+            }
         }
     }
 
     public static void removeAllNPC() {
-        for(Shop shop : TradeListener.getShops().values()) {
+        for (Shop shop : getShops().values()) {
             shop.getNPC().remove();
         }
     }
 
     public static void saveAllShops() {
-        for(Shop shop : TradeListener.getShops().values()) {
+        for (Shop shop : getShops().values()) {
             shop.saveYaml();
         }
+    }
+
+    public static HashMap<String, Shop> getShops() {
+        return shops;
+    }
+
+    public static Shop getShop(String id) {
+        return shops.get(id);
+    }
+
+    public static void addShop(String id, Shop shop) {
+        shops.put(id, shop);
+    }
+
+    public static void createShop(Location location, EntityType type) {
+        if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(location))) return;
+        if(type.equals(EntityType.VILLAGER) || type.equals(EntityType.ZOMBIE_VILLAGER)) {
+            new VillagerableShop(location, type);
+            return;
+        }
+        if(type.equals(EntityType.CREEPER)) {
+            new PoweredableShop(location, type);
+            return;
+        }
+        if(Ageable.class.isAssignableFrom(type.getEntityClass())) {
+            new AgeableShop(location, type);
+            return;
+        }
+        new Shop(location, type);
     }
 }

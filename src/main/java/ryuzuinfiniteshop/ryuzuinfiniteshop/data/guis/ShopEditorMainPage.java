@@ -26,7 +26,7 @@ public class ShopEditorMainPage extends ShopGui {
         Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), getPage(), ShopEditorMainPage.class.getName()), 9 * 6, "ショップエディター ページ" + getPage());
 
         setEquipment(inv);
-        setTradesPage(inv, mode);
+        setTradesPage(inv);
         setDisplayName(inv);
 
         return inv;
@@ -51,13 +51,13 @@ public class ShopEditorMainPage extends ShopGui {
         }
     }
 
-    private void setTradesPage(Inventory inv, ShopHolder.ShopMode mode) {
+    private void setTradesPage(Inventory inv) {
         int lastslot = getTradeLastSlotNumber();
         for (int i = 0; i <= lastslot; i++) {
             inv.setItem(i, ItemUtil.getNamedItem(Material.LIME_STAINED_GLASS_PANE, ChatColor.GREEN + "ページ" + getTradePageNumber(i)));
         }
         int newslot = getTradeNewSlotNumber();
-        if (newslot != 0)
+        if (newslot != -1)
             inv.setItem(newslot, ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.WHITE + "新規ページ"));
     }
 
@@ -81,9 +81,10 @@ public class ShopEditorMainPage extends ShopGui {
 
     public int getTradeNewSlotNumber() {
         int last = getTradeLastSlotNumber();
+        if(last == -1) return 0;
         if (last != 17 && getShop().isLimitPage(getTradePageNumber(last)))
             return last + 1;
         else
-            return 0;
+            return -1;
     }
 }

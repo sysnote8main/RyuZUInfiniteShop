@@ -1,6 +1,7 @@
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\JavaUtil.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopHolder.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ItemUtil.java
+C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\VillagerableShop.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\schedulers\RyuZUMagicSyncTask.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ClassUtil.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\AgeableShop.java
@@ -12,6 +13,7 @@ C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui4to4.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopEditorMainPage.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\schedulers\RyuZUBaseTask.java
+C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\PoweredableShop.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\trades\OpenShopListener.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeDisplayNameListener.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\EquipmentUtil.java

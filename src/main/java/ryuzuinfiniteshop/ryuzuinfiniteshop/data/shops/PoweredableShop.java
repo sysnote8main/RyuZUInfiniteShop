@@ -11,14 +11,6 @@ import java.util.function.Consumer;
 public class PoweredableShop extends Shop {
     protected boolean powered = false;
 
-    public PoweredableShop(File file) {
-        super(file);
-    }
-
-    public PoweredableShop(Location location) {
-        super(location);
-    }
-
     public PoweredableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
     }

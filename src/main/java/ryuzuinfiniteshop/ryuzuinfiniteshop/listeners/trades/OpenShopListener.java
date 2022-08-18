@@ -1,7 +1,5 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,15 +7,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopTradeGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
@@ -29,12 +25,13 @@ public class OpenShopListener implements Listener {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
         if (p.isSneaking()) return;
+        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
         String id = PersistentUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;
-        Shop shop = TradeListener.getShop(id);
+        Shop shop = ShopUtil.getShop(id);
         if (!shop.isAvailableShop(p)) return;
 
-        Inventory inv = shop.getPage(1).getInventory(p, ShopHolder.ShopMode.Trade);
+        Inventory inv = shop.getPage(1).getInventory(ShopHolder.ShopMode.Trade, p);
         p.openInventory(inv);
         event.setCancelled(true);
     }
@@ -79,7 +76,7 @@ public class OpenShopListener implements Listener {
             SoundUtil.playFailSound(p);
         } else {
             SoundUtil.playClickShopSound(p);
-            ((ShopTradeGui)gui).setTradeStatus(p, inv);
+            ((ShopTradeGui) gui).setTradeStatus(p, inv);
         }
 
         //イベントキャンセル
@@ -100,7 +97,7 @@ public class OpenShopListener implements Listener {
         ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
 
         //ショップのステータスを更新
-        ((ShopTradeGui)gui).setTradeStatus(p, event.getClickedInventory());
+        ((ShopTradeGui) gui).setTradeStatus(p, event.getClickedInventory());
 
         //イベントをキャンセル
         event.setCancelled(true);

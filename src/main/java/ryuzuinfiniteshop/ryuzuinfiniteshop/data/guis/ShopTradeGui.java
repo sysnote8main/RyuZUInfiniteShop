@@ -17,7 +17,7 @@ public abstract class ShopTradeGui extends ShopGui {
 
     public ShopTradeGui(Shop shop, int page) {
         super(shop, page);
-        if(!(!existTrades() && shop.getTradePageCount() + 1 == getPage() && shop.getTrades().size() % shop.getLimitSize() == 0)) setTrades();
+        setTrades();
     }
 
     public List<ShopTrade> getTrades() {
@@ -31,10 +31,12 @@ public abstract class ShopTradeGui extends ShopGui {
     }
 
     public void setTrades() {
-        this.trades = JavaUtil.splitList(getShop().getTrades() , getShop().getLimitSize())[getPage() - 1];
+        List<ShopTrade>[] trades = JavaUtil.splitList(getShop().getTrades(), getShop().getLimitSize());
+        if (trades.length == getPage() - 1) return;
+        this.trades = trades[getPage() - 1];
     }
 
-    public abstract Inventory getInventory(Player p, ShopHolder.ShopMode mode);
+    public abstract Inventory getInventory(ShopHolder.ShopMode mode, Player p);
 
     public boolean existTrades() {
         return getTrades().size() > (getPage() - 2) * getShop().getLimitSize();

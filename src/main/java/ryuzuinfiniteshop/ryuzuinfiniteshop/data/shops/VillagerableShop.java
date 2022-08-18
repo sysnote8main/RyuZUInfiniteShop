@@ -11,14 +11,6 @@ public class VillagerableShop extends AgeableShop {
     protected Villager.Profession profession = Villager.Profession.FARMER;
     protected Villager.Type villagertype = Villager.Type.PLAINS;
 
-    public VillagerableShop(File file) {
-        super(file);
-    }
-
-    public VillagerableShop(Location location) {
-        super(location);
-    }
-
     public VillagerableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
     }

@@ -13,9 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.*;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.*;
 
 import java.io.File;
@@ -41,18 +41,10 @@ public class Shop {
     protected String diplayname;
     protected boolean invisible = false;
 
-
-    public Shop(File file) {
-        loadYamlProcess(file);
-    }
-
-    public Shop(Location location) {
-        initializeShop(location, EntityType.VILLAGER);
-    }
-
     public Shop(Location location, EntityType entitytype) {
         initializeShop(location, entitytype);
         saveYaml();
+        loadYamlProcess(getFile());
     }
 
     public void loadYamlProcess(File file) {
@@ -68,7 +60,7 @@ public class Shop {
 
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return yaml -> {
-            initializeShop(location , EntityType.valueOf(yaml.getString("EntityType")));
+            initializeShop(location, EntityType.valueOf(yaml.getString("EntityType")));
             this.type = ShopType.valueOf(yaml.getString("ShopType"));
             this.lock = yaml.getBoolean("Lock");
             this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, ArrayList<ItemStack>>) tradeconfig)).collect(Collectors.toList());
@@ -83,26 +75,13 @@ public class Shop {
         this.type = ShopType.TwotoOne;
         spawnNPC(entitytype);
         Arrays.fill(equipments, new ItemStack(Material.AIR));
-        createFirstPage();
-        TradeListener.addShop(getID(), this);
+        //createFirstPage();
+        ShopUtil.addShop(getID(), this);
     }
 
     public void updateTradeContents() {
-        if (trades.size() == 0)
-            createFirstPage();
-        else
-            setGuis();
-    }
-
-    public void setGuis() {
         setTradePages();
         setEditors();
-    }
-
-    public void createFirstPage() {
-        pages.clear();
-        editors.clear();
-        createNewPage();
     }
 
     public void createNewPage() {
@@ -153,6 +132,7 @@ public class Shop {
 
     public void setEditors() {
         editors.clear();
+        if (getTradePageCount() == 0) editors.add(new ShopEditorMainPage(this, 1));
         for (int i = 1; i <= getEditorPageCountFromTradesCount(); i++) {
             editors.add(new ShopEditorMainPage(this, i));
         }
@@ -228,6 +208,7 @@ public class Shop {
     }
 
     public void saveYaml() {
+        if(new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists()) return;
         File file = getFile();
         YamlConfiguration yaml = new YamlConfiguration();
         getSaveYamlProcess().accept(yaml);
@@ -322,6 +303,11 @@ public class Shop {
         }
         if (isEditting()) {
             p.sendMessage(ChatColor.RED + "現在このショップは編集中です");
+            SoundUtil.playFailSound(p);
+            return false;
+        }
+        if (getTradePageCount() == 0) {
+            p.sendMessage(ChatColor.RED + "現在このショップには取引が存在しません");
             SoundUtil.playFailSound(p);
             return false;
         }

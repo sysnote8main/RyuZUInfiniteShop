@@ -2,9 +2,12 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.commands;
 
 import com.github.ryuzu.ryuzucommandsgenerator.CommandsGenerator;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.LocationUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 public class SpawnCommand {
     public static void registerCommand() {
@@ -22,7 +25,13 @@ public class SpawnCommand {
 
         CommandsGenerator.registerCommand("ris.spawn",
                 data -> {
-                    TradeListener.createNewShop((Player) data.getSender());
+                    Player p = (Player) data.getSender();
+                    Location loc = p.getLocation();
+                    if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(loc))) {
+                        p.sendMessage(ChatColor.RED + "既にその場所にはショップが存在します");
+                        return;
+                    }
+                    ShopUtil.createShop(loc , EntityType.VILLAGER);
                     data.sendMessage(ChatColor.GREEN + "ショップを設置しました");
                 },
                 "ris.op",
@@ -38,7 +47,13 @@ public class SpawnCommand {
 
         CommandsGenerator.registerCommand("ris.spawn",
                 data -> {
-                    TradeListener.createNewShop((Player) data.getSender() , EntityType.valueOf(data.getArgs()[1].toUpperCase()));
+                    Player p = (Player) data.getSender();
+                    Location loc = p.getLocation();
+                    if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(loc))) {
+                        p.sendMessage(ChatColor.RED + "既にその場所にはショップが存在します");
+                        return;
+                    }
+                    ShopUtil.createShop(loc , EntityType.valueOf(data.getArgs()[1].toUpperCase()));
                     data.sendMessage(ChatColor.GREEN + "ショップを設置しました");
                 },
                 "ris.op",

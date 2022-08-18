@@ -12,7 +12,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 
@@ -65,7 +64,7 @@ public class ChangeDisplayNameListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "名前が設定されました");
             SoundUtil.playSuccessSound(p);
         }
-        Shop shop = TradeListener.getShop(namingShop.get(p.getUniqueId()));
+        Shop shop = ShopUtil.getShop(namingShop.get(p.getUniqueId()));
         shop.getNPC().setCustomName(event.getMessage());
         namingTime.remove(p.getUniqueId());
         namingShop.remove(p.getUniqueId());

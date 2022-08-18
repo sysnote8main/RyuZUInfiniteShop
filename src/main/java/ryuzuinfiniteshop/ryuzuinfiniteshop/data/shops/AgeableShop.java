@@ -11,14 +11,6 @@ import java.util.function.Consumer;
 public class AgeableShop extends Shop {
     protected boolean adult = true;
 
-    public AgeableShop(File file) {
-        super(file);
-    }
-
-    public AgeableShop(Location location) {
-        super(location);
-    }
-
     public AgeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
     }
