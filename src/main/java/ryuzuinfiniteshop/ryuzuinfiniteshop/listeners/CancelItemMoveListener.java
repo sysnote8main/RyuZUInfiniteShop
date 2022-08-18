@@ -3,13 +3,8 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.PlayerInventory;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 //ショップのラインナップを変更時以外はインベントリ内のアイテム移動を禁止するように

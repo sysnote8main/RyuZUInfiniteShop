@@ -1,15 +1,16 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.Inventory;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class ShopEditorMainPage extends ShopGui {
         Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), getPage(), ShopEditorMainPage.class.getName()), 9 * 6, "ショップエディター ページ" + getPage());
 
         setEquipment(inv);
-        setTradesPage(inv);
+        setTradesPage(inv, mode);
         setDisplayName(inv);
 
         return inv;
@@ -50,7 +51,7 @@ public class ShopEditorMainPage extends ShopGui {
         }
     }
 
-    private void setTradesPage(Inventory inv) {
+    private void setTradesPage(Inventory inv, ShopHolder.ShopMode mode) {
         int lastslot = getTradeLastSlotNumber();
         for (int i = 0; i <= lastslot; i++) {
             inv.setItem(i, ItemUtil.getNamedItem(Material.LIME_STAINED_GLASS_PANE, ChatColor.GREEN + "ページ" + getTradePageNumber(i)));
@@ -61,7 +62,7 @@ public class ShopEditorMainPage extends ShopGui {
     }
 
     private void setDisplayName(Inventory inv) {
-        String diplayname = getShop().getNPC().getCustomName() == null ? ChatColor.WHITE + "名前" : getShop().getNPC().getCustomName();
+        String diplayname = JavaUtil.getOrDefault(getShop().getNPC().getCustomName(), ChatColor.WHITE + "名前");
         inv.setItem(5 * 9 + 8, ItemUtil.getNamedItem(Material.NAME_TAG, diplayname));
     }
 

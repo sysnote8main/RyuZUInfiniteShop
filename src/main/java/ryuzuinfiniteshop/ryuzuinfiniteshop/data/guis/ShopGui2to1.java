@@ -1,15 +1,16 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +33,9 @@ public class ShopGui2to1 extends ShopTradeGui {
 
     @Override
     public Inventory getInventory(ShopHolder.ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), getPage(), ShopGui.class.getName()), 9 * 6 , "ショップ ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), getPage(), ShopGui.class.getName()), 9 * 6, "ショップ ページ" + getPage());
 
-        ItemStack filler = ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE , ChatColor.BLACK + "");
+        ItemStack filler = ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.BLACK + "");
 
         for (int i = 0; i < 6; i++) {
             inv.setItem(i * 9 + 2, filler);
@@ -45,12 +46,19 @@ public class ShopGui2to1 extends ShopTradeGui {
         for (int i = 0; i < getTrades().size(); i++) {
             ShopTrade trade = getTrades().get(i);
             int slot = (i / 2) * 9 + (i % 2 == 1 ? 5 : 0);
-            for(int k = 0 ; k < trade.take.length ; k++) {
+            for (int k = 0; k < trade.take.length; k++) {
                 inv.setItem(slot + k, trade.take[k]);
             }
             inv.setItem(slot + 3, trade.give[0]);
         }
 
+        return inv;
+    }
+
+    @Override
+    public Inventory getInventory(Player p, ShopHolder.ShopMode mode) {
+        Inventory inv = getInventory(mode);
+        if (mode.equals(ShopHolder.ShopMode.Trade)) setTradeStatus(p, inv);
         return inv;
     }
 

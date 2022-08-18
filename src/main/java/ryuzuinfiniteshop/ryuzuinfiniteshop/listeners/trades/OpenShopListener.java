@@ -2,7 +2,6 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,12 +11,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopEditorMainPage;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.ShopTradeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
@@ -35,9 +34,8 @@ public class OpenShopListener implements Listener {
         Shop shop = TradeListener.getShop(id);
         if (!shop.isAvailableShop(p)) return;
 
-        Inventory inv = shop.getPage(1).getInventory(ShopHolder.ShopMode.Trade);
+        Inventory inv = shop.getPage(1).getInventory(p, ShopHolder.ShopMode.Trade);
         p.openInventory(inv);
-        setTradeStatus(p, (ShopHolder) inv.getHolder(), shop);
         event.setCancelled(true);
     }
 
@@ -53,6 +51,7 @@ public class OpenShopListener implements Listener {
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
+        Inventory inv = event.getView().getTopInventory();
         ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
         Shop shop = shopholder.getShop();
         ShopHolder.ShopMode mode = shopholder.getShopMode();
@@ -68,20 +67,19 @@ public class OpenShopListener implements Listener {
         if (type.isRightClick()) {
             if (shop.getPage(shopholder.getPage() + 1) == null) {
                 fail = true;
-                if(gui instanceof ShopEditorMainPage && shop.ableCreateNewPage()) {
+                if (gui instanceof ShopEditorMainPage && shop.ableCreateNewPage()) {
                     shop.createTradeNewPage();
                     p.openInventory(shop.getPage(shopholder.getPage() + 1).getInventory(mode));
                     fail = false;
                 }
-            }
-            else
+            } else
                 p.openInventory(shop.getPage(shopholder.getPage() + 1).getInventory(mode));
         }
         if (fail) {
             SoundUtil.playFailSound(p);
         } else {
             SoundUtil.playClickShopSound(p);
-            if(mode.equals(ShopHolder.ShopMode.Trade)) setTradeStatus(p, shopholder, shop);
+            ((ShopTradeGui)gui).setTradeStatus(p, inv);
         }
 
         //イベントキャンセル
@@ -100,43 +98,11 @@ public class OpenShopListener implements Listener {
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
-        Shop shop = shopholder.getShop();
 
         //ショップのステータスを更新
-        setTradeStatus(p, shopholder, shop);
+        ((ShopTradeGui)gui).setTradeStatus(p, event.getClickedInventory());
 
         //イベントをキャンセル
         event.setCancelled(true);
-    }
-
-    //それぞれの取引が可能か表示
-    public void setTradeStatus(Player p, ShopHolder holder, Shop shop) {
-        int page = holder.getPage();
-        Inventory inv = p.getOpenInventory().getTopInventory();
-        ShopTradeGui gui = (ShopTradeGui) ShopUtil.getShopGui(inv);
-
-        ItemStack status1 = ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "購入可能");
-        ItemStack status2 = ItemUtil.getNamedItem(Material.RED_STAINED_GLASS_PANE, ChatColor.RED + "アイテムが足りません");
-        ItemStack status3 = ItemUtil.getNamedItem(Material.YELLOW_STAINED_GLASS_PANE, ChatColor.YELLOW + "インベントリに十分な空きがありません");
-
-        int addslot = shop.getShopType().equals(Shop.ShopType.TwotoOne) ? 2 : 4;
-        for (int i = 0; i < gui.getTrades().size(); i++) {
-            int baseslot = shop.getShopType().equals(Shop.ShopType.TwotoOne) ?
-                    (i / 2) * 9 + (i % 2 == 1 ? 5 : 0) :
-                    i * 9;
-            ShopTrade trade = gui.getTradeFromSlot(baseslot);
-            ShopTrade.Result result = trade.getResult(p);
-            switch (result){
-                case Lack:
-                    inv.setItem(baseslot + addslot, status2);
-                    break;
-                case Full:
-                    inv.setItem(baseslot + addslot, status3);
-                    break;
-                case Success:
-                    inv.setItem(baseslot + addslot, status1);
-                    break;
-            }
-        }
     }
 }

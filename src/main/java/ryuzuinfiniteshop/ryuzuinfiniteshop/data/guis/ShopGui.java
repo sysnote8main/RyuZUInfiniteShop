@@ -1,9 +1,14 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
+import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +19,7 @@ public abstract class ShopGui {
     private final int page;
     private final Shop shop;
 
-    public ShopGui (Shop shop , int page) {
+    public ShopGui(Shop shop, int page) {
         this.shop = shop;
         this.page = page;
     }

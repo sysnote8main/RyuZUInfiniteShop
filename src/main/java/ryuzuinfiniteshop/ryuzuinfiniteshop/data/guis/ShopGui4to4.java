@@ -1,15 +1,15 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +48,13 @@ public class ShopGui4to4 extends ShopTradeGui {
             }
         }
 
+        return inv;
+    }
+
+    @Override
+    public Inventory getInventory(Player p, ShopHolder.ShopMode mode) {
+        Inventory inv = getInventory(mode);
+        if (mode.equals(ShopHolder.ShopMode.Trade)) setTradeStatus(p, inv);
         return inv;
     }
 

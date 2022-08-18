@@ -1,9 +1,8 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.data;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,51 +13,41 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.*;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Shop {
     public enum ShopType {TwotoOne, FourtoFour}
 
-    private Entity npc;
-    private Location location;
-    private ShopType type;
-    private List<ShopTrade> trades = new ArrayList<>();
-    private boolean lock = false;
-    private boolean editting = false;
-    private List<ShopEditorMainPage> editors = new ArrayList<>();
-    private List<ShopTradeGui> pages = new ArrayList<>();
-    public ItemStack[] equipments = new ItemStack[6];
-    public String diplayname;
-    public boolean invisible = false;
+    public enum ShopNBT {Ageable, Poweredable, Villagerable}
+
+    protected Entity npc;
+    protected Location location;
+    protected ShopType type;
+    protected List<ShopTrade> trades = new ArrayList<>();
+    protected boolean lock = false;
+    protected boolean editting = false;
+    protected List<ShopEditorMainPage> editors = new ArrayList<>();
+    protected List<ShopTradeGui> pages = new ArrayList<>();
+    protected ItemStack[] equipments = new ItemStack[6];
+    protected String diplayname;
+    protected boolean invisible = false;
 
 
     public Shop(File file) {
-        YamlConfiguration config = new YamlConfiguration();
-        try {
-            config.load(file);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-        this.location = LocationUtil.toLocationFromString(file.getName().replace(".yml", ""));
-        spawnNPC(EntityType.valueOf(config.getString("EntityType", "VILLAGER")));
-        this.type = ShopType.valueOf(config.getString("ShopType"));
-        this.lock = config.getBoolean("Lock");
-        this.trades = config.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, ArrayList<ItemStack>>) tradeconfig)).collect(Collectors.toList());
-        updateTradeContents();
-        this.equipments = ((ArrayList<ItemStack>) config.getList("Equipments")).toArray(new ItemStack[0]);
-        updateEquipments();
-        TradeListener.addShop(getID(), this);
+        loadYamlProcess(file);
     }
 
     public Shop(Location location) {
-        initializeShop(location);
+        initializeShop(location, EntityType.VILLAGER);
     }
 
     public Shop(Location location, EntityType entitytype) {
@@ -66,33 +55,33 @@ public class Shop {
         saveYaml();
     }
 
-    public void initializeShop(Location location, EntityType entitytype) {
-        File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
+    public void loadYamlProcess(File file) {
         YamlConfiguration config = new YamlConfiguration();
         try {
             config.load(file);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+        this.location = LocationUtil.toLocationFromString(file.getName().replace(".yml", ""));
+        getLoadYamlProcess().accept(config);
+    }
+
+    public Consumer<YamlConfiguration> getLoadYamlProcess() {
+        return yaml -> {
+            initializeShop(location , EntityType.valueOf(yaml.getString("EntityType")));
+            this.type = ShopType.valueOf(yaml.getString("ShopType"));
+            this.lock = yaml.getBoolean("Lock");
+            this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, ArrayList<ItemStack>>) tradeconfig)).collect(Collectors.toList());
+            updateTradeContents();
+            this.equipments = ((ArrayList<ItemStack>) yaml.getList("Equipments")).toArray(new ItemStack[0]);
+            updateEquipments();
+        };
+    }
+
+    public void initializeShop(Location location, EntityType entitytype) {
         this.location = location;
         this.type = ShopType.TwotoOne;
         spawnNPC(entitytype);
-        Arrays.fill(equipments, new ItemStack(Material.AIR));
-        createFirstPage();
-        TradeListener.addShop(getID(), this);
-    }
-
-    public void initializeShop(Location location) {
-        File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
-        YamlConfiguration config = new YamlConfiguration();
-        try {
-            config.load(file);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-        this.location = location;
-        this.type = ShopType.TwotoOne;
-        spawnNPC(EntityType.valueOf(config.getString("EntityType", "VILLAGER")));
         Arrays.fill(equipments, new ItemStack(Material.AIR));
         createFirstPage();
         TradeListener.addShop(getID(), this);
@@ -228,21 +217,29 @@ public class Shop {
         trades.add(new ShopTrade(inv, slot, type));
     }
 
+    public Consumer<YamlConfiguration> getSaveYamlProcess() {
+        return yaml -> {
+            yaml.set("EntityType", npc.getType().toString());
+            yaml.set("ShopType", type.toString());
+            yaml.set("Equipments", Arrays.stream(equipments).map(equipment -> JavaUtil.getOrDefault(equipment, new ItemStack(Material.AIR))).collect(Collectors.toList()));
+            yaml.set("Lock", lock);
+            yaml.set("Trades", getTradesConfig());
+        };
+    }
+
     public void saveYaml() {
-        File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
-        YamlConfiguration config = new YamlConfiguration();
-
-        config.set("EntityType", npc.getType().toString());
-        config.set("ShopType", type.toString());
-        config.set("Equipments", Arrays.stream(equipments).map(equipment -> JavaUtil.getOrDefault(equipment , new ItemStack(Material.AIR))).collect(Collectors.toList()));
-        config.set("Lock", lock);
-        config.set("Trades", getTradesConfig());
-
+        File file = getFile();
+        YamlConfiguration yaml = new YamlConfiguration();
+        getSaveYamlProcess().accept(yaml);
         try {
-            config.save(file);
+            yaml.save(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public File getFile() {
+        return FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
     }
 
     public void setLock(boolean lock) {

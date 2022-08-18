@@ -4,7 +4,6 @@ import com.github.ryuzu.ryuzucommandsgenerator.CommandsGenerator;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
 
 public class SpawnCommand {
