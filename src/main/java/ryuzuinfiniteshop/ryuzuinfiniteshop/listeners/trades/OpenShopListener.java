@@ -65,11 +65,6 @@ public class OpenShopListener implements Listener {
         if (type.isRightClick()) {
             if (shop.getPage(shopholder.getPage() + 1) == null) {
                 fail = true;
-                if (gui instanceof ShopEditorMainPage && shop.ableCreateNewPage()) {
-                    shop.createTradeNewPage();
-                    p.openInventory(shop.getPage(shopholder.getPage() + 1).getInventory(mode, p));
-                    fail = false;
-                }
             } else
                 p.openInventory(shop.getPage(shopholder.getPage() + 1).getInventory(mode, p));
         }
