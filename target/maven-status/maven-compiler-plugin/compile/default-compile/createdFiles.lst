@@ -1,3 +1,4 @@
+ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopEditorMainPage$ShopSettings.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\Shop$ShopNBT.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\schedulers\RyuZUMagicSyncTask.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\Shop.class
@@ -10,13 +11,14 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\trades\OpenShopListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopEditorMainPage.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\PoweredableShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\LocationUtil.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\VillagerableShop$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\PersistentUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui4to4.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\CancelItemMoveListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeEquipmentListener.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\CancelAffectNPC.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\AgeableShop.class
-ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\CancelDamageNPC.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\trades\TradeListener$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopTrade.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ShopUtil.class
@@ -36,6 +38,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui2to1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\schedulers\RyuZUBaseTask.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\trades\TradeListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\SoundUtil.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeIndividualSettingsListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\FileUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopTrade$Result.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ClassUtil.class

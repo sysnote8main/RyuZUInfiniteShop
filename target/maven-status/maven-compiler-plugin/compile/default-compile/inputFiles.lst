@@ -1,5 +1,6 @@
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\JavaUtil.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopHolder.java
+C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeIndividualSettingsListener.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ItemUtil.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\VillagerableShop.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\schedulers\RyuZUMagicSyncTask.java
@@ -7,7 +8,6 @@ C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\AgeableShop.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\commands\SpawnCommand.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui2to1.java
-C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\CancelDamageNPC.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\Shop.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\FileUtil.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui4to4.java
@@ -29,4 +29,5 @@ C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopTradeGui.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ShopUtil.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui.java
+C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\CancelAffectNPC.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\RyuZUInfiniteShop.java

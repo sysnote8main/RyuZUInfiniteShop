@@ -66,7 +66,9 @@ public class ShopEditorMainPage extends ShopGui {
             inv.setItem(i, ItemUtil.getNamedItem(Material.LIME_STAINED_GLASS_PANE, ChatColor.GREEN + "ページ" + getTradePageNumber(i)));
         }
         int newslot = getTradeNewSlotNumber();
-        if (newslot != -1)
+        if (newslot == 18)
+            getShop().createEdotorNewPage();
+        else if (newslot != -1)
             inv.setItem(newslot, ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.WHITE + "新規ページ"));
     }
 
@@ -133,7 +135,7 @@ public class ShopEditorMainPage extends ShopGui {
     public int getTradeNewSlotNumber() {
         int last = getTradeLastSlotNumber();
         if (last == -1) return 0;
-        if (last != 17 && getShop().isLimitPage(getTradePageNumber(last)))
+        if (getShop().isLimitPage(getTradePageNumber(last)))
             return last + 1;
         else
             return -1;

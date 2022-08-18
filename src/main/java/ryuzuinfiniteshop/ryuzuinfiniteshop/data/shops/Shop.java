@@ -133,7 +133,7 @@ public class Shop {
 
     public void setEditors() {
         editors.clear();
-        if (getTradePageCount() == 0) editors.add(new ShopEditorMainPage(this, 1));
+        if (pages.isEmpty()) editors.add(new ShopEditorMainPage(this, 1));
         for (int i = 1; i <= getEditorPageCountFromTradesCount(); i++) {
             editors.add(new ShopEditorMainPage(this, i));
         }
@@ -163,8 +163,8 @@ public class Shop {
 
     public int getEditorPageCountFromTradesCount() {
         int size = getTradePageCountFromTradesCount() / 18;
-        if (getTradePageCountFromTradesCount() % 18 != 0) size++;
-        return size;
+        //if (getTradePageCountFromTradesCount() % 18 != 0) size++;
+        return size + 1;
     }
 
     public ShopType getShopType() {
@@ -306,7 +306,7 @@ public class Shop {
             SoundUtil.playFailSound(p);
             return false;
         }
-        if (getTradePageCount() == 0) {
+        if (pages.isEmpty()) {
             p.sendMessage(ChatColor.RED + "現在このショップには取引が存在しません");
             SoundUtil.playFailSound(p);
             return false;

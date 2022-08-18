@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -76,10 +77,26 @@ public class OpenShopListener implements Listener {
             SoundUtil.playFailSound(p);
         } else {
             SoundUtil.playClickShopSound(p);
-            ((ShopTradeGui) gui).setTradeStatus(p, inv);
         }
+
+        ((ShopTradeGui) gui).setTradeStatus(p, inv);
 
         //イベントキャンセル
         event.setCancelled(true);
+    }
+
+    //ショップのステータスの更新
+    @EventHandler
+    public void updateStatus(InventoryDragEvent event) {
+        //インベントリがショップなのかチェック
+        ShopGui gui = ShopUtil.getShopGui(event.getInventory());
+        if (gui == null) return;
+        if (!ShopUtil.isTradeMode(event.getInventory())) return;
+
+        //必要なデータを取得
+        Player p = (Player) event.getWhoClicked();
+        Inventory inv = event.getView().getTopInventory();
+
+        ((ShopTradeGui) gui).setTradeStatus(p, inv);
     }
 }
