@@ -82,24 +82,4 @@ public class OpenShopListener implements Listener {
         //イベントキャンセル
         event.setCancelled(true);
     }
-
-    //ショップのステータスの更新
-    @EventHandler
-    public void updateStatus(InventoryClickEvent event) {
-        //インベントリがショップなのかチェック
-        ShopGui gui = ShopUtil.getShopGui(event);
-        if (gui == null) return;
-        if (!(gui instanceof ShopTradeGui)) return;
-        if (!ShopUtil.isTradeMode(event)) return;
-
-        //必要なデータを取得
-        Player p = (Player) event.getWhoClicked();
-        ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
-
-        //ショップのステータスを更新
-        ((ShopTradeGui) gui).setTradeStatus(p, event.getClickedInventory());
-
-        //イベントをキャンセル
-        event.setCancelled(true);
-    }
 }

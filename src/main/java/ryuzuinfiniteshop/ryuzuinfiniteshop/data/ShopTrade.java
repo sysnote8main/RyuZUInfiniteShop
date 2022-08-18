@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ShopTrade {
-    public enum Result {Lack, Full, Success}
+    public enum Result {notAfford, Full, Success, Lack}
 
     public ItemStack[] give;
     public ItemStack[] take;
@@ -54,7 +54,7 @@ public class ShopTrade {
     public Result getResult(Player p) {
         Result result = Result.Success;
 
-        if (!affordTrade(p)) result = Result.Lack;
+        if (!affordTrade(p)) result = Result.notAfford;
         else if (!hasEnoughSpace(p)) result = Result.Full;
 
         return result;
@@ -77,6 +77,10 @@ public class ShopTrade {
         for (int time = 0; time < times; time++) {
             result = trade(p);
             if (!result.equals(Result.Success)) {
+                if (time != 1)
+                    result = Result.Lack;
+                else
+                    result = Result.notAfford;
                 break;
             }
         }
@@ -97,9 +101,13 @@ public class ShopTrade {
 
     public void playResultEffect(Player p, Result result) {
         switch (result) {
-            case Lack:
+            case notAfford:
                 p.sendMessage(ChatColor.RED + "アイテムが足りません");
                 SoundUtil.playFailSound(p);
+                break;
+            case Lack:
+                p.sendMessage(ChatColor.RED + "すべてを購入できませんでした");
+                SoundUtil.playCautionSound(p);
                 break;
             case Full:
                 p.sendMessage(ChatColor.RED + "インベントリに十分な空きがありません");

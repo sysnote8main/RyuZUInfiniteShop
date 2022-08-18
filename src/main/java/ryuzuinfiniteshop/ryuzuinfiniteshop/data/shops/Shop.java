@@ -42,9 +42,10 @@ public class Shop {
     protected boolean invisible = false;
 
     public Shop(Location location, EntityType entitytype) {
+        boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         initializeShop(location, entitytype);
-        saveYaml();
-        loadYamlProcess(getFile());
+        if(exsited) loadYamlProcess(getFile());
+        if(!exsited) saveYaml();
     }
 
     public void loadYamlProcess(File file) {
@@ -208,7 +209,6 @@ public class Shop {
     }
 
     public void saveYaml() {
-        if(new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists()) return;
         File file = getFile();
         YamlConfiguration yaml = new YamlConfiguration();
         getSaveYamlProcess().accept(yaml);

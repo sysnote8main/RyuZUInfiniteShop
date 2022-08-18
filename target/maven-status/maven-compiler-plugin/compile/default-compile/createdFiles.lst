@@ -24,6 +24,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopTradeGui$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\JavaUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopTrade$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ItemUtil.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ShopUtil$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopTradeGui.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\RyuZUInfiniteShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\EditTradePageListener.class

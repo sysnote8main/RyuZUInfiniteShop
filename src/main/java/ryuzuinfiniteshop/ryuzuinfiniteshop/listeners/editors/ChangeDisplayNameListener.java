@@ -52,7 +52,7 @@ public class ChangeDisplayNameListener implements Listener {
         p.closeInventory();
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.LOW)
     public void changeDisplay(AsyncPlayerChatEvent event) {
         Player p = event.getPlayer();
         if (!namingTime.containsKey(p.getUniqueId())) return;

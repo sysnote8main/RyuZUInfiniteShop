@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
@@ -26,12 +27,13 @@ public class TradeListener implements Listener {
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
-        ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
+        Inventory inv = event.getView().getTopInventory();
+        ShopHolder shopholder = (ShopHolder) inv.getHolder();
         Shop shop = shopholder.getShop();
         int slot = event.getSlot();
         ShopTrade trade = ((ShopTradeGui) gui).getTradeFromSlot(slot);
 
-        if(trade == null) return;
+        if (trade == null) return;
 
         //取引
         int times = 1;
@@ -45,6 +47,9 @@ public class TradeListener implements Listener {
                 break;
         }
         trade.trade(p, times);
+
+        //ステータスの更新
+        ShopUtil.setTradeStatus(p, inv, shop, (ShopTradeGui) gui);
 
         //イベントキャンセル
         event.setCancelled(true);

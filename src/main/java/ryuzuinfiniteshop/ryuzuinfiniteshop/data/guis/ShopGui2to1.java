@@ -67,7 +67,7 @@ public class ShopGui2to1 extends ShopTradeGui {
         int mod9 = slot % 9;
         if (mod9 == 4) return null;
         int quootient9 = slot / 9;
-        int front = mod9 / 4;
+        int front = mod9 < 4 ? 0 : 1;
         return getTrade(quootient9 * 2 + front + 1);
     }
 

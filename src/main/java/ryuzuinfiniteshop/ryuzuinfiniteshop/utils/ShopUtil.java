@@ -2,6 +2,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Ageable;
@@ -10,7 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.AgeableShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.PoweredableShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
@@ -93,14 +97,14 @@ public class ShopUtil {
         File[] ItemFiles = directory.listFiles();
         if (ItemFiles == null) return;
         for (File f : ItemFiles) {
-            if (f.getName().endsWith(".yml"))  {
+            if (f.getName().endsWith(".yml")) {
                 YamlConfiguration config = new YamlConfiguration();
                 try {
                     config.load(f);
                 } catch (IOException | InvalidConfigurationException e) {
                     e.printStackTrace();
                 }
-                createShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")) , EntityType.valueOf(config.getString("EntityType")));
+                createShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("EntityType")));
             }
         }
     }
@@ -131,18 +135,44 @@ public class ShopUtil {
 
     public static void createShop(Location location, EntityType type) {
         if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(location))) return;
-        if(type.equals(EntityType.VILLAGER) || type.equals(EntityType.ZOMBIE_VILLAGER)) {
+        if (type.equals(EntityType.VILLAGER) || type.equals(EntityType.ZOMBIE_VILLAGER)) {
             new VillagerableShop(location, type);
             return;
         }
-        if(type.equals(EntityType.CREEPER)) {
+        if (type.equals(EntityType.CREEPER)) {
             new PoweredableShop(location, type);
             return;
         }
-        if(Ageable.class.isAssignableFrom(type.getEntityClass())) {
+        if (Ageable.class.isAssignableFrom(type.getEntityClass())) {
             new AgeableShop(location, type);
             return;
         }
         new Shop(location, type);
+    }
+
+    public static void setTradeStatus(Player p, Inventory inventory, Shop shop, ShopTradeGui gui) {
+        ItemStack status1 = ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "購入可能");
+        ItemStack status2 = ItemUtil.getNamedItem(Material.RED_STAINED_GLASS_PANE, ChatColor.RED + "アイテムが足りません");
+        ItemStack status3 = ItemUtil.getNamedItem(Material.YELLOW_STAINED_GLASS_PANE, ChatColor.YELLOW + "インベントリに十分な空きがありません");
+
+        int addslot = shop.getShopType().equals(Shop.ShopType.TwotoOne) ? 2 : 4;
+        for (int i = 0; i < gui.getTrades().size(); i++) {
+            int baseslot = shop.getShopType().equals(Shop.ShopType.TwotoOne) ?
+                    (i / 2) * 9 + (i % 2 == 1 ? 5 : 0) :
+                    i * 9;
+            ShopTrade trade = gui.getTradeFromSlot(baseslot);
+            ShopTrade.Result result = trade.getResult(p);
+            switch (result) {
+                case notAfford:
+                    inventory.setItem(baseslot + addslot, status2);
+                    break;
+                case Full:
+                    inventory.setItem(baseslot + addslot, status3);
+                    break;
+                case Success:
+                    inventory.setItem(baseslot + addslot, status1);
+                    break;
+            }
+        }
     }
 }

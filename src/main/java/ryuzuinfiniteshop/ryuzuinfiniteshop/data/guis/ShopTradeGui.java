@@ -59,7 +59,7 @@ public abstract class ShopTradeGui extends ShopGui {
             ShopTrade trade = getTradeFromSlot(baseslot);
             ShopTrade.Result result = trade.getResult(p);
             switch (result) {
-                case Lack:
+                case notAfford:
                     inventory.setItem(baseslot + addslot, status2);
                     break;
                 case Full:
