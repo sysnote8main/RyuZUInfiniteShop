@@ -5,7 +5,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.EntityType;
 
-import java.io.File;
 import java.util.function.Consumer;
 
 public class AgeableShop extends Shop {
@@ -19,7 +18,7 @@ public class AgeableShop extends Shop {
         return adult;
     }
 
-    public void setAgeLock(boolean look) {
+    public void setAgeLook(boolean look) {
         this.adult = look;
         if (look)
             ((Ageable) getNPC()).setAdult();

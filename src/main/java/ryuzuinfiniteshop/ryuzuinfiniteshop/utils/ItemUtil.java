@@ -1,8 +1,10 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -84,6 +86,7 @@ public class ItemUtil {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
+        meta.addItemFlags(ItemFlag.values());
         item.setItemMeta(meta);
         return item;
     }
@@ -94,6 +97,30 @@ public class ItemUtil {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
         meta.setLore(Arrays.asList(lore));
+        meta.addItemFlags(ItemFlag.values());
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    //名前付きエンチャント済みアイテムを返す
+    public static ItemStack getNamedEnchantedItem(Material material, String name) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(name);
+        meta.addItemFlags(ItemFlag.values());
+        meta.addEnchant(Enchantment.DURABILITY , 1 , true);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    //名前付きエンチャント済みアイテムを返す
+    public static ItemStack getNamedEnchantedItem(Material material, String name, String... lore) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(name);
+        meta.setLore(Arrays.asList(lore));
+        meta.addItemFlags(ItemFlag.values());
+        meta.addEnchant(Enchantment.DURABILITY , 1 , true);
         item.setItemMeta(meta);
         return item;
     }
