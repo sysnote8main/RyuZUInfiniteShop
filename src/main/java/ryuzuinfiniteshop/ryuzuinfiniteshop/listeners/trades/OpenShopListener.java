@@ -59,18 +59,18 @@ public class OpenShopListener implements Listener {
             if (shop.getPage(shopholder.getPage() - 1) == null)
                 fail = true;
             else
-                p.openInventory(shop.getPage(shopholder.getPage() - 1).getInventory(mode));
+                p.openInventory(shop.getPage(shopholder.getPage() - 1).getInventory(mode, p));
         }
         if (type.isRightClick()) {
             if (shop.getPage(shopholder.getPage() + 1) == null) {
                 fail = true;
                 if (gui instanceof ShopEditorMainPage && shop.ableCreateNewPage()) {
                     shop.createTradeNewPage();
-                    p.openInventory(shop.getPage(shopholder.getPage() + 1).getInventory(mode));
+                    p.openInventory(shop.getPage(shopholder.getPage() + 1).getInventory(mode, p));
                     fail = false;
                 }
             } else
-                p.openInventory(shop.getPage(shopholder.getPage() + 1).getInventory(mode));
+                p.openInventory(shop.getPage(shopholder.getPage() + 1).getInventory(mode, p));
         }
         if (fail) {
             SoundUtil.playFailSound(p);
