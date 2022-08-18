@@ -33,7 +33,7 @@ public class ShopGui2to1 extends ShopTradeGui {
 
     @Override
     public Inventory getInventory(ShopHolder.ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), getPage(), ShopGui.class.getName()), 9 * 6, "ショップ ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, "ショップ ページ" + getPage());
 
         ItemStack filler = ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.BLACK + "");
 

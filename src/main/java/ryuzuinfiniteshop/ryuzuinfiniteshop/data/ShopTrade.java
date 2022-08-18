@@ -77,7 +77,7 @@ public class ShopTrade {
         for (int time = 0; time < times; time++) {
             result = trade(p);
             if (!result.equals(Result.Success)) {
-                if (time != 1)
+                if (time != 0)
                     result = Result.Lack;
                 else
                     result = Result.notAfford;

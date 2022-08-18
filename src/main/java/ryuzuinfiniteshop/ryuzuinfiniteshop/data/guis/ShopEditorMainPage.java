@@ -23,7 +23,7 @@ import java.util.List;
 public class ShopEditorMainPage extends ShopGui {
     public enum ShopSettings {Age, Power, Profession, Biome}
 
-    private HashMap<Integer, ShopSettings> SettingsMap = new HashMap<>();
+    private final HashMap<Integer, ShopSettings> SettingsMap = new HashMap<>();
 
     public ShopEditorMainPage(Shop shop, int page) {
         super(shop, page);
@@ -31,7 +31,7 @@ public class ShopEditorMainPage extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopHolder.ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), getPage(), ShopEditorMainPage.class.getName()), 9 * 6, "ショップエディター ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, "ショップエディター ページ" + getPage());
 
         setEquipment(inv);
         setTradesPage(inv);
@@ -67,7 +67,7 @@ public class ShopEditorMainPage extends ShopGui {
         }
         int newslot = getTradeNewSlotNumber();
         if (newslot == 18)
-            getShop().createEdotorNewPage();
+            getShop().createEditorNewPage();
         else if (newslot != -1)
             inv.setItem(newslot, ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.WHITE + "新規ページ"));
     }

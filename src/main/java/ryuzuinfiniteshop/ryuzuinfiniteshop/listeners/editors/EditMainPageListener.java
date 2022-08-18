@@ -25,7 +25,7 @@ public class EditMainPageListener implements Listener {
     public void openShopEditor(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
-        if(!p.isSneaking()) return;
+        if (!p.isSneaking()) return;
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
         String id = PersistentUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;
@@ -42,9 +42,9 @@ public class EditMainPageListener implements Listener {
     public void releaseEdittingLock(InventoryCloseEvent event) {
         //インベントリがショップなのかチェック
         Inventory inv = event.getInventory();
-        ShopGui gui = ShopUtil.getShopGui(inv);
-        if (gui == null) return;
-        if (!(gui instanceof ShopEditorMainPage)) return;
+        ShopHolder holder = ShopUtil.getShopHolder(inv);
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof ShopEditorMainPage)) return;
         if (!ShopUtil.isEditMode(inv)) return;
 
         //必要なデータを取得
@@ -62,31 +62,31 @@ public class EditMainPageListener implements Listener {
     @EventHandler
     public void changePage(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        ShopGui gui = ShopUtil.getShopGui(event);
-        if (gui == null) return;
+        ShopHolder holder = ShopUtil.getShopHolder(event);
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof ShopEditorMainPage)) return;
         if (event.getClickedInventory() != null) return;
-        if (!(gui instanceof ShopEditorMainPage)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
-        ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
-        Shop shop = shopholder.getShop();
-        ShopHolder.ShopMode mode = shopholder.getShopMode();
+        Shop shop = holder.getShop();
+        ShopHolder.ShopMode mode = holder.getShopMode();
+        int page = holder.getGui().getPage();
 
         //ページ切り替え
         boolean fail = false;
         if (type.isLeftClick()) {
-            if (shop.getEditor(shopholder.getPage() - 1) == null)
+            if (shop.getEditor(holder.getGui().getPage() - 1) == null)
                 fail = true;
             else
-                p.openInventory(shop.getEditor(shopholder.getPage() - 1).getInventory(mode));
+                p.openInventory(shop.getEditor(page - 1).getInventory(mode));
         }
         if (type.isRightClick()) {
-            if (shop.getEditor(shopholder.getPage() + 1) == null) {
+            if (shop.getEditor(page + 1) == null)
                 fail = true;
-            } else
-                p.openInventory(shop.getEditor(shopholder.getPage() + 1).getInventory(mode));
+            else
+                p.openInventory(shop.getEditor(page + 1).getInventory(mode));
         }
         if (fail) {
             SoundUtil.playFailSound(p);

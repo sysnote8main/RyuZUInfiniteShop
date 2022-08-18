@@ -19,9 +19,9 @@ public class TradeListener implements Listener {
     @EventHandler
     public void onTrade(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        ShopGui gui = ShopUtil.getShopGui(event);
-        if (gui == null) return;
-        if (!(gui instanceof ShopTradeGui)) return;
+        ShopHolder holder = ShopUtil.getShopHolder(event);
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof ShopTradeGui)) return;
         if (!ShopUtil.isTradeMode(event)) return;
 
         //必要なデータを取得
@@ -31,7 +31,7 @@ public class TradeListener implements Listener {
         ShopHolder shopholder = (ShopHolder) inv.getHolder();
         Shop shop = shopholder.getShop();
         int slot = event.getSlot();
-        ShopTrade trade = ((ShopTradeGui) gui).getTradeFromSlot(slot);
+        ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(slot);
 
         if (trade == null) return;
 
@@ -49,7 +49,7 @@ public class TradeListener implements Listener {
         trade.trade(p, times);
 
         //ステータスの更新
-        ShopUtil.setTradeStatus(p, inv, shop, (ShopTradeGui) gui);
+        ShopUtil.setTradeStatus(p, inv, shop, (ShopTradeGui) holder.getGui());
 
         //イベントキャンセル
         event.setCancelled(true);

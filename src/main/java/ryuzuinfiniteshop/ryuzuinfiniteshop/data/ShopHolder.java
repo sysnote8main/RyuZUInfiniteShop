@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 
 import java.util.Arrays;
@@ -14,21 +15,14 @@ public class ShopHolder implements InventoryHolder {
 
     private final List<String> tags;
 
-    private final int page;
     private final Shop shop;
     private final ShopMode mode;
+    private final ShopGui gui;
 
-    public ShopHolder(ShopMode mode, Shop shop, String... tags) {
+    public ShopHolder(ShopMode mode, Shop shop, ShopGui gui, String... tags) {
         this.mode = mode;
         this.shop = shop;
-        this.page = 1;
-        this.tags = Arrays.asList(tags);
-    }
-
-    public ShopHolder(ShopMode mode, Shop shop, int page, String... tags) {
-        this.mode = mode;
-        this.shop = shop;
-        this.page = page;
+        this.gui = gui;
         this.tags = Arrays.asList(tags);
     }
 
@@ -36,8 +30,8 @@ public class ShopHolder implements InventoryHolder {
         return tags;
     }
 
-    public int getPage() {
-        return page;
+    public ShopGui getGui() {
+        return gui;
     }
 
     public Shop getShop() {

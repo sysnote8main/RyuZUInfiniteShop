@@ -23,11 +23,11 @@ public class ChangeIndividualSettingsListener implements Listener {
 
     //年齢の変更
     @EventHandler
-    public void changeAgeLook(InventoryClickEvent event) {
+    public void changeSettings(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        ShopGui gui = ShopUtil.getShopGui(event);
-        if (gui == null) return;
-        if (!(gui instanceof ShopEditorMainPage)) return;
+        ShopHolder holder = ShopUtil.getShopHolder(event);
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof ShopEditorMainPage)) return;
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
 
@@ -36,104 +36,65 @@ public class ChangeIndividualSettingsListener implements Listener {
         ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
         Shop shop = shopholder.getShop();
         int slot = event.getSlot();
-        if (!((ShopEditorMainPage) gui).getSettingsMap().containsKey(slot)) return;
-        if (!((ShopEditorMainPage) gui).getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Age)) return;
-        if (!(shop instanceof AgeableShop)) return;
+        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
 
-        //年齢の変更
-        ((AgeableShop) shop).setAgeLook(!((AgeableShop) shop).isAdult());
+        if (!editor.getSettingsMap().containsKey(slot)) return;
+        changeAgeLook(holder, event.getSlot());
+        changePowered(holder, event.getSlot());
+        changeProfession(holder, event.getSlot());
+        changeBiome(holder, event.getSlot());
 
         //音を出す
         SoundUtil.playClickShopSound(p);
 
         //GUIのアイテムを更新
-        ((ShopEditorMainPage) gui).setSettings(event.getView().getTopInventory());
+        editor.setSettings(event.getView().getTopInventory());
+    }
+
+    //年齢の変更
+    public void changeAgeLook(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Age)) return;
+        if (!(holder.getShop() instanceof AgeableShop)) return;
+
+        //年齢の変更
+        ((AgeableShop) holder.getShop()).setAgeLook(!((AgeableShop) holder.getShop()).isAdult());
     }
 
     //クリーパーを帯電させるか変更
-    @EventHandler
-    public void changePowered(InventoryClickEvent event) {
-        //インベントリがショップなのかチェック
-        ShopGui gui = ShopUtil.getShopGui(event);
-        if (gui == null) return;
-        if (!(gui instanceof ShopEditorMainPage)) return;
-        if (!ShopUtil.isEditMode(event)) return;
-        if (event.getClickedInventory() == null) return;
-
+    public void changePowered(ShopHolder holder, int slot) {
         //必要なデータを取得
-        Player p = (Player) event.getWhoClicked();
-        ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
-        Shop shop = shopholder.getShop();
-        int slot = event.getSlot();
-        if (!((ShopEditorMainPage) gui).getSettingsMap().containsKey(slot)) return;
-        if (!((ShopEditorMainPage) gui).getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Power)) return;
-        if (!(shop instanceof PoweredableShop)) return;
+        if (!((ShopEditorMainPage) holder.getGui()).getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Power))
+            return;
+        if (!(holder.getShop() instanceof PoweredableShop)) return;
 
         //帯電させるか変更
-        ((PoweredableShop) shop).setPowered(!((PoweredableShop) shop).isPowered());
-
-        //音を出す
-        SoundUtil.playClickShopSound(p);
-
-        //GUIのアイテムを更新
-        ((ShopEditorMainPage) gui).setSettings(event.getView().getTopInventory());
+        ((PoweredableShop) holder.getShop()).setPowered(!((PoweredableShop) holder.getShop()).isPowered());
     }
 
     //村人の職業を変更
-    @EventHandler
-    public void changeProfession(InventoryClickEvent event) {
-        //インベントリがショップなのかチェック
-        ShopGui gui = ShopUtil.getShopGui(event);
-        if (gui == null) return;
-        if (!(gui instanceof ShopEditorMainPage)) return;
-        if (!ShopUtil.isEditMode(event)) return;
-        if (event.getClickedInventory() == null) return;
-
+    public void changeProfession(ShopHolder holder, int slot) {
         //必要なデータを取得
-        Player p = (Player) event.getWhoClicked();
-        ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
-        Shop shop = shopholder.getShop();
-        int slot = event.getSlot();
-        if (!((ShopEditorMainPage) gui).getSettingsMap().containsKey(slot)) return;
-        if (!((ShopEditorMainPage) gui).getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Profession)) return;
-        if (!(shop instanceof VillagerableShop)) return;
+        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Profession)) return;
+        if (!(holder.getShop() instanceof VillagerableShop)) return;
 
         //職業を変更
-        ((VillagerableShop) shop).setProfession(((VillagerableShop) shop).getNextProfession());
-
-        //音を出す
-        SoundUtil.playClickShopSound(p);
-
-        //GUIのアイテムを更新
-        ((ShopEditorMainPage) gui).setSettings(event.getView().getTopInventory());
+        ((VillagerableShop) holder.getShop()).setProfession(((VillagerableShop) holder.getShop()).getNextProfession());
     }
 
     //村人のバイオームを変更
-    @EventHandler
-    public void changeBiome(InventoryClickEvent event) {
-        //インベントリがショップなのかチェック
-        ShopGui gui = ShopUtil.getShopGui(event);
-        if (gui == null) return;
-        if (!(gui instanceof ShopEditorMainPage)) return;
-        if (!ShopUtil.isEditMode(event)) return;
-        if (event.getClickedInventory() == null) return;
-
+    public void changeBiome(ShopHolder holder, int slot) {
         //必要なデータを取得
-        Player p = (Player) event.getWhoClicked();
-        ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
-        Shop shop = shopholder.getShop();
-        int slot = event.getSlot();
-        if (!((ShopEditorMainPage) gui).getSettingsMap().containsKey(slot)) return;
-        if (!((ShopEditorMainPage) gui).getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Biome)) return;
-        if (!(shop instanceof VillagerableShop)) return;
+        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Biome)) return;
+        if (!(holder.getShop() instanceof VillagerableShop)) return;
 
         //バイオームを変更
-        ((VillagerableShop) shop).setBiome(((VillagerableShop) shop).getNextBiome());
-
-        //音を出す
-        SoundUtil.playClickShopSound(p);
-
-        //GUIのアイテムを更新
-        ((ShopEditorMainPage) gui).setSettings(event.getView().getTopInventory());
+        ((VillagerableShop) holder.getShop()).setBiome(((VillagerableShop) holder.getShop()).getNextBiome());
     }
 }

@@ -30,40 +30,21 @@ import java.util.HashMap;
 public class ShopUtil {
     private static HashMap<String, Shop> shops = new HashMap<>();
 
-    public static boolean isShopInventory(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) return false;
-        Player p = (Player) event.getWhoClicked();
-        if (event.getClickedInventory() == null) return false;
-        return isShopInventory(event.getView().getTopInventory());
+    public static ShopHolder getShopHolder(InventoryClickEvent event) {
+        return getShopHolder(getSecureInventory(event));
     }
 
-    public static boolean isShopInventory(Inventory inv) {
-        if (inv == null) return false;
-        if (inv instanceof PlayerInventory) return false;
+    public static ShopHolder getShopHolder(Inventory inv) {
+        if (inv == null) return null;
+        if (inv instanceof PlayerInventory) return null;
         InventoryHolder holder = inv.getHolder();
-        if (holder == null) return false;
-        if (!(holder instanceof ShopHolder)) return false;
-        ShopHolder shopholder = (ShopHolder) holder;
-        Shop shop = shopholder.getShop();
-
-        return shop != null;
+        if (holder == null) return null;
+        if (!(holder instanceof ShopHolder)) return null;
+        return (ShopHolder) holder;
     }
 
     public static Inventory getSecureInventory(InventoryClickEvent event) {
-        return event.getClickedInventory() == null ? event.getView().getTopInventory() : event.getClickedInventory();
-    }
-
-    public static ShopGui getShopGui(InventoryClickEvent event) {
-        return getShopGui(getSecureInventory(event));
-    }
-
-    public static ShopGui getShopGui(Inventory inv) {
-        if (!isShopInventory(inv)) return null;
-        ShopHolder holder = (ShopHolder) inv.getHolder();
-        if (holder.getTags().get(0).equals(ShopEditorMainPage.class.getName()))
-            return holder.getShop().getEditor(holder.getPage());
-        else
-            return holder.getShop().getPage(holder.getPage());
+        return JavaUtil.getOrDefault(event.getClickedInventory(), event.getView().getTopInventory());
     }
 
     public static boolean isEditMode(InventoryClickEvent event) {
@@ -75,12 +56,12 @@ public class ShopUtil {
     }
 
     public static boolean isEditMode(Inventory inv) {
-        if (!isShopInventory(inv)) return false;
+        if (getShopHolder(inv) != null) return false;
         return ((ShopHolder) inv.getHolder()).getShopMode().equals(ShopHolder.ShopMode.Edit);
     }
 
     public static boolean isTradeMode(Inventory inv) {
-        if (!isShopInventory(inv)) return false;
+        if (getShopHolder(inv) != null) return false;
         return ((ShopHolder) inv.getHolder()).getShopMode().equals(ShopHolder.ShopMode.Trade);
     }
 

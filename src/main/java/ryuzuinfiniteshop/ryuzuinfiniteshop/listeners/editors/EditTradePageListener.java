@@ -26,55 +26,42 @@ public class EditTradePageListener implements Listener {
     public void onEdit(InventoryCloseEvent event) {
         //インベントリがショップなのかチェック
         Inventory inv = event.getInventory();
-        ShopGui gui = ShopUtil.getShopGui(inv);
-        if (gui == null) return;
-        if (!(gui instanceof ShopTradeGui)) return;
+        ShopHolder holder = ShopUtil.getShopHolder(inv);
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof ShopTradeGui)) return;
         if (!ShopUtil.isEditMode(inv)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getPlayer();
-        ShopHolder shopholder = (ShopHolder) inv.getHolder();
-        Shop shop = shopholder.getShop();
+        Shop shop = holder.getShop();
 
         //取引を上書きし、取引として成立しないものは削除する
-        List<ShopTrade> emptytrades = new ArrayList<>();
-        for (int i = 0; i < 9 * 6; i += shop.getShopType().equals(Shop.ShopType.TwotoOne) ? 4 : 9) {
-            if (shop.getShopType().equals(Shop.ShopType.TwotoOne) && i % 9 == 4) i++;
-            ShopTrade trade = ((ShopTradeGui) gui).getTradeFromSlot(i);
-            boolean available = ShopUtil.isAvailableTrade(inv, i, shop.getShopType());
-            if (trade == null && available)
-                shop.addTrade(inv, i);
-            else if (available)
-                trade.setTrade(inv, i, shop.getShopType());
-            else
-                emptytrades.add(trade);
-        }
-        shop.removeTrades(emptytrades);
-
-        //ショップを更新する
-        shop.updateTradeContents();
+        shop.checkTrades(inv);
 
         //1tick送らせてエディターのメインページに戻る
-        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () ->  {
-            int page = gui.getPage() / 18;
-            if (gui.getPage() % 18 != 0) page++;
-            p.openInventory(shop.getEditor(page).getInventory(ShopHolder.ShopMode.Edit));
-        }, 1L);
+        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> {
+            Inventory openinv = p.getOpenInventory().getTopInventory();
+            if (ShopUtil.getShopHolder(openinv) == null) {
+                int page = holder.getGui().getPage() / 18;
+                if (holder.getGui().getPage() % 18 != 0) page++;
+                p.openInventory(shop.getEditor(page).getInventory(ShopHolder.ShopMode.Edit));
 
-        //音を出す
-        SoundUtil.playCloseShopSound(p);
+                //音を出す
+                SoundUtil.playCloseShopSound(p);
+            }
+        }, 1L);
     }
 
     //ディスプレイをクリックしたときイベントをキャンセルする
     @EventHandler
     public void cancelClickDisplay(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        ShopGui gui = ShopUtil.getShopGui(event);
-        if (gui == null) return;
-        if (!(gui instanceof ShopTradeGui)) return;
+        ShopHolder holder = ShopUtil.getShopHolder(event);
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof ShopTradeGui)) return;
         if (!ShopUtil.isEditMode(event)) return;
         int slot = event.getSlot();
-        if (!((ShopTradeGui) gui).isDisplayItem(slot)) return;
+        if (!((ShopTradeGui) holder.getGui()).isDisplayItem(slot)) return;
         //イベントキャンセル
         event.setCancelled(true);
     }
@@ -83,17 +70,16 @@ public class EditTradePageListener implements Listener {
     @EventHandler
     public void openTradePage(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        ShopGui gui = ShopUtil.getShopGui(event);
-        if (gui == null) return;
-        if (!(gui instanceof ShopEditorMainPage)) return;
+        ShopHolder holder = ShopUtil.getShopHolder(event);
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof ShopEditorMainPage)) return;
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
-        ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
-        ShopEditorMainPage editormainpage = (ShopEditorMainPage) gui;
-        Shop shop = shopholder.getShop();
+        ShopEditorMainPage editormainpage = (ShopEditorMainPage) holder.getGui();
+        Shop shop = holder.getShop();
         int slot = event.getSlot();
 
         int lastslot = editormainpage.getTradeLastSlotNumber();

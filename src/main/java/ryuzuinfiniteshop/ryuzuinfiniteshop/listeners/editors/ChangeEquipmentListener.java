@@ -19,16 +19,15 @@ public class ChangeEquipmentListener implements Listener {
     @EventHandler
     public void changeEquipment(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        ShopGui gui = ShopUtil.getShopGui(event);
-        if (gui == null) return;
-        if (!(gui instanceof ShopEditorMainPage)) return;
+        ShopHolder holder = ShopUtil.getShopHolder(event);
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof ShopEditorMainPage)) return;
         if (!ShopUtil.isEditMode(event)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
-        ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
-        Shop shop = shopholder.getShop();
+        Shop shop = holder.getShop();
         int slot = event.getSlot();
 
         if (!EquipmentUtil.getEquipmentsSlot().containsKey(slot)) return;

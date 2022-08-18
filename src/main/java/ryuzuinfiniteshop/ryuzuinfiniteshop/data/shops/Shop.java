@@ -14,6 +14,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.*;
@@ -87,7 +88,30 @@ public class Shop {
 
     public void createNewPage() {
         createTradeNewPage();
-        createEdotorNewPage();
+        createEditorNewPage();
+    }
+
+    public void checkTrades(Inventory inv) {
+        ShopHolder holder = ShopUtil.getShopHolder(inv);
+        if (holder == null) return;
+
+        //取引を上書きし、取引として成立しないものは削除する
+        List<ShopTrade> emptytrades = new ArrayList<>();
+        for (int i = 0; i < 9 * 6; i += getShopType().equals(Shop.ShopType.TwotoOne) ? 4 : 9) {
+            if (getShopType().equals(Shop.ShopType.TwotoOne) && i % 9 == 4) i++;
+            ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(i);
+            boolean available = ShopUtil.isAvailableTrade(inv, i, getShopType());
+            if (trade == null && available)
+                addTrade(inv, i);
+            else if (available)
+                trade.setTrade(inv, i, getShopType());
+            else
+                emptytrades.add(trade);
+        }
+        removeTrades(emptytrades);
+
+        //ショップを更新する
+        updateTradeContents();
     }
 
     public void removeTrade(int number) {
@@ -128,6 +152,7 @@ public class Shop {
 
     public ShopEditorMainPage getEditor(int page) {
         if (page <= 0) return null;
+        if (page > editors.size()) return null;
         return editors.get(page - 1);
     }
 
@@ -137,6 +162,7 @@ public class Shop {
         for (int i = 1; i <= getEditorPageCountFromTradesCount(); i++) {
             editors.add(new ShopEditorMainPage(this, i));
         }
+        if(ableCreateEditorNewPage()) editors.add(new ShopEditorMainPage(this, getEditorPageCountFromTradesCount() + 1));
     }
 
     public int getLimitSize() {
@@ -167,6 +193,15 @@ public class Shop {
         return size + 1;
     }
 
+    public boolean isNewPage(Inventory inv) {
+        //インベントリがショップなのかチェック
+        ShopHolder holder = ShopUtil.getShopHolder(inv);
+        int page = holder.getGui().getPage();
+        if (pages.size() < page) return false;
+        if (pages.size() + 1 != page) return false;
+        return isLimitPage(pages.size());
+    }
+
     public ShopType getShopType() {
         return type;
     }
@@ -184,13 +219,13 @@ public class Shop {
             pages.add(new ShopGui4to4(this, getTradePageCount() + 1));
     }
 
-    public boolean ableEditorNewPage() {
+    public boolean ableCreateEditorNewPage() {
         if (editors.isEmpty()) return true;
         return editors.size() < getEditorPageCountFromTradesCount();
     }
 
-    public void createEdotorNewPage() {
-        if (!ableEditorNewPage()) return;
+    public void createEditorNewPage() {
+        if (!ableCreateEditorNewPage()) return;
         editors.add(new ShopEditorMainPage(this, getEditorPageCount() + 1));
     }
 

@@ -26,15 +26,14 @@ public class ChangeDisplayNameListener implements Listener {
     @EventHandler
     public void changeDisplay(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        ShopGui gui = ShopUtil.getShopGui(event);
-        if (gui == null) return;
-        if(!(gui instanceof ShopEditorMainPage)) return;
+        ShopHolder holder = ShopUtil.getShopHolder(event);
+        if (holder == null) return;
+        if(!(holder.getGui() instanceof ShopEditorMainPage)) return;
         if (!ShopUtil.isEditMode(event)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
-        ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
-        Shop shop = shopholder.getShop();
+        Shop shop = holder.getShop();
         int slot = event.getSlot();
         if (slot != 5 * 9 + 8) return;
 
