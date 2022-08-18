@@ -37,6 +37,7 @@ public class ChangeIndividualSettingsListener implements Listener {
         Shop shop = shopholder.getShop();
         int slot = event.getSlot();
         if (!((ShopEditorMainPage) gui).getSettingsMap().containsKey(slot)) return;
+        if (!((ShopEditorMainPage) gui).getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Age)) return;
         if (!(shop instanceof AgeableShop)) return;
 
         //年齢の変更
@@ -65,6 +66,7 @@ public class ChangeIndividualSettingsListener implements Listener {
         Shop shop = shopholder.getShop();
         int slot = event.getSlot();
         if (!((ShopEditorMainPage) gui).getSettingsMap().containsKey(slot)) return;
+        if (!((ShopEditorMainPage) gui).getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Power)) return;
         if (!(shop instanceof PoweredableShop)) return;
 
         //帯電させるか変更
@@ -93,9 +95,10 @@ public class ChangeIndividualSettingsListener implements Listener {
         Shop shop = shopholder.getShop();
         int slot = event.getSlot();
         if (!((ShopEditorMainPage) gui).getSettingsMap().containsKey(slot)) return;
+        if (!((ShopEditorMainPage) gui).getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Profession)) return;
         if (!(shop instanceof VillagerableShop)) return;
 
-        //帯電させるか変更
+        //職業を変更
         ((VillagerableShop) shop).setProfession(((VillagerableShop) shop).getNextProfession());
 
         //音を出す
@@ -105,7 +108,7 @@ public class ChangeIndividualSettingsListener implements Listener {
         ((ShopEditorMainPage) gui).setSettings(event.getView().getTopInventory());
     }
 
-    //村人の職業を変更
+    //村人のバイオームを変更
     @EventHandler
     public void changeBiome(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
@@ -121,9 +124,10 @@ public class ChangeIndividualSettingsListener implements Listener {
         Shop shop = shopholder.getShop();
         int slot = event.getSlot();
         if (!((ShopEditorMainPage) gui).getSettingsMap().containsKey(slot)) return;
+        if (!((ShopEditorMainPage) gui).getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Biome)) return;
         if (!(shop instanceof VillagerableShop)) return;
 
-        //帯電させるか変更
+        //バイオームを変更
         ((VillagerableShop) shop).setBiome(((VillagerableShop) shop).getNextBiome());
 
         //音を出す
