@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,6 +11,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
@@ -55,7 +57,11 @@ public class EditMainPageListener implements Listener {
         shop.setEditting(false);
 
         //音を出す
-        SoundUtil.playCloseShopSound(p);
+        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> {
+            if (ShopUtil.getShopHolder(p.getOpenInventory().getTopInventory()) == null) {
+                SoundUtil.playCloseShopSound(p);
+            }
+        }, 1L);
     }
 
     //編集画面の切り替え

@@ -40,8 +40,7 @@ public class EditTradePageListener implements Listener {
 
         //1tick送らせてエディターのメインページに戻る
         Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> {
-            Inventory openinv = p.getOpenInventory().getTopInventory();
-            if (ShopUtil.getShopHolder(openinv) == null) {
+            if (ShopUtil.getShopHolder(p.getOpenInventory().getTopInventory()) == null) {
                 int page = holder.getGui().getPage() / 18;
                 if (holder.getGui().getPage() % 18 != 0) page++;
                 p.openInventory(shop.getEditor(page).getInventory(ShopHolder.ShopMode.Edit));

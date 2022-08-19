@@ -56,12 +56,12 @@ public class ShopUtil {
     }
 
     public static boolean isEditMode(Inventory inv) {
-        if (getShopHolder(inv) != null) return false;
+        if (getShopHolder(inv) == null) return false;
         return ((ShopHolder) inv.getHolder()).getShopMode().equals(ShopHolder.ShopMode.Edit);
     }
 
     public static boolean isTradeMode(Inventory inv) {
-        if (getShopHolder(inv) != null) return false;
+        if (getShopHolder(inv) == null) return false;
         return ((ShopHolder) inv.getHolder()).getShopMode().equals(ShopHolder.ShopMode.Trade);
     }
 
