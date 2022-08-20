@@ -36,7 +36,6 @@ public class Shop {
     protected List<ShopEditorMainPage> editors = new ArrayList<>();
     protected List<ShopTradeGui> pages = new ArrayList<>();
     protected ItemStack[] equipments = new ItemStack[6];
-    protected boolean invisible = false;
 
     public Shop(Location location, EntityType entitytype) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
@@ -142,8 +141,14 @@ public class Shop {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石");
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石" , "シフトして地面に使用");
         return PersistentUtil.setNMSTag(item, "Shop", config.saveToString());
+    }
+
+    public void removeShop() {
+        npc.remove();
+        getFile().delete();
+        ShopUtil.removeShop(LocationUtil.toStringFromLocation(location));
     }
 
     public void removeTrade(int number) {

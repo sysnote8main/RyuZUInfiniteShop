@@ -138,13 +138,13 @@ public class ItemUtil {
 
     public static String toStringFromItemStack(ItemStack item) {
         YamlConfiguration config = new YamlConfiguration();
-        config.set("", item);
+        config.set("ShopItemStack", item);
         return config.saveToString();
     }
 
     public static String toStringFromItemStackArray(ItemStack[] item) {
         YamlConfiguration config = new YamlConfiguration();
-        config.set("", item);
+        config.set("ShopItemStacks", item);
         return config.saveToString();
     }
 
@@ -156,7 +156,7 @@ public class ItemUtil {
             e.printStackTrace();
             return null;
         }
-        return config.getItemStack("", null);
+        return config.getItemStack("ShopItemStack", null);
     }
 
     public static ItemStack[] toItemStackArrayFromString(String string) {
@@ -167,6 +167,6 @@ public class ItemUtil {
             e.printStackTrace();
             return null;
         }
-        return ((List<ItemStack>) config.getList("", null)).toArray(new ItemStack[0]);
+        return ((List<ItemStack>) config.getList("ShopItemStacks", null)).toArray(new ItemStack[0]);
     }
 }

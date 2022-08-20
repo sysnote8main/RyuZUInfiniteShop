@@ -37,15 +37,17 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
     }
 
     public static void registerEvents() {
-        getPlugin().getServer().getPluginManager().registerEvents(new ChangeEquipmentListener(), getPlugin());
-        getPlugin().getServer().getPluginManager().registerEvents(new ChangeDisplayNameListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new EditMainPageListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new EditTradePageListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new CancelItemMoveListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new OpenShopListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new TradeListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new CancelAffectNPC(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new ChangeEquipmentListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new ChangeDisplayNameListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeIndividualSettingsListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new ChangeShopTypeListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new ConvartListener(), getPlugin());
 
         /*try {
             for(Class<?> clazz : new HashSet<>(ClassUtil.loadClasses("ryuzuinfiniteshop.ryuzuinfiniteshop", "listeners"))) {

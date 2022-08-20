@@ -11,7 +11,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 
 //ショップのNPCの装備を変更する
-public class ChangeShopTypeListener implements Listener {
+public class RemoveShopListener implements Listener {
     @EventHandler
     public void changeShopType(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
@@ -25,15 +25,15 @@ public class ChangeShopTypeListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
         int slot = event.getSlot();
-        if (slot != 5 * 9 + 7) return;
+        if (slot != 3 * 9 + 6) return;
 
-        //ショップタイプの変更
-        shop.changeShopType();
+        //ショップを削除
+        shop.removeShop();
 
         //音を出す
-        SoundUtil.playClickShopSound(p);
+        SoundUtil.playSuccessSound(p);
 
-        //インベントリを更新する
-        p.openInventory(shop.getEditor(holder.getGui().getPage()).getInventory(holder.getShopMode()));
+        //インベントリを閉じる
+        p.closeInventory();
     }
 }

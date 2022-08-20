@@ -30,6 +30,7 @@ public class ChangeDisplayNameListener implements Listener {
         if (holder == null) return;
         if(!(holder.getGui() instanceof ShopEditorMainPage)) return;
         if (!ShopUtil.isEditMode(event)) return;
+        if (event.getClickedInventory() == null) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();

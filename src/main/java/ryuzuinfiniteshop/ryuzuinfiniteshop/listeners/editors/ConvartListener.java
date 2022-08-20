@@ -34,13 +34,10 @@ public class ConvartListener implements Listener {
         if (slot != 3 * 9 + 7 && slot != 3 * 9 + 8) return;
 
         //コンバート
-        ItemStack item = slot != 3 * 9 + 7 ? shop.convertTrades() : shop.convertShop();
+        ItemStack item = slot == 3 * 9 + 7 ? shop.convertTrades() : shop.convertShop();
         if (ItemUtil.ableGive(p.getInventory(), item)) {
             p.getInventory().addItem(item);
             SoundUtil.playSuccessSound(p);
-
-            //インベントリを更新する
-            p.openInventory(shop.getEditor(holder.getGui().getPage()).getInventory(holder.getShopMode()));
         } else
             SoundUtil.playFailSound(p);
     }
@@ -61,11 +58,11 @@ public class ConvartListener implements Listener {
         ItemStack item = event.getCursor();
         int slot = event.getSlot();
 
+        if (slot != 2 * 9 + 8) return;
         if (item == null || PersistentUtil.getNMSStringTag(item, "TradesSize") == null) {
             SoundUtil.playFailSound(p);
             return;
         }
-        if (slot != 2 * 9 + 8) return;
 
         //トレードを読み込む
         if ((type.isRightClick() || type.isLeftClick()) && !type.isShiftClick()) {
@@ -73,6 +70,9 @@ public class ConvartListener implements Listener {
 
             //音を出す
             SoundUtil.playSuccessSound(p);
+
+            //インベントリを更新する
+            p.openInventory(shop.getEditor(holder.getGui().getPage()).getInventory(holder.getShopMode()));
         }
     }
 

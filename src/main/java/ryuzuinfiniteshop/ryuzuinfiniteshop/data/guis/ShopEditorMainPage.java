@@ -39,6 +39,7 @@ public class ShopEditorMainPage extends ShopGui {
         setShopType(inv);
         setConvertTrades(inv);
         setConvertShop(inv);
+        setRemoveShop(inv);
         setSettings(inv);
 
         return inv;
@@ -72,7 +73,7 @@ public class ShopEditorMainPage extends ShopGui {
         if (newslot == 18)
             getShop().createEditorNewPage();
         else if (newslot != -1)
-            inv.setItem(newslot, ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.WHITE + "新規ページ"));
+            inv.setItem(newslot, ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.YELLOW + "新規ページ"));
     }
 
     private void setDisplayName(Inventory inv) {
@@ -81,17 +82,21 @@ public class ShopEditorMainPage extends ShopGui {
     }
 
     private void setShopType(Inventory inv) {
-        String typename = getShop().getShopType().equals(Shop.ShopType.TwotoOne) ? ChatColor.WHITE + "2対1" : ChatColor.WHITE + "4対4" ;
+        String typename = getShop().getShopType().equals(Shop.ShopType.TwotoOne) ? ChatColor.GREEN + "2対1" : ChatColor.GREEN + "4対4" ;
         inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, typename));
     }
 
     private void setConvertTrades(Inventory inv) {
-        inv.setItem(3 * 9 + 7, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, ChatColor.GREEN +"トレード内容をアイテム化する"));
-        inv.setItem(2 * 9 + 8, ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.GREEN +"トレードを読み込む"));
+        inv.setItem(3 * 9 + 7, ItemUtil.getNamedItem(Material.EMERALD, ChatColor.GREEN +"トレード内容をアイテム化する"));
+        inv.setItem(2 * 9 + 8, ItemUtil.getNamedEnchantedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.GREEN +"トレードを読み込む"));
     }
 
     private void setConvertShop(Inventory inv) {
-        inv.setItem(3 * 9 + 8, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, ChatColor.GREEN + "ショップをアイテム化する"));
+        inv.setItem(3 * 9 + 8, ItemUtil.getNamedItem(Material.DIAMOND, ChatColor.GREEN + "ショップをアイテム化する"));
+    }
+
+    private void setRemoveShop(Inventory inv) {
+        inv.setItem(3 * 9 + 6, ItemUtil.getNamedItem(Material.BARRIER, ChatColor.RED + "ショップを削除する"));
     }
 
     public void setSettings(Inventory inv) {
@@ -105,8 +110,8 @@ public class ShopEditorMainPage extends ShopGui {
     private void setAge(Inventory inv) {
         if (!(getShop() instanceof AgeableShop)) return;
         ItemStack item = ((AgeableShop) getShop()).isAdult() ?
-                ItemUtil.getNamedItem(Material.STONE, ChatColor.WHITE + "大人") :
-                ItemUtil.getNamedItem(Material.STONE_BUTTON, ChatColor.WHITE + "子供");
+                ItemUtil.getNamedItem(Material.STONE, ChatColor.GREEN + "大人") :
+                ItemUtil.getNamedItem(Material.STONE_BUTTON, ChatColor.GREEN + "子供");
         int slot = 4 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Age);
@@ -115,8 +120,8 @@ public class ShopEditorMainPage extends ShopGui {
     private void setPower(Inventory inv) {
         if (!(getShop() instanceof PoweredableShop)) return;
         ItemStack item = ((AgeableShop) getShop()).isAdult() ?
-                ItemUtil.getNamedItem(Material.CREEPER_SPAWN_EGG, ChatColor.AQUA + "通常") :
-                ItemUtil.getNamedEnchantedItem(Material.CREEPER_SPAWN_EGG, ChatColor.AQUA + "帯電");
+                ItemUtil.getNamedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + "通常") :
+                ItemUtil.getNamedEnchantedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + "帯電");
         int slot = 4 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Power);
@@ -125,14 +130,14 @@ public class ShopEditorMainPage extends ShopGui {
     private void setProfession(Inventory inv) {
         if (!(getShop() instanceof VillagerableShop)) return;
         int slot = 4 * 9 + 8 - SettingsMap.size();
-        inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getJobBlockMaterial(), ChatColor.WHITE + "ジョブチェンジ"));
+        inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getJobBlockMaterial(), ChatColor.GREEN + "ジョブチェンジ"));
         SettingsMap.put(slot, ShopSettings.Profession);
     }
 
     private void setBiome(Inventory inv) {
         if (!(getShop() instanceof VillagerableShop)) return;
         int slot = 4 * 9 + 8 - SettingsMap.size();
-        inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getBiomeImageMaterial(), ChatColor.WHITE + "バイオームチェンジ"));
+        inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getBiomeImageMaterial(), ChatColor.GREEN + "バイオームチェンジ"));
         SettingsMap.put(slot, ShopSettings.Biome);
     }
 

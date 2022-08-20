@@ -131,6 +131,10 @@ public class ShopUtil {
         new Shop(location, type);
     }
 
+    public static void removeShop(String id) {
+        shops.remove(id);
+    }
+
     public static void createShop(Location location, String data) {
         if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(location))) return;
 
