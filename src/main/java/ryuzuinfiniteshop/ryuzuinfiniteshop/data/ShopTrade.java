@@ -32,9 +32,9 @@ public class ShopTrade {
         this.take = config.get("take").toArray(new ItemStack[0]);
     }
 
-    public ShopTrade(ConfigurationSection config) {
-        this.give = (ItemStack[]) config.get("give");
-        this.take = (ItemStack[]) config.get("take");
+    public ShopTrade(ItemStack[] give , ItemStack[] take) {
+        this.give = give;
+        this.take = take;
     }
 
     public ShopTrade(Inventory inv, int slot, Shop.ShopType type) {

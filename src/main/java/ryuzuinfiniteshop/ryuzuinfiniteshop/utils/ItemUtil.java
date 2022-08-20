@@ -1,6 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -27,15 +28,15 @@ public class ItemUtil {
     public static boolean ableGive(Inventory inventory, ItemStack... items) {
         if (items == null) return true;
         HashMap<ItemStack, Integer> give = new HashMap<>();
-        Arrays.stream(items).forEach(item -> give.put(item, containsCount(items , item)));
+        Arrays.stream(items).forEach(item -> give.put(item, containsCount(items, item)));
         give.replaceAll((i, v) -> give.get(i) - capacityCount(getContents(inventory), i));
         int needslot = give.keySet().stream()
                 .filter(item -> give.get(item) > 0)
                 .mapToInt(item -> {
-            int size = give.get(item) / item.getType().getMaxStackSize();
-            if (give.get(item) % item.getType().getMaxStackSize() != 0) size++;
-            return size;
-        }).sum();
+                    int size = give.get(item) / item.getType().getMaxStackSize();
+                    if (give.get(item) % item.getType().getMaxStackSize() != 0) size++;
+                    return size;
+                }).sum();
         int emptyslot = (int) Arrays.stream(getContents(inventory)).filter(Objects::isNull).count();
         return needslot <= emptyslot;
     }
@@ -44,16 +45,17 @@ public class ItemUtil {
     public static boolean contains(Inventory inventory, ItemStack... items) {
         if (items == null) return true;
         HashMap<ItemStack, Integer> need = new HashMap<>();
-        Arrays.stream(items).filter(Objects::nonNull).forEach(item -> need.put(item, containsCount(items , item)));
+        Arrays.stream(items).filter(Objects::nonNull).forEach(item -> need.put(item, containsCount(items, item)));
         HashMap<ItemStack, Integer> has = new HashMap<>();
-        if (need.keySet().stream().anyMatch(item -> Arrays.stream(getContents(inventory)).noneMatch(item::isSimilar))) return false;
-        need.keySet().forEach(item -> has.put(item, containsCount(getContents(inventory) , item)));
+        if (need.keySet().stream().anyMatch(item -> Arrays.stream(getContents(inventory)).noneMatch(item::isSimilar)))
+            return false;
+        need.keySet().forEach(item -> has.put(item, containsCount(getContents(inventory), item)));
         return need.keySet().stream().noneMatch(item -> has.get(item) < need.get(item));
     }
 
     public static ItemStack[] getContents(Inventory inventory) {
         ItemStack[] contents = inventory.getContents();
-        return inventory instanceof PlayerInventory ? Arrays.copyOf(contents , contents.length - 5) : contents;
+        return inventory instanceof PlayerInventory ? Arrays.copyOf(contents, contents.length - 5) : contents;
     }
 
     public static ItemStack getOneItemStack(ItemStack item) {
@@ -108,7 +110,7 @@ public class ItemUtil {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
         meta.addItemFlags(ItemFlag.values());
-        meta.addEnchant(Enchantment.DURABILITY , 1 , true);
+        meta.addEnchant(Enchantment.DURABILITY, 1, true);
         item.setItemMeta(meta);
         return item;
     }
@@ -120,7 +122,7 @@ public class ItemUtil {
         meta.setDisplayName(name);
         meta.setLore(Arrays.asList(lore));
         meta.addItemFlags(ItemFlag.values());
-        meta.addEnchant(Enchantment.DURABILITY , 1 , true);
+        meta.addEnchant(Enchantment.DURABILITY, 1, true);
         item.setItemMeta(meta);
         return item;
     }
@@ -132,5 +134,39 @@ public class ItemUtil {
             set.add(inv.getItem(slot + i));
         }
         return set.toArray(new ItemStack[0]);
+    }
+
+    public static String toStringFromItemStack(ItemStack item) {
+        YamlConfiguration config = new YamlConfiguration();
+        config.set("", item);
+        return config.saveToString();
+    }
+
+    public static String toStringFromItemStackArray(ItemStack[] item) {
+        YamlConfiguration config = new YamlConfiguration();
+        config.set("", item);
+        return config.saveToString();
+    }
+
+    public static ItemStack toItemStackFromString(String string) {
+        YamlConfiguration config = new YamlConfiguration();
+        try {
+            config.loadFromString(string);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return config.getItemStack("", null);
+    }
+
+    public static ItemStack[] toItemStackArrayFromString(String string) {
+        YamlConfiguration config = new YamlConfiguration();
+        try {
+            config.loadFromString(string);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return ((List<ItemStack>) config.getList("", null)).toArray(new ItemStack[0]);
     }
 }

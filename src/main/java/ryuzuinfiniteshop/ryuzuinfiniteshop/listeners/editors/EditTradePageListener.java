@@ -43,7 +43,7 @@ public class EditTradePageListener implements Listener {
             if (ShopUtil.getShopHolder(p.getOpenInventory().getTopInventory()) == null) {
                 int page = holder.getGui().getPage() / 18;
                 if (holder.getGui().getPage() % 18 != 0) page++;
-                p.openInventory(shop.getEditor(page).getInventory(ShopHolder.ShopMode.Edit));
+                p.openInventory(shop.getEditor(page).getInventory(holder.getShopMode()));
 
                 //音を出す
                 SoundUtil.playCloseShopSound(p);
@@ -91,9 +91,9 @@ public class EditTradePageListener implements Listener {
         //取引編集ページを開く
         if (slot == newslot) {
             shop.createTradeNewPage();
-            p.openInventory(shop.getPage(page).getInventory(ShopHolder.ShopMode.Edit));
+            p.openInventory(shop.getPage(page).getInventory(holder.getShopMode()));
         } else
-            p.openInventory(shop.getPage(editormainpage.getTradePageNumber(slot)).getInventory(ShopHolder.ShopMode.Edit));
+            p.openInventory(shop.getPage(editormainpage.getTradePageNumber(slot)).getInventory(holder.getShopMode()));
 
         //音を出す
         SoundUtil.playClickShopSound(p);

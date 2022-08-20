@@ -6,10 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -39,14 +36,13 @@ public class Shop {
     protected List<ShopEditorMainPage> editors = new ArrayList<>();
     protected List<ShopTradeGui> pages = new ArrayList<>();
     protected ItemStack[] equipments = new ItemStack[6];
-    protected String diplayname;
     protected boolean invisible = false;
 
     public Shop(Location location, EntityType entitytype) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         initializeShop(location, entitytype);
-        if(exsited) loadYamlProcess(getFile());
-        if(!exsited) saveYaml();
+        if (exsited) loadYamlProcess(getFile());
+        if (!exsited) saveYaml();
     }
 
     public void loadYamlProcess(File file) {
@@ -77,7 +73,6 @@ public class Shop {
         this.type = ShopType.TwotoOne;
         spawnNPC(entitytype);
         Arrays.fill(equipments, new ItemStack(Material.AIR));
-        //createFirstPage();
         ShopUtil.addShop(getID(), this);
     }
 
@@ -89,6 +84,12 @@ public class Shop {
     public void createNewPage() {
         createTradeNewPage();
         createEditorNewPage();
+    }
+
+    public void changeShopType() {
+        if (type.equals(ShopType.FourtoFour)) trades.clear();
+        this.type = type.equals(ShopType.TwotoOne) ? ShopType.FourtoFour : ShopType.TwotoOne;
+        updateTradeContents();
     }
 
     public void checkTrades(Inventory inv) {
@@ -112,6 +113,37 @@ public class Shop {
 
         //ショップを更新する
         updateTradeContents();
+    }
+
+    public ItemStack convertTrades() {
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石");
+        item = PersistentUtil.setNMSTag(item, "TradesSize", String.valueOf(trades.size()));
+        for (int i = 0; i < trades.size(); i++) {
+            item = PersistentUtil.setNMSTag(item, "Give" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).give));
+            item = PersistentUtil.setNMSTag(item, "Take" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).take));
+        }
+        return item;
+    }
+
+    public void loadTrades(ItemStack item) {
+        String tag = PersistentUtil.getNMSStringTag(item, "TradesSize");
+        if (tag == null) return;
+        for (int i = 0; i < Integer.parseInt(tag); i++) {
+            trades.add(new ShopTrade(ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Give" + i)), ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Take" + i))));
+        }
+        updateTradeContents();
+    }
+
+    public ItemStack convertShop() {
+        File file = getFile();
+        YamlConfiguration config = new YamlConfiguration();
+        try {
+            config.load(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石");
+        return PersistentUtil.setNMSTag(item, "Shop", config.saveToString());
     }
 
     public void removeTrade(int number) {
@@ -162,7 +194,8 @@ public class Shop {
         for (int i = 1; i <= getEditorPageCountFromTradesCount(); i++) {
             editors.add(new ShopEditorMainPage(this, i));
         }
-        if(ableCreateEditorNewPage()) editors.add(new ShopEditorMainPage(this, getEditorPageCountFromTradesCount() + 1));
+        if (ableCreateEditorNewPage())
+            editors.add(new ShopEditorMainPage(this, getEditorPageCountFromTradesCount() + 1));
     }
 
     public int getLimitSize() {

@@ -131,6 +131,39 @@ public class ShopUtil {
         new Shop(location, type);
     }
 
+    public static void createShop(Location location, String data) {
+        if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(location))) return;
+
+        File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
+        YamlConfiguration config = new YamlConfiguration();
+        try {
+            config.loadFromString(data);
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        EntityType type = EntityType.valueOf(config.getString("EntityType"));
+
+        if (type.equals(EntityType.VILLAGER) || type.equals(EntityType.ZOMBIE_VILLAGER)) {
+            new VillagerableShop(location, type);
+            return;
+        }
+        if (type.equals(EntityType.CREEPER)) {
+            new PoweredableShop(location, type);
+            return;
+        }
+        if (Ageable.class.isAssignableFrom(type.getEntityClass())) {
+            new AgeableShop(location, type);
+            return;
+        }
+        new Shop(location, type);
+    }
+
     public static void setTradeStatus(Player p, Inventory inventory, Shop shop, ShopTradeGui gui) {
         ItemStack status1 = ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "購入可能");
         ItemStack status2 = ItemUtil.getNamedItem(Material.RED_STAINED_GLASS_PANE, ChatColor.RED + "アイテムが足りません");

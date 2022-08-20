@@ -62,9 +62,9 @@ public class ChangeDisplayNameListener implements Listener {
         } else {
             p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "名前が設定されました");
             SoundUtil.playSuccessSound(p);
+            Shop shop = ShopUtil.getShop(namingShop.get(p.getUniqueId()));
+            shop.getNPC().setCustomName(event.getMessage());
         }
-        Shop shop = ShopUtil.getShop(namingShop.get(p.getUniqueId()));
-        shop.getNPC().setCustomName(event.getMessage());
         namingTime.remove(p.getUniqueId());
         namingShop.remove(p.getUniqueId());
         event.setCancelled(true);

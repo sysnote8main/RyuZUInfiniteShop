@@ -36,6 +36,9 @@ public class ShopEditorMainPage extends ShopGui {
         setEquipment(inv);
         setTradesPage(inv);
         setDisplayName(inv);
+        setShopType(inv);
+        setConvertTrades(inv);
+        setConvertShop(inv);
         setSettings(inv);
 
         return inv;
@@ -73,8 +76,22 @@ public class ShopEditorMainPage extends ShopGui {
     }
 
     private void setDisplayName(Inventory inv) {
-        String diplayname = JavaUtil.getOrDefault(getShop().getNPC().getCustomName(), ChatColor.WHITE + "名前");
+        String diplayname = JavaUtil.getOrDefault(getShop().getNPC().getCustomName(), ChatColor.GREEN + "名前を変更する");
         inv.setItem(5 * 9 + 8, ItemUtil.getNamedItem(Material.NAME_TAG, diplayname));
+    }
+
+    private void setShopType(Inventory inv) {
+        String typename = getShop().getShopType().equals(Shop.ShopType.TwotoOne) ? ChatColor.WHITE + "2対1" : ChatColor.WHITE + "4対4" ;
+        inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, typename));
+    }
+
+    private void setConvertTrades(Inventory inv) {
+        inv.setItem(3 * 9 + 7, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, ChatColor.GREEN +"トレード内容をアイテム化する"));
+        inv.setItem(2 * 9 + 8, ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.GREEN +"トレードを読み込む"));
+    }
+
+    private void setConvertShop(Inventory inv) {
+        inv.setItem(3 * 9 + 8, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, ChatColor.GREEN + "ショップをアイテム化する"));
     }
 
     public void setSettings(Inventory inv) {

@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
+import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopTradeGui;
@@ -17,7 +18,7 @@ public class CancelItemMoveListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (event.getClickedInventory() == null) return;
-        if (!event.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) return;
+        if (!(event.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY) || event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR))) return;
         if (ShopUtil.isEditMode(event.getView().getTopInventory()) && holder.getGui() instanceof ShopTradeGui) return;
 
         //キャンセルイベント
@@ -46,5 +47,6 @@ public class CancelItemMoveListener implements Listener {
 
         //キャンセルイベント
         event.setCancelled(true);
+
     }
 }
