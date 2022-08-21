@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Shop {
-    public enum ShopType {TwotoOne, FourtoFour,SixtoTwo}
+    public enum ShopType {TwotoOne, FourtoFour, SixtoTwo}
 
     public enum ShopNBT {Ageable, Poweredable, Villagerable}
 
@@ -67,6 +67,9 @@ public class Shop {
             updateTradeContents();
             this.equipments = ((ArrayList<ItemStack>) yaml.getList("Equipments")).toArray(new ItemStack[0]);
             updateEquipments();
+            this.location.setYaw(yaml.getInt("Yaw"));
+            npc.teleport(location);
+            if (npc instanceof LivingEntity) ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Visible"));
         };
     }
 
@@ -149,6 +152,7 @@ public class Shop {
     }
 
     public ItemStack convertShop() {
+        saveYaml();
         File file = getFile();
         YamlConfiguration config = new YamlConfiguration();
         try {
@@ -156,7 +160,7 @@ public class Shop {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石" , "シフトして地面に使用");
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石", "シフトして地面に使用");
         return PersistentUtil.setNMSTag(item, "Shop", config.saveToString());
     }
 
@@ -301,6 +305,8 @@ public class Shop {
             yaml.set("Equipments", Arrays.stream(equipments).map(equipment -> JavaUtil.getOrDefault(equipment, new ItemStack(Material.AIR))).collect(Collectors.toList()));
             yaml.set("Lock", lock);
             yaml.set("Trades", getTradesConfig());
+            if (npc instanceof LivingEntity) yaml.set("Visible", !((LivingEntity) npc).isInvisible());
+            yaml.set("Yaw", location.getYaw());
         };
     }
 
@@ -345,10 +351,13 @@ public class Shop {
 
     public void spawnNPC(EntityType entitytype) {
         if (npc != null) npc.remove();
+        this.location.setPitch(0);
+        this.location.setYaw(0);
         Entity npc = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entitytype);
         this.npc = npc;
         npc.setSilent(true);
         npc.setInvulnerable(true);
+        npc.teleport(location);
         PersistentUtil.setNMSTag(npc, "Shop", getID());
         initializeLivingEntitiy();
     }

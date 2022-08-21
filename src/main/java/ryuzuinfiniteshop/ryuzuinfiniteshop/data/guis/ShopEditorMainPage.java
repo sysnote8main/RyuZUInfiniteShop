@@ -31,17 +31,10 @@ public class ShopEditorMainPage extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopHolder.ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, JavaUtil.getOrDefault(getShop().getNPC().getCustomName() , "ショップ") + " エディター ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, JavaUtil.getOrDefault(getShop().getNPC().getCustomName(), "ショップ") + " エディター ページ" + getPage());
 
-        setEquipment(inv);
-        setTradesPage(inv);
-        setDisplayName(inv);
-        setShopType(inv);
-        setNPCDirecation(inv);
-        setConvertTrades(inv);
-        setConvertShop(inv);
-        setRemoveShop(inv);
-        setSettings(inv);
+        //アイテムを設置
+        setDisplay(inv);
 
         return inv;
     }
@@ -78,20 +71,20 @@ public class ShopEditorMainPage extends ShopGui {
     }
 
     private void setDisplayName(Inventory inv) {
-        inv.setItem(5 * 9 + 8, ItemUtil.getNamedItem(Material.NAME_TAG,  ChatColor.GREEN + "名前を変更する"));
+        inv.setItem(5 * 9 + 8, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + "名前を変更する"));
     }
 
     private void setShopType(Inventory inv) {
         String typename = "";
         switch (getShop().getShopType()) {
             case TwotoOne:
-                typename = "2対1";
+                typename = ChatColor.GREEN + "2対1";
                 break;
             case FourtoFour:
-                typename =  "4対4";
+                typename = ChatColor.GREEN + "4対4";
                 break;
             case SixtoTwo:
-                typename =  "6対2";
+                typename = ChatColor.GREEN + "6対2";
                 break;
         }
         inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, typename));
@@ -99,6 +92,13 @@ public class ShopEditorMainPage extends ShopGui {
 
     private void setNPCDirecation(Inventory inv) {
         inv.setItem(5 * 9 + 6, ItemUtil.getNamedItem(Material.ARROW, ChatColor.GREEN + "方向切り替え"));
+    }
+
+    private void setLock(Inventory inv) {
+        ItemStack item = getShop().isLock() ?
+                ItemUtil.getNamedEnchantedItem(Material.TRIPWIRE_HOOK, ChatColor.GREEN + "ロック") :
+                ItemUtil.getNamedItem(Material.TRIPWIRE_HOOK, ChatColor.GREEN + "アンロック");
+        inv.setItem(5 * 9 + 5, item);
     }
 
     private void setConvertTrades(Inventory inv) {
@@ -112,6 +112,18 @@ public class ShopEditorMainPage extends ShopGui {
 
     private void setRemoveShop(Inventory inv) {
         inv.setItem(3 * 9 + 6, ItemUtil.getNamedItem(Material.BARRIER, ChatColor.RED + "ショップを削除する"));
+    }
+
+    public void setDisplay(Inventory inv) {
+        setEquipment(inv);
+        setTradesPage(inv);
+        setDisplayName(inv);
+        setShopType(inv);
+        setNPCDirecation(inv);
+        setConvertTrades(inv);
+        setConvertShop(inv);
+        setRemoveShop(inv);
+        setSettings(inv);
     }
 
     public void setSettings(Inventory inv) {

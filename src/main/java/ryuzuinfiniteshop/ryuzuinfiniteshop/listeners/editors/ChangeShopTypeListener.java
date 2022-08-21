@@ -10,7 +10,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 
-//ショップのNPCの装備を変更する
+//ショップのタイプを変更する
 public class ChangeShopTypeListener implements Listener {
     @EventHandler
     public void changeShopType(InventoryClickEvent event) {
@@ -34,6 +34,6 @@ public class ChangeShopTypeListener implements Listener {
         SoundUtil.playClickShopSound(p);
 
         //インベントリを更新する
-        p.openInventory(shop.getEditor(holder.getGui().getPage()).getInventory(holder.getShopMode()));
+        shop.getEditor(holder.getGui().getPage()).setDisplay(event.getClickedInventory());
     }
 }

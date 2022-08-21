@@ -39,7 +39,7 @@ public abstract class ShopTradeGui extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopHolder.ShopMode mode) {
-        return Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, JavaUtil.getOrDefault(getShop().getNPC().getCustomName() , "ショップ") + "ショップ ページ" + getPage());
+        return Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, JavaUtil.getOrDefault(getShop().getNPC().getCustomName(), "ショップ") + "ショップ ページ" + getPage());
     }
 
     public Inventory getInventory(ShopHolder.ShopMode mode, Player p) {
@@ -67,10 +67,10 @@ public abstract class ShopTradeGui extends ShopGui {
                 addslot = 2;
                 break;
             case FourtoFour:
-                addslot =  4;
+                addslot = 4;
                 break;
             case SixtoTwo:
-                addslot =  6;
+                addslot = 6;
                 break;
         }
         for (int i = 0; i < getTrades().size(); i++) {

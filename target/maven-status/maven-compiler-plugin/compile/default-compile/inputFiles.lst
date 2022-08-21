@@ -1,6 +1,7 @@
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\JavaUtil.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopHolder.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeIndividualSettingsListener.java
+C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeLockListener.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ItemUtil.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\VillagerableShop.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\schedulers\RyuZUMagicSyncTask.java
@@ -31,6 +32,7 @@ C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeShopTypeListener.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeEquipmentListener.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ConvartListener.java
+C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui6to2.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopTradeGui.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ShopUtil.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui.java
