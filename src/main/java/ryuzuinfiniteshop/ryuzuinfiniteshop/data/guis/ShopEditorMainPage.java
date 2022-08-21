@@ -78,8 +78,7 @@ public class ShopEditorMainPage extends ShopGui {
     }
 
     private void setDisplayName(Inventory inv) {
-        String diplayname = JavaUtil.getOrDefault(getShop().getNPC().getCustomName(), ChatColor.GREEN + "名前を変更する");
-        inv.setItem(5 * 9 + 8, ItemUtil.getNamedItem(Material.NAME_TAG, diplayname));
+        inv.setItem(5 * 9 + 8, ItemUtil.getNamedItem(Material.NAME_TAG,  ChatColor.GREEN + "名前を変更する"));
     }
 
     private void setShopType(Inventory inv) {

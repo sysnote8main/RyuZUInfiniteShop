@@ -53,7 +53,7 @@ public class RemoveShopListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
         int slot = event.getSlot();
-        if (slot != 0 && slot != 9) return;
+        if (slot != 0 && slot != 8) return;
 
         if(slot == 0) {
             //音を出す
