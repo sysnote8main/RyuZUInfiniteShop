@@ -37,7 +37,7 @@ public class ShopGui2to1 extends ShopTradeGui {
         Inventory inv = super.getInventory(mode);
 
         ItemStack filler = ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.BLACK + "" );
-        ItemStack filler2 = ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.BLACK + "" , "シフトクリックでトレードをアイテム化");
+        ItemStack filler2 = ItemUtil.getNamedItem(Material.EMERALD, ChatColor.GREEN + "シフトクリックでトレードをアイテム化");
 
         for (int i = 0; i < 6; i++) {
             inv.setItem(i * 9 + 2, filler2);
