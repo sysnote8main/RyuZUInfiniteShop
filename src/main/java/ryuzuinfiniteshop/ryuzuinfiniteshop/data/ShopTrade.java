@@ -46,12 +46,15 @@ public class ShopTrade {
             case TwotoOne:
                 this.take = ItemUtil.getItemSet(inv, slot, 2);
                 this.give = new ItemStack[]{inv.getItem(slot + 3)};
+                break;
             case FourtoFour:
                 this.take = ItemUtil.getItemSet(inv, slot, 4);
                 this.give = ItemUtil.getItemSet(inv, slot + 4, 4);
+                break;
             case SixtoTwo:
                 this.take = ItemUtil.getItemSet(inv, slot, 6);
                 this.give = ItemUtil.getItemSet(inv, slot + 6, 2);
+                break;
         }
     }
 

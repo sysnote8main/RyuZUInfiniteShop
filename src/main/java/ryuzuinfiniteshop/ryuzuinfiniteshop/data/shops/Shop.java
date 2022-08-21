@@ -202,10 +202,13 @@ public class Shop {
             switch (type) {
                 case TwotoOne:
                     pages.add(new ShopGui2to1(this, i));
+                    break;
                 case FourtoFour:
                     pages.add(new ShopGui4to4(this, i));
+                    break;
                 case SixtoTwo:
                     pages.add(new ShopGui6to2(this, i));
+                    break;
             }
         }
     }
@@ -277,10 +280,13 @@ public class Shop {
         switch (type) {
             case TwotoOne:
                 pages.add(new ShopGui2to1(this, getTradePageCount() + 1));
+                break;
             case FourtoFour:
                 pages.add(new ShopGui4to4(this, getTradePageCount() + 1));
+                break;
             case SixtoTwo:
                 pages.add(new ShopGui6to2(this, getTradePageCount() + 1));
+                break;
         }
     }
 
