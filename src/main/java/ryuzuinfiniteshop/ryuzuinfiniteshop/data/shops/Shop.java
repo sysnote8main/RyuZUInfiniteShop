@@ -132,8 +132,21 @@ public class Shop {
         updateTradeContents();
     }
 
+    public String getShopTypeDisplay() {
+        switch (type) {
+            case TwotoOne:
+                return ChatColor.GREEN + "2対1";
+            case FourtoFour:
+                return ChatColor.GREEN + "4対4";
+            case SixtoTwo:
+                return ChatColor.GREEN + "6対2";
+        }
+        return "";
+    }
+
     public ItemStack convertTrades() {
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石");
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石" , ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
+        item = PersistentUtil.setNMSTag(item, "ShopType", type.toString());
         item = PersistentUtil.setNMSTag(item, "TradesSize", String.valueOf(trades.size()));
         for (int i = 0; i < trades.size(); i++) {
             item = PersistentUtil.setNMSTag(item, "Give" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).give));
@@ -145,6 +158,8 @@ public class Shop {
     public void loadTrades(ItemStack item) {
         String tag = PersistentUtil.getNMSStringTag(item, "TradesSize");
         if (tag == null) return;
+        ShopType shoptype = ShopType.valueOf(PersistentUtil.getNMSStringTag(item, "ShopType"));
+        if(!(shoptype.equals(ShopType.TwotoOne) || shoptype.equals(type))) return;
         for (int i = 0; i < Integer.parseInt(tag); i++) {
             trades.add(new ShopTrade(ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Give" + i)), ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Take" + i))));
         }
@@ -160,7 +175,10 @@ public class Shop {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石", "シフトして地面に使用");
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石",
+                "シフトして地面に使用" ,
+                ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay() ,
+                ChatColor.YELLOW + "名前: " + JavaUtil.getOrDefault(npc.getCustomName() , "<none>"));
         return PersistentUtil.setNMSTag(item, "Shop", config.saveToString());
     }
 

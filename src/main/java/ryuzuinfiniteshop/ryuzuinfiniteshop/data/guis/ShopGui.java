@@ -12,6 +12,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class ShopGui {
@@ -43,6 +44,9 @@ public abstract class ShopGui {
         //必要なデータの取得
         Inventory inv = getInventory(holder.getShopMode());
         if(!holder.equals(ShopUtil.getShopHolder(inv))) return;
+        ItemStack[] clear = target.getContents();
+        Arrays.fill(clear, new ItemStack(Material.AIR));
+        target.setContents(clear);
         target.setContents(inv.getContents());
     }
 }

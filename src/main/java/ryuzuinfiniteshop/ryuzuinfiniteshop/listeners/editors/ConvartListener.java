@@ -57,11 +57,17 @@ public class ConvartListener implements Listener {
         ClickType type = event.getClick();
         Shop shop = holder.getShop();
         ItemStack item = event.getCursor();
+        String tag = PersistentUtil.getNMSStringTag(item, "ShopType");
         int slot = event.getSlot();
 
         if (slot != 2 * 9 + 8) return;
-        if (item == null || PersistentUtil.getNMSStringTag(item, "TradesSize") == null) {
+        if (tag == null) {
             SoundUtil.playFailSound(p);
+            return;
+        }
+        if (!(Shop.ShopType.valueOf(tag).equals(Shop.ShopType.TwotoOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
+            SoundUtil.playFailSound(p);
+            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "ショップタイプが違います");
             return;
         }
 
@@ -71,9 +77,6 @@ public class ConvartListener implements Listener {
 
             //音を出す
             SoundUtil.playSuccessSound(p);
-
-            //event.setCursor(null);
-            //p.getInventory().addItem(item);
 
             //インベントリを更新する
             holder.getGui().reloadInventory(event.getClickedInventory());

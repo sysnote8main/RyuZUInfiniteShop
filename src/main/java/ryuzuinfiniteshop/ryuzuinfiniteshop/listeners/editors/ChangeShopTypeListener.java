@@ -34,6 +34,6 @@ public class ChangeShopTypeListener implements Listener {
         SoundUtil.playClickShopSound(p);
 
         //インベントリを更新する
-        shop.getEditor(holder.getGui().getPage()).setDisplay(event.getClickedInventory());
+        holder.getGui().reloadInventory(event.getClickedInventory());
     }
 }

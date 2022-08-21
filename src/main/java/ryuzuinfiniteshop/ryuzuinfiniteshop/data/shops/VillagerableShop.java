@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +16,6 @@ public class VillagerableShop extends AgeableShop {
 
     public VillagerableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        ((Villager) getNPC()).setRecipes(new ArrayList<>());
     }
 
     public Villager.Profession getProfession() {
@@ -60,8 +60,8 @@ public class VillagerableShop extends AgeableShop {
     @Override
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return super.getSaveYamlProcess().andThen(yaml -> {
-            yaml.set("Profession", profession);
-            yaml.set("Biome", biome);
+            yaml.set("Profession", JavaUtil.getOrDefault(profession , Villager.Profession.FARMER).toString());
+            yaml.set("Biome", JavaUtil.getOrDefault(biome , Villager.Type.PLAINS).toString());
         });
     }
 

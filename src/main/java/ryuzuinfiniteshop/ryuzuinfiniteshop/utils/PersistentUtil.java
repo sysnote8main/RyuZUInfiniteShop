@@ -38,6 +38,7 @@ public class PersistentUtil {
     }
 
     public static String getNMSStringTag(ItemStack item , String key){
+        if(item == null) return null;
         net.minecraft.server.v1_16_R3.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         NBTTagCompound nbttag = nmsItem.getTag();
 

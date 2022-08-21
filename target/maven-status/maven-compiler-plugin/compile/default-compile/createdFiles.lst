@@ -9,7 +9,6 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui4to4.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\CancelItemMoveListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeEquipmentListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ConvartListener.class
-ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopEditorMainPage$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\AgeableShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeNPCDirecationListener.class
