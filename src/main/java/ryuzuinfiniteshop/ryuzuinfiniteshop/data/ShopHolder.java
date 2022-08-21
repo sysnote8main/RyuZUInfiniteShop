@@ -44,6 +44,18 @@ public class ShopHolder implements InventoryHolder {
 
     @Override
     public @NotNull Inventory getInventory() {
-        return null;
+        return gui.getInventory(mode);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if(!(obj instanceof ShopHolder)) return false;
+        ShopHolder holder = (ShopHolder) obj;
+        if(!holder.getGui().equals(gui)) return false;
+        if(!holder.getShopMode().equals(mode)) return false;
+        if(!holder.getShop().equals(shop)) return false;
+        if(!holder.getTags().equals(tags)) return false;
+        return true;
     }
 }

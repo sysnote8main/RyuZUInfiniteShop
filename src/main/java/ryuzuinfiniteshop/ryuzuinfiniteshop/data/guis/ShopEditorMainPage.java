@@ -21,7 +21,7 @@ import java.util.List;
 
 //ショップエディターのメインページ
 public class ShopEditorMainPage extends ShopGui {
-    public enum ShopSettings {Age, Power, Profession, Biome}
+    public enum ShopSettings {Age, Power, Profession, Biome, Visible}
 
     private final HashMap<Integer, ShopSettings> SettingsMap = new HashMap<>();
 
@@ -37,6 +37,7 @@ public class ShopEditorMainPage extends ShopGui {
         setTradesPage(inv);
         setDisplayName(inv);
         setShopType(inv);
+        setNPCDirecation(inv);
         setConvertTrades(inv);
         setConvertShop(inv);
         setRemoveShop(inv);
@@ -82,13 +83,17 @@ public class ShopEditorMainPage extends ShopGui {
     }
 
     private void setShopType(Inventory inv) {
-        String typename = getShop().getShopType().equals(Shop.ShopType.TwotoOne) ? ChatColor.GREEN + "2対1" : ChatColor.GREEN + "4対4" ;
+        String typename = getShop().getShopType().equals(Shop.ShopType.TwotoOne) ? ChatColor.GREEN + "2対1" : ChatColor.GREEN + "4対4";
         inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, typename));
     }
 
+    private void setNPCDirecation(Inventory inv) {
+        inv.setItem(5 * 9 + 6, ItemUtil.getNamedItem(Material.ARROW, ChatColor.GREEN + "方向切り替え"));
+    }
+
     private void setConvertTrades(Inventory inv) {
-        inv.setItem(3 * 9 + 7, ItemUtil.getNamedItem(Material.EMERALD, ChatColor.GREEN +"トレード内容をアイテム化する"));
-        inv.setItem(2 * 9 + 8, ItemUtil.getNamedEnchantedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.GREEN +"トレードを読み込む"));
+        inv.setItem(3 * 9 + 7, ItemUtil.getNamedItem(Material.EMERALD, ChatColor.GREEN + "トレード内容をアイテム化する"));
+        inv.setItem(2 * 9 + 8, ItemUtil.getNamedEnchantedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.GREEN + "トレードを読み込む"));
     }
 
     private void setConvertShop(Inventory inv) {
@@ -105,6 +110,7 @@ public class ShopEditorMainPage extends ShopGui {
         setPower(inv);
         setProfession(inv);
         setBiome(inv);
+        setVisible(inv);
     }
 
     private void setAge(Inventory inv) {
@@ -141,6 +147,16 @@ public class ShopEditorMainPage extends ShopGui {
         SettingsMap.put(slot, ShopSettings.Biome);
     }
 
+    private void setVisible(Inventory inv) {
+        if (!(getShop().getNPC() instanceof LivingEntity)) return;
+        ItemStack item = ((LivingEntity) getShop().getNPC()).isInvisible() ?
+                ItemUtil.getNamedItem(Material.GLASS, ChatColor.GREEN + "透明") :
+                ItemUtil.getNamedItem(Material.POLISHED_ANDESITE, ChatColor.GREEN + "不透明");
+        int slot = 4 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.Visible);
+    }
+
     public int getTradePageRawNumber(int slot) {
         return slot + 1 + (getPage() - 1) * 18;
     }
@@ -163,7 +179,7 @@ public class ShopEditorMainPage extends ShopGui {
             return -1;
     }
 
-    public HashMap<Integer ,ShopSettings> getSettingsMap() {
+    public HashMap<Integer, ShopSettings> getSettingsMap() {
         return SettingsMap;
     }
 }

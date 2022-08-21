@@ -1,12 +1,16 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
@@ -15,6 +19,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.AgeableShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.PoweredableShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.VillagerableShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 
@@ -33,8 +38,6 @@ public class ChangeIndividualSettingsListener implements Listener {
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
-        ShopHolder shopholder = (ShopHolder) event.getView().getTopInventory().getHolder();
-        Shop shop = shopholder.getShop();
         int slot = event.getSlot();
         ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
 
@@ -43,6 +46,7 @@ public class ChangeIndividualSettingsListener implements Listener {
         changePowered(holder, event.getSlot());
         changeProfession(holder, event.getSlot());
         changeBiome(holder, event.getSlot());
+        changeVisible(holder, event.getSlot());
 
         //音を出す
         SoundUtil.playClickShopSound(p);
@@ -96,5 +100,17 @@ public class ChangeIndividualSettingsListener implements Listener {
 
         //バイオームを変更
         ((VillagerableShop) holder.getShop()).setBiome(((VillagerableShop) holder.getShop()).getNextBiome());
+    }
+
+    //透明か変更
+    public void changeVisible(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Visible)) return;
+        if (!(holder.getShop().getNPC() instanceof LivingEntity)) return;
+
+        //透明か変更
+        holder.getShop().changeInvisible();
     }
 }

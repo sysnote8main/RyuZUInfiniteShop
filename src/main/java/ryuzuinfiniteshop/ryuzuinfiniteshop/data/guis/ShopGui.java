@@ -9,6 +9,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,4 +34,15 @@ public abstract class ShopGui {
     }
 
     public abstract Inventory getInventory(ShopHolder.ShopMode mode);
+
+    public void reloadInventory(Inventory target) {
+        //インベントリがショップなのかチェック
+        ShopHolder holder = ShopUtil.getShopHolder(target);
+        if (holder == null) return;
+
+        //必要なデータの取得
+        Inventory inv = getInventory(holder.getShopMode());
+        if(!holder.equals(ShopUtil.getShopHolder(inv))) return;
+        target.setContents(inv.getContents());
+    }
 }

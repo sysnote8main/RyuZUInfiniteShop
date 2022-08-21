@@ -71,8 +71,11 @@ public class ConvartListener implements Listener {
             //音を出す
             SoundUtil.playSuccessSound(p);
 
+            //event.setCursor(null);
+            //p.getInventory().addItem(item);
+
             //インベントリを更新する
-            p.openInventory(shop.getEditor(holder.getGui().getPage()).getInventory(holder.getShopMode()));
+            holder.getGui().reloadInventory(p.getInventory());
         }
     }
 

@@ -330,6 +330,18 @@ public class Shop {
         initializeLivingEntitiy();
     }
 
+    public void changeInvisible() {
+        if (!(npc instanceof LivingEntity)) return;
+        LivingEntity livnpc = (LivingEntity) npc;
+        livnpc.setInvisible(livnpc.isInvisible());
+    }
+
+    public void changeNPCDirecation() {
+        if (!(npc instanceof LivingEntity)) return;
+        LivingEntity livnpc = (LivingEntity) npc;
+        livnpc.getLocation().setYaw((livnpc.getLocation().getYaw() + 45));
+    }
+
     public void initializeLivingEntitiy() {
         if (!(npc instanceof LivingEntity)) return;
         LivingEntity livnpc = (LivingEntity) npc;
