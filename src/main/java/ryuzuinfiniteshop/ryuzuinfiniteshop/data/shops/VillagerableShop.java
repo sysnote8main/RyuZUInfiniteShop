@@ -123,7 +123,7 @@ public class VillagerableShop extends AgeableShop {
                 return Material.DARK_OAK_LOG;
             case PLAINS:
             default:
-                return Material.GRASS;
+                return Material.GRASS_BLOCK;
         }
     }
 }

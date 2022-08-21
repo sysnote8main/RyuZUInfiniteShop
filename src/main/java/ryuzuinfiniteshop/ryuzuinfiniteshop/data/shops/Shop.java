@@ -41,7 +41,10 @@ public class Shop {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         initializeShop(location, entitytype);
         if (exsited) loadYamlProcess(getFile());
-        if (!exsited) saveYaml();
+        if (!exsited) {
+            createEditorNewPage();
+            saveYaml();
+        }
     }
 
     public void loadYamlProcess(File file) {
@@ -333,7 +336,7 @@ public class Shop {
     public void changeInvisible() {
         if (!(npc instanceof LivingEntity)) return;
         LivingEntity livnpc = (LivingEntity) npc;
-        livnpc.setInvisible(livnpc.isInvisible());
+        livnpc.setInvisible(!livnpc.isInvisible());
     }
 
     public void changeNPCDirecation() {
