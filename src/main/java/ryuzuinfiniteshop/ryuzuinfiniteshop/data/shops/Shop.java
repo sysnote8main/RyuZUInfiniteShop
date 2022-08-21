@@ -377,9 +377,8 @@ public class Shop {
     public void changeNPCDirecation() {
         if (!(npc instanceof LivingEntity)) return;
         LivingEntity livnpc = (LivingEntity) npc;
-        Location loc = livnpc.getLocation();
-        loc.setYaw((livnpc.getLocation().getYaw() + 45));
-        livnpc.teleport(loc);
+        location.setYaw((location.getYaw() + 45));
+        livnpc.teleport(location);
     }
 
     public void initializeLivingEntitiy() {
