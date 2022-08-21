@@ -54,18 +54,6 @@ public class ShopUtil {
         return ((ShopHolder) inv.getHolder()).getShopMode().equals(ShopHolder.ShopMode.Trade);
     }
 
-    public static boolean isAvailableTrade(Inventory inv, int slot, Shop.ShopType type) {
-        switch (type) {
-            case TwotoOne:
-                return ItemUtil.getItemSet(inv, slot, 2).length != 0 && inv.getItem(slot + 3) != null;
-            case FourtoFour:
-                return ItemUtil.getItemSet(inv, slot, 4).length != 0 && ItemUtil.getItemSet(inv, slot + 5, 4).length != 0;
-            case SixtoTwo:
-                return ItemUtil.getItemSet(inv, slot, 6).length != 0 && ItemUtil.getItemSet(inv, slot + 7, 2).length != 0;
-        }
-        return false;
-    }
-
     public static void loadAllShops() {
         getShops().clear();
         File directory = FileUtil.initializeFolder("shops");

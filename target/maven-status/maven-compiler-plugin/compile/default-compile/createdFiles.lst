@@ -19,6 +19,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\Shop$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopTrade$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ItemUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeLockListener.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\utils\TradeUtil$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopTradeGui.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\RyuZUInfiniteShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\EditTradePageListener.class
@@ -44,7 +45,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\CancelAffectNPC.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopTrade.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopTradeGui$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\JavaUtil.class
-ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ShopUtil$1.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\utils\TradeUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopHolder.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\RemoveShopListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\schedulers\RyuZUBaseTask.class

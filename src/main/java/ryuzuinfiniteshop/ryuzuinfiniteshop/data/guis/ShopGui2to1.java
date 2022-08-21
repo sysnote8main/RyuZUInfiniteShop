@@ -18,13 +18,11 @@ import java.util.List;
 
 public class ShopGui2to1 extends ShopTradeGui {
 
-    private static final List<Integer> displayslot = new ArrayList<>();
-
     static {
         for (int i = 0; i < 6; i++) {
-            displayslot.add(i * 9 + 2);
+            convertslot.add(i * 9 + 2);
+            convertslot.add(i * 9 + 7);
             displayslot.add(i * 9 + 4);
-            displayslot.add(i * 9 + 7);
         }
     }
 
@@ -64,10 +62,5 @@ public class ShopGui2to1 extends ShopTradeGui {
         int quootient9 = slot / 9;
         int front = mod9 < 4 ? 0 : 1;
         return getTrade(quootient9 * 2 + front + 1);
-    }
-
-    @Override
-    public boolean isDisplayItem(int slot) {
-        return displayslot.contains(slot);
     }
 }

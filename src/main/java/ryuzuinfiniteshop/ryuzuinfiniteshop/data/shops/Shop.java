@@ -118,7 +118,7 @@ public class Shop {
         for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TwotoOne) ? 4 : 9) {
             if (getShopType().equals(ShopType.TwotoOne) && i % 9 == 4) i++;
             ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(i);
-            boolean available = ShopUtil.isAvailableTrade(inv, i, getShopType());
+            boolean available = TradeUtil.isAvailableTrade(inv, i, getShopType());
             if (trade == null && available)
                 addTrade(inv, i);
             else if (available)
@@ -144,31 +144,29 @@ public class Shop {
         return "";
     }
 
-    //トレードをアイテム化する
-    public ItemStack convertTrade(Inventory inv, int slot) {
-        if (!ShopUtil.isAvailableTrade(inv, slot, type)) return null;
-        ItemStack[] take = null;
-        ItemStack[] give = null;
+    public int getSubtractSlot() {
         switch (type) {
             case TwotoOne:
-                take = ItemUtil.getItemSet(inv, slot, 2);
-                give = new ItemStack[]{inv.getItem(slot + 3)};
-                break;
+                return 2;
             case FourtoFour:
-                take = ItemUtil.getItemSet(inv, slot, 4);
-                give = ItemUtil.getItemSet(inv, slot + 5, 4);
-                break;
+                return 4;
             case SixtoTwo:
-                take = ItemUtil.getItemSet(inv, slot, 6);
-                give = ItemUtil.getItemSet(inv, slot + 7, 2);
-                break;
+                return 6;
         }
+        return 0;
+    }
+
+    //トレードをアイテム化する
+    public ItemStack convertTrade(Inventory inv, int slot) {
+        if (!((ShopTradeGui) ShopUtil.getShopHolder(inv).getGui()).isConvertSlot(slot)) return null;
+        ShopTrade trade = TradeUtil.getTrade(inv, slot - getSubtractSlot(), type);
+        if (trade == null) return null;
 
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石", ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
         item = PersistentUtil.setNMSTag(item, "ShopType", type.toString());
         item = PersistentUtil.setNMSTag(item, "TradesSize", String.valueOf(1));
-        item = PersistentUtil.setNMSTag(item, "Give" + 1, ItemUtil.toStringFromItemStackArray(give));
-        item = PersistentUtil.setNMSTag(item, "Take" + 1, ItemUtil.toStringFromItemStackArray(take));
+        item = PersistentUtil.setNMSTag(item, "Give" + 0, ItemUtil.toStringFromItemStackArray(trade.give));
+        item = PersistentUtil.setNMSTag(item, "Take" + 0, ItemUtil.toStringFromItemStackArray(trade.take));
         return item;
     }
 

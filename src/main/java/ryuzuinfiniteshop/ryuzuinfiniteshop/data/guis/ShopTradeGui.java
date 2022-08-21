@@ -12,13 +12,25 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ShopTradeGui extends ShopGui {
 
+    protected static final List<Integer> displayslot = new ArrayList<>();
+    protected static final List<Integer> convertslot = new ArrayList<>();
+
     public ShopTradeGui(Shop shop, int page) {
         super(shop, page);
         setTrades();
+    }
+
+    public boolean isConvertSlot(int slot) {
+        return convertslot.contains(slot);
+    }
+
+    public boolean isDisplaySlot(int slot) {
+        return convertslot.contains(slot) || displayslot.contains(slot);
     }
 
     public List<ShopTrade> getTrades() {
@@ -53,8 +65,6 @@ public abstract class ShopTradeGui extends ShopGui {
     }
 
     public abstract ShopTrade getTradeFromSlot(int slot);
-
-    public abstract boolean isDisplayItem(int slot);
 
     public void setTradeStatus(Player p, Inventory inventory) {
         ItemStack status1 = ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "購入可能");

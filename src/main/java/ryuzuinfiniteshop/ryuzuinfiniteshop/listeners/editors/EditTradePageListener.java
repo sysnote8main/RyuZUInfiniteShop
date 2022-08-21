@@ -63,7 +63,7 @@ public class EditTradePageListener implements Listener {
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
         int slot = event.getSlot();
-        if (!((ShopTradeGui) holder.getGui()).isDisplayItem(slot)) return;
+        if (!((ShopTradeGui) holder.getGui()).isDisplaySlot(slot)) return;
         //イベントキャンセル
         event.setCancelled(true);
 
@@ -71,6 +71,7 @@ public class EditTradePageListener implements Listener {
         ItemStack item = holder.getShop().convertTrade(event.getClickedInventory(), slot);
         //トレードをアイテム化する
         if (!event.isShiftClick()) return;
+        if(!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
         if (item == null) {
             SoundUtil.playFailSound(p);
             return;

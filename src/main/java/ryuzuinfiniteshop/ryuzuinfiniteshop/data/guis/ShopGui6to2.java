@@ -14,11 +14,9 @@ import java.util.List;
 
 public class ShopGui6to2 extends ShopTradeGui {
 
-    private static final List<Integer> displayslot = new ArrayList<>();
-
     static {
         for (int i = 0; i < 6; i++) {
-            displayslot.add(i * 9 + 4);
+            convertslot.add(i * 9 + 4);
         }
     }
 
@@ -52,10 +50,5 @@ public class ShopGui6to2 extends ShopTradeGui {
     @Override
     public ShopTrade getTradeFromSlot(int slot) {
         return getTrade(slot / 9 + 1);
-    }
-
-    @Override
-    public boolean isDisplayItem(int slot) {
-        return displayslot.contains(slot);
     }
 }

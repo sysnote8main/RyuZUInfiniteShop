@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.TradeUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class ShopTrade {
         this.take = config.get("take").toArray(new ItemStack[0]);
     }
 
-    public ShopTrade(ItemStack[] give , ItemStack[] take) {
+    public ShopTrade(ItemStack[] give, ItemStack[] take) {
         this.give = give;
         this.take = take;
     }
@@ -42,20 +43,10 @@ public class ShopTrade {
     }
 
     public void setTrade(Inventory inv, int slot, Shop.ShopType type) {
-        switch (type) {
-            case TwotoOne:
-                this.take = ItemUtil.getItemSet(inv, slot, 2);
-                this.give = new ItemStack[]{inv.getItem(slot + 3)};
-                break;
-            case FourtoFour:
-                this.take = ItemUtil.getItemSet(inv, slot, 4);
-                this.give = ItemUtil.getItemSet(inv, slot + 5, 4);
-                break;
-            case SixtoTwo:
-                this.take = ItemUtil.getItemSet(inv, slot, 6);
-                this.give = ItemUtil.getItemSet(inv, slot + 7, 2);
-                break;
-        }
+        ShopTrade trade = TradeUtil.getTrade(inv, slot, type);
+        if (trade == null) return;
+        this.take = trade.take;
+        this.give = trade.give;
     }
 
     public Result getResult(Player p) {
