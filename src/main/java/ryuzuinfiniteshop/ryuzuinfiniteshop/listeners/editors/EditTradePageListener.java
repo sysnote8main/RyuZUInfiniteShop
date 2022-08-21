@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
@@ -14,6 +15,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopTradeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 
@@ -59,15 +61,25 @@ public class EditTradePageListener implements Listener {
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopTradeGui)) return;
         if (!ShopUtil.isEditMode(event)) return;
+        if (event.getClickedInventory() == null) return;
         int slot = event.getSlot();
         if (!((ShopTradeGui) holder.getGui()).isDisplayItem(slot)) return;
         //イベントキャンセル
         event.setCancelled(true);
 
-        //トレードをアイテム化する
-        if(!event.isShiftClick()) return;
         Player p = (Player) event.getWhoClicked();
-        p.getInventory().addItem(holder.getShop().convertTrade(((ShopTradeGui) holder.getGui()).getTradeFromSlot(slot)));
+        ItemStack item = holder.getShop().convertTrade(event.getClickedInventory(), slot);
+        //トレードをアイテム化する
+        if (!event.isShiftClick()) return;
+        if (item == null) {
+            SoundUtil.playFailSound(p);
+            return;
+        }
+        if (ItemUtil.ableGive(p.getInventory(), item)) {
+            p.getInventory().addItem(item);
+            SoundUtil.playSuccessSound(p);
+        } else
+            SoundUtil.playFailSound(p);
 
         //音を出す
         SoundUtil.playSuccessSound(p);

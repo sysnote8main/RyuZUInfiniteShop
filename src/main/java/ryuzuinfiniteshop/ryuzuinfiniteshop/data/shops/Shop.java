@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 public class Shop {
     public enum ShopType {TwotoOne, FourtoFour, SixtoTwo}
+
     public enum ShopNBT {Ageable, Poweredable, Villagerable}
 
     protected Entity npc;
@@ -144,17 +145,35 @@ public class Shop {
     }
 
     //トレードをアイテム化する
-    public ItemStack convertTrade(ShopTrade trade) {
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石" , ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
+    public ItemStack convertTrade(Inventory inv, int slot) {
+        if (!ShopUtil.isAvailableTrade(inv, slot, type)) return null;
+        ItemStack[] take = null;
+        ItemStack[] give = null;
+        switch (type) {
+            case TwotoOne:
+                take = ItemUtil.getItemSet(inv, slot, 2);
+                give = new ItemStack[]{inv.getItem(slot + 3)};
+                break;
+            case FourtoFour:
+                take = ItemUtil.getItemSet(inv, slot, 4);
+                give = ItemUtil.getItemSet(inv, slot + 5, 4);
+                break;
+            case SixtoTwo:
+                take = ItemUtil.getItemSet(inv, slot, 6);
+                give = ItemUtil.getItemSet(inv, slot + 7, 2);
+                break;
+        }
+
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石", ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
         item = PersistentUtil.setNMSTag(item, "ShopType", type.toString());
         item = PersistentUtil.setNMSTag(item, "TradesSize", String.valueOf(1));
-        item = PersistentUtil.setNMSTag(item, "Give" + 1, ItemUtil.toStringFromItemStackArray(trade.give));
-        item = PersistentUtil.setNMSTag(item, "Take" + 1, ItemUtil.toStringFromItemStackArray(trade.take));
+        item = PersistentUtil.setNMSTag(item, "Give" + 1, ItemUtil.toStringFromItemStackArray(give));
+        item = PersistentUtil.setNMSTag(item, "Take" + 1, ItemUtil.toStringFromItemStackArray(take));
         return item;
     }
 
     public ItemStack convertTrades() {
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石" , ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石", ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
         item = PersistentUtil.setNMSTag(item, "ShopType", type.toString());
         item = PersistentUtil.setNMSTag(item, "TradesSize", String.valueOf(trades.size()));
         for (int i = 0; i < trades.size(); i++) {
@@ -168,7 +187,7 @@ public class Shop {
         String tag = PersistentUtil.getNMSStringTag(item, "TradesSize");
         if (tag == null) return;
         ShopType shoptype = ShopType.valueOf(PersistentUtil.getNMSStringTag(item, "ShopType"));
-        if(!(shoptype.equals(ShopType.TwotoOne) || shoptype.equals(type))) return;
+        if (!(shoptype.equals(ShopType.TwotoOne) || shoptype.equals(type))) return;
         for (int i = 0; i < Integer.parseInt(tag); i++) {
             trades.add(new ShopTrade(ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Give" + i)), ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Take" + i))));
         }
@@ -185,9 +204,9 @@ public class Shop {
             e.printStackTrace();
         }
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石",
-                "シフトして地面に使用" ,
-                ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay() ,
-                ChatColor.YELLOW + "名前: " + JavaUtil.getOrDefault(npc.getCustomName() , "<none>"));
+                "シフトして地面に使用",
+                ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay(),
+                ChatColor.YELLOW + "名前: " + JavaUtil.getOrDefault(npc.getCustomName(), "<none>"));
         return PersistentUtil.setNMSTag(item, "Shop", config.saveToString());
     }
 
@@ -196,6 +215,7 @@ public class Shop {
         getFile().delete();
         ShopUtil.removeShop(LocationUtil.toStringFromLocation(location));
     }
+
     public List<ShopTrade> getTrades() {
         return trades;
     }
