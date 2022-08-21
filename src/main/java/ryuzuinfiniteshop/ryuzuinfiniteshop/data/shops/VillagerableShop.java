@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
@@ -14,6 +15,7 @@ public class VillagerableShop extends AgeableShop {
 
     public VillagerableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
+        ((Villager) getNPC()).setRecipes(new ArrayList<>());
     }
 
     public Villager.Profession getProfession() {
@@ -30,6 +32,7 @@ public class VillagerableShop extends AgeableShop {
             ((Villager) getNPC()).setProfession(profession);
         else
             ((ZombieVillager) getNPC()).setVillagerProfession(profession);
+        ((Villager) getNPC()).setRecipes(new ArrayList<>());
     }
 
     public void setBiome(Villager.Type villagertype) {
@@ -38,7 +41,6 @@ public class VillagerableShop extends AgeableShop {
             ((Villager) getNPC()).setVillagerType(villagertype);
         else
             ((ZombieVillager) getNPC()).setVillagerType(villagertype);
-
     }
 
     public Villager.Profession getNextProfession() {

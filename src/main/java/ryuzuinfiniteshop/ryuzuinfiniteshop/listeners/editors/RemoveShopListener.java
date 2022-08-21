@@ -26,12 +26,8 @@ public class RemoveShopListener implements Listener {
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
-        Shop shop = holder.getShop();
         int slot = event.getSlot();
         if (slot != 3 * 9 + 6) return;
-
-        //ショップを削除
-        shop.removeShop();
 
         //音を出す
         SoundUtil.playCautionSound(p);

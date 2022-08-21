@@ -78,7 +78,7 @@ public class ShopUtil {
         File[] ItemFiles = directory.listFiles();
         if (ItemFiles == null) return;
         for (File f : ItemFiles) {
-            if (f.getName().endsWith(".yml")) continue;
+            if (!f.getName().endsWith(".yml")) continue;
             YamlConfiguration config = new YamlConfiguration();
             try {
                 config.load(f);
@@ -86,7 +86,6 @@ public class ShopUtil {
                 e.printStackTrace();
             }
             createShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("EntityType")));
-
         }
     }
 
