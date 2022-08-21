@@ -49,11 +49,11 @@ public class ShopTrade {
                 break;
             case FourtoFour:
                 this.take = ItemUtil.getItemSet(inv, slot, 4);
-                this.give = ItemUtil.getItemSet(inv, slot + 4, 4);
+                this.give = ItemUtil.getItemSet(inv, slot + 5, 4);
                 break;
             case SixtoTwo:
                 this.take = ItemUtil.getItemSet(inv, slot, 6);
-                this.give = ItemUtil.getItemSet(inv, slot + 6, 2);
+                this.give = ItemUtil.getItemSet(inv, slot + 7, 2);
                 break;
         }
     }

@@ -50,6 +50,7 @@ public class ConvartListener implements Listener {
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopEditorMainPage)) return;
         if (!ShopUtil.isEditMode(event)) return;
+        if (event.getClickedInventory() == null) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
@@ -75,7 +76,7 @@ public class ConvartListener implements Listener {
             //p.getInventory().addItem(item);
 
             //インベントリを更新する
-            holder.getGui().reloadInventory(p.getInventory());
+            holder.getGui().reloadInventory(event.getClickedInventory());
         }
     }
 
@@ -92,6 +93,7 @@ public class ConvartListener implements Listener {
         ItemStack item = event.getItem();
         Block block = event.getClickedBlock();
 
+        if (!p.hasPermission("ris.op")) return;
         if (!p.isSneaking()) return;
         if (item == null || PersistentUtil.getNMSStringTag(item, "Shop") == null) return;
         if (block == null) return;

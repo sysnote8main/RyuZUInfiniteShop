@@ -27,6 +27,7 @@ public class EditMainPageListener implements Listener {
     public void openShopEditor(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
+        if (!p.hasPermission("ris.op")) return;
         if (!p.isSneaking()) return;
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
         String id = PersistentUtil.getNMSStringTag(entity, "Shop");

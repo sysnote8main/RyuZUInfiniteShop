@@ -115,6 +115,7 @@ public class ShopEditorMainPage extends ShopGui {
     }
 
     public void setDisplay(Inventory inv) {
+        setLock(inv);
         setEquipment(inv);
         setTradesPage(inv);
         setDisplayName(inv);
