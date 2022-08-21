@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -36,7 +37,16 @@ public abstract class ShopTradeGui extends ShopGui {
         this.trades = trades[getPage() - 1];
     }
 
-    public abstract Inventory getInventory(ShopHolder.ShopMode mode, Player p);
+    @Override
+    public Inventory getInventory(ShopHolder.ShopMode mode) {
+        return Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, JavaUtil.getOrDefault(getShop().getNPC().getCustomName() , "ショップ") + "ショップ ページ" + getPage());
+    }
+
+    public Inventory getInventory(ShopHolder.ShopMode mode, Player p) {
+        Inventory inv = getInventory(mode);
+        if (mode.equals(ShopHolder.ShopMode.Trade)) setTradeStatus(p, inv);
+        return inv;
+    }
 
     public boolean existTrades() {
         return getTrades().size() > (getPage() - 2) * getShop().getLimitSize();

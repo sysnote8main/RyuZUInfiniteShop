@@ -31,7 +31,7 @@ public class ShopEditorMainPage extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopHolder.ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, "ショップエディター ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, JavaUtil.getOrDefault(getShop().getNPC().getCustomName() , "ショップ") + " エディター ページ" + getPage());
 
         setEquipment(inv);
         setTradesPage(inv);

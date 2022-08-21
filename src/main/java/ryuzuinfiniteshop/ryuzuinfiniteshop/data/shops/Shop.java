@@ -382,17 +382,17 @@ public class Shop {
 
     public boolean isAvailableShop(Player p) {
         if (isLock() && !p.hasPermission("ris.op")) {
-            p.sendMessage(ChatColor.RED + "現在このショップはロックされています");
+            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "現在このショップはロックされています");
             SoundUtil.playFailSound(p);
             return false;
         }
         if (isEditting()) {
-            p.sendMessage(ChatColor.RED + "現在このショップは編集中です");
+            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "現在このショップは編集中です");
             SoundUtil.playFailSound(p);
             return false;
         }
         if (pages.isEmpty()) {
-            p.sendMessage(ChatColor.RED + "現在このショップには取引が存在しません");
+            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "現在このショップには取引が存在しません");
             SoundUtil.playFailSound(p);
             return false;
         }

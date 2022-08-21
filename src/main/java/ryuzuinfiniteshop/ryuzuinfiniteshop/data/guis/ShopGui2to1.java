@@ -10,6 +10,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class ShopGui2to1 extends ShopTradeGui {
 
     @Override
     public Inventory getInventory(ShopHolder.ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, "ショップ ページ" + getPage());
+        Inventory inv = super.getInventory(mode);
 
         ItemStack filler = ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.BLACK + "");
 
@@ -52,13 +53,6 @@ public class ShopGui2to1 extends ShopTradeGui {
             inv.setItem(slot + 3, trade.give[0]);
         }
 
-        return inv;
-    }
-
-    @Override
-    public Inventory getInventory(ShopHolder.ShopMode mode, Player p) {
-        Inventory inv = getInventory(mode);
-        if (mode.equals(ShopHolder.ShopMode.Trade)) setTradeStatus(p, inv);
         return inv;
     }
 
