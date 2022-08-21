@@ -66,10 +66,15 @@ public class ShopUtil {
     }
 
     public static boolean isAvailableTrade(Inventory inv, int slot, Shop.ShopType type) {
-        if (type.equals(Shop.ShopType.TwotoOne))
-            return ItemUtil.getItemSet(inv, slot, 2).length != 0 && inv.getItem(slot + 3) != null;
-        else
-            return ItemUtil.getItemSet(inv, slot, 4).length != 0 && ItemUtil.getItemSet(inv, slot + 5, 4).length != 0;
+        switch (type) {
+            case TwotoOne:
+                return ItemUtil.getItemSet(inv, slot, 2).length != 0 && inv.getItem(slot + 3) != null;
+            case FourtoFour:
+                return ItemUtil.getItemSet(inv, slot, 4).length != 0 && ItemUtil.getItemSet(inv, slot + 5, 4).length != 0;
+            case SixtoTwo:
+                return ItemUtil.getItemSet(inv, slot, 6).length != 0 && ItemUtil.getItemSet(inv, slot + 7, 2).length != 0;
+        }
+        return false;
     }
 
     public static void loadAllShops() {
@@ -165,31 +170,5 @@ public class ShopUtil {
             return;
         }
         new Shop(location, type);
-    }
-
-    public static void setTradeStatus(Player p, Inventory inventory, Shop shop, ShopTradeGui gui) {
-        ItemStack status1 = ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "購入可能");
-        ItemStack status2 = ItemUtil.getNamedItem(Material.RED_STAINED_GLASS_PANE, ChatColor.RED + "アイテムが足りません");
-        ItemStack status3 = ItemUtil.getNamedItem(Material.YELLOW_STAINED_GLASS_PANE, ChatColor.YELLOW + "インベントリに十分な空きがありません");
-
-        int addslot = shop.getShopType().equals(Shop.ShopType.TwotoOne) ? 2 : 4;
-        for (int i = 0; i < gui.getTrades().size(); i++) {
-            int baseslot = shop.getShopType().equals(Shop.ShopType.TwotoOne) ?
-                    (i / 2) * 9 + (i % 2 == 1 ? 5 : 0) :
-                    i * 9;
-            ShopTrade trade = gui.getTradeFromSlot(baseslot);
-            ShopTrade.Result result = trade.getResult(p);
-            switch (result) {
-                case notAfford:
-                    inventory.setItem(baseslot + addslot, status2);
-                    break;
-                case Full:
-                    inventory.setItem(baseslot + addslot, status3);
-                    break;
-                case Success:
-                    inventory.setItem(baseslot + addslot, status1);
-                    break;
-            }
-        }
     }
 }

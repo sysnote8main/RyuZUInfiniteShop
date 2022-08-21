@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Shop {
-    public enum ShopType {TwotoOne, FourtoFour}
+    public enum ShopType {TwotoOne, FourtoFour,SixtoTwo}
 
     public enum ShopNBT {Ageable, Poweredable, Villagerable}
 
@@ -89,9 +89,21 @@ public class Shop {
     }
 
     public void changeShopType() {
-        if (type.equals(ShopType.FourtoFour)) trades.clear();
-        this.type = type.equals(ShopType.TwotoOne) ? ShopType.FourtoFour : ShopType.TwotoOne;
+        if (!type.equals(ShopType.TwotoOne)) trades.clear();
+        this.type = getNextShopType();
         updateTradeContents();
+    }
+
+    public ShopType getNextShopType() {
+        switch (type) {
+            case TwotoOne:
+                return ShopType.FourtoFour;
+            case FourtoFour:
+                return ShopType.SixtoTwo;
+            case SixtoTwo:
+                return ShopType.TwotoOne;
+        }
+        return ShopType.TwotoOne;
     }
 
     public void checkTrades(Inventory inv) {
@@ -183,10 +195,14 @@ public class Shop {
     public void setTradePages() {
         pages.clear();
         for (int i = 1; i <= getTradePageCountFromTradesCount(); i++) {
-            if (type.equals(ShopType.TwotoOne))
-                pages.add(new ShopGui2to1(this, i));
-            else
-                pages.add(new ShopGui4to4(this, i));
+            switch (type) {
+                case TwotoOne:
+                    pages.add(new ShopGui2to1(this, i));
+                case FourtoFour:
+                    pages.add(new ShopGui4to4(this, i));
+                case SixtoTwo:
+                    pages.add(new ShopGui6to2(this, i));
+            }
         }
     }
 
@@ -254,10 +270,14 @@ public class Shop {
 
     public void createTradeNewPage() {
         if (!ableCreateNewPage()) return;
-        if (type.equals(ShopType.TwotoOne))
-            pages.add(new ShopGui2to1(this, getTradePageCount() + 1));
-        else
-            pages.add(new ShopGui4to4(this, getTradePageCount() + 1));
+        switch (type) {
+            case TwotoOne:
+                pages.add(new ShopGui2to1(this, getTradePageCount() + 1));
+            case FourtoFour:
+                pages.add(new ShopGui4to4(this, getTradePageCount() + 1));
+            case SixtoTwo:
+                pages.add(new ShopGui6to2(this, getTradePageCount() + 1));
+        }
     }
 
     public boolean ableCreateEditorNewPage() {

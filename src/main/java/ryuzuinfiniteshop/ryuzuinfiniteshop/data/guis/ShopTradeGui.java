@@ -61,7 +61,18 @@ public abstract class ShopTradeGui extends ShopGui {
         ItemStack status2 = ItemUtil.getNamedItem(Material.RED_STAINED_GLASS_PANE, ChatColor.RED + "アイテムが足りません");
         ItemStack status3 = ItemUtil.getNamedItem(Material.YELLOW_STAINED_GLASS_PANE, ChatColor.YELLOW + "インベントリに十分な空きがありません");
 
-        int addslot = getShop().getShopType().equals(Shop.ShopType.TwotoOne) ? 2 : 4;
+        int addslot = 0;
+        switch (getShop().getShopType()) {
+            case TwotoOne:
+                addslot = 2;
+                break;
+            case FourtoFour:
+                addslot =  4;
+                break;
+            case SixtoTwo:
+                addslot =  6;
+                break;
+        }
         for (int i = 0; i < getTrades().size(); i++) {
             int baseslot = getShop().getShopType().equals(Shop.ShopType.TwotoOne) ?
                     (i / 2) * 9 + (i % 2 == 1 ? 5 : 0) :

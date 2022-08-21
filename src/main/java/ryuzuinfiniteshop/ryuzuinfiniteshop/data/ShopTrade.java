@@ -42,12 +42,16 @@ public class ShopTrade {
     }
 
     public void setTrade(Inventory inv, int slot, Shop.ShopType type) {
-        if (type.equals(Shop.ShopType.TwotoOne)) {
-            this.take = ItemUtil.getItemSet(inv, slot, 2);
-            this.give = new ItemStack[]{inv.getItem(slot + 3)};
-        } else {
-            this.take = ItemUtil.getItemSet(inv, slot, 4);
-            this.give = ItemUtil.getItemSet(inv, slot + 4, 4);
+        switch (type) {
+            case TwotoOne:
+                this.take = ItemUtil.getItemSet(inv, slot, 2);
+                this.give = new ItemStack[]{inv.getItem(slot + 3)};
+            case FourtoFour:
+                this.take = ItemUtil.getItemSet(inv, slot, 4);
+                this.give = ItemUtil.getItemSet(inv, slot + 4, 4);
+            case SixtoTwo:
+                this.take = ItemUtil.getItemSet(inv, slot, 6);
+                this.give = ItemUtil.getItemSet(inv, slot + 6, 2);
         }
     }
 

@@ -27,9 +27,6 @@ public class TradeListener implements Listener {
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
-        Inventory inv = event.getView().getTopInventory();
-        ShopHolder shopholder = (ShopHolder) inv.getHolder();
-        Shop shop = shopholder.getShop();
         int slot = event.getSlot();
         ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(slot);
 
@@ -49,7 +46,7 @@ public class TradeListener implements Listener {
         trade.trade(p, times);
 
         //ステータスの更新
-        ShopUtil.setTradeStatus(p, inv, shop, (ShopTradeGui) holder.getGui());
+        ((ShopTradeGui) holder.getGui()).setTradeStatus(p , event.getView().getTopInventory());
 
         //イベントキャンセル
         event.setCancelled(true);

@@ -82,7 +82,18 @@ public class ShopEditorMainPage extends ShopGui {
     }
 
     private void setShopType(Inventory inv) {
-        String typename = getShop().getShopType().equals(Shop.ShopType.TwotoOne) ? ChatColor.GREEN + "2対1" : ChatColor.GREEN + "4対4";
+        String typename = "";
+        switch (getShop().getShopType()) {
+            case TwotoOne:
+                typename = "2対1";
+                break;
+            case FourtoFour:
+                typename =  "4対4";
+                break;
+            case SixtoTwo:
+                typename =  "6対2";
+                break;
+        }
         inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, typename));
     }
 
