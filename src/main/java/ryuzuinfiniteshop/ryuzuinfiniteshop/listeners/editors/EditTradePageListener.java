@@ -63,6 +63,14 @@ public class EditTradePageListener implements Listener {
         if (!((ShopTradeGui) holder.getGui()).isDisplayItem(slot)) return;
         //イベントキャンセル
         event.setCancelled(true);
+
+        //トレードをアイテム化する
+        if(!event.isShiftClick()) return;
+        Player p = (Player) event.getWhoClicked();
+        p.getInventory().addItem(holder.getShop().convertTrade(((ShopTradeGui) holder.getGui()).getTradeFromSlot(slot)));
+
+        //音を出す
+        SoundUtil.playSuccessSound(p);
     }
 
     //ショップの取引編集ページを開く

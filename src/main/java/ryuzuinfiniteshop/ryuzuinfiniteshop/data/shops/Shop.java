@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 public class Shop {
     public enum ShopType {TwotoOne, FourtoFour, SixtoTwo}
-
     public enum ShopNBT {Ageable, Poweredable, Villagerable}
 
     protected Entity npc;
@@ -115,8 +114,8 @@ public class Shop {
 
         //取引を上書きし、取引として成立しないものは削除する
         List<ShopTrade> emptytrades = new ArrayList<>();
-        for (int i = 0; i < 9 * 6; i += getShopType().equals(Shop.ShopType.TwotoOne) ? 4 : 9) {
-            if (getShopType().equals(Shop.ShopType.TwotoOne) && i % 9 == 4) i++;
+        for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TwotoOne) ? 4 : 9) {
+            if (getShopType().equals(ShopType.TwotoOne) && i % 9 == 4) i++;
             ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(i);
             boolean available = ShopUtil.isAvailableTrade(inv, i, getShopType());
             if (trade == null && available)
@@ -126,7 +125,7 @@ public class Shop {
             else
                 emptytrades.add(trade);
         }
-        removeTrades(emptytrades);
+        this.trades.removeAll(emptytrades);
 
         //ショップを更新する
         updateTradeContents();
@@ -142,6 +141,16 @@ public class Shop {
                 return ChatColor.GREEN + "6対2";
         }
         return "";
+    }
+
+    //トレードをアイテム化する
+    public ItemStack convertTrade(ShopTrade trade) {
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石" , ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
+        item = PersistentUtil.setNMSTag(item, "ShopType", type.toString());
+        item = PersistentUtil.setNMSTag(item, "TradesSize", String.valueOf(1));
+        item = PersistentUtil.setNMSTag(item, "Give" + 1, ItemUtil.toStringFromItemStackArray(trade.give));
+        item = PersistentUtil.setNMSTag(item, "Take" + 1, ItemUtil.toStringFromItemStackArray(trade.take));
+        return item;
     }
 
     public ItemStack convertTrades() {
@@ -187,19 +196,6 @@ public class Shop {
         getFile().delete();
         ShopUtil.removeShop(LocationUtil.toStringFromLocation(location));
     }
-
-    public void removeTrade(int number) {
-        this.trades.remove(number);
-    }
-
-    public void removeTrade(ShopTrade trade) {
-        this.trades.remove(trade);
-    }
-
-    public void removeTrades(Collection<ShopTrade> trades) {
-        this.trades.removeAll(trades);
-    }
-
     public List<ShopTrade> getTrades() {
         return trades;
     }
