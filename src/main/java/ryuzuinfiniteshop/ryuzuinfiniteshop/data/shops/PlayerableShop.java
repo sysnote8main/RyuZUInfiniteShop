@@ -2,7 +2,6 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
 
 import java.util.UUID;
