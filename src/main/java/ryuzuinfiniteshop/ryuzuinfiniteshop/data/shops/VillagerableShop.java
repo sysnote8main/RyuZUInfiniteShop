@@ -29,18 +29,18 @@ public class VillagerableShop extends AgeableShop {
     public void setProfession(Villager.Profession profession) {
         this.profession = profession;
         if (npc instanceof Villager)
-            ((Villager) getNPC()).setProfession(profession);
+            ((Villager) npc).setProfession(profession);
         else
-            ((ZombieVillager) getNPC()).setVillagerProfession(profession);
-        ((Villager) getNPC()).setRecipes(new ArrayList<>());
+            ((ZombieVillager) npc).setVillagerProfession(profession);
+        ((Villager) npc).setRecipes(new ArrayList<>());
     }
 
     public void setBiome(Villager.Type villagertype) {
         this.biome = villagertype;
         if (npc instanceof Villager)
-            ((Villager) getNPC()).setVillagerType(villagertype);
+            ((Villager) npc).setVillagerType(villagertype);
         else
-            ((ZombieVillager) getNPC()).setVillagerType(villagertype);
+            ((ZombieVillager) npc).setVillagerType(villagertype);
     }
 
     public Villager.Profession getNextProfession() {
@@ -60,8 +60,8 @@ public class VillagerableShop extends AgeableShop {
     @Override
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return super.getSaveYamlProcess().andThen(yaml -> {
-            yaml.set("Profession", JavaUtil.getOrDefault(profession , Villager.Profession.FARMER).toString());
-            yaml.set("Biome", JavaUtil.getOrDefault(biome , Villager.Type.PLAINS).toString());
+            yaml.set("Profession", JavaUtil.getOrDefault(profession, Villager.Profession.FARMER).toString());
+            yaml.set("Biome", JavaUtil.getOrDefault(biome, Villager.Type.PLAINS).toString());
         });
     }
 

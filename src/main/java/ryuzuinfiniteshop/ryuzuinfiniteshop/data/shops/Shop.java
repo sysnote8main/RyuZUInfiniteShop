@@ -25,8 +25,6 @@ import java.util.stream.Collectors;
 public class Shop {
     public enum ShopType {TwotoOne, FourtoFour, SixtoTwo}
 
-    public enum ShopNBT {Ageable, Poweredable, Villagerable}
-
     protected Entity npc;
     protected Location location;
     protected ShopType type;
@@ -289,15 +287,6 @@ public class Shop {
         return size + 1;
     }
 
-    public boolean isNewPage(Inventory inv) {
-        //インベントリがショップなのかチェック
-        ShopHolder holder = ShopUtil.getShopHolder(inv);
-        int page = holder.getGui().getPage();
-        if (pages.size() < page) return false;
-        if (pages.size() + 1 != page) return false;
-        return isLimitPage(pages.size());
-    }
-
     public ShopType getShopType() {
         return type;
     }
@@ -377,10 +366,6 @@ public class Shop {
 
     public boolean isEditting() {
         return editting;
-    }
-
-    public void removeNPC() {
-        this.npc.remove();
     }
 
     public Entity getNPC() {

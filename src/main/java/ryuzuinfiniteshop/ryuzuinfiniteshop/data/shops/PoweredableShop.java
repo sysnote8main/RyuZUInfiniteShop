@@ -21,7 +21,7 @@ public class PoweredableShop extends Shop {
 
     public void setPowered(boolean powered) {
         this.powered = powered;
-        ((Creeper) getNPC()).setPowered(powered);
+        ((Creeper) npc).setPowered(powered);
     }
 
     @Override
