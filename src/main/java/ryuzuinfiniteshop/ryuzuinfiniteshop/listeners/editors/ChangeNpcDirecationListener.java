@@ -11,7 +11,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 
 //NPCの方向を変更する
-public class ChangeNPCDirecationListener implements Listener {
+public class ChangeNpcDirecationListener implements Listener {
     @EventHandler
     public void changeNPCDirecation(InventoryClickEvent event) {
         //インベントリがショップなのかチェック

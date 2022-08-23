@@ -134,18 +134,27 @@ public class ShopUtil {
 
         EntityType type = EntityType.valueOf(config.getString("EntityType"));
 
-        if (type.equals(EntityType.VILLAGER) || type.equals(EntityType.ZOMBIE_VILLAGER)) {
-            new VillagerableShop(location, type);
-            return;
+        createShop(location, type);
+    }
+
+    public static void createShop(Location location, String data, EntityType type) {
+        if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(location))) return;
+
+        File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
+        YamlConfiguration config = new YamlConfiguration();
+        try {
+            config.loadFromString(data);
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
         }
-        if (type.equals(EntityType.CREEPER)) {
-            new PoweredableShop(location, type);
-            return;
+        config.set("EntityType" , type.toString());
+
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        if (Ageable.class.isAssignableFrom(type.getEntityClass())) {
-            new AgeableShop(location, type);
-            return;
-        }
-        new Shop(location, type);
+
+        createShop(location, type);
     }
 }

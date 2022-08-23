@@ -190,7 +190,7 @@ public class Shop {
         updateTradeContents();
     }
 
-    public ItemStack convertShop() {
+    public String convertShopToString() {
         saveYaml();
         File file = getFile();
         YamlConfiguration config = new YamlConfiguration();
@@ -199,11 +199,15 @@ public class Shop {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+        return config.saveToString();
+    }
+
+    public ItemStack convertShopToItemStack() {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石",
                 "シフトして地面に使用",
                 ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay(),
                 ChatColor.YELLOW + "名前: " + JavaUtil.getOrDefault(npc.getCustomName(), "<none>"));
-        return PersistentUtil.setNMSTag(item, "Shop", config.saveToString());
+        return PersistentUtil.setNMSTag(item, "Shop", convertShopToString());
     }
 
     public void removeShop() {
@@ -369,7 +373,7 @@ public class Shop {
     }
 
     public Entity getNPC() {
-        return this.npc;
+        return npc;
     }
 
     public void spawnNPC(EntityType entitytype) {
@@ -409,7 +413,7 @@ public class Shop {
     }
 
     public ItemStack getEquipmentItem(int slot) {
-        return this.equipments[slot];
+        return equipments[slot];
     }
 
     public void setEquipmentItem(ItemStack item, int slot) {
@@ -419,6 +423,10 @@ public class Shop {
 
     public ItemStack getEquipmentDisplayItem(EquipmentSlot slot) {
         return JavaUtil.getOrDefault(getEquipmentItem(EquipmentUtil.getEquipmentSlotNumber(slot)), EquipmentUtil.getEquipmentDisplayItem(slot));
+    }
+
+    public Location getLocation() {
+        return location;
     }
 
     public void updateEquipments() {

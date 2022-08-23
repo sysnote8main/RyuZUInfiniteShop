@@ -6,12 +6,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.AgeableShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.PoweredableShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.VillagerableShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
@@ -21,7 +18,7 @@ import java.util.List;
 
 //ショップエディターのメインページ
 public class ShopEditorMainPage extends ShopGui {
-    public enum ShopSettings {Age, Power, Profession, Biome, Visible}
+    public enum ShopSettings {Age, Power, Profession, Biome, Visible, ParrotColor, DyeColor, HorseColor, HorseStyle}
 
     private final HashMap<Integer, ShopSettings> SettingsMap = new HashMap<>();
 
@@ -71,7 +68,11 @@ public class ShopEditorMainPage extends ShopGui {
     }
 
     private void setDisplayName(Inventory inv) {
-        inv.setItem(5 * 9 + 8, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + "名前を変更する"));
+        inv.setItem(5 * 9 + 8, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + "名前を変更する" , ChatColor.YELLOW + "現在の名前: " + JavaUtil.getOrDefault(getShop().getNPC().getCustomName() , "<none>")));
+    }
+
+    private void setEntityType(Inventory inv) {
+        inv.setItem(5 * 9 + 4, ItemUtil.getNamedItem(Material.EGG, ChatColor.GREEN + "エンティティタイプを変更する"));
     }
 
     private void setShopType(Inventory inv) {
@@ -107,6 +108,7 @@ public class ShopEditorMainPage extends ShopGui {
         setEquipment(inv);
         setTradesPage(inv);
         setDisplayName(inv);
+        setEntityType(inv);
         setShopType(inv);
         setNPCDirecation(inv);
         setConvertTrades(inv);
@@ -122,6 +124,10 @@ public class ShopEditorMainPage extends ShopGui {
         setProfession(inv);
         setBiome(inv);
         setVisible(inv);
+        setParrotColor(inv);
+        setDyeColor(inv);
+        setHorseColor(inv);
+        setHorseStyle(inv);
     }
 
     private void setAge(Inventory inv) {
@@ -136,12 +142,44 @@ public class ShopEditorMainPage extends ShopGui {
 
     private void setPower(Inventory inv) {
         if (!(getShop() instanceof PoweredableShop)) return;
-        ItemStack item = ((AgeableShop) getShop()).isAdult() ?
-                ItemUtil.getNamedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + "通常") :
-                ItemUtil.getNamedEnchantedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + "帯電");
+        ItemStack item = ((PoweredableShop) getShop()).isPowered() ?
+                ItemUtil.getNamedEnchantedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + "帯電") :
+                ItemUtil.getNamedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + "通常");
         int slot = 4 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Power);
+    }
+
+    private void setParrotColor(Inventory inv) {
+        if (!(getShop() instanceof ParrotShop)) return;
+        ItemStack item = ItemUtil.getNamedItem(((ParrotShop) getShop()).getColorMaterial(), ChatColor.GREEN + "色の変更");
+        int slot = 4 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.ParrotColor);
+    }
+
+    private void setDyeColor(Inventory inv) {
+        if (!(getShop() instanceof DyeableShop)) return;
+        ItemStack item = ItemUtil.getNamedItem(((DyeableShop) getShop()).getColorMaterial(), ChatColor.GREEN + "色の変更");
+        int slot = 4 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.DyeColor);
+    }
+
+    private void setHorseColor(Inventory inv) {
+        if (!(getShop() instanceof HorseShop)) return;
+        ItemStack item = ItemUtil.getNamedItem(((HorseShop) getShop()).getColorMaterial(), ChatColor.GREEN + "色の変更");
+        int slot = 4 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.HorseColor);
+    }
+
+    private void setHorseStyle(Inventory inv) {
+        if (!(getShop() instanceof HorseShop)) return;
+        ItemStack item = ItemUtil.getNamedItem(Material.TERRACOTTA, ChatColor.GREEN + "模様の変更");
+        int slot = 4 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.HorseStyle);
     }
 
     private void setProfession(Inventory inv) {

@@ -15,10 +15,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.AgeableShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.PoweredableShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.VillagerableShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
@@ -47,6 +44,10 @@ public class ChangeIndividualSettingsListener implements Listener {
         changeProfession(holder, event.getSlot());
         changeBiome(holder, event.getSlot());
         changeVisible(holder, event.getSlot());
+        changeParrotColor(holder, event.getSlot());
+        changeDyeColor(holder, event.getSlot());
+        changeHorseColor(holder, event.getSlot());
+        changeHorseStyle(holder, event.getSlot());
 
         //音を出す
         SoundUtil.playClickShopSound(p);
@@ -112,5 +113,53 @@ public class ChangeIndividualSettingsListener implements Listener {
 
         //透明か変更
         holder.getShop().changeInvisible();
+    }
+
+    //オウムの色を変更
+    public void changeParrotColor(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.ParrotColor)) return;
+        if (!(holder.getShop() instanceof ParrotShop)) return;
+
+        //色を変更
+        ((ParrotShop) holder.getShop()).setColor(((ParrotShop) holder.getShop()).getNextColor());
+    }
+
+    //色を変更
+    public void changeDyeColor(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.DyeColor)) return;
+        if (!(holder.getShop() instanceof DyeableShop)) return;
+
+        //色を変更
+        ((DyeableShop) holder.getShop()).setColor(((DyeableShop) holder.getShop()).getNextColor());
+    }
+
+    //馬の色を変更
+    public void changeHorseColor(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.HorseColor)) return;
+        if (!(holder.getShop() instanceof HorseShop)) return;
+
+        //色を変更
+        ((HorseShop) holder.getShop()).setColor(((HorseShop) holder.getShop()).getNextColor());
+    }
+
+    //馬の模様を変更
+    public void changeHorseStyle(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.HorseStyle)) return;
+        if (!(holder.getShop() instanceof HorseShop)) return;
+
+        //色を変更
+        ((HorseShop) holder.getShop()).setStyle(((HorseShop) holder.getShop()).getNextStyle());
     }
 }

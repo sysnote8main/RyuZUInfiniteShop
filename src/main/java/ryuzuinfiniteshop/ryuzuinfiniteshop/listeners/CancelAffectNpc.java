@@ -8,7 +8,7 @@ import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
 
-public class CancelAffectNPC implements Listener {
+public class CancelAffectNpc implements Listener {
     //ダメージを無効化する
     @EventHandler(priority = EventPriority.HIGH)
     public void cancelDamage(EntityDamageEvent event) {
