@@ -47,6 +47,7 @@ public class OpenShopListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (event.getClickedInventory() != null) return;
+        if (!(holder.getGui() instanceof ShopTradeGui)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
@@ -55,8 +56,6 @@ public class OpenShopListener implements Listener {
         ShopHolder.ShopMode mode = holder.getShopMode();
         Shop shop = holder.getShop();
         int page = holder.getGui().getPage();
-
-        if (!(holder.getGui() instanceof ShopTradeGui)) return;
 
         //ページ切り替え
         boolean fail = false;

@@ -31,7 +31,7 @@ public class Shop {
     protected List<ShopTrade> trades = new ArrayList<>();
     protected boolean lock = false;
     protected boolean editting = false;
-    protected List<ShopEditorMainPage> editors = new ArrayList<>();
+    protected List<ShopEditorGui> editors = new ArrayList<>();
     protected List<ShopTradeGui> pages = new ArrayList<>();
     protected ItemStack[] equipments = new ItemStack[6];
 
@@ -58,7 +58,6 @@ public class Shop {
 
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return yaml -> {
-            initializeShop(location, EntityType.valueOf(yaml.getString("EntityType")));
             this.type = ShopType.valueOf(yaml.getString("ShopType"));
             this.lock = yaml.getBoolean("Lock");
             this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, ArrayList<ItemStack>>) tradeconfig)).collect(Collectors.toList());
@@ -66,7 +65,7 @@ public class Shop {
             this.equipments = ((ArrayList<ItemStack>) yaml.getList("Equipments")).toArray(new ItemStack[0]);
             updateEquipments();
             this.location.setYaw(yaml.getInt("Yaw"));
-            npc.teleport(location);
+            npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
             if (npc instanceof LivingEntity) ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Visible"));
         };
     }
@@ -247,7 +246,7 @@ public class Shop {
         }
     }
 
-    public ShopEditorMainPage getEditor(int page) {
+    public ShopEditorGui getEditor(int page) {
         if (page <= 0) return null;
         if (page > editors.size()) return null;
         return editors.get(page - 1);
@@ -255,12 +254,12 @@ public class Shop {
 
     public void setEditors() {
         editors.clear();
-        if (pages.isEmpty()) editors.add(new ShopEditorMainPage(this, 1));
+        if (pages.isEmpty()) editors.add(new ShopEditorGui(this, 1));
         for (int i = 1; i <= getEditorPageCountFromTradesCount(); i++) {
-            editors.add(new ShopEditorMainPage(this, i));
+            editors.add(new ShopEditorGui(this, i));
         }
         if (ableCreateEditorNewPage())
-            editors.add(new ShopEditorMainPage(this, getEditorPageCountFromTradesCount() + 1));
+            editors.add(new ShopEditorGui(this, getEditorPageCountFromTradesCount() + 1));
     }
 
     public int getLimitSize() {
@@ -322,7 +321,7 @@ public class Shop {
 
     public void createEditorNewPage() {
         if (!ableCreateEditorNewPage()) return;
-        editors.add(new ShopEditorMainPage(this, getEditorPageCount() + 1));
+        editors.add(new ShopEditorGui(this, getEditorPageCount() + 1));
     }
 
     public void addTrade(Inventory inv, int slot) {
@@ -384,7 +383,6 @@ public class Shop {
         this.npc = npc;
         npc.setSilent(true);
         npc.setInvulnerable(true);
-        npc.teleport(location);
         PersistentUtil.setNMSTag(npc, "Shop", getID());
         initializeLivingEntitiy();
     }
@@ -399,13 +397,14 @@ public class Shop {
         if (!(npc instanceof LivingEntity)) return;
         LivingEntity livnpc = (LivingEntity) npc;
         location.setYaw((location.getYaw() + 45));
-        livnpc.teleport(location);
+        livnpc.teleport(LocationUtil.toBlockLocationFromLocation(location));
     }
 
     public void initializeLivingEntitiy() {
         if (!(npc instanceof LivingEntity)) return;
         LivingEntity livnpc = (LivingEntity) npc;
         livnpc.setAI(false);
+        livnpc.setRemoveWhenFarAway(false);
     }
 
     public List<ConfigurationSection> getTradesConfig() {

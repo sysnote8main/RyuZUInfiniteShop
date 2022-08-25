@@ -63,7 +63,7 @@ public class SpawnCommand {
                         EntityType.valueOf(data.getArgs()[1].toUpperCase());
                         return true;
                     } catch (IllegalArgumentException e) {
-                        System.out.println(RyuZUInfiniteShop.prefix + "有効なEntityTypeを入力して下さい");
+                        data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "有効なエンティティタイプを入力して下さい");
                         return false;
                     }
                 },

@@ -3,8 +3,10 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop;
 import com.github.ryuzu.ryuzucommandsgenerator.RyuZUCommandsGenerator;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.commands.ListCommand;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.commands.SpawnCommand;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.CancelAffectNpc;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.admin.OpenShopListListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.CancelItemMoveListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.OpenShopListener;
@@ -41,6 +43,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         getPlugin().getServer().getPluginManager().registerEvents(new EditTradePageListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new CancelItemMoveListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new OpenShopListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new OpenShopListListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new TradeListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new CancelAffectNpc(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeEquipmentListener(), getPlugin());
@@ -69,5 +72,6 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
 
     public static void registerCommands() {
         SpawnCommand.registerCommand();
+        ListCommand.registerCommand();
     }
 }

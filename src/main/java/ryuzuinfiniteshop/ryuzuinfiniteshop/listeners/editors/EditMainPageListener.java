@@ -12,11 +12,9 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
@@ -47,7 +45,7 @@ public class EditMainPageListener implements Listener {
         Inventory inv = event.getInventory();
         ShopHolder holder = ShopUtil.getShopHolder(inv);
         if (holder == null) return;
-        if (!(holder.getGui() instanceof ShopEditorMainPage)) return;
+        if (!(holder.getGui() instanceof ShopEditorGui)) return;
         if (!ShopUtil.isEditMode(inv)) return;
 
         //必要なデータを取得
@@ -71,7 +69,7 @@ public class EditMainPageListener implements Listener {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
-        if (!(holder.getGui() instanceof ShopEditorMainPage)) return;
+        if (!(holder.getGui() instanceof ShopEditorGui)) return;
         if (event.getClickedInventory() != null) return;
 
         //必要なデータを取得

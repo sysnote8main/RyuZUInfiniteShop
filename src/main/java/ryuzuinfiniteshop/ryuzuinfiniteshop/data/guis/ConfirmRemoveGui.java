@@ -3,26 +3,16 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.AgeableShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.PoweredableShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.VillagerableShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
 
-import java.util.HashMap;
-import java.util.List;
-
 //ショップエディターのメインページ
-public class ConfirmRemoveShop extends ShopGui {
+public class ConfirmRemoveGui extends ShopGui {
 
-    public ConfirmRemoveShop(Shop shop, int page) {
+    public ConfirmRemoveGui(Shop shop, int page) {
         super(shop, page);
     }
 

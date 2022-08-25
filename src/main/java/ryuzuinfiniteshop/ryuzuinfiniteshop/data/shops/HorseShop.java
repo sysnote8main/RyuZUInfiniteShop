@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Donkey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.material.Colorable;
@@ -10,12 +11,14 @@ import org.bukkit.material.Colorable;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-public class HorseShop extends Shop {
+public class HorseShop extends AgeableShop {
     protected Horse.Color color = Horse.Color.WHITE;
     protected Horse.Style style = Horse.Style.NONE;
 
     public HorseShop(Location location, EntityType entitytype) {
         super(location, entitytype);
+        ((Horse) npc).setColor(color);
+        ((Horse) npc).setStyle(style);
     }
 
     public Horse.Color setColor() {
@@ -57,8 +60,8 @@ public class HorseShop extends Shop {
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.color = Horse.Color.valueOf(yaml.getString("Color"));
-            this.style = Horse.Style.valueOf(yaml.getString("Style"));
+            this.color = Horse.Color.valueOf(yaml.getString("Color" , "WHITE"));
+            this.style = Horse.Style.valueOf(yaml.getString("Style" , "NONE"));
         });
     }
 

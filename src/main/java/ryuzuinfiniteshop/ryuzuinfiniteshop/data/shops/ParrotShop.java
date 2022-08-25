@@ -16,6 +16,7 @@ public class ParrotShop extends Shop {
 
     public ParrotShop(Location location, EntityType entitytype) {
         super(location, entitytype);
+        ((Parrot) npc).setVariant(color);
     }
 
     public Parrot.Variant setColor() {
@@ -44,7 +45,7 @@ public class ParrotShop extends Shop {
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.color = Parrot.Variant.valueOf(yaml.getString("Color"));
+            this.color = Parrot.Variant.valueOf(yaml.getString("Color" , "RED"));
         });
     }
 

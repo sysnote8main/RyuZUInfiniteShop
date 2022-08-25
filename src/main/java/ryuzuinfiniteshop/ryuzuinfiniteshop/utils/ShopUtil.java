@@ -1,19 +1,25 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Ageable;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.material.Colorable;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class ShopUtil {
@@ -72,8 +78,11 @@ public class ShopUtil {
     }
 
     public static void removeAllNPC() {
-        for (Shop shop : getShops().values()) {
-            shop.getNPC().remove();
+        for(World world : Bukkit.getWorlds()) {
+            for(Entity entity : world.getEntities()) {
+                String id = PersistentUtil.getNMSStringTag(entity, "Shop");
+                if (id != null) entity.remove();
+            }
         }
     }
 
@@ -87,6 +96,12 @@ public class ShopUtil {
         return shops;
     }
 
+    public static HashMap<String, Shop> getSortedShops() {
+        HashMap<String, Shop> sorted = new HashMap<>();
+        shops.keySet().stream().sorted(Comparator.naturalOrder()).forEach(key -> sorted.put(key , shops.get(key)));
+        return sorted;
+    }
+
     public static Shop getShop(String id) {
         return shops.get(id);
     }
@@ -96,13 +111,24 @@ public class ShopUtil {
     }
 
     public static void createShop(Location location, EntityType type) {
-        if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(location))) return;
         if (type.equals(EntityType.VILLAGER) || type.equals(EntityType.ZOMBIE_VILLAGER)) {
             new VillagerableShop(location, type);
             return;
         }
         if (type.equals(EntityType.CREEPER)) {
             new PoweredableShop(location, type);
+            return;
+        }
+        if (Colorable.class.isAssignableFrom(type.getEntityClass()) || type.equals(EntityType.WOLF) || type.equals(EntityType.TROPICAL_FISH)) {
+            new DyeableShop(location, type);
+            return;
+        }
+        if (type.equals(EntityType.PARROT)) {
+            new ParrotShop(location, type);
+            return;
+        }
+        if (type.equals(EntityType.HORSE)) {
+            new HorseShop(location, type);
             return;
         }
         if (Ageable.class.isAssignableFrom(type.getEntityClass())) {
@@ -117,8 +143,6 @@ public class ShopUtil {
     }
 
     public static void createShop(Location location, String data) {
-        if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(location))) return;
-
         File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
         YamlConfiguration config = new YamlConfiguration();
         try {
@@ -126,6 +150,10 @@ public class ShopUtil {
         } catch (InvalidConfigurationException e) {
             e.printStackTrace();
         }
+
+        String stringlocation = LocationUtil.toStringFromLocation(location);
+        if (shops.containsKey(stringlocation)) shops.get(stringlocation).removeShop();
+
         try {
             config.save(file);
         } catch (IOException e) {
@@ -133,13 +161,10 @@ public class ShopUtil {
         }
 
         EntityType type = EntityType.valueOf(config.getString("EntityType"));
-
         createShop(location, type);
     }
 
     public static void createShop(Location location, String data, EntityType type) {
-        if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(location))) return;
-
         File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
         YamlConfiguration config = new YamlConfiguration();
         try {
@@ -147,7 +172,10 @@ public class ShopUtil {
         } catch (InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        config.set("EntityType" , type.toString());
+        config.set("EntityType", type.toString());
+
+        String stringlocation = LocationUtil.toStringFromLocation(location);
+        if (shops.containsKey(stringlocation)) shops.get(stringlocation).removeShop();
 
         try {
             config.save(file);

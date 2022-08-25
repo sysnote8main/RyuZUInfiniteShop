@@ -4,10 +4,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Parrot;
-import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.material.Colorable;
 
 import java.util.Arrays;
@@ -18,15 +15,21 @@ public class DyeableShop extends Shop {
 
     public DyeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
+        setColor(color);
     }
 
-    public DyeColor setColor() {
+    public DyeColor getColor() {
         return color;
     }
 
     public void setColor(DyeColor color) {
         this.color = color;
-        ((Colorable) npc).setColor(color);
+        if (npc instanceof Colorable) ((Colorable) npc).setColor(color);
+        if (npc instanceof TropicalFish) ((TropicalFish) npc).setBodyColor(color);
+        if (npc instanceof Wolf)  {
+            ((Wolf) npc).setTamed(true);
+            ((Wolf) npc).setCollarColor(color);
+        }
     }
 
     public DyeColor getNextColor() {
@@ -46,7 +49,7 @@ public class DyeableShop extends Shop {
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.color = DyeColor.valueOf(yaml.getString("Color"));
+            this.color = DyeColor.valueOf(yaml.getString("Color" , "WHITE"));
         });
     }
 
@@ -78,6 +81,8 @@ public class DyeableShop extends Shop {
                 return Material.GREEN_WOOL;
             case RED:
                 return Material.RED_WOOL;
+            case BLACK:
+                return Material.BLACK_WOOL;
             case WHITE:
             default:
                 return Material.WHITE_WOOL;

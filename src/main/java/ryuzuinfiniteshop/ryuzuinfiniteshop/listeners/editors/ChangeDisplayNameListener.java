@@ -10,8 +10,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 
@@ -28,7 +27,7 @@ public class ChangeDisplayNameListener implements Listener {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
-        if(!(holder.getGui() instanceof ShopEditorMainPage)) return;
+        if(!(holder.getGui() instanceof ShopEditorGui)) return;
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
 

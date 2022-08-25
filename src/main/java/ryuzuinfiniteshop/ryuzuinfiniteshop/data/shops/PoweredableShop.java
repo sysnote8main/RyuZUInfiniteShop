@@ -13,6 +13,7 @@ public class PoweredableShop extends Shop {
 
     public PoweredableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
+        ((Creeper) npc).setPowered(powered);
     }
 
     public boolean isPowered() {
@@ -34,7 +35,7 @@ public class PoweredableShop extends Shop {
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.powered = yaml.getBoolean("Powered");
+            this.powered = yaml.getBoolean("Powered" , true);
         });
     }
 }

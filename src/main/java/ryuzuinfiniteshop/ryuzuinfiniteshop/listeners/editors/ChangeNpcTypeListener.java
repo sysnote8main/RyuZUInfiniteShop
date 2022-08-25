@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -10,7 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
@@ -28,7 +29,7 @@ public class ChangeNpcTypeListener implements Listener {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
-        if (!(holder.getGui() instanceof ShopEditorMainPage)) return;
+        if (!(holder.getGui() instanceof ShopEditorGui)) return;
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
 
@@ -60,15 +61,17 @@ public class ChangeNpcTypeListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "エンティティタイプ変更をキャンセルしました");
             SoundUtil.playClickShopSound(p);
         } else {
-            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "エンティティタイプを変更しました");
-            SoundUtil.playSuccessSound(p);
+            //同期させてNPCを再構築する
             Shop shop = ShopUtil.getShop(changingShop.get(p.getUniqueId()));
-            try {
-                ShopUtil.createShop(shop.getLocation(), shop.convertShopToString(), EntityType.valueOf(event.getMessage().toUpperCase()));
-            } catch (IllegalArgumentException e) {
-                System.out.println(RyuZUInfiniteShop.prefix + "有効なEntityTypeを入力して下さい");
-                return;
-            }
+            Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> {
+                p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "エンティティタイプを変更しました");
+                SoundUtil.playSuccessSound(p);
+                try {
+                    ShopUtil.createShop(shop.getLocation(), shop.convertShopToString(), EntityType.valueOf(event.getMessage().toUpperCase()));
+                } catch (IllegalArgumentException e) {
+                    p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "有効なエンティティタイプを入力して下さい");
+                }
+            }, 1L);
         }
         changingTime.remove(p.getUniqueId());
         changingShop.remove(p.getUniqueId());

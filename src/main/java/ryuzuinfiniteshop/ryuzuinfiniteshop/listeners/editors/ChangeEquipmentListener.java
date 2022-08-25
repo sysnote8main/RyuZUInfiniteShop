@@ -7,8 +7,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
@@ -21,7 +20,7 @@ public class ChangeEquipmentListener implements Listener {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
-        if (!(holder.getGui() instanceof ShopEditorMainPage)) return;
+        if (!(holder.getGui() instanceof ShopEditorGui)) return;
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
 

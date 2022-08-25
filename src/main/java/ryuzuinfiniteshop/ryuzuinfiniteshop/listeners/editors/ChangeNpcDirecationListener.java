@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
@@ -17,7 +17,7 @@ public class ChangeNpcDirecationListener implements Listener {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
-        if(!(holder.getGui() instanceof ShopEditorMainPage)) return;
+        if(!(holder.getGui() instanceof ShopEditorGui)) return;
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
 

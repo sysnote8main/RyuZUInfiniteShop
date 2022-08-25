@@ -1,22 +1,13 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 
@@ -29,14 +20,14 @@ public class ChangeIndividualSettingsListener implements Listener {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
-        if (!(holder.getGui() instanceof ShopEditorMainPage)) return;
+        if (!(holder.getGui() instanceof ShopEditorGui)) return;
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         int slot = event.getSlot();
-        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+        ShopEditorGui editor = (ShopEditorGui) holder.getGui();
 
         if (!editor.getSettingsMap().containsKey(slot)) return;
         changeAgeLook(holder, event.getSlot());
@@ -59,9 +50,9 @@ public class ChangeIndividualSettingsListener implements Listener {
     //年齢の変更
     public void changeAgeLook(ShopHolder holder, int slot) {
         //必要なデータを取得
-        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+        ShopEditorGui editor = (ShopEditorGui) holder.getGui();
 
-        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Age)) return;
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.Age)) return;
         if (!(holder.getShop() instanceof AgeableShop)) return;
 
         //年齢の変更
@@ -71,7 +62,7 @@ public class ChangeIndividualSettingsListener implements Listener {
     //クリーパーを帯電させるか変更
     public void changePowered(ShopHolder holder, int slot) {
         //必要なデータを取得
-        if (!((ShopEditorMainPage) holder.getGui()).getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Power))
+        if (!((ShopEditorGui) holder.getGui()).getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.Power))
             return;
         if (!(holder.getShop() instanceof PoweredableShop)) return;
 
@@ -82,9 +73,9 @@ public class ChangeIndividualSettingsListener implements Listener {
     //村人の職業を変更
     public void changeProfession(ShopHolder holder, int slot) {
         //必要なデータを取得
-        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+        ShopEditorGui editor = (ShopEditorGui) holder.getGui();
 
-        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Profession)) return;
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.Profession)) return;
         if (!(holder.getShop() instanceof VillagerableShop)) return;
 
         //職業を変更
@@ -94,9 +85,9 @@ public class ChangeIndividualSettingsListener implements Listener {
     //村人のバイオームを変更
     public void changeBiome(ShopHolder holder, int slot) {
         //必要なデータを取得
-        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+        ShopEditorGui editor = (ShopEditorGui) holder.getGui();
 
-        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Biome)) return;
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.Biome)) return;
         if (!(holder.getShop() instanceof VillagerableShop)) return;
 
         //バイオームを変更
@@ -106,9 +97,9 @@ public class ChangeIndividualSettingsListener implements Listener {
     //透明か変更
     public void changeVisible(ShopHolder holder, int slot) {
         //必要なデータを取得
-        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+        ShopEditorGui editor = (ShopEditorGui) holder.getGui();
 
-        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.Visible)) return;
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.Visible)) return;
         if (!(holder.getShop().getNPC() instanceof LivingEntity)) return;
 
         //透明か変更
@@ -118,9 +109,9 @@ public class ChangeIndividualSettingsListener implements Listener {
     //オウムの色を変更
     public void changeParrotColor(ShopHolder holder, int slot) {
         //必要なデータを取得
-        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+        ShopEditorGui editor = (ShopEditorGui) holder.getGui();
 
-        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.ParrotColor)) return;
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.ParrotColor)) return;
         if (!(holder.getShop() instanceof ParrotShop)) return;
 
         //色を変更
@@ -130,9 +121,9 @@ public class ChangeIndividualSettingsListener implements Listener {
     //色を変更
     public void changeDyeColor(ShopHolder holder, int slot) {
         //必要なデータを取得
-        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+        ShopEditorGui editor = (ShopEditorGui) holder.getGui();
 
-        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.DyeColor)) return;
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.DyeColor)) return;
         if (!(holder.getShop() instanceof DyeableShop)) return;
 
         //色を変更
@@ -142,9 +133,9 @@ public class ChangeIndividualSettingsListener implements Listener {
     //馬の色を変更
     public void changeHorseColor(ShopHolder holder, int slot) {
         //必要なデータを取得
-        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+        ShopEditorGui editor = (ShopEditorGui) holder.getGui();
 
-        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.HorseColor)) return;
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.HorseColor)) return;
         if (!(holder.getShop() instanceof HorseShop)) return;
 
         //色を変更
@@ -154,9 +145,9 @@ public class ChangeIndividualSettingsListener implements Listener {
     //馬の模様を変更
     public void changeHorseStyle(ShopHolder holder, int slot) {
         //必要なデータを取得
-        ShopEditorMainPage editor = (ShopEditorMainPage) holder.getGui();
+        ShopEditorGui editor = (ShopEditorGui) holder.getGui();
 
-        if (!editor.getSettingsMap().get(slot).equals(ShopEditorMainPage.ShopSettings.HorseStyle)) return;
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.HorseStyle)) return;
         if (!(holder.getShop() instanceof HorseShop)) return;
 
         //色を変更

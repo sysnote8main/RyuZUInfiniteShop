@@ -16,6 +16,9 @@ public class VillagerableShop extends AgeableShop {
 
     public VillagerableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
+        ((Villager) npc).setProfession(profession);
+        ((ZombieVillager) npc).setVillagerProfession(profession);
+        ((Villager) npc).setRecipes(new ArrayList<>());
     }
 
     public Villager.Profession getProfession() {
@@ -68,8 +71,8 @@ public class VillagerableShop extends AgeableShop {
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.profession = Villager.Profession.valueOf(yaml.getString("Profession"));
-            this.biome = Villager.Type.valueOf(yaml.getString("Biome"));
+            this.profession = Villager.Profession.valueOf(yaml.getString("Profession" , "FARMER"));
+            this.biome = Villager.Type.valueOf(yaml.getString("Biome" , "PLAINS"));
         });
     }
 

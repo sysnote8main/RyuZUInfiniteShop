@@ -6,6 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
 
 public class CancelAffectNpc implements Listener {
@@ -20,7 +21,7 @@ public class CancelAffectNpc implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void cancelBurn(EntityCombustEvent event){
+    public void cancelBurn(EntityCombustEvent event) {
         Entity entity = event.getEntity();
         String id = PersistentUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;

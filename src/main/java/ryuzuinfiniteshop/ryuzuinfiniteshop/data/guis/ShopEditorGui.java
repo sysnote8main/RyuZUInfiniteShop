@@ -17,12 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 
 //ショップエディターのメインページ
-public class ShopEditorMainPage extends ShopGui {
+public class ShopEditorGui extends ShopGui {
     public enum ShopSettings {Age, Power, Profession, Biome, Visible, ParrotColor, DyeColor, HorseColor, HorseStyle}
 
     private final HashMap<Integer, ShopSettings> SettingsMap = new HashMap<>();
 
-    public ShopEditorMainPage(Shop shop, int page) {
+    public ShopEditorGui(Shop shop, int page) {
         super(shop, page);
     }
 
@@ -119,11 +119,11 @@ public class ShopEditorMainPage extends ShopGui {
 
     public void setSettings(Inventory inv) {
         SettingsMap.clear();
+        setVisible(inv);
         setAge(inv);
         setPower(inv);
         setProfession(inv);
         setBiome(inv);
-        setVisible(inv);
         setParrotColor(inv);
         setDyeColor(inv);
         setHorseColor(inv);

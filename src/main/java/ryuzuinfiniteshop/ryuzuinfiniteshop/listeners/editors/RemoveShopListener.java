@@ -7,8 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ConfirmRemoveShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorMainPage;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ConfirmRemoveGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
@@ -20,7 +20,7 @@ public class RemoveShopListener implements Listener {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
-        if (!(holder.getGui() instanceof ShopEditorMainPage)) return;
+        if (!(holder.getGui() instanceof ShopEditorGui)) return;
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
 
@@ -33,7 +33,7 @@ public class RemoveShopListener implements Listener {
         SoundUtil.playCautionSound(p);
 
         //確認画面を開く
-        p.openInventory(new ConfirmRemoveShop(holder.getShop(), holder.getGui().getPage()).getInventory(holder.getShopMode()));
+        p.openInventory(new ConfirmRemoveGui(holder.getShop(), holder.getGui().getPage()).getInventory(holder.getShopMode()));
     }
 
     @EventHandler
@@ -41,7 +41,7 @@ public class RemoveShopListener implements Listener {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
-        if (!(holder.getGui() instanceof ConfirmRemoveShop)) return;
+        if (!(holder.getGui() instanceof ConfirmRemoveGui)) return;
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
 

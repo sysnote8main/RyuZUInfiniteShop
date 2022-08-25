@@ -54,7 +54,6 @@ public class ShopTrade {
 
         if (!affordTrade(p)) result = Result.notAfford;
         else if (!hasEnoughSpace(p)) result = Result.Full;
-
         return result;
     }
 
