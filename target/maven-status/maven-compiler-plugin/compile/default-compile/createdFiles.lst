@@ -7,6 +7,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\PoweredableShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\LocationUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\HorseShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui6to2.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\commands\ListCommand.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui4to4.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\CancelItemMoveListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeEquipmentListener.class
