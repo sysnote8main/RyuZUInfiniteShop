@@ -2,6 +2,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
@@ -11,8 +12,8 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class VillagerableShop extends AgeableShop {
-    protected Villager.Profession profession = Villager.Profession.FARMER;
-    protected Villager.Type biome = Villager.Type.PLAINS;
+    protected Villager.Profession profession;
+    protected Villager.Type biome;
 
     public VillagerableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
@@ -63,16 +64,16 @@ public class VillagerableShop extends AgeableShop {
     @Override
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return super.getSaveYamlProcess().andThen(yaml -> {
-            yaml.set("Profession", JavaUtil.getOrDefault(profession, Villager.Profession.FARMER).toString());
-            yaml.set("Biome", JavaUtil.getOrDefault(biome, Villager.Type.PLAINS).toString());
+            yaml.set("Npc.Options.Profession", JavaUtil.getOrDefault(profession, Villager.Profession.FARMER).toString());
+            yaml.set("Npc.Options.Biome", JavaUtil.getOrDefault(biome, Villager.Type.PLAINS).toString());
         });
     }
 
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.profession = Villager.Profession.valueOf(yaml.getString("Profession" , "FARMER"));
-            this.biome = Villager.Type.valueOf(yaml.getString("Biome" , "PLAINS"));
+            this.profession = Villager.Profession.valueOf(yaml.getString("Npc.Options.Profession" , "FARMER"));
+            this.biome = Villager.Type.valueOf(yaml.getString("Npc.Options.Biome" , "PLAINS"));
         });
     }
 

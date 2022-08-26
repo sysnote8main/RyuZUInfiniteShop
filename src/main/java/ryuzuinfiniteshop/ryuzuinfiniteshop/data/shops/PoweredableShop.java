@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.function.Consumer;
 
 public class PoweredableShop extends Shop {
-    protected boolean powered = false;
+    protected boolean powered;
 
     public PoweredableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
@@ -28,14 +28,14 @@ public class PoweredableShop extends Shop {
     @Override
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return super.getSaveYamlProcess().andThen(yaml -> {
-            yaml.set("Powered", powered);
+            yaml.set("Npc.Options.Powered", powered);
         });
     }
 
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.powered = yaml.getBoolean("Powered" , true);
+            this.powered = yaml.getBoolean("Npc.Options.Powered" , false);
         });
     }
 }

@@ -38,8 +38,8 @@ public class Shop {
     public Shop(Location location, EntityType entitytype) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         initializeShop(location, entitytype);
-        if (exsited) loadYamlProcess(getFile());
-        if (!exsited) {
+        loadYamlProcess(getFile());
+        if(!exsited) {
             createEditorNewPage();
             saveYaml();
         }
@@ -58,15 +58,24 @@ public class Shop {
 
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return yaml -> {
-            this.type = ShopType.valueOf(yaml.getString("ShopType"));
-            this.lock = yaml.getBoolean("Lock");
-            this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, ArrayList<ItemStack>>) tradeconfig)).collect(Collectors.toList());
-            updateTradeContents();
-            this.equipments = ((ArrayList<ItemStack>) yaml.getList("Equipments")).toArray(new ItemStack[0]);
-            updateEquipments();
-            this.location.setYaw(yaml.getInt("Yaw"));
-            npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
-            if (npc instanceof LivingEntity) ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Visible"));
+            try {
+                this.type = ShopType.valueOf(yaml.getString("Shop.Options.ShopType" , "TwotoOne"));
+                this.lock = yaml.getBoolean("Shop.Status.Lock" , false);
+                if(yaml.contains("Trades")) {
+                    this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, ArrayList<ItemStack>>) tradeconfig)).collect(Collectors.toList());
+                    updateTradeContents();
+                }
+                if(yaml.contains("Npc.Options.Equipments")) {
+                    this.equipments = ((ArrayList<ItemStack>) yaml.getList("Npc.Options.Equipments")).toArray(new ItemStack[0]);
+                    updateEquipments();
+                }
+                if(yaml.getString("Npc.DisplayName") != null) npc.setCustomName(yaml.getString("Npc.Options.DisplayName"));
+                this.location.setYaw(yaml.getInt("Npc.Status.Yaw" , 0));
+                npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
+                if (npc instanceof LivingEntity) ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Npc.Options.Visible" , true));
+            } catch (Exception error) {
+                error.printStackTrace();
+            }
         };
     }
 
@@ -330,13 +339,14 @@ public class Shop {
 
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return yaml -> {
-            yaml.set("EntityType", npc.getType().toString());
-            yaml.set("ShopType", type.toString());
-            yaml.set("Equipments", Arrays.stream(equipments).map(equipment -> JavaUtil.getOrDefault(equipment, new ItemStack(Material.AIR))).collect(Collectors.toList()));
-            yaml.set("Lock", lock);
+            yaml.set("Npc.Options.EntityType", npc.getType().toString());
+            yaml.set("Npc.Options.DisplayName", npc.getCustomName());
+            yaml.set("Shop.Options.ShopType", type.toString());
+            yaml.set("Npc.Options.Equipments", Arrays.stream(equipments).map(equipment -> JavaUtil.getOrDefault(equipment, new ItemStack(Material.AIR))).collect(Collectors.toList()));
+            yaml.set("Npc.Status.Lock", lock);
             yaml.set("Trades", getTradesConfig());
-            if (npc instanceof LivingEntity) yaml.set("Visible", !((LivingEntity) npc).isInvisible());
-            yaml.set("Yaw", location.getYaw());
+            if (npc instanceof LivingEntity) yaml.set("Npc.Options.Visible", !((LivingEntity) npc).isInvisible());
+            yaml.set("Npc.Status.Yaw", location.getYaw());
         };
     }
 
@@ -373,6 +383,10 @@ public class Shop {
 
     public Entity getNPC() {
         return npc;
+    }
+
+    public String getDisplayName() {
+        return JavaUtil.getOrDefault(npc.getCustomName(), "ショップ");
     }
 
     public void spawnNPC(EntityType entitytype) {

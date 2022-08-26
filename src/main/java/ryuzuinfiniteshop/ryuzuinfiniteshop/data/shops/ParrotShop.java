@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class ParrotShop extends Shop {
-    protected Parrot.Variant color = Parrot.Variant.RED;
+    protected Parrot.Variant color;
 
     public ParrotShop(Location location, EntityType entitytype) {
         super(location, entitytype);
@@ -38,14 +38,14 @@ public class ParrotShop extends Shop {
     @Override
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return super.getSaveYamlProcess().andThen(yaml -> {
-            yaml.set("Color", color.toString());
+            yaml.set("Npc.Options.Color", color.toString());
         });
     }
 
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.color = Parrot.Variant.valueOf(yaml.getString("Color" , "RED"));
+            this.color = Parrot.Variant.valueOf(yaml.getString("Npc.Options.Color" , "RED"));
         });
     }
 

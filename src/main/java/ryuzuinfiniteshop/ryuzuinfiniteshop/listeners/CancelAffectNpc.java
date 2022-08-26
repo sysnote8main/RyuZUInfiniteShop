@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners;
 
+import com.destroystokyo.paper.event.entity.CreeperIgniteEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,6 +23,14 @@ public class CancelAffectNpc implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void cancelBurn(EntityCombustEvent event) {
+        Entity entity = event.getEntity();
+        String id = PersistentUtil.getNMSStringTag(entity, "Shop");
+        if (id == null) return;
+        event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void cancelBurn(CreeperIgniteEvent event) {
         Entity entity = event.getEntity();
         String id = PersistentUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;

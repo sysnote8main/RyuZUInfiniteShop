@@ -102,11 +102,11 @@ public class ConvartListener implements Listener {
         if (block == null) return;
 
         //ショップを読み込む
-        ShopUtil.createShop(block.getLocation().add(0, 1, 0), PersistentUtil.getNMSStringTag(item, "Shop"));
+        Shop shop = ShopUtil.createShop(block.getLocation().add(0, 1, 0), PersistentUtil.getNMSStringTag(item, "Shop"));
 
         //音を出し、メッセージを送信
         SoundUtil.playSuccessSound(p);
-        p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "ショップを召喚しました");
+        p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + shop.getDisplayName() + "を召喚しました");
 
     }
 }

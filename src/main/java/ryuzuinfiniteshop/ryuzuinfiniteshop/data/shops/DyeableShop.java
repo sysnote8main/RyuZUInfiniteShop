@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class DyeableShop extends Shop {
-    protected DyeColor color = DyeColor.WHITE;
+    protected DyeColor color;
 
     public DyeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
@@ -42,14 +42,14 @@ public class DyeableShop extends Shop {
     @Override
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return super.getSaveYamlProcess().andThen(yaml -> {
-            yaml.set("Color", color.toString());
+            yaml.set("Npc.Options.Color", color.toString());
         });
     }
 
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.color = DyeColor.valueOf(yaml.getString("Color" , "WHITE"));
+            this.color = DyeColor.valueOf(yaml.getString("Npc.Options.Color" , "WHITE"));
         });
     }
 

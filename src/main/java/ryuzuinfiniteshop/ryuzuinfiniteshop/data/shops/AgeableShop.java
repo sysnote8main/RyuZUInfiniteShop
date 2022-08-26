@@ -8,7 +8,7 @@ import org.bukkit.entity.EntityType;
 import java.util.function.Consumer;
 
 public class AgeableShop extends Shop {
-    protected boolean adult = true;
+    protected boolean adult;
 
     public AgeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
@@ -30,14 +30,14 @@ public class AgeableShop extends Shop {
     @Override
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return super.getSaveYamlProcess().andThen(yaml -> {
-            yaml.set("Adult", adult);
+            yaml.set("Npc.Options.Adult", adult);
         });
     }
 
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.adult = yaml.getBoolean("Adult" , true);
+            this.adult = yaml.getBoolean("Npc.Options.Adult" , true);
         });
     }
 }

@@ -73,7 +73,7 @@ public class ShopUtil {
             } catch (IOException | InvalidConfigurationException e) {
                 e.printStackTrace();
             }
-            createShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("EntityType")));
+            createShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("Npc.Options.EntityType")));
         }
     }
 
@@ -110,39 +110,33 @@ public class ShopUtil {
         shops.put(id, shop);
     }
 
-    public static void createShop(Location location, EntityType type) {
+    public static Shop createShop(Location location, EntityType type) {
         if (type.equals(EntityType.VILLAGER) || type.equals(EntityType.ZOMBIE_VILLAGER)) {
-            new VillagerableShop(location, type);
-            return;
+            return new VillagerableShop(location, type);
         }
         if (type.equals(EntityType.CREEPER)) {
-            new PoweredableShop(location, type);
-            return;
+            return new PoweredableShop(location, type);
         }
         if (Colorable.class.isAssignableFrom(type.getEntityClass()) || type.equals(EntityType.WOLF) || type.equals(EntityType.TROPICAL_FISH)) {
-            new DyeableShop(location, type);
-            return;
+            return new DyeableShop(location, type);
         }
         if (type.equals(EntityType.PARROT)) {
-            new ParrotShop(location, type);
-            return;
+            return new ParrotShop(location, type);
         }
         if (type.equals(EntityType.HORSE)) {
-            new HorseShop(location, type);
-            return;
+            return new HorseShop(location, type);
         }
         if (Ageable.class.isAssignableFrom(type.getEntityClass())) {
-            new AgeableShop(location, type);
-            return;
+            return new AgeableShop(location, type);
         }
-        new Shop(location, type);
+        return new Shop(location, type);
     }
 
     public static void removeShop(String id) {
         shops.remove(id);
     }
 
-    public static void createShop(Location location, String data) {
+    public static Shop createShop(Location location, String data) {
         File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
         YamlConfiguration config = new YamlConfiguration();
         try {
@@ -160,11 +154,11 @@ public class ShopUtil {
             e.printStackTrace();
         }
 
-        EntityType type = EntityType.valueOf(config.getString("EntityType"));
-        createShop(location, type);
+        EntityType type = EntityType.valueOf(config.getString("Npc.Options.EntityType"));
+        return createShop(location, type);
     }
 
-    public static void createShop(Location location, String data, EntityType type) {
+    public static Shop createShop(Location location, String data, EntityType type) {
         File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
         YamlConfiguration config = new YamlConfiguration();
         try {
@@ -172,7 +166,7 @@ public class ShopUtil {
         } catch (InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        config.set("EntityType", type.toString());
+        config.set("Npc.Options.EntityType", type.toString());
 
         String stringlocation = LocationUtil.toStringFromLocation(location);
         if (shops.containsKey(stringlocation)) shops.get(stringlocation).removeShop();
@@ -183,6 +177,6 @@ public class ShopUtil {
             e.printStackTrace();
         }
 
-        createShop(location, type);
+        return createShop(location, type);
     }
 }

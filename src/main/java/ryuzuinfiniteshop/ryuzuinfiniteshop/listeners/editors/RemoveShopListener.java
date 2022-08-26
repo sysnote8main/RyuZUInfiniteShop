@@ -1,14 +1,17 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ConfirmRemoveGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopListGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
@@ -60,10 +63,16 @@ public class RemoveShopListener implements Listener {
         } else {
             //ショップを削除
             shop.removeShop();
+            for(Player opener : Bukkit.getServer().getOnlinePlayers()) {
+                ShopHolder listholder = ShopUtil.getShopHolder(opener.getOpenInventory().getTopInventory());
+                if (listholder == null) continue;
+                if (!(listholder.getGui() instanceof ShopListGui)) continue;
+                opener.openInventory(new ShopListGui(null , listholder.getGui().getPage()).getInventory(ShopHolder.ShopMode.Edit));
+            }
 
             //音を出し、メッセージを送信する
             SoundUtil.playSuccessSound(p);
-            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "ショップを削除しました");
+            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + shop.getDisplayName() + "を削除しました");
 
             //インベントリを閉じる
             p.closeInventory();
