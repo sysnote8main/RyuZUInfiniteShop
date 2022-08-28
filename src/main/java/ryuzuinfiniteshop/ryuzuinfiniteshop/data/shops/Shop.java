@@ -39,7 +39,7 @@ public class Shop {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         initializeShop(location, entitytype);
         loadYamlProcess(getFile());
-        if(!exsited) {
+        if (!exsited) {
             createEditorNewPage();
             saveYaml();
         }
@@ -58,24 +58,21 @@ public class Shop {
 
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return yaml -> {
-            try {
-                this.type = ShopType.valueOf(yaml.getString("Shop.Options.ShopType" , "TwotoOne"));
-                this.lock = yaml.getBoolean("Shop.Status.Lock" , false);
-                if(yaml.contains("Trades")) {
-                    this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, ArrayList<ItemStack>>) tradeconfig)).collect(Collectors.toList());
-                    updateTradeContents();
-                }
-                if(yaml.contains("Npc.Options.Equipments")) {
-                    this.equipments = ((ArrayList<ItemStack>) yaml.getList("Npc.Options.Equipments")).toArray(new ItemStack[0]);
-                    updateEquipments();
-                }
-                if(yaml.getString("Npc.DisplayName") != null) npc.setCustomName(yaml.getString("Npc.Options.DisplayName"));
-                this.location.setYaw(yaml.getInt("Npc.Status.Yaw" , 0));
-                npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
-                if (npc instanceof LivingEntity) ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Npc.Options.Visible" , true));
-            } catch (Exception error) {
-                error.printStackTrace();
+            this.type = ShopType.valueOf(yaml.getString("Shop.Options.ShopType", "TwotoOne"));
+            this.lock = yaml.getBoolean("Shop.Status.Lock", false);
+            if (yaml.contains("Trades")) {
+                this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, ArrayList<ItemStack>>) tradeconfig)).collect(Collectors.toList());
+                updateTradeContents();
             }
+            if (yaml.contains("Npc.Options.Equipments")) {
+                this.equipments = ((ArrayList<ItemStack>) yaml.getList("Npc.Options.Equipments")).toArray(new ItemStack[0]);
+                updateEquipments();
+            }
+            if (yaml.getString("Npc.DisplayName") != null) npc.setCustomName(yaml.getString("Npc.Options.DisplayName"));
+            this.location.setYaw(yaml.getInt("Npc.Status.Yaw", 0));
+            npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
+            if (npc instanceof LivingEntity)
+                ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Npc.Options.Visible", true));
         };
     }
 
