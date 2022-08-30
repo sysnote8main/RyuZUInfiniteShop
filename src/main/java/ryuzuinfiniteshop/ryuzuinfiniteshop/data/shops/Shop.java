@@ -138,11 +138,11 @@ public class Shop {
     public String getShopTypeDisplay() {
         switch (type) {
             case TwotoOne:
-                return ChatColor.GREEN + "2対1";
+                return ChatColor.GREEN + "2 -> 1";
             case FourtoFour:
-                return ChatColor.GREEN + "4対4";
+                return ChatColor.GREEN + "4 -> 4";
             case SixtoTwo:
-                return ChatColor.GREEN + "6対2";
+                return ChatColor.GREEN + "6 -> 2";
         }
         return "";
     }
