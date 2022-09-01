@@ -128,6 +128,7 @@ public class Shop {
                 trade.setTrade(inv, i, getShopType());
             else
                 emptytrades.add(trade);
+
         }
         this.trades.removeAll(emptytrades);
 

@@ -10,6 +10,7 @@ import org.bukkit.material.Colorable;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+//狼、熱帯魚、羊などの染料と同じ色を付けられるもの
 public class DyeableShop extends Shop {
     protected DyeColor color;
 
