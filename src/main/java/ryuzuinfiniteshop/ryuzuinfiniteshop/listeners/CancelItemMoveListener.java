@@ -15,7 +15,7 @@ public class CancelItemMoveListener implements Listener {
     @EventHandler
     public void cancelMoveToOtherInventory(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        ShopHolder holder = ShopUtil.getShopHolder(event);
+        ShopHolder holder = ShopUtil.getShopHolder(event.getView().getTopInventory());
         if (holder == null) return;
         if (event.getClickedInventory() == null) return;
         if (!(event.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY) || event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR))) return;
