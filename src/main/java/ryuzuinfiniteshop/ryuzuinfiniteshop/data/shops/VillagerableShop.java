@@ -17,9 +17,9 @@ public class VillagerableShop extends AgeableShop {
 
     public VillagerableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        ((Villager) npc).setProfession(profession);
-        ((ZombieVillager) npc).setVillagerProfession(profession);
-        ((Villager) npc).setRecipes(new ArrayList<>());
+        if(entitytype.equals(EntityType.VILLAGER)) ((Villager) npc).setRecipes(new ArrayList<>());
+        setProfession(profession);
+        setBiome(biome);
     }
 
     public Villager.Profession getProfession() {

@@ -11,6 +11,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\commands\ListCommand.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui4to4.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\CancelItemMoveListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeEquipmentListener.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\DisplayConfig$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ConvartListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopGui.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\AgeableShop.class
@@ -23,6 +24,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopTrade$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ItemUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeLockListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\TradeUtil$1.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\DisplayConfig$DisplayType.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopTradeGui.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\RyuZUInfiniteShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopEditorGui$ShopSettings.class
@@ -37,7 +39,6 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\utils\SoundUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ConfirmRemoveGui.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeNpcTypeListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopTrade$Result.class
-ryuzuinfiniteshop\ryuzuinfiniteshop\utils\ClassUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\HorseShop$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\Shop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\EquipmentUtil.class
@@ -54,10 +55,12 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeNpcDirecationListene
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\DyeableShop$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\admin\OpenShopListListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\ParrotShop$1.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\DisplayConfig$2.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopHolder.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\RemoveShopListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\ParrotShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\schedulers\RyuZUBaseTask.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\ShopEditorGui.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\DisplayConfig.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editors\ChangeIndividualSettingsListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\FileUtil.class
