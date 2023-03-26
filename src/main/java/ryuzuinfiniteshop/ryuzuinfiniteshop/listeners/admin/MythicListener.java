@@ -25,6 +25,7 @@ public class MythicListener implements Listener {
     }
 
     public static String getID(ItemStack item) {
-        return items.getOrDefault(item , null);
+        ItemStack copy = item.clone();
+        return items.getOrDefault(copy , null);
     }
 }

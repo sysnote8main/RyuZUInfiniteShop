@@ -4,9 +4,11 @@ import com.github.ryuzu.ryuzucommandsgenerator.RyuZUCommandsGenerator;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.commands.ListCommand;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.commands.SpawnCommand;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.MythicItem;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.DisplayConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.admin.MythicListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.canceller.CancelAffectNpc;
@@ -32,9 +34,10 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         registerEvents();
         registerCommands();
         new RyuZUCommandsGenerator(this);
+        ConfigurationSerialization.registerClass(MythicItem.class);
+        MythicListener.reload();
         ShopUtil.loadAllShops();
         DisplayConfig.loadDisplay();
-        MythicListener.reload();
     }
 
     @Override

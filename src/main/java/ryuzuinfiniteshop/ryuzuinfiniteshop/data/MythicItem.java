@@ -28,4 +28,8 @@ public class MythicItem implements ConfigurationSerializable {
         result.put("amount", amount);
         return result;
     }
+
+    public static MythicItem deserialize(Map<String,Object> map){
+        return new MythicItem(map.get("id").toString(),Integer.parseInt(map.get("amount").toString()));
+    }
 }
