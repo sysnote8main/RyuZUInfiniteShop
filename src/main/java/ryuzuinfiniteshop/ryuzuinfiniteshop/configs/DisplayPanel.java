@@ -11,7 +11,7 @@ public class DisplayPanel {
     public static int noafford = -1;
     public static int nospace = -1;
     public static int valid = -1;
-    public void loadConfig() throws IOException, InvalidConfigurationException {
+    public static void loadConfig() throws IOException, InvalidConfigurationException {
         File file = FileUtil.initializeFile("config.yml");
         YamlConfiguration yaml = new YamlConfiguration();
         yaml.load(file);

@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.delete;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -6,12 +6,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ConfirmRemoveGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopListGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ConfirmRemoveGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopListGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;

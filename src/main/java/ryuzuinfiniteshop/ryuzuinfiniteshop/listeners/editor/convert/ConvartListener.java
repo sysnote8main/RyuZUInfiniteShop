@@ -1,5 +1,6 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editors;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.convert;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -13,7 +14,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.*;
 
@@ -107,6 +108,18 @@ public class ConvartListener implements Listener {
         //音を出し、メッセージを送信
         SoundUtil.playSuccessSound(p);
         p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + shop.getDisplayName() + "を召喚しました");
+    }
 
+    @EventHandler
+    public void debug(PlayerInteractEvent event) {
+        //ショップ召喚用アイテムなのかチェック
+        if (event.getHand() == null) return;
+        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+        Player p = event.getPlayer();
+        ItemStack item = event.getItem();
+        if (!p.isSneaking()) return;
+        p.sendMessage(MythicMobs.inst().getVolatileCodeHandler().getItemHandler().getNBTData(item).getString("MYTHIC_ITEM"));
+//        p.sendMessage(MythicMobs.inst().getItemManager().getItems().stream().filter(mythicItem -> BukkitAdapter.adapt(mythicItem.generateItemStack(1)).equals(item)).findFirst().get().getInternalName());
     }
 }

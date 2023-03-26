@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,7 +10,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,11 +29,11 @@ public class ShopListGui extends ShopGui {
         for (int i = 0; i < Math.min(shops.size() - (getPage() - 1) * 54, 54); i++) {
             Shop shop = shops.get(keys.get(i + (getPage() - 1) * 54));
             ItemStack item = shop.isLock() ?
-                    ItemUtil.getNamedEnchantedItem(shop.getTrades().size() == 0 ? Material.BARRIER : shop.getTrades().get(1).give[0].getType(),
+                    ItemUtil.getNamedEnchantedItem(shop.getTrades().size() == 0 ? Material.BARRIER : shop.getTrades().get(1).getGiveItems()[0].getType(),
                             JavaUtil.getOrDefault(shop.getNPC().getCustomName(), ChatColor.YELLOW + "<none>"),
                             ChatColor.YELLOW + "座標: " + LocationUtil.toStringFromLocation(shop.getLocation()),
                             "シフトでNPCの位置までテレポート") :
-                    ItemUtil.getNamedItem(shop.getTrades().size() == 0 ? Material.BARRIER : shop.getTrades().get(1).give[0].getType(),
+                    ItemUtil.getNamedItem(shop.getTrades().size() == 0 ? Material.BARRIER : shop.getTrades().get(1).getGiveItems()[0].getType(),
                             JavaUtil.getOrDefault(shop.getNPC().getCustomName(), ChatColor.YELLOW + "<none>"),
                             ChatColor.YELLOW + "座標: " + LocationUtil.toStringFromLocation(shop.getLocation()),
                             "シフトでNPCの位置までテレポート");

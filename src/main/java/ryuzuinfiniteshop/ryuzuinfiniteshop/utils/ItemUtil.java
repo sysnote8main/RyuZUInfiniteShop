@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -168,5 +169,15 @@ public class ItemUtil {
             return null;
         }
         return ((List<ItemStack>) config.getList("ShopItemStacks", null)).toArray(new ItemStack[0]);
+    }
+
+    public static ItemStack getMythicItem(String id) {
+        return MythicMobs.inst().getItemManager().getItemStack(id);
+    }
+
+    public static ItemStack getMythicItem(String id , int amount) {
+        ItemStack item =  MythicMobs.inst().getItemManager().getItemStack(id);
+        item.setAmount(amount);
+        return item;
     }
 }

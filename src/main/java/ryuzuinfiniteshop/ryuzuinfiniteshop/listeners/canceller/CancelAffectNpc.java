@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.canceller;
 
 import com.destroystokyo.paper.event.entity.CreeperIgniteEvent;
 import org.bukkit.entity.Entity;

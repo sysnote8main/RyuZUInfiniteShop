@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

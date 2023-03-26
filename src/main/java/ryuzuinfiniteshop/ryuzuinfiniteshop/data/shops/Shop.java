@@ -13,7 +13,11 @@ import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.*;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopGui2to1;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopGui4to4;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopGui6to2;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.*;
 
 import java.io.File;
@@ -61,7 +65,7 @@ public class Shop {
             this.type = ShopType.valueOf(yaml.getString("Shop.Options.ShopType", "TwotoOne"));
             this.lock = yaml.getBoolean("Shop.Status.Lock", false);
             if (yaml.contains("Trades")) {
-                this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, ArrayList<ItemStack>>) tradeconfig)).collect(Collectors.toList());
+                this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, List<Object>>) tradeconfig)).collect(Collectors.toList());
                 updateTradeContents();
             }
             if (yaml.contains("Npc.Options.Equipments")) {
@@ -169,8 +173,8 @@ public class Shop {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石", ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
         item = PersistentUtil.setNMSTag(item, "ShopType", type.toString());
         item = PersistentUtil.setNMSTag(item, "TradesSize", String.valueOf(1));
-        item = PersistentUtil.setNMSTag(item, "Give" + 0, ItemUtil.toStringFromItemStackArray(trade.give));
-        item = PersistentUtil.setNMSTag(item, "Take" + 0, ItemUtil.toStringFromItemStackArray(trade.take));
+        item = PersistentUtil.setNMSTag(item, "Give" + 0, ItemUtil.toStringFromItemStackArray(trade.getGiveItems()));
+        item = PersistentUtil.setNMSTag(item, "Take" + 0, ItemUtil.toStringFromItemStackArray(trade.getTakeItems()));
         return item;
     }
 
@@ -179,8 +183,8 @@ public class Shop {
         item = PersistentUtil.setNMSTag(item, "ShopType", type.toString());
         item = PersistentUtil.setNMSTag(item, "TradesSize", String.valueOf(trades.size()));
         for (int i = 0; i < trades.size(); i++) {
-            item = PersistentUtil.setNMSTag(item, "Give" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).give));
-            item = PersistentUtil.setNMSTag(item, "Take" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).take));
+            item = PersistentUtil.setNMSTag(item, "Give" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).getGiveItems()));
+            item = PersistentUtil.setNMSTag(item, "Take" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).getTakeItems()));
         }
         return item;
     }

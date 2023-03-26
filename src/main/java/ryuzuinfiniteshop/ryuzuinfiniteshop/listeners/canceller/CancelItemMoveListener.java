@@ -1,12 +1,10 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.canceller;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopTradeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
 
 //ショップのラインナップを変更時以外はインベントリ内のアイテム移動を禁止するように

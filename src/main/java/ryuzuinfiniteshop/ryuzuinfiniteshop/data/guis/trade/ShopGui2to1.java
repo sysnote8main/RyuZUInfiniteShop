@@ -1,20 +1,13 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ShopGui2to1 extends ShopTradeGui {
 
@@ -34,8 +27,8 @@ public class ShopGui2to1 extends ShopTradeGui {
     public Inventory getInventory(ShopHolder.ShopMode mode) {
         Inventory inv = super.getInventory(mode);
 
-        ItemStack filler = ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.BLACK + "" );
-        ItemStack filler2 = ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "シフトクリックでトレードをアイテム化");
+        ItemStack filler = ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.BLACK + "");
+        ItemStack filler2 = mode.equals(ShopHolder.ShopMode.Edit) ? ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "シフトクリックでトレードをアイテム化") : filler;
 
         for (int i = 0; i < 6; i++) {
             inv.setItem(i * 9 + 2, filler2);
@@ -46,10 +39,10 @@ public class ShopGui2to1 extends ShopTradeGui {
         for (int i = 0; i < getTrades().size(); i++) {
             ShopTrade trade = getTrades().get(i);
             int slot = (i / 2) * 9 + (i % 2 == 1 ? 5 : 0);
-            for (int k = 0; k < trade.take.length; k++) {
-                inv.setItem(slot + k, trade.take[k]);
+            for (int k = 0; k < trade.getTakeItems().length; k++) {
+                inv.setItem(slot + k, trade.getTakeItems()[k]);
             }
-            inv.setItem(slot + 3, trade.give[0]);
+            inv.setItem(slot + 3, trade.getGiveItems()[0]);
         }
 
         return inv;

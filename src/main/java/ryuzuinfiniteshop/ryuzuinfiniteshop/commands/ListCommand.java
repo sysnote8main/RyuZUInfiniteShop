@@ -2,14 +2,10 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.commands;
 
 import com.github.ryuzu.ryuzucommandsgenerator.CommandsGenerator;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.ShopListGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.LocationUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopListGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 
 public class ListCommand {

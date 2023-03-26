@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -7,46 +8,76 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.admin.MythicListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.TradeUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ShopTrade {
     public enum Result {notAfford, Full, Success, Lack}
-
-    public ItemStack[] give;
-    public ItemStack[] take;
+    public List<Object> giveData;
+    public List<Object> takeData;
 
     public ConfigurationSection getConfig() {
         ConfigurationSection config = new MemoryConfiguration();
-        config.set("give", give);
-        config.set("take", take);
+        config.set("give", giveData);
+        config.set("take", takeData);
 
         return config;
     }
 
-    public ShopTrade(HashMap<String, ArrayList<ItemStack>> config) {
-        this.give = config.get("give").toArray(new ItemStack[0]);
-        this.take = config.get("take").toArray(new ItemStack[0]);
+    public ShopTrade(HashMap<String, List<Object>> config) {
+        this.giveData = config.get("give");
+        this.takeData = config.get("take");
     }
 
     public ShopTrade(ItemStack[] give, ItemStack[] take) {
-        this.give = give;
-        this.take = take;
+        this.giveData = getItemsConfiguration(give);
+        this.takeData = getItemsConfiguration(take);
     }
 
     public ShopTrade(Inventory inv, int slot, Shop.ShopType type) {
         setTrade(inv, slot, type);
     }
 
+    private List<Object> getItemsConfiguration(ItemStack[] items) {
+        return Arrays.stream(items).map(item -> {
+            if(MythicListener.getID(item) != null)
+                return new MythicItem(MythicListener.getID(item) , item.getAmount());
+            else
+                return item;
+        }).collect(Collectors.toList());
+    }
+
+    public ItemStack[] getGiveItems() {
+        return getTradeItems(giveData);
+    }
+
+    public ItemStack[] getTakeItems() {
+        return getTradeItems(takeData);
+    }
+
+    private ItemStack[] getTradeItems(List<Object> data) {
+        return data.stream().map(item -> {
+            if(item instanceof MythicItem)
+                return ((MythicItem) item).convertItemStack();
+            else
+                return item;
+        }).toArray(ItemStack[]::new);
+    }
+
     public void setTrade(Inventory inv, int slot, Shop.ShopType type) {
         ShopTrade trade = TradeUtil.getTrade(inv, slot, type);
         if (trade == null) return;
-        this.take = trade.take;
-        this.give = trade.give;
+        this.takeData = trade.takeData;
+        this.giveData = trade.giveData;
     }
 
     public Result getResult(Player p) {
@@ -63,8 +94,8 @@ public class ShopTrade {
 
         //アイテムを追加する
         if (result == Result.Success) {
-            inv.removeItem(take);
-            inv.addItem(give);
+            inv.removeItem(getTakeItems());
+            inv.addItem(getGiveItems());
         }
         return result;
     }
@@ -88,12 +119,12 @@ public class ShopTrade {
 
     //アイテムを追加できるかチェックする
     public boolean hasEnoughSpace(Player p) {
-        return ItemUtil.ableGive(p.getInventory(), give);
+        return ItemUtil.ableGive(p.getInventory(), getGiveItems());
     }
 
     //アイテムを所持しているか確認する
     public boolean affordTrade(Player p) {
-        return ItemUtil.contains(p.getInventory(), take);
+        return ItemUtil.contains(p.getInventory(), getTakeItems());
     }
 
     public void playResultEffect(Player p, Result result) {
