@@ -48,4 +48,8 @@ public class PersistentUtil {
 
         return nbttag.getString(key);
     }
+
+    public static String getMythicID(ItemStack item) {
+        return getNMSStringTag(item, "MYTHIC_TYPE");
+    }
 }
