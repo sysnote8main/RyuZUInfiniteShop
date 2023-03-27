@@ -1,14 +1,9 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EntityType;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.FileUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.LocationUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.FileUtil;
 
 import java.io.File;
 import java.io.IOException;

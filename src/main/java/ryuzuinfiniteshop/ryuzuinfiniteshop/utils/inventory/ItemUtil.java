@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Material;

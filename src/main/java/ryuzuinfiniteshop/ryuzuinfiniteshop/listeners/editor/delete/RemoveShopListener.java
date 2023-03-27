@@ -12,8 +12,8 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ConfirmRemoveGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopListGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.effect.SoundUtil;
 
 //ショップのNPCの装備を変更する
 public class RemoveShopListener implements Listener {

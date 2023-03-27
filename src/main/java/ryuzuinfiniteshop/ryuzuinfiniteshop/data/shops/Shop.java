@@ -18,7 +18,15 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopGui2to1;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopGui4to4;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopGui6to2;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopTradeGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.*;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.EquipmentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.FileUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.LocationUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.effect.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.TradeUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +73,7 @@ public class Shop {
             this.type = ShopType.valueOf(yaml.getString("Shop.Options.ShopType", "TwotoOne"));
             this.lock = yaml.getBoolean("Shop.Status.Lock", false);
             if (yaml.contains("Trades")) {
-                this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, List<Object>>) tradeconfig)).collect(Collectors.toList());
+                this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, Object>) tradeconfig)).collect(Collectors.toList());
                 updateTradeContents();
             }
             if (yaml.contains("Npc.Options.Equipments")) {
@@ -124,13 +132,21 @@ public class Shop {
         List<ShopTrade> emptytrades = new ArrayList<>();
         for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TwotoOne) ? 4 : 9) {
             if (getShopType().equals(ShopType.TwotoOne) && i % 9 == 4) i++;
+
+            int limitSlot = 0;
+            if(getShopType().equals(ShopType.TwotoOne)) limitSlot = i + 2;
+            else if(getShopType().equals(ShopType.FourtoFour)) limitSlot = i + 4;
+            else if(getShopType().equals(ShopType.SixtoTwo)) limitSlot = i + 6;
+            String limitString = PersistentUtil.getNMSStringTag(inv.getItem(limitSlot) , "TradeLimit");
+            int limit = limitString == null ? 0 : Integer.parseInt(limitString);
             ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(i);
             boolean available = TradeUtil.isAvailableTrade(inv, i, getShopType());
             if (trade == null && available)
-                addTrade(inv, i);
-            else if (available)
+                addTrade(inv, i , limit);
+            else if (available) {
+                trade.setTradeLimits(limit);
                 trade.setTrade(inv, i, getShopType());
-            else
+            } else
                 emptytrades.add(trade);
 
         }
@@ -164,10 +180,14 @@ public class Shop {
         return 0;
     }
 
+    public ShopTrade getTrade(Inventory inv, int slot) {
+        if (!((ShopTradeGui) ShopUtil.getShopHolder(inv).getGui()).isConvertSlot(slot)) return null;
+        return TradeUtil.getTrade(inv, slot - getSubtractSlot(), type);
+    }
+
     //トレードをアイテム化する
     public ItemStack convertTrade(Inventory inv, int slot) {
-        if (!((ShopTradeGui) ShopUtil.getShopHolder(inv).getGui()).isConvertSlot(slot)) return null;
-        ShopTrade trade = TradeUtil.getTrade(inv, slot - getSubtractSlot(), type);
+        ShopTrade trade = getTrade(inv, slot);
         if (trade == null) return null;
 
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石", ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
@@ -190,14 +210,22 @@ public class Shop {
     }
 
     public void loadTrades(ItemStack item) {
-        String tag = PersistentUtil.getNMSStringTag(item, "TradesSize");
-        if (tag == null) return;
-        ShopType shoptype = ShopType.valueOf(PersistentUtil.getNMSStringTag(item, "ShopType"));
-        if (!(shoptype.equals(ShopType.TwotoOne) || shoptype.equals(type))) return;
-        for (int i = 0; i < Integer.parseInt(tag); i++) {
-            trades.add(new ShopTrade(ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Give" + i)), ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Take" + i))));
-        }
+        List<ShopTrade> temp = getTrades(item);
+        if (temp == null) return;
+        trades.addAll(temp);
         updateTradeContents();
+    }
+
+    public List<ShopTrade> getTrades(ItemStack item) {
+        String tag = PersistentUtil.getNMSStringTag(item, "TradesSize");
+        if (tag == null) return null;
+        Shop.ShopType shoptype = Shop.ShopType.valueOf(PersistentUtil.getNMSStringTag(item, "ShopType"));
+        if (!(shoptype.equals(Shop.ShopType.TwotoOne) || shoptype.equals(type))) return null;
+        List<ShopTrade> temp = new ArrayList<>();
+        for (int i = 0; i < Integer.parseInt(tag); i++) {
+            temp.add(new ShopTrade(ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Give" + i)), ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Take" + i))));
+        }
+        return temp;
     }
 
     public String convertShopToString() {
@@ -214,9 +242,10 @@ public class Shop {
 
     public ItemStack convertShopToItemStack() {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石",
-                "シフトして地面に使用",
-                ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay(),
-                ChatColor.YELLOW + "名前: " + JavaUtil.getOrDefault(npc.getCustomName(), "<none>"));
+                                                        "シフトして地面に使用",
+                                                        ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay(),
+                                                        ChatColor.YELLOW + "名前: " + JavaUtil.getOrDefault(npc.getCustomName(), "<none>")
+        );
         return PersistentUtil.setNMSTag(item, "Shop", convertShopToString());
     }
 
@@ -335,8 +364,8 @@ public class Shop {
         editors.add(new ShopEditorGui(this, getEditorPageCount() + 1));
     }
 
-    public void addTrade(Inventory inv, int slot) {
-        trades.add(new ShopTrade(inv, slot, type));
+    public void addTrade(Inventory inv, int slot, int limit) {
+        trades.add(new ShopTrade(inv, slot, type, limit));
     }
 
     public Consumer<YamlConfiguration> getSaveYamlProcess() {

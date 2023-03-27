@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory;
 
 import net.minecraft.server.v1_16_R3.NBTTagCompound;
 import org.bukkit.NamespacedKey;

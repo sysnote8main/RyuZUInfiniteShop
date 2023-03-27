@@ -7,7 +7,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.*;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.LocationUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ShopUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,18 +26,18 @@ public class ShopListGui extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopHolder.ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, "ショップ一覧");
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, "ショップ一覧 ページ" + getPage());
 
         HashMap<String, Shop> shops = ShopUtil.getSortedShops();
         List<String> keys = new ArrayList<>(shops.keySet());
         for (int i = 0; i < Math.min(shops.size() - (getPage() - 1) * 54, 54); i++) {
             Shop shop = shops.get(keys.get(i + (getPage() - 1) * 54));
             ItemStack item = shop.isLock() ?
-                    ItemUtil.getNamedEnchantedItem(shop.getTrades().size() == 0 ? Material.BARRIER : shop.getTrades().get(1).getGiveItems()[0].getType(),
-                            JavaUtil.getOrDefault(shop.getNPC().getCustomName(), ChatColor.YELLOW + "<none>"),
-                            ChatColor.YELLOW + "座標: " + LocationUtil.toStringFromLocation(shop.getLocation()),
-                            "シフトでNPCの位置までテレポート") :
-                    ItemUtil.getNamedItem(shop.getTrades().size() == 0 ? Material.BARRIER : shop.getTrades().get(1).getGiveItems()[0].getType(),
+                    ItemUtil.getNamedEnchantedItem(shop.getTrades().size() == 0 ? Material.BARRIER : shop.getTrades().get(0).getGiveItems()[0].getType(),
+                                                   JavaUtil.getOrDefault(shop.getNPC().getCustomName(), ChatColor.YELLOW + "<none>"),
+                                                   ChatColor.YELLOW + "座標: " + LocationUtil.toStringFromLocation(shop.getLocation()),
+                                                   "シフトでNPCの位置までテレポート") :
+                    ItemUtil.getNamedItem(shop.getTrades().size() == 0 ? Material.BARRIER : shop.getTrades().get(0).getGiveItems()[0].getType(),
                             JavaUtil.getOrDefault(shop.getNPC().getCustomName(), ChatColor.YELLOW + "<none>"),
                             ChatColor.YELLOW + "座標: " + LocationUtil.toStringFromLocation(shop.getLocation()),
                             "シフトでNPCの位置までテレポート");

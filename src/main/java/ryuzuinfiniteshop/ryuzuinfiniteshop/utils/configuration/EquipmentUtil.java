@@ -1,8 +1,9 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ItemUtil;
 
 import java.util.HashMap;
 

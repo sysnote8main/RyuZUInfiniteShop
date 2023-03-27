@@ -2,10 +2,9 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.JavaUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -8,7 +8,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -16,6 +15,9 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.Colorable;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.FileUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.LocationUtil;
 
 import java.io.File;
 import java.io.IOException;

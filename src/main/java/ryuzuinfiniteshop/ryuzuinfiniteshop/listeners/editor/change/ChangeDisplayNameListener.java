@@ -11,8 +11,8 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopEditorGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.effect.SoundUtil;
 
 import java.util.HashMap;
 import java.util.UUID;

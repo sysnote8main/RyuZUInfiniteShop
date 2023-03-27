@@ -5,10 +5,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopTradeGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.effect.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ShopUtil;
 
 public class TradeListener implements Listener {
 
@@ -47,5 +50,31 @@ public class TradeListener implements Listener {
 
         //イベントキャンセル
         event.setCancelled(true);
+    }
+
+    //ディスプレイをクリックしたときイベントをキャンセルする
+    @EventHandler
+    public void changeTradeLimit(InventoryClickEvent event) {
+        //インベントリがショップなのかチェック
+        ShopHolder holder = ShopUtil.getShopHolder(event);
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof ShopTradeGui)) return;
+        if (!ShopUtil.isEditMode(event)) return;
+        if (event.getClickedInventory() == null) return;
+        int slot = event.getSlot();
+        if (!((ShopTradeGui) holder.getGui()).isDisplaySlot(slot)) return;
+        //イベントキャンセル
+        event.setCancelled(true);
+
+        Player p = (Player) event.getWhoClicked();
+        ShopTrade trade = holder.getShop().getTrade(event.getClickedInventory(), slot);
+        //トレードをアイテム化する
+        if (event.isShiftClick()) return;
+        if (!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
+        if (!(trade.getLimit() == 0 && event.isLeftClick())) {
+            event.setCurrentItem(trade.changeLimit(event.isLeftClick() ? -1 : 1));
+            SoundUtil.playClickShopSound(p);
+        } else
+            SoundUtil.playFailSound(p);
     }
 }

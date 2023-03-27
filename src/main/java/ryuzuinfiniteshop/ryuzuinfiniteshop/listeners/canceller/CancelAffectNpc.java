@@ -7,8 +7,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.PersistentUtil;
 
 public class CancelAffectNpc implements Listener {
     //ダメージを無効化する

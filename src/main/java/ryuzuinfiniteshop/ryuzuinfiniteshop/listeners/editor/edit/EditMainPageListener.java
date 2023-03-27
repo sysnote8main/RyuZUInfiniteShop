@@ -15,9 +15,9 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopEditorGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.PersistentUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.effect.SoundUtil;
 
 public class EditMainPageListener implements Listener {
     //ショップの編集画面を開く

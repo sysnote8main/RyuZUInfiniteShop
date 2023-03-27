@@ -1,13 +1,10 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop;
 
 import com.github.ryuzu.ryuzucommandsgenerator.RyuZUCommandsGenerator;
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.commands.ListCommand;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.commands.SpawnCommand;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.commands.CommandChain;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.MythicItem;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.DisplayConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.admin.MythicListener;
@@ -21,7 +18,8 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.edit.EditMainPageLis
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.edit.EditTradePageListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.OpenShopListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.TradeListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.TradeUtil;
 
 public final class RyuZUInfiniteShop extends JavaPlugin {
     private static RyuZUInfiniteShop plugin;
@@ -32,17 +30,19 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         // Plugin startup logic
         plugin = this;
         registerEvents();
-        registerCommands();
+        CommandChain.registerCommand();
         new RyuZUCommandsGenerator(this);
         ConfigurationSerialization.registerClass(MythicItem.class);
         MythicListener.reload();
         ShopUtil.loadAllShops();
+        TradeUtil.loadTradeLimits();
         DisplayConfig.loadDisplay();
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        TradeUtil.saveTradeLimits();
         ShopUtil.saveAllShops();
         ShopUtil.removeAllNPC();
         DisplayConfig.saveDisplay();
@@ -101,10 +101,5 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-    }
-
-    public static void registerCommands() {
-        SpawnCommand.registerCommand();
-        ListCommand.registerCommand();
     }
 }

@@ -10,11 +10,12 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.JavaUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public abstract class ShopTradeGui extends ShopGui {
 
@@ -52,7 +53,22 @@ public abstract class ShopTradeGui extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopHolder.ShopMode mode) {
-        return Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, JavaUtil.getOrDefault(getShop().getNPC().getCustomName(), "ショップ") + "ショップ ページ" + getPage());
+        return null;
+    }
+
+    public Inventory getInventory(Function<Integer, Integer> function, ShopHolder.ShopMode mode) {
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, JavaUtil.getOrDefault(getShop().getNPC().getCustomName(), "ショップ") + " ページ" + getPage());
+
+        for (int i = 0; i < getTrades().size(); i++) {
+            ShopTrade trade = getTrades().get(i);
+            int slot = function.apply(i);
+            ItemStack[] items = trade.getTradeItems(getShop().getShopType(), mode);
+            for (int k = 0; k < items.length; k++) {
+                inv.setItem(slot + k, items[k]);
+            }
+        }
+
+        return inv;
     }
 
     public Inventory getInventory(ShopHolder.ShopMode mode, Player p) {
@@ -71,6 +87,7 @@ public abstract class ShopTradeGui extends ShopGui {
         ItemStack status1 = ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "購入可能");
         ItemStack status2 = ItemUtil.getNamedItem(Material.RED_STAINED_GLASS_PANE, ChatColor.RED + "アイテムが足りません");
         ItemStack status3 = ItemUtil.getNamedItem(Material.YELLOW_STAINED_GLASS_PANE, ChatColor.YELLOW + "インベントリに十分な空きがありません");
+        ItemStack status4 = ItemUtil.getNamedItem(Material.RED_STAINED_GLASS_PANE, ChatColor.RED + "取引上限です");
 
         int addslot = 0;
         switch (getShop().getShopType()) {
@@ -89,7 +106,7 @@ public abstract class ShopTradeGui extends ShopGui {
                     (i / 2) * 9 + (i % 2 == 1 ? 5 : 0) :
                     i * 9;
             ShopTrade trade = getTradeFromSlot(baseslot);
-            ShopTrade.Result result = trade.getResult(p);
+            ShopTrade.TradeResult result = trade.getResult(p);
             switch (result) {
                 case notAfford:
                     inventory.setItem(baseslot + addslot, status2);
@@ -98,7 +115,12 @@ public abstract class ShopTradeGui extends ShopGui {
                     inventory.setItem(baseslot + addslot, status3);
                     break;
                 case Success:
-                    inventory.setItem(baseslot + addslot, status1);
+                    inventory.setItem(baseslot + addslot, trade.getTradeLimit() == 0 ? status1 :
+                            ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "購入可能" , ChatColor.YELLOW + "残り" + (trade.getTradeLimit() - trade.getCounts(p)) + "回購入可能")
+                    );
+                    break;
+                case Limited:
+                    inventory.setItem(baseslot + addslot, status4);
                     break;
             }
         }

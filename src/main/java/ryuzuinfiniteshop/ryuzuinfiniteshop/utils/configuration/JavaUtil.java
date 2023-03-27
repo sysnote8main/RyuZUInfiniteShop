@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

@@ -13,9 +13,9 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopTradeGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ShopUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.effect.SoundUtil;
 
 public class EditTradePageListener implements Listener {
     //ショップのラインナップを変更
@@ -66,7 +66,7 @@ public class EditTradePageListener implements Listener {
         ItemStack item = holder.getShop().convertTrade(event.getClickedInventory(), slot);
         //トレードをアイテム化する
         if (!event.isShiftClick()) return;
-        if(!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
+        if (!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
         if (item == null) {
             SoundUtil.playFailSound(p);
             return;
@@ -76,9 +76,6 @@ public class EditTradePageListener implements Listener {
             SoundUtil.playSuccessSound(p);
         } else
             SoundUtil.playFailSound(p);
-
-        //音を出す
-        SoundUtil.playSuccessSound(p);
     }
 
     //ショップの取引編集ページを開く

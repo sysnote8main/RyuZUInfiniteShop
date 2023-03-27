@@ -1,13 +1,10 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Value;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ItemUtil;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

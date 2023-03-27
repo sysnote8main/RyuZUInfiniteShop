@@ -2,7 +2,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.configs;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.FileUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.FileUtil;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.utils;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.utils.effect;
 
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

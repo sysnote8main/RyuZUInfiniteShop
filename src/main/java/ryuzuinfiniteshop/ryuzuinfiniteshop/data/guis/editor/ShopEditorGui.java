@@ -10,9 +10,9 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.EquipmentUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.EquipmentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.JavaUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -116,6 +116,13 @@ public class ShopEditorGui extends ShopGui {
         setConvertShop(inv);
         setRemoveShop(inv);
         setSettings(inv);
+        setCover(inv);
+    }
+
+    public void setCover(Inventory inv) {
+        ItemStack item = ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, "");
+        for (int i = 2 * 9 ; i < 5 * 9 + 8 ; i++)
+            if(!ItemUtil.isAir(inv.getItem(2 * 9 + i))) inv.setItem(2 * 9 + i, item);
     }
 
     public void setSettings(Inventory inv) {
