@@ -40,9 +40,9 @@ public class ChangeDisplayNameListener implements Listener {
         //チャット入力待機
         namingTime.put(p.getUniqueId(), System.currentTimeMillis());
         namingShop.put(p.getUniqueId(), shop.getID());
-        p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "ページに設定する名前をチャットに入力してください");
-        p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
-        p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "カラーコードを使う際は'&'か'{color:R,G,B}'を使用してください");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ページに設定する名前をチャットに入力してください");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "カラーコードを使う際は'&'か'{color:R,G,B}'を使用してください");
 
         //音を出す
         SoundUtil.playClickShopSound(p);
@@ -57,10 +57,10 @@ public class ChangeDisplayNameListener implements Listener {
         if (!namingTime.containsKey(p.getUniqueId())) return;
         if ((double) (System.currentTimeMillis() - namingTime.get(p.getUniqueId())) / 1000 > 20) return;
         if (event.getMessage().equalsIgnoreCase("Cancel"))  {
-            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "名前変更をキャンセルしました");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "名前変更をキャンセルしました");
             SoundUtil.playClickShopSound(p);
         } else {
-            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "名前が設定されました");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "名前が設定されました");
             SoundUtil.playSuccessSound(p);
             Shop shop = ShopUtil.getShop(namingShop.get(p.getUniqueId()));
             shop.getNPC().setCustomName(event.getMessage());

@@ -1,15 +1,18 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopTradeGui;
@@ -48,7 +51,7 @@ public class OpenShopListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
         Inventory inv = event.getView().getTopInventory();
-        ShopHolder.ShopMode mode = holder.getShopMode();
+        ShopHolder.ShopMode mode = holder.getMode();
         Shop shop = holder.getShop();
         int page = holder.getGui().getPage();
 
@@ -58,7 +61,7 @@ public class OpenShopListener implements Listener {
             if (shop.getPage(page - 1) == null)
                 fail = true;
             else
-                p.openInventory(shop.getPage(page - 1).getInventory(mode, p));
+                p.openInventory(shop.getPage(page - 1).getInventory(mode, p, holder.getBefore()));
         }
         if (type.isRightClick()) {
             if (shop.getPage(page + 1) == null) {
@@ -68,12 +71,12 @@ public class OpenShopListener implements Listener {
                     shop.checkTrades(inv);
                     if (shop.ableCreateNewPage()) {
                         shop.createNewPage();
-                        p.openInventory(shop.getPage(page + 1).getInventory(mode, p));
+                        p.openInventory(shop.getPage(page + 1).getInventory(mode, p, holder.getBefore()));
                         fail = false;
                     }
                 }
             } else
-                p.openInventory(shop.getPage(page + 1).getInventory(mode, p));
+                p.openInventory(shop.getPage(page + 1).getInventory(mode, p, holder.getBefore()));
         }
         if (fail) {
             SoundUtil.playFailSound(p);
@@ -85,6 +88,25 @@ public class OpenShopListener implements Listener {
 
         //イベントキャンセル
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void openBeforePage(InventoryCloseEvent event) {
+        //インベントリがショップなのかチェック
+        Inventory inv = event.getInventory();
+        ShopHolder holder = ShopUtil.getShopHolder(inv);
+        if (holder == null) return;
+
+        //必要なデータを取得
+        Player p = (Player) event.getPlayer();
+        SoundUtil.playCloseShopSound(p);
+
+        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> {
+            if (ShopUtil.getShopHolder(p.getOpenInventory().getTopInventory()) != null) return;
+            if (holder.getBefore() == null) return;
+            p.openInventory(holder.getBefore().getInventory(holder.getMode()));
+
+        }, 1L);
     }
 
     //ショップのステータスの更新

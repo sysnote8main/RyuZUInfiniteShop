@@ -28,6 +28,7 @@ public class ItemUtil {
     //アイテムを与えることが可能か調べる
     public static boolean ableGive(Inventory inventory, ItemStack... items) {
         if (items == null) return true;
+        if(items.length <= Arrays.stream(getContents(inventory)).filter(ItemUtil::isAir).count()) return true;
         HashMap<ItemStack, Integer> give = new HashMap<>();
         Arrays.stream(items).forEach(item -> give.put(item, containsCount(items, item)));
         give.replaceAll((i, v) -> give.get(i) - capacityCount(getContents(inventory), i));
@@ -60,7 +61,7 @@ public class ItemUtil {
     }
 
     public static ItemStack getOneItemStack(ItemStack item) {
-        ItemStack copy = new ItemStack(item);
+        ItemStack copy = item.clone();
         copy.setAmount(1);
         return copy;
     }
@@ -179,5 +180,13 @@ public class ItemUtil {
         ItemStack item =  MythicMobs.inst().getItemManager().getItemStack(id);
         item.setAmount(amount);
         return item;
+    }
+
+    public static boolean isEmptySlot(Inventory inventory, int slot) {
+        return isAir(inventory.getItem(slot));
+    }
+
+    public static void setItemIfEmpyty(Inventory inventory, int slot, ItemStack item) {
+        if (isEmptySlot(inventory, slot)) inventory.setItem(slot, item);
     }
 }

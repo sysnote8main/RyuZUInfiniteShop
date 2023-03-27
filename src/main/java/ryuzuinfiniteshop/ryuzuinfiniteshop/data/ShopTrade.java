@@ -2,6 +2,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import lombok.EqualsAndHashCode;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@EqualsAndHashCode
 public class ShopTrade {
     public static final HashMap<ShopTrade, UUID> tradeUUID = new HashMap<>();
     public static final Table<UUID, UUID, Integer> tradeCounts = HashBasedTable.create();
@@ -37,14 +39,14 @@ public class ShopTrade {
         config.set("give", giveData);
         config.set("take", takeData);
         if (tradeUUID.containsKey(this))
-            config.set("uuid", tradeUUID.get(this));
+            config.set("uuid", tradeUUID.get(this).toString());
         return config;
     }
 
     public ShopTrade(HashMap<String, Object> config) {
         this.giveData = (List<Object>) config.get("give");
         this.takeData = (List<Object>) config.get("take");
-        if (config.containsKey("limit"))
+        if (config.containsKey("uuid"))
             tradeUUID.put(this, UUID.fromString((String) config.get("uuid")));
     }
 
@@ -55,7 +57,7 @@ public class ShopTrade {
 
     public ShopTrade(Inventory inv, int slot, Shop.ShopType type, int limit) {
         setTrade(inv, slot, type);
-        setTradeLimits(limit);
+        setTradeLimits(limit, false);
     }
 
     private List<Object> getItemsConfiguration(ItemStack[] items) {
@@ -80,41 +82,41 @@ public class ShopTrade {
     }
 
     public Integer getTradeCount(Player player) {
-        if(!tradeUUID.containsKey(this)) return 0;
+        if (!tradeUUID.containsKey(this)) return 0;
         return tradeCounts.contains(player.getUniqueId(), tradeUUID.get(this)) ? tradeCounts.get(player.getUniqueId(), tradeUUID.get(this)) : 0;
     }
 
     public int getTradeLimit() {
-        if(!tradeUUID.containsKey(this)) return 0;
+        if (!tradeUUID.containsKey(this)) return 0;
         return tradeLimits.getOrDefault(tradeUUID.get(this), 0);
     }
 
     public int getCounts(Player p) {
-        if(!tradeUUID.containsKey(this)) return 0;
+        if (!tradeUUID.containsKey(this)) return 0;
         return tradeCounts.contains(p.getUniqueId(), tradeUUID.get(this)) ? tradeCounts.get(p.getUniqueId(), tradeUUID.get(this)) : 0;
     }
 
     public void addTradeCount(Player player) {
-        if(!tradeUUID.containsKey(this)) return;
+        if (!tradeUUID.containsKey(this)) return;
         tradeCounts.put(player.getUniqueId(), tradeUUID.get(this), getTradeCount(player) + 1);
     }
 
     public void setTradeCount(Player player, int count) {
+        if (!tradeUUID.containsKey(this)) return;
         tradeCounts.put(player.getUniqueId(), tradeUUID.get(this), count);
     }
 
-    public void setTradeLimits(int count) {
-        if(count == 0) {
+    public void setTradeLimits(int count, boolean force) {
+        if (count == 0) {
             tradeLimits.remove(tradeUUID.get(this));
             tradeUUID.remove(this);
-        }
-        else {
-            if(!tradeLimits.containsKey(tradeUUID.get(this))) tradeUUID.put(this, UUID.randomUUID());
-            tradeLimits.put(tradeUUID.get(this), count);
+        } else {
+            if (!tradeUUID.containsKey(this)) tradeUUID.put(this, UUID.randomUUID());
+            if(!(!force && tradeLimits.containsKey(tradeUUID.get(this)))) tradeLimits.put(tradeUUID.get(this), count);
         }
     }
 
-    private ItemStack getFilter() {
+    public static ItemStack getFilter() {
         return ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.BLACK + "");
     }
 
@@ -122,11 +124,15 @@ public class ShopTrade {
         return mode.equals(ShopHolder.ShopMode.Edit) ? getSettingsFilter() : getFilter();
     }
 
+    public static ItemStack getFilter(ShopHolder.ShopMode mode, int value) {
+        return mode.equals(ShopHolder.ShopMode.Edit) ? getSettingsFilter(value) : getFilter();
+    }
+
     private ItemStack getSettingsFilter() {
         return getSettingsFilter(getLimit());
     }
 
-    private ItemStack getSettingsFilter(int value) {
+    private static ItemStack getSettingsFilter(int value) {
         return PersistentUtil.setNMSTag(ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "取引上限設定と取引のアイテム化",
                                                               ChatColor.GREEN + "クリック: 取引上限設定" + ChatColor.YELLOW + " 取引上限: " + value,
                                                               ChatColor.GREEN + "シフトクリック: 取引のアイテム化"
@@ -181,12 +187,12 @@ public class ShopTrade {
     }
 
     private ItemStack[] getTradeItems(List<Object> data) {
-        return data.stream().map(item -> {
-            if (item instanceof MythicItem)
-                return ((MythicItem) item).convertItemStack();
+        return data.stream().map(obj -> {
+            if (obj instanceof MythicItem)
+                return ((MythicItem) obj).convertItemStack();
             else
-                return item;
-        }).toArray(ItemStack[]::new);
+                return obj;
+        }).map(obj -> ((ItemStack) obj).clone()).toArray(ItemStack[]::new);
     }
 
     public void setTrade(Inventory inv, int slot, Shop.ShopType type) {
@@ -205,7 +211,7 @@ public class ShopTrade {
         return result;
     }
 
-    public TradeResult trade(Player p) {
+    private TradeResult trade(Player p) {
         Inventory inv = p.getInventory();
         TradeResult result = getResult(p);
 
@@ -246,10 +252,12 @@ public class ShopTrade {
     }
 
     private boolean isLimited(Player p) {
-        return tradeUUID.containsKey(this) && getCounts(p) == tradeLimits.get(tradeUUID.get(this));
+        if (!tradeUUID.containsKey(this)) return false;
+        if (tradeLimits.getOrDefault(tradeUUID.get(this), 0) == 0) return false;
+        return getCounts(p) >= tradeLimits.getOrDefault(tradeUUID.get(this), 0);
     }
 
-    public void playResultEffect(Player p, TradeResult result) {
+    private void playResultEffect(Player p, TradeResult result) {
         switch (result) {
             case notAfford:
                 p.sendMessage(ChatColor.RED + "アイテムが足りません");
@@ -272,14 +280,4 @@ public class ShopTrade {
                 break;
         }
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ShopTrade) {
-            ShopTrade trade = (ShopTrade) obj;
-            return trade.giveData.equals(this.giveData) && trade.takeData.equals(this.takeData);
-        }
-        return false;
-    }
-
 }

@@ -13,6 +13,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.JavaUtil;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -77,6 +78,13 @@ public abstract class ShopTradeGui extends ShopGui {
         return inv;
     }
 
+    public Inventory getInventory(ShopHolder.ShopMode mode, Player p, @Nullable ShopGui before) {
+        Inventory inv = getInventory(mode);
+        ((ShopHolder) inv.getHolder()).setBefore(before);
+        if (mode.equals(ShopHolder.ShopMode.Trade)) setTradeStatus(p, inv);
+        return inv;
+    }
+
     public boolean existTrades() {
         return getTrades().size() > (getPage() - 2) * getShop().getLimitSize();
     }
@@ -116,7 +124,7 @@ public abstract class ShopTradeGui extends ShopGui {
                     break;
                 case Success:
                     inventory.setItem(baseslot + addslot, trade.getTradeLimit() == 0 ? status1 :
-                            ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "購入可能" , ChatColor.YELLOW + "残り" + (trade.getTradeLimit() - trade.getCounts(p)) + "回購入可能")
+                            ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "購入可能", ChatColor.YELLOW + "残り" + (trade.getTradeLimit() - trade.getCounts(p)) + "回購入可能")
                     );
                     break;
                 case Limited:

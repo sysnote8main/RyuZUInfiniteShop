@@ -122,7 +122,7 @@ public class ShopEditorGui extends ShopGui {
     public void setCover(Inventory inv) {
         ItemStack item = ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, "");
         for (int i = 2 * 9 ; i < 5 * 9 + 8 ; i++)
-            if(!ItemUtil.isAir(inv.getItem(2 * 9 + i))) inv.setItem(2 * 9 + i, item);
+            if(ItemUtil.isAir(inv.getItem(i))) inv.setItem(i, item);
     }
 
     public void setSettings(Inventory inv) {

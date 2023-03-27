@@ -42,8 +42,8 @@ public class ChangeNpcTypeListener implements Listener {
         //チャット入力待機
         changingTime.put(p.getUniqueId(), System.currentTimeMillis());
         changingShop.put(p.getUniqueId(), shop.getID());
-        p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "エンティティIDを入力してください");
-        p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティIDを入力してください");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
 
         //音を出す
         SoundUtil.playClickShopSound(p);
@@ -58,18 +58,18 @@ public class ChangeNpcTypeListener implements Listener {
         if (!changingTime.containsKey(p.getUniqueId())) return;
         if ((double) (System.currentTimeMillis() - changingTime.get(p.getUniqueId())) / 1000 > 20) return;
         if (event.getMessage().equalsIgnoreCase("Cancel")) {
-            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "エンティティタイプ変更をキャンセルしました");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティタイプ変更をキャンセルしました");
             SoundUtil.playClickShopSound(p);
         } else {
             //同期させてNPCを再構築する
             Shop shop = ShopUtil.getShop(changingShop.get(p.getUniqueId()));
             Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> {
-                p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "エンティティタイプを変更しました");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティタイプを変更しました");
                 SoundUtil.playSuccessSound(p);
                 try {
                     ShopUtil.createShop(shop.getLocation(), shop.convertShopToString(), EntityType.valueOf(event.getMessage().toUpperCase()));
                 } catch (IllegalArgumentException e) {
-                    p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "有効なエンティティタイプを入力して下さい");
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なエンティティタイプを入力して下さい");
                 }
             }, 1L);
         }

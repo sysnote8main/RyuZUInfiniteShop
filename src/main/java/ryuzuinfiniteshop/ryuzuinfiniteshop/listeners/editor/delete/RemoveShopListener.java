@@ -35,7 +35,7 @@ public class RemoveShopListener implements Listener {
         SoundUtil.playCautionSound(p);
 
         //確認画面を開く
-        p.openInventory(new ConfirmRemoveGui(holder.getShop(), holder.getGui().getPage()).getInventory(holder.getShopMode()));
+        p.openInventory(new ConfirmRemoveGui(holder.getShop(), holder.getGui().getPage()).getInventory(holder.getMode(), holder.getGui()));
     }
 
     @EventHandler
@@ -58,7 +58,7 @@ public class RemoveShopListener implements Listener {
             SoundUtil.playClickShopSound(p);
 
             //エディター画面に戻る
-            p.openInventory(shop.getEditor(holder.getGui().getPage()).getInventory(holder.getShopMode()));
+            p.openInventory(shop.getEditor(holder.getGui().getPage()).getInventory(holder.getMode()));
         } else {
             //ショップを削除
             shop.removeShop();
@@ -71,7 +71,7 @@ public class RemoveShopListener implements Listener {
 
             //音を出し、メッセージを送信する
             SoundUtil.playSuccessSound(p);
-            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + shop.getDisplayName() + "を削除しました");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + "を削除しました");
 
             //インベントリを閉じる
             p.closeInventory();

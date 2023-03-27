@@ -54,13 +54,6 @@ public class EditMainPageListener implements Listener {
         Shop shop = shopholder.getShop();
 
         shop.setEditting(false);
-
-        //音を出す
-        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> {
-            if (ShopUtil.getShopHolder(p.getOpenInventory().getTopInventory()) == null) {
-                SoundUtil.playCloseShopSound(p);
-            }
-        }, 1L);
     }
 
     //編集画面の切り替え
@@ -76,7 +69,7 @@ public class EditMainPageListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
         Shop shop = holder.getShop();
-        ShopHolder.ShopMode mode = holder.getShopMode();
+        ShopHolder.ShopMode mode = holder.getMode();
         int page = holder.getGui().getPage();
 
         //ページ切り替え
@@ -85,13 +78,13 @@ public class EditMainPageListener implements Listener {
             if (shop.getEditor(holder.getGui().getPage() - 1) == null)
                 fail = true;
             else
-                p.openInventory(shop.getEditor(page - 1).getInventory(mode));
+                p.openInventory(shop.getEditor(page - 1).getInventory(mode, holder.getBefore()));
         }
         if (type.isRightClick()) {
             if (shop.getEditor(page + 1) == null)
                 fail = true;
             else
-                p.openInventory(shop.getEditor(page + 1).getInventory(mode));
+                p.openInventory(shop.getEditor(page + 1).getInventory(mode, holder.getBefore()));
         }
         if (fail) {
             SoundUtil.playFailSound(p);

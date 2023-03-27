@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.data.configurations;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;

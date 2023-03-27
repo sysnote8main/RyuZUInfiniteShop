@@ -144,8 +144,8 @@ public class Shop {
             if (trade == null && available)
                 addTrade(inv, i , limit);
             else if (available) {
-                trade.setTradeLimits(limit);
                 trade.setTrade(inv, i, getShopType());
+                trade.setTradeLimits(limit, true);
             } else
                 emptytrades.add(trade);
 
@@ -490,17 +490,17 @@ public class Shop {
 
     public boolean isAvailableShop(Player p) {
         if (isLock() && !p.hasPermission("ris.op")) {
-            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "現在このショップはロックされています");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "現在このショップはロックされています");
             SoundUtil.playFailSound(p);
             return false;
         }
         if (isEditting()) {
-            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "現在このショップは編集中です");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "現在このショップは編集中です");
             SoundUtil.playFailSound(p);
             return false;
         }
         if (pages.isEmpty()) {
-            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "現在このショップには取引が存在しません");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "現在このショップには取引が存在しません");
             SoundUtil.playFailSound(p);
             return false;
         }

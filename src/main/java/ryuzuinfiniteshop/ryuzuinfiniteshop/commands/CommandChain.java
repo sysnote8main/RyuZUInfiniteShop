@@ -24,9 +24,9 @@ public class CommandChain {
                 "ris",
                 data -> {
                     if (data.getSender().hasPermission("ris.op")) {
-                        data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "/" + data.getLabel() + " [spawn/list/limit]");
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "/" + data.getLabel() + " [spawn/list/limit]");
                     } else {
-                        data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "/" + data.getLabel() + " []");
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "/" + data.getLabel() + " []");
                     }
                 },
                 "ris.player",
@@ -39,17 +39,17 @@ public class CommandChain {
                     Player p = (Player) data.getSender();
                     Location loc = p.getLocation();
                     if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(loc))) {
-                        p.sendMessage(RyuZUInfiniteShop.prefix + RyuZUInfiniteShop.prefix + ChatColor.RED + "既にその場所にはショップが存在します");
+                        p.sendMessage(RyuZUInfiniteShop.prefixCommand + RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "既にその場所にはショップが存在します");
                         return;
                     }
                     ShopUtil.createShop(loc, EntityType.VILLAGER);
-                    data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "ショップを設置しました");
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ショップを設置しました");
                 },
                 "ris.op",
                 data -> true,
                 data -> {
                     if (!(data.getSender() instanceof Player)) {
-                        data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                         return false;
                     }
                     return data.getArgs().length == 1;
@@ -62,27 +62,27 @@ public class CommandChain {
                     Player p = (Player) data.getSender();
                     Location loc = p.getLocation();
                     ShopUtil.createShop(loc, EntityType.valueOf(data.getArgs()[1].toUpperCase()));
-                    data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + "ショップを設置しました");
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ショップを設置しました");
                 },
                 "ris.op",
                 data -> {
                     Player p = (Player) data.getSender();
                     Location loc = p.getLocation();
                     if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(loc))) {
-                        p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "既にその場所にはショップが存在します");
+                        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "既にその場所にはショップが存在します");
                         return false;
                     }
                     try {
                         EntityType.valueOf(data.getArgs()[1].toUpperCase());
                         return true;
                     } catch (IllegalArgumentException e) {
-                        data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "有効なエンティティタイプを入力して下さい");
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なエンティティタイプを入力して下さい");
                         return false;
                     }
                 },
                 data -> {
                     if (!(data.getSender() instanceof Player)) {
-                        data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                         return false;
                     }
                     return data.getArgs().length != 1;
@@ -100,7 +100,7 @@ public class CommandChain {
                 data -> true,
                 data -> {
                     if (!(data.getSender() instanceof Player)) {
-                        data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                         return false;
                     }
                     return data.getArgs().length == 1;
@@ -110,14 +110,14 @@ public class CommandChain {
         CommandsGenerator.registerCommand(
                 "ris.limit",
                 data -> {
-                    data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "/" + data.getLabel() + "limit [add/set] [player] [limit]");
-                    data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "トレード圧縮宝石を持った状態で実行してください");
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "/" + data.getLabel() + "limit [increase/decrease/set] [player] [limit]");
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "トレード圧縮宝石を持った状態で実行してください");
                 },
                 "ris.op",
                 data -> true,
                 data -> {
                     if (!(data.getSender() instanceof Player)) {
-                        data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                         return false;
                     }
                     return data.getArgs().length <= 2;
@@ -125,40 +125,53 @@ public class CommandChain {
         );
 
         Predicate<CommandData> limitCondition = data -> {
-            if (Bukkit.getServer().getPlayer(data.getArgs()[2]) != null) {
-                data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "そのプレイヤーは存在しません");
+            if (Bukkit.getServer().getPlayer(data.getArgs()[2]) == null) {
+                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "そのプレイヤーは存在しません");
                 return false;
             }
             Player p = (Player) data.getSender();
             ShopTrade trade = TradeUtil.getFirstTrade(p.getInventory().getItemInMainHand());
             if (trade == null) {
-                p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "トレード圧縮宝石を持って実行してください");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "トレード圧縮宝石を持って実行してください");
                 return false;
             }
             try {
                 Integer.parseInt(data.getArgs()[3]);
                 return true;
             } catch (IllegalArgumentException e) {
-                data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "0以上の整数を入力してください");
+                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "0以上の整数を入力してください");
                 return false;
             }
         };
         Predicate<CommandData> limitTabCondition = data -> {
             if (!(data.getSender() instanceof Player)) {
-                data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
+                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                 return false;
             }
             return data.getArgs().length >= 3;
         };
 
         CommandsGenerator.registerCommand(
-                "ris.limit.add",
+                "ris.limit.increase",
                 data -> {
                     Player p = (Player) data.getSender();
                     Player target = Bukkit.getServer().getPlayer(data.getArgs()[2]);
                     ShopTrade trade = TradeUtil.getFirstTrade(p.getInventory().getItemInMainHand());
                     trade.setTradeCount(target, trade.getCounts(target) + Integer.parseInt(data.getArgs()[3]));
-                    data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + target.getName() + "の取引上限に変更を加えました");
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + target.getName() + "の取引上限に変更を加えました");
+                    SoundUtil.playClickShopSound(p);
+                },
+                "ris.op", limitCondition, limitTabCondition
+        );
+
+        CommandsGenerator.registerCommand(
+                "ris.limit.decrease",
+                data -> {
+                    Player p = (Player) data.getSender();
+                    Player target = Bukkit.getServer().getPlayer(data.getArgs()[2]);
+                    ShopTrade trade = TradeUtil.getFirstTrade(p.getInventory().getItemInMainHand());
+                    trade.setTradeCount(target, trade.getCounts(target) - Integer.parseInt(data.getArgs()[3]));
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + target.getName() + "の取引上限に変更を加えました");
                     SoundUtil.playClickShopSound(p);
                 },
                 "ris.op", limitCondition, limitTabCondition
@@ -171,7 +184,7 @@ public class CommandChain {
                     Player target = Bukkit.getServer().getPlayer(data.getArgs()[2]);
                     ShopTrade trade = TradeUtil.getFirstTrade(p.getInventory().getItemInMainHand());
                     trade.setTradeCount(target, Integer.parseInt(data.getArgs()[3]));
-                    data.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + target.getName() + "の取引上限に変更を加えました");
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + target.getName() + "の取引上限に変更を加えました");
                     SoundUtil.playClickShopSound(p);
                 },
                 "ris.op", limitCondition, limitTabCondition

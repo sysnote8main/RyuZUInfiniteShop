@@ -17,7 +17,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.PersistentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.effect.SoundUtil;
 
-public class OpenShopListListener implements Listener {
+public class ShopListListener implements Listener {
     //ショップのページ切り替え
     @EventHandler
     public void changePage(InventoryClickEvent event) {
@@ -31,7 +31,7 @@ public class OpenShopListListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
         Inventory inv = event.getView().getTopInventory();
-        ShopHolder.ShopMode mode = holder.getShopMode();
+        ShopHolder.ShopMode mode = holder.getMode();
         Shop shop = holder.getShop();
         int page = holder.getGui().getPage();
         int maxpage = ShopUtil.getShops().size() / 54 + 1;
@@ -75,7 +75,7 @@ public class OpenShopListListener implements Listener {
         ItemStack item = event.getCurrentItem();
         if(item == null) return;
         Player p = (Player) event.getWhoClicked();
-        ShopHolder.ShopMode mode = holder.getShopMode();
+        ShopHolder.ShopMode mode = holder.getMode();
         Shop shop = ShopUtil.getShop(PersistentUtil.getNMSStringTag(item, "Shop"));
 
         if(event.isShiftClick()) {
@@ -83,10 +83,10 @@ public class OpenShopListListener implements Listener {
             p.closeInventory();
             p.teleport(shop.getLocation());
             SoundUtil.playSuccessSound(p);
-            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + shop.getDisplayName() + "にテレポートしました");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + "にテレポートしました");
         } else {
             //エディターを開く
-            p.openInventory(shop.getEditor(1).getInventory(mode));
+            p.openInventory(shop.getEditor(1).getInventory(mode, holder.getGui()));
             SoundUtil.playClickShopSound(p);
         }
     }

@@ -70,7 +70,7 @@ public class ConvartListener implements Listener {
         }
         if (!(Shop.ShopType.valueOf(tag).equals(Shop.ShopType.TwotoOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
             SoundUtil.playFailSound(p);
-            p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.RED + "ショップタイプが違います");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップタイプが違います");
             return;
         }
 
@@ -109,6 +109,6 @@ public class ConvartListener implements Listener {
 
         //音を出し、メッセージを送信
         SoundUtil.playSuccessSound(p);
-        p.sendMessage(RyuZUInfiniteShop.prefix + ChatColor.GREEN + shop.getDisplayName() + "を召喚しました");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + "を召喚しました");
     }
 }

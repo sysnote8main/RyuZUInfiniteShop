@@ -43,11 +43,11 @@ public class TradeUtil {
     public static void saveTradeLimits() {
         File file = FileUtil.initializeFile("limits.yml");
         YamlConfiguration config = new YamlConfiguration();
-        ShopTrade.tradeUUID.values().stream().forEach(tradeID -> {
-            if(ShopTrade.tradeLimits.get(tradeID) == 0) return;
-            config.set(tradeID + ".limit", ShopTrade.tradeLimits.get(tradeID));
-            ShopTrade.tradeCounts.rowKeySet().stream().forEach(playerID -> {
-                config.set(tradeID + ".counts." + playerID, ShopTrade.tradeCounts.get(playerID, tradeID));
+        ShopTrade.tradeUUID.values().forEach(tradeID -> {
+            if(ShopTrade.tradeLimits.getOrDefault(tradeID , 0) == 0) return;
+            config.set(tradeID.toString() + ".limit", ShopTrade.tradeLimits.get(tradeID));
+            ShopTrade.tradeCounts.rowKeySet().forEach(playerID -> {
+                config.set(tradeID + ".counts." + playerID.toString(), ShopTrade.tradeCounts.get(playerID, tradeID));
             });
         });
 

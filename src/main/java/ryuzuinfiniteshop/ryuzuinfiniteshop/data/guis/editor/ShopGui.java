@@ -33,13 +33,21 @@ public abstract class ShopGui {
 
     public abstract Inventory getInventory(ShopHolder.ShopMode mode);
 
+    public Inventory getInventory(ShopHolder.ShopMode mode, ShopGui before) {
+        Inventory inv = getInventory(mode);
+        ShopHolder holder = ShopUtil.getShopHolder(inv);
+        if (holder == null) return inv;
+        holder.setBefore(before);
+        return inv;
+    }
+
     public void reloadInventory(Inventory target) {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(target);
         if (holder == null) return;
 
         //必要なデータの取得
-        Inventory inv = getInventory(holder.getShopMode());
+        Inventory inv = getInventory(holder.getMode());
         if(!holder.equals(ShopUtil.getShopHolder(inv))) return;
         ItemStack[] clear = target.getContents();
         Arrays.fill(clear, new ItemStack(Material.AIR));
