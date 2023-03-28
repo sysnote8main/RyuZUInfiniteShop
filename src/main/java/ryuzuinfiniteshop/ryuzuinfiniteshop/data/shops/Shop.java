@@ -463,7 +463,7 @@ public class Shop {
     }
 
     public ItemStack getEquipmentDisplayItem(EquipmentSlot slot) {
-        return JavaUtil.getOrDefault(getEquipmentItem(EquipmentUtil.getEquipmentSlotNumber(slot)), EquipmentUtil.getEquipmentDisplayItem(slot));
+        return JavaUtil.getOrDefault(getEquipmentItem(slot.ordinal()), EquipmentUtil.getEquipmentDisplayItem(slot));
     }
 
     public Location getLocation() {
@@ -475,8 +475,7 @@ public class Shop {
             LivingEntity livnpc = ((LivingEntity) npc);
             for (Integer i : EquipmentUtil.getEquipmentsSlot().keySet()) {
                 EquipmentSlot slot = EquipmentUtil.getEquipmentSlot(i);
-                int number = EquipmentUtil.getEquipmentSlotNumber(slot);
-                livnpc.getEquipment().setItem(slot, equipments.toItemStacks()[number]);
+                livnpc.getEquipment().setItem(slot, equipments.toItemStacks()[slot.ordinal()]);
             }
         }
     }

@@ -5,11 +5,9 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\DyeableShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\canceller\CancelAffectNpc.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\PoweredableShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\HorseShop.class
-ryuzuinfiniteshop\ryuzuinfiniteshop\data\configurations\DisplayConfig.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\admin\ShopListListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\change\ChangeDisplayNameListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\edit\EditMainPageListener.class
-ryuzuinfiniteshop\ryuzuinfiniteshop\data\configurations\DisplayConfig$DisplayType.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\AgeableShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopTrade$TradeResult.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\configuration\EquipmentUtil$1.class
@@ -25,7 +23,6 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\PlayerableShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\change\ChangeNpcTypeListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\VillagerableShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\editor\ShopEditorGui.class
-ryuzuinfiniteshop\ryuzuinfiniteshop\data\configurations\DisplayConfig$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopHolder$ShopMode.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\inventory\TradeUtil$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\configs\Config.class
@@ -39,6 +36,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\MythicItem.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\trade\ShopTradeGui.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\configuration\LocationUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\trade\ShopGui2to1.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\utils\configuration\EquipmentUtil$2.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\HorseShop$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\edit\EditTradePageListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\Shop.class
@@ -46,7 +44,6 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\Shop$ShopType.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\trades\OpenShopListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\configs\DisplayPanelConfig.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\VillagerableShop$1.class
-ryuzuinfiniteshop\ryuzuinfiniteshop\data\configurations\DisplayConfig$2.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\change\ChangeNpcDirecationListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\TradeLimit.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ObjectItems.class

@@ -35,14 +35,14 @@ public class ChangeEquipmentListener implements Listener {
         //装備を変更
         if ((type.isRightClick() || type.isLeftClick()) && !type.isShiftClick()) {
             if (ItemUtil.isAir(event.getCursor())) {
-                if (ItemUtil.isAir(shop.getEquipmentItem(EquipmentUtil.getEquipmentSlotNumber(EquipmentUtil.getEquipmentSlot(slot)))))
+                if (ItemUtil.isAir(shop.getEquipmentItem(EquipmentUtil.getEquipmentSlot(slot).ordinal())))
                     return;
                  else
                     event.setCurrentItem(EquipmentUtil.getEquipmentDisplayItem(EquipmentUtil.getEquipmentSlot(slot)));
             } else
                 event.setCurrentItem(ItemUtil.getOneItemStack(event.getCursor()));
 
-            shop.setEquipmentItem(ItemUtil.getOneItemStack(event.getCursor()), EquipmentUtil.getEquipmentSlotNumber(EquipmentUtil.getEquipmentSlot(slot)));
+            shop.setEquipmentItem(ItemUtil.getOneItemStack(event.getCursor()), EquipmentUtil.getEquipmentSlot(slot).ordinal());
 
             //音を出す
             SoundUtil.playClickShopSound(p);

@@ -7,7 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.commands.CommandChain;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.configs.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.MythicItem;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.configurations.DisplayConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.admin.MythicListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.canceller.CancelAffectNpc;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.canceller.CancelItemMoveListener;
