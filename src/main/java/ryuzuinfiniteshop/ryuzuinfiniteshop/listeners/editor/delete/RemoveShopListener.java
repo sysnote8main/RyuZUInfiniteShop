@@ -35,7 +35,7 @@ public class RemoveShopListener implements Listener {
         SoundUtil.playCautionSound(p);
 
         //確認画面を開く
-        p.openInventory(new ConfirmRemoveGui(holder.getShop(), holder.getGui().getPage()).getInventory(holder.getMode(), holder));
+        p.openInventory(new ConfirmRemoveGui(holder.getShop(), holder.getGui().getPage()).getInventory(holder.getMode()));
     }
 
     @EventHandler

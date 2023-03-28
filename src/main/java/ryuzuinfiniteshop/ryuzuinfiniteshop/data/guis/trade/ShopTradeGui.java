@@ -111,8 +111,7 @@ public abstract class ShopTradeGui extends ShopGui {
                     i * 9;
             ShopTrade trade = getTradeFromSlot(baseslot);
             ShopTrade.TradeResult result = trade.getResult(p);
-            System.out.println(result);
-            inventory.setItem(baseslot + addslot, DisplayPanelConfig.getPanel(result).getItemStack(result , trade.getLimit(), trade.getLimit() - trade.getTradeCount(p)));
+            inventory.setItem(baseslot + addslot, DisplayPanelConfig.getPanel(result).getItemStack(result , trade.getLimit(), trade.getTradeCount(p)));
         }
     }
 }

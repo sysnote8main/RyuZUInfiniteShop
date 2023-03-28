@@ -141,7 +141,7 @@ public class ItemUtil {
 
     public static ItemStack withCustomModelData(ItemStack item , int data) {
         ItemMeta meta = item.getItemMeta();
-        meta.setCustomModelData(data);
+        if(data!= -1) meta.setCustomModelData(data);
         item.setItemMeta(meta);
         return item;
     }
