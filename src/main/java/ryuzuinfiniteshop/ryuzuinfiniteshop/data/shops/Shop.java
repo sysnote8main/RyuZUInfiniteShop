@@ -11,6 +11,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ObjectItems;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopEditorGui;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Shop {
     public enum ShopType {TwotoOne, FourtoFour, SixtoTwo}
@@ -45,7 +47,7 @@ public class Shop {
     protected boolean editting = false;
     protected List<ShopEditorGui> editors = new ArrayList<>();
     protected List<ShopTradeGui> pages = new ArrayList<>();
-    protected ItemStack[] equipments = new ItemStack[6];
+    protected ObjectItems equipments;
 
     public Shop(Location location, EntityType entitytype) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
@@ -77,7 +79,7 @@ public class Shop {
                 updateTradeContents();
             }
             if (yaml.contains("Npc.Options.Equipments")) {
-                this.equipments = ((ArrayList<ItemStack>) yaml.getList("Npc.Options.Equipments")).toArray(new ItemStack[0]);
+                this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments"));
                 updateEquipments();
             }
             if (yaml.getString("Npc.DisplayName") != null) npc.setCustomName(yaml.getString("Npc.Options.DisplayName"));
@@ -92,7 +94,7 @@ public class Shop {
         this.location = location;
         this.type = ShopType.TwotoOne;
         spawnNPC(entitytype);
-        Arrays.fill(equipments, new ItemStack(Material.AIR));
+        equipments = new ObjectItems(IntStream.range(0, 6).mapToObj(i -> new ItemStack(Material.AIR)).toArray());
         ShopUtil.addShop(getID(), this);
     }
 
@@ -373,7 +375,7 @@ public class Shop {
             yaml.set("Npc.Options.EntityType", npc.getType().toString());
             yaml.set("Npc.Options.DisplayName", npc.getCustomName());
             yaml.set("Shop.Options.ShopType", type.toString());
-            yaml.set("Npc.Options.Equipments", Arrays.stream(equipments).map(equipment -> JavaUtil.getOrDefault(equipment, new ItemStack(Material.AIR))).collect(Collectors.toList()));
+            yaml.set("Npc.Options.Equipments", equipments.getObjects());
             yaml.set("Npc.Status.Lock", lock);
             yaml.set("Trades", getTradesConfig());
             if (npc instanceof LivingEntity) yaml.set("Npc.Options.Visible", !((LivingEntity) npc).isInvisible());
@@ -457,11 +459,11 @@ public class Shop {
     }
 
     public ItemStack getEquipmentItem(int slot) {
-        return equipments[slot];
+        return equipments.toItemStacks()[slot];
     }
 
     public void setEquipmentItem(ItemStack item, int slot) {
-        this.equipments[slot] = item;
+        equipments.setObject(item , slot);
         updateEquipments();
     }
 
@@ -479,7 +481,7 @@ public class Shop {
             for (Integer i : EquipmentUtil.getEquipmentsSlot().keySet()) {
                 EquipmentSlot slot = EquipmentUtil.getEquipmentSlot(i);
                 int number = EquipmentUtil.getEquipmentSlotNumber(slot);
-                livnpc.getEquipment().setItem(slot, equipments[number]);
+                livnpc.getEquipment().setItem(slot, equipments.toItemStacks()[number]);
             }
         }
     }

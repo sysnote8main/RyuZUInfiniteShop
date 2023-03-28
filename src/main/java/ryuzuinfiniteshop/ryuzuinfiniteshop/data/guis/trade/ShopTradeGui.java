@@ -78,7 +78,7 @@ public abstract class ShopTradeGui extends ShopGui {
         return inv;
     }
 
-    public Inventory getInventory(ShopHolder.ShopMode mode, Player p, @Nullable ShopGui before) {
+    public Inventory getInventory(ShopHolder.ShopMode mode, Player p, @Nullable ShopHolder before) {
         Inventory inv = getInventory(mode);
         ((ShopHolder) inv.getHolder()).setBefore(before);
         if (mode.equals(ShopHolder.ShopMode.Trade)) setTradeStatus(p, inv);

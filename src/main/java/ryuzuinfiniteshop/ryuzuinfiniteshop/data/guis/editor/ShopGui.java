@@ -33,7 +33,7 @@ public abstract class ShopGui {
 
     public abstract Inventory getInventory(ShopHolder.ShopMode mode);
 
-    public Inventory getInventory(ShopHolder.ShopMode mode, ShopGui before) {
+    public Inventory getInventory(ShopHolder.ShopMode mode, ShopHolder before) {
         Inventory inv = getInventory(mode);
         ShopHolder holder = ShopUtil.getShopHolder(inv);
         if (holder == null) return inv;

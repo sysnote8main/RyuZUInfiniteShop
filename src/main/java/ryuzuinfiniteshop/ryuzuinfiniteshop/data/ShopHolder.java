@@ -23,7 +23,7 @@ public class ShopHolder implements InventoryHolder {
     private final ShopMode mode;
     private final ShopGui gui;
     @Setter
-    private ShopGui before;
+    private ShopHolder before;
 
     public ShopHolder(ShopMode mode, Shop shop, ShopGui gui, String... tags) {
         this.mode = mode;
@@ -32,7 +32,7 @@ public class ShopHolder implements InventoryHolder {
         this.tags = Arrays.asList(tags);
     }
 
-    public ShopHolder(ShopMode mode, Shop shop, ShopGui gui, ShopGui before, String... tags) {
+    public ShopHolder(ShopMode mode, Shop shop, ShopGui gui, ShopHolder before, String... tags) {
         this.mode = mode;
         this.shop = shop;
         this.gui = gui;

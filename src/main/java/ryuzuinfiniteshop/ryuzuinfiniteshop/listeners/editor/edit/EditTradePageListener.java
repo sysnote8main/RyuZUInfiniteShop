@@ -95,9 +95,9 @@ public class EditTradePageListener implements Listener {
         //取引編集ページを開く
         if (slot == newslot) {
             shop.createTradeNewPage();
-            p.openInventory(shop.getPage(page).getInventory(holder.getMode() , editormainpage));
+            p.openInventory(shop.getPage(page).getInventory(holder.getMode() , holder));
         } else
-            p.openInventory(shop.getPage(editormainpage.getTradePageNumber(slot)).getInventory(holder.getMode(), editormainpage));
+            p.openInventory(shop.getPage(editormainpage.getTradePageNumber(slot)).getInventory(holder.getMode(), holder));
 
         //音を出す
         SoundUtil.playClickShopSound(p);

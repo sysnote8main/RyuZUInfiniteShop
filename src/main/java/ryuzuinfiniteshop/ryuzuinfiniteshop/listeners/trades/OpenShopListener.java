@@ -5,10 +5,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -99,13 +96,12 @@ public class OpenShopListener implements Listener {
 
         //必要なデータを取得
         Player p = (Player) event.getPlayer();
-        SoundUtil.playCloseShopSound(p);
 
         Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> {
+            if(p.getOpenInventory().getType().equals(InventoryType.CREATIVE) || p.getOpenInventory().getType().equals(InventoryType.CRAFTING)) SoundUtil.playCloseShopSound(p);
             if (ShopUtil.getShopHolder(p.getOpenInventory().getTopInventory()) != null) return;
             if (holder.getBefore() == null) return;
-            p.openInventory(holder.getBefore().getInventory(holder.getMode()));
-
+            p.openInventory(holder.getBefore().getGui().getInventory(holder.getMode(), holder.getBefore().getBefore()));
         }, 1L);
     }
 

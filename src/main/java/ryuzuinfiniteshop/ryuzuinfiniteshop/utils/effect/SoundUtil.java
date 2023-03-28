@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 public class SoundUtil {
     public static void playCloseShopSound(Player p) {
-        p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_CLOSE, 1, 2);
+        p.playSound(p.getLocation(), Sound.BLOCK_ENDER_CHEST_CLOSE, 1, 1);
     }
 
     public static void playClickShopSound(Player p) {

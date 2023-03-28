@@ -31,28 +31,28 @@ public class ShopTrade {
 
     public enum TradeResult {notAfford, Full, Success, Lack, Limited}
 
-    public List<Object> giveData;
-    public List<Object> takeData;
+    private ObjectItems giveData;
+    private ObjectItems takeData;
 
     public ConfigurationSection getConfig() {
         ConfigurationSection config = new MemoryConfiguration();
-        config.set("give", giveData);
-        config.set("take", takeData);
+        config.set("give", giveData.getObjects());
+        config.set("take", takeData.getObjects());
         if (tradeUUID.containsKey(this))
             config.set("uuid", tradeUUID.get(this).toString());
         return config;
     }
 
     public ShopTrade(HashMap<String, Object> config) {
-        this.giveData = (List<Object>) config.get("give");
-        this.takeData = (List<Object>) config.get("take");
+        this.giveData = new ObjectItems(config.get("give"));
+        this.takeData = new ObjectItems(config.get("take"));
         if (config.containsKey("uuid"))
             tradeUUID.put(this, UUID.fromString((String) config.get("uuid")));
     }
 
     public ShopTrade(ItemStack[] give, ItemStack[] take) {
-        this.giveData = getItemsConfiguration(give);
-        this.takeData = getItemsConfiguration(take);
+        this.giveData = new ObjectItems(give);
+        this.takeData = new ObjectItems(take);
     }
 
     public ShopTrade(Inventory inv, int slot, Shop.ShopType type, int limit) {
@@ -60,21 +60,12 @@ public class ShopTrade {
         setTradeLimits(limit, false);
     }
 
-    private List<Object> getItemsConfiguration(ItemStack[] items) {
-        return Arrays.stream(items).map(item -> {
-            if (MythicListener.getID(item) != null)
-                return new MythicItem(MythicListener.getID(item), item.getAmount());
-            else
-                return item;
-        }).collect(Collectors.toList());
-    }
-
     public ItemStack[] getGiveItems() {
-        return getTradeItems(giveData);
+        return giveData.toItemStacks();
     }
 
     public ItemStack[] getTakeItems() {
-        return getTradeItems(takeData);
+        return takeData.toItemStacks();
     }
 
     public int getLimit() {
@@ -184,15 +175,6 @@ public class ShopTrade {
                 break;
         }
         return items;
-    }
-
-    private ItemStack[] getTradeItems(List<Object> data) {
-        return data.stream().map(obj -> {
-            if (obj instanceof MythicItem)
-                return ((MythicItem) obj).convertItemStack();
-            else
-                return obj;
-        }).map(obj -> ((ItemStack) obj).clone()).toArray(ItemStack[]::new);
     }
 
     public void setTrade(Inventory inv, int slot, Shop.ShopType type) {

@@ -173,7 +173,7 @@ public class ItemUtil {
     }
 
     public static ItemStack getMythicItem(String id) {
-        return MythicMobs.inst().getItemManager().getItemStack(id);
+        return getMythicItem(id, 1);
     }
 
     public static ItemStack getMythicItem(String id , int amount) {
