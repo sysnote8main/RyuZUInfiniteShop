@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -106,16 +107,18 @@ public class ShopEditorGui extends ShopGui {
 
     public void setDisplay(Inventory inv) {
         setLock(inv);
-        setEquipment(inv);
         setTradesPage(inv);
-        setDisplayName(inv);
-        setEntityType(inv);
         setShopType(inv);
         setNPCDirecation(inv);
         setConvertTrades(inv);
         setConvertShop(inv);
         setRemoveShop(inv);
-        setSettings(inv);
+        if(!MythicMobs.inst().getAPIHelper().isMythicMob(getShop().getNPC())) {
+            setEquipment(inv);
+            setDisplayName(inv);
+            setEntityType(inv);
+            setSettings(inv);
+        }
         setCover(inv);
     }
 

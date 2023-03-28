@@ -2,6 +2,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.change;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +14,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.effect.SoundUtil;
 
@@ -32,6 +34,7 @@ public class ChangeNpcTypeListener implements Listener {
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
+        if(ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, "").equals(event.getCurrentItem())) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();

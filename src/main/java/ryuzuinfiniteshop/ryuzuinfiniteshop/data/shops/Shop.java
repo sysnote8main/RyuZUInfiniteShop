@@ -1,6 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.api.exceptions.InvalidMobTypeException;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,6 +11,7 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.MetadataValue;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ObjectItems;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
@@ -41,6 +43,7 @@ public class Shop {
 
     protected Entity npc;
     protected Location location;
+    protected Optional<String> mythicmob = Optional.empty();
     protected ShopType type;
     protected List<ShopTrade> trades = new ArrayList<>();
     protected boolean lock = false;
@@ -78,15 +81,26 @@ public class Shop {
                 this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, Object>) tradeconfig)).collect(Collectors.toList());
                 updateTradeContents();
             }
-            if (yaml.contains("Npc.Options.Equipments")) {
-                this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments"));
-                updateEquipments();
-            }
-            if (yaml.getString("Npc.DisplayName") != null) npc.setCustomName(yaml.getString("Npc.Options.DisplayName"));
             this.location.setYaw(yaml.getInt("Npc.Status.Yaw", 0));
             npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
-            if (npc instanceof LivingEntity)
-                ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Npc.Options.Visible", true));
+            this.mythicmob = Optional.ofNullable(yaml.getString("Npc.Options.MythicMob"));
+            if(mythicmob.isPresent() && MythicMobs.inst().getAPIHelper().getMythicMob(mythicmob.get()) != null) {
+                npc.remove();
+                try {
+                    npc = MythicMobs.inst().getAPIHelper().spawnMythicMob(mythicmob.get(), location);
+                } catch (InvalidMobTypeException e) {
+                    throw new RuntimeException(e);
+                }
+                setNpcMeta();
+            } else {
+                if (yaml.contains("Npc.Options.Equipments")) {
+                    this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments"));
+                    updateEquipments();
+                }
+                if (yaml.getString("Npc.DisplayName") != null) npc.setCustomName(yaml.getString("Npc.Options.DisplayName"));
+                if (npc instanceof LivingEntity)
+                    ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Npc.Options.Visible", true));
+            }
         };
     }
 
@@ -392,6 +406,7 @@ public class Shop {
             yaml.set("Npc.Options.DisplayName", npc.getCustomName());
             yaml.set("Shop.Options.ShopType", type.toString());
             yaml.set("Npc.Options.Equipments", equipments.getObjects());
+            mythicmob.ifPresent(mythicmob -> yaml.set("Npc.Options.MythicMob", mythicmob));
             yaml.set("Npc.Status.Lock", lock);
             yaml.set("Trades", getTrades().stream().map(ShopTrade::serialize).collect(Collectors.toList()));
             if (npc instanceof LivingEntity) yaml.set("Npc.Options.Visible", !((LivingEntity) npc).isInvisible());
@@ -444,10 +459,21 @@ public class Shop {
         this.location.setYaw(0);
         Entity npc = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entitytype);
         this.npc = npc;
+        setNpcMeta();
+    }
+
+    public void setNpcMeta() {
         npc.setSilent(true);
         npc.setInvulnerable(true);
         PersistentUtil.setNMSTag(npc, "Shop", getID());
         initializeLivingEntitiy();
+    }
+
+    public void initializeLivingEntitiy() {
+        if (!(npc instanceof LivingEntity)) return;
+        LivingEntity livnpc = (LivingEntity) npc;
+        livnpc.setAI(false);
+        livnpc.setRemoveWhenFarAway(false);
     }
 
     public void changeInvisible() {
@@ -461,13 +487,6 @@ public class Shop {
         LivingEntity livnpc = (LivingEntity) npc;
         location.setYaw((location.getYaw() + 45));
         livnpc.teleport(LocationUtil.toBlockLocationFromLocation(location));
-    }
-
-    public void initializeLivingEntitiy() {
-        if (!(npc instanceof LivingEntity)) return;
-        LivingEntity livnpc = (LivingEntity) npc;
-        livnpc.setAI(false);
-        livnpc.setRemoveWhenFarAway(false);
     }
 
     public ItemStack getEquipmentItem(int slot) {
