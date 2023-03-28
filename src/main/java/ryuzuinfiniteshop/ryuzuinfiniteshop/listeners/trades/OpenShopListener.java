@@ -1,6 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -65,7 +66,8 @@ public class OpenShopListener implements Listener {
                 fail = true;
                 if (ShopUtil.isEditMode(event) && shop.ableCreateNewPage()) {
                     //取引を上書きし、取引として成立しないものは削除する
-                    shop.checkTrades(inv);
+                    boolean warn = shop.checkTrades(inv);
+                    if(warn) p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "重複している取引がありました");
                     if (shop.ableCreateNewPage()) {
                         shop.createNewPage();
                         p.openInventory(shop.getPage(page + 1).getInventory(mode, p, holder.getBefore()));

@@ -125,15 +125,17 @@ public class Shop {
         return ShopType.TwotoOne;
     }
 
-    public void checkTrades(Inventory inv) {
+    // 重複している取引があればtrueを返す
+    public boolean checkTrades(Inventory inv) {
         ShopHolder holder = ShopUtil.getShopHolder(inv);
-        if (holder == null) return;
+        if (holder == null) return false;
 
+        boolean warn = false;
         //取引を上書きし、取引として成立しないものは削除する
-        List<ShopTrade> emptytrades = new ArrayList<>();
+        HashSet<ShopTrade> emptyTrades = new HashSet<>();
+        HashSet<ShopTrade> addedTrades = new HashSet<>();
         for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TwotoOne) ? 4 : 9) {
             if (getShopType().equals(ShopType.TwotoOne) && i % 9 == 4) i++;
-
             int limitSlot = 0;
             if(getShopType().equals(ShopType.TwotoOne)) limitSlot = i + 2;
             else if(getShopType().equals(ShopType.FourtoFour)) limitSlot = i + 4;
@@ -142,19 +144,23 @@ public class Shop {
             int limit = limitString == null ? 0 : Integer.parseInt(limitString);
             ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(i);
             boolean available = TradeUtil.isAvailableTrade(inv, i, getShopType());
-            if (trade == null && available)
-                addTrade(inv, i , limit);
-            else if (available) {
+            if (trade == null && available) {
+                if(addedTrades.contains(trade)) warn = true;
+                else addTrade(inv, i , limit);
+                addedTrades.add(trade);
+            } else if (available) {
                 trade.setTrade(inv, i, getShopType());
                 trade.setTradeLimits(limit, true);
-            } else
-                emptytrades.add(trade);
-
+            } else if(trade != null) {
+                if(emptyTrades.contains(trade)) warn = true;
+                emptyTrades.add(trade);
+            }
         }
-        this.trades.removeAll(emptytrades);
+        this.trades.removeAll(emptyTrades);
 
         //ショップを更新する
         updateTradeContents();
+        return warn;
     }
 
     public String getShopTypeDisplay() {
