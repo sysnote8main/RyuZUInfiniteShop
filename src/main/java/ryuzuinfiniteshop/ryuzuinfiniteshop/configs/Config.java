@@ -6,6 +6,6 @@ import java.io.IOException;
 
 public class Config {
     public void loadConfig() throws IOException, InvalidConfigurationException {
-        DisplayPanel.loadConfig();
+        DisplayPanelConfig.load();
     }
 }

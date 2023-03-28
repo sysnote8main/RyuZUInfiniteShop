@@ -11,17 +11,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.admin.MythicListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.PersistentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.TradeUtil;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @EqualsAndHashCode
 public class ShopTrade {
@@ -29,12 +25,12 @@ public class ShopTrade {
     public static final Table<UUID, UUID, Integer> tradeCounts = HashBasedTable.create();
     public static final HashMap<UUID, Integer> tradeLimits = new HashMap<>();
 
-    public enum TradeResult {notAfford, Full, Success, Lack, Limited}
+    public enum TradeResult {NotAfford, Full, Success, Lack, Limited}
 
     private ObjectItems giveData;
     private ObjectItems takeData;
 
-    public ConfigurationSection getConfig() {
+    public ConfigurationSection serialize() {
         ConfigurationSection config = new MemoryConfiguration();
         config.set("give", giveData.getObjects());
         config.set("take", takeData.getObjects());
@@ -69,17 +65,13 @@ public class ShopTrade {
     }
 
     public int getLimit() {
+        if (!tradeUUID.containsKey(this)) return 0;
         return tradeLimits.getOrDefault(tradeUUID.get(this), 0);
     }
 
     public Integer getTradeCount(Player player) {
         if (!tradeUUID.containsKey(this)) return 0;
         return tradeCounts.contains(player.getUniqueId(), tradeUUID.get(this)) ? tradeCounts.get(player.getUniqueId(), tradeUUID.get(this)) : 0;
-    }
-
-    public int getTradeLimit() {
-        if (!tradeUUID.containsKey(this)) return 0;
-        return tradeLimits.getOrDefault(tradeUUID.get(this), 0);
     }
 
     public int getCounts(Player p) {
@@ -187,7 +179,7 @@ public class ShopTrade {
     public TradeResult getResult(Player p) {
         TradeResult result = TradeResult.Success;
 
-        if (!affordTrade(p)) result = TradeResult.notAfford;
+        if (!affordTrade(p)) result = TradeResult.NotAfford;
         else if (isLimited(p)) result = TradeResult.Limited;
         else if (!hasEnoughSpace(p)) result = TradeResult.Full;
         return result;
@@ -214,7 +206,7 @@ public class ShopTrade {
                 if (time != 0)
                     result = TradeResult.Lack;
                 else
-                    result = TradeResult.notAfford;
+                    result = TradeResult.NotAfford;
                 break;
             }
         }
@@ -241,7 +233,7 @@ public class ShopTrade {
 
     private void playResultEffect(Player p, TradeResult result) {
         switch (result) {
-            case notAfford:
+            case NotAfford:
                 p.sendMessage(ChatColor.RED + "アイテムが足りません");
                 SoundUtil.playFailSound(p);
                 break;

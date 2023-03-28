@@ -129,6 +129,23 @@ public class ItemUtil {
         return item;
     }
 
+    public static ItemStack withLore(ItemStack item , String lore) {
+        ItemMeta meta = item.getItemMeta();
+        List<String> lores = meta.getLore();
+        if(lores == null) lores = new ArrayList<>();
+        lores.add(lore);
+        meta.setLore(lores);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static ItemStack withCustomModelData(ItemStack item , int data) {
+        ItemMeta meta = item.getItemMeta();
+        meta.setCustomModelData(data);
+        item.setItemMeta(meta);
+        return item;
+    }
+
     public static ItemStack[] getItemSet(Inventory inv, int slot, int lengh) {
         List<ItemStack> set = new ArrayList<>();
         for (int i = 0; i < lengh; i++) {

@@ -3,7 +3,6 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
@@ -377,7 +376,7 @@ public class Shop {
             yaml.set("Shop.Options.ShopType", type.toString());
             yaml.set("Npc.Options.Equipments", equipments.getObjects());
             yaml.set("Npc.Status.Lock", lock);
-            yaml.set("Trades", getTradesConfig());
+            yaml.set("Trades", getTrades().stream().map(ShopTrade::serialize).collect(Collectors.toList()));
             if (npc instanceof LivingEntity) yaml.set("Npc.Options.Visible", !((LivingEntity) npc).isInvisible());
             yaml.set("Npc.Status.Yaw", location.getYaw());
         };
@@ -452,10 +451,6 @@ public class Shop {
         LivingEntity livnpc = (LivingEntity) npc;
         livnpc.setAI(false);
         livnpc.setRemoveWhenFarAway(false);
-    }
-
-    public List<ConfigurationSection> getTradesConfig() {
-        return getTrades().stream().map(ShopTrade::getConfig).collect(Collectors.toList());
     }
 
     public ItemStack getEquipmentItem(int slot) {

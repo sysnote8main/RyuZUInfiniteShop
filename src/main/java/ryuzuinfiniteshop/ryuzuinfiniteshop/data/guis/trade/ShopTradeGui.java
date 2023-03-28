@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.configs.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
@@ -92,11 +93,6 @@ public abstract class ShopTradeGui extends ShopGui {
     public abstract ShopTrade getTradeFromSlot(int slot);
 
     public void setTradeStatus(Player p, Inventory inventory) {
-        ItemStack status1 = ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "購入可能");
-        ItemStack status2 = ItemUtil.getNamedItem(Material.RED_STAINED_GLASS_PANE, ChatColor.RED + "アイテムが足りません");
-        ItemStack status3 = ItemUtil.getNamedItem(Material.YELLOW_STAINED_GLASS_PANE, ChatColor.YELLOW + "インベントリに十分な空きがありません");
-        ItemStack status4 = ItemUtil.getNamedItem(Material.RED_STAINED_GLASS_PANE, ChatColor.RED + "取引上限です");
-
         int addslot = 0;
         switch (getShop().getShopType()) {
             case TwotoOne:
@@ -115,22 +111,7 @@ public abstract class ShopTradeGui extends ShopGui {
                     i * 9;
             ShopTrade trade = getTradeFromSlot(baseslot);
             ShopTrade.TradeResult result = trade.getResult(p);
-            switch (result) {
-                case notAfford:
-                    inventory.setItem(baseslot + addslot, status2);
-                    break;
-                case Full:
-                    inventory.setItem(baseslot + addslot, status3);
-                    break;
-                case Success:
-                    inventory.setItem(baseslot + addslot, trade.getTradeLimit() == 0 ? status1 :
-                            ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "購入可能", ChatColor.YELLOW + "残り" + (trade.getTradeLimit() - trade.getCounts(p)) + "回購入可能")
-                    );
-                    break;
-                case Limited:
-                    inventory.setItem(baseslot + addslot, status4);
-                    break;
-            }
+            inventory.setItem(baseslot + addslot, DisplayPanelConfig.getPanel(result).getItemStack(result , trade.getLimit(), trade.getLimit() - trade.getTradeCount(p)));
         }
     }
 }
