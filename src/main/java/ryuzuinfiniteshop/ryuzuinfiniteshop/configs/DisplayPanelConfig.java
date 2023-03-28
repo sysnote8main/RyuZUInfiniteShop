@@ -35,7 +35,7 @@ public class DisplayPanelConfig {
             throw new RuntimeException(e);
         }
         panels = new HashMap<ShopTrade.TradeResult, DisplayPanel>() {{
-            for(ShopTrade.TradeResult result : ShopTrade.TradeResult.values()) {
+            for(ShopTrade.TradeResult result : defaultResultMaterial.keySet()) {
                 put(result,
                     new DisplayPanel(
                             Material.valueOf(yaml.getString(getResultConfig(result) + ".Material", defaultResultMaterial.get(result).name())),
@@ -49,8 +49,7 @@ public class DisplayPanelConfig {
     public static void save() {
         File file = FileUtil.initializeFile("config.yml");
         YamlConfiguration yaml = new YamlConfiguration();
-        List<ShopTrade.TradeResult> results = Arrays.asList(ShopTrade.TradeResult.Success, ShopTrade.TradeResult.NotAfford, ShopTrade.TradeResult.Full);
-        results.forEach(result -> yaml.set(getResultConfig(result), panels.get(result).serialize()));
+        defaultResultMaterial.keySet().forEach(result -> yaml.set(getResultConfig(result), panels.get(result).serialize()));
         try {
             yaml.save(file);
         } catch (IOException e) {

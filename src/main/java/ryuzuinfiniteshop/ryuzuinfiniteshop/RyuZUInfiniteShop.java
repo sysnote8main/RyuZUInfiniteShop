@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.commands.CommandChain;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.configs.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.MythicItem;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.configurations.DisplayConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.admin.MythicListener;
@@ -35,9 +36,9 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         ConfigurationSerialization.registerClass(MythicItem.class);
         MythicListener.reload();
         ShopUtil.removeAllNPC();
+        DisplayPanelConfig.load();
         ShopUtil.loadAllShops();
         TradeUtil.loadTradeLimits();
-        DisplayConfig.loadDisplay();
     }
 
     @Override
@@ -46,7 +47,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         TradeUtil.saveTradeLimits();
         ShopUtil.saveAllShops();
         ShopUtil.removeAllNPC();
-        DisplayConfig.saveDisplay();
+        DisplayPanelConfig.save();
     }
 
     public static RyuZUInfiniteShop getPlugin() {

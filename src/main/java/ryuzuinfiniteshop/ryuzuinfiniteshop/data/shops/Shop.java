@@ -93,7 +93,7 @@ public class Shop {
         this.location = location;
         this.type = ShopType.TwotoOne;
         spawnNPC(entitytype);
-        equipments = new ObjectItems(IntStream.range(0, 6).mapToObj(i -> new ItemStack(Material.AIR)).toArray());
+        equipments = new ObjectItems(IntStream.range(0, 6).mapToObj(i -> new ItemStack(Material.AIR)).collect(Collectors.toList()));
         ShopUtil.addShop(getID(), this);
     }
 
