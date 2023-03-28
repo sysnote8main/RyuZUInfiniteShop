@@ -120,7 +120,7 @@ public class CommandChain {
                         data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                         return false;
                     }
-                    return data.getArgs().length <= 2;
+                    return data.getArgs().length <= 3;
                 }
         );
 
@@ -148,7 +148,7 @@ public class CommandChain {
                 data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                 return false;
             }
-            return data.getArgs().length >= 3;
+            return true;
         };
 
         CommandsGenerator.registerCommand(

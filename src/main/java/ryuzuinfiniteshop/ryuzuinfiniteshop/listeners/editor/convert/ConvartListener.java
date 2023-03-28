@@ -76,10 +76,14 @@ public class ConvartListener implements Listener {
 
         //トレードを読み込む
         if ((type.isRightClick() || type.isLeftClick()) && !type.isShiftClick()) {
-            shop.loadTrades(item);
+            boolean duplication = shop.loadTrades(item);
 
             //音を出す
-            SoundUtil.playSuccessSound(p);
+            if(duplication) {
+                SoundUtil.playCautionSound(p);
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "重複している取引がありました");
+            } else
+                SoundUtil.playSuccessSound(p);
 
             //インベントリを更新する
             holder.getGui().reloadInventory(event.getClickedInventory());

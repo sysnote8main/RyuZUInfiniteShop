@@ -26,7 +26,7 @@ public class MythicItem implements ConfigurationSerializable {
         return result;
     }
 
-    public static MythicItem deserialize(Map<String,Object> map){
-        return new MythicItem(map.get("id").toString(),Integer.parseInt(map.get("amount").toString()));
+    public static MythicItem deserialize(Map<String, Object> map) {
+        return new MythicItem(map.get("id").toString(), Integer.parseInt(map.get("amount").toString()));
     }
 }

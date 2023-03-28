@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -130,37 +131,44 @@ public class Shop {
         ShopHolder holder = ShopUtil.getShopHolder(inv);
         if (holder == null) return false;
 
-        boolean warn = false;
-        //取引を上書きし、取引として成立しないものは削除する
+        //取引を上書きし、取引として成立しないものと重複しているものは削除する
+        boolean duplication = false;
         HashSet<ShopTrade> emptyTrades = new HashSet<>();
-        HashSet<ShopTrade> addedTrades = new HashSet<>();
+        HashSet<ShopTrade> onTrades = new HashSet<>();
         for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TwotoOne) ? 4 : 9) {
             if (getShopType().equals(ShopType.TwotoOne) && i % 9 == 4) i++;
             int limitSlot = 0;
             if(getShopType().equals(ShopType.TwotoOne)) limitSlot = i + 2;
             else if(getShopType().equals(ShopType.FourtoFour)) limitSlot = i + 4;
             else if(getShopType().equals(ShopType.SixtoTwo)) limitSlot = i + 6;
+            ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(i);
+            ShopTrade expectedTrade = TradeUtil.getTrade(inv, i, getShopType());
+            boolean available = TradeUtil.isAvailableTrade(inv, i, getShopType());
             String limitString = PersistentUtil.getNMSStringTag(inv.getItem(limitSlot) , "TradeLimit");
             int limit = limitString == null ? 0 : Integer.parseInt(limitString);
-            ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(i);
-            boolean available = TradeUtil.isAvailableTrade(inv, i, getShopType());
+            if(available && this.trades.contains(expectedTrade) && !expectedTrade.equals(trade)) duplication = true;
+
+            // 編集画面上に重複した取引が存在するかチェックする
+            if(expectedTrade == null) continue;
+            if(onTrades.contains(expectedTrade)) duplication = true;
+            onTrades.add(expectedTrade);
+
+            // 取引を追加、上書き、削除する
             if (trade == null && available) {
-                if(addedTrades.contains(trade)) warn = true;
-                else addTrade(inv, i , limit);
-                addedTrades.add(trade);
+                addTrade(inv, i , limit);
             } else if (available) {
                 trade.setTrade(inv, i, getShopType());
                 trade.setTradeLimits(limit, true);
             } else if(trade != null) {
-                if(emptyTrades.contains(trade)) warn = true;
                 emptyTrades.add(trade);
             }
         }
         this.trades.removeAll(emptyTrades);
+        if(duplication) this.trades = trades.stream().distinct().collect(Collectors.toList());
 
         //ショップを更新する
         updateTradeContents();
-        return warn;
+        return duplication;
     }
 
     public String getShopTypeDisplay() {
@@ -216,11 +224,14 @@ public class Shop {
         return item;
     }
 
-    public void loadTrades(ItemStack item) {
+    public boolean loadTrades(ItemStack item) {
         List<ShopTrade> temp = getTrades(item);
-        if (temp == null) return;
+        if (temp == null) return false;
+        boolean duplication = temp.stream().anyMatch(trade -> trades.contains(trade));
         trades.addAll(temp);
+        if(duplication) trades = trades.stream().distinct().collect(Collectors.toList());
         updateTradeContents();
+        return duplication;
     }
 
     public List<ShopTrade> getTrades(ItemStack item) {
