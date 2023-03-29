@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.convert;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.system;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -109,7 +109,7 @@ public class ConvartListener implements Listener {
         if (block == null) return;
 
         //ショップを読み込む
-        Shop shop = ShopUtil.createShop(block.getLocation().add(0, 1, 0), PersistentUtil.getNMSStringTag(item, "Shop"));
+        Shop shop = ShopUtil.reloadShop(block.getLocation().add(0, 1, 0), PersistentUtil.getNMSStringTag(item, "Shop"));
 
         //音を出し、メッセージを送信
         SoundUtil.playSuccessSound(p);

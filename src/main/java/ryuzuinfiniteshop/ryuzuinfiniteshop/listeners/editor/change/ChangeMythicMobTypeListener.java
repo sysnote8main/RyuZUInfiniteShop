@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.change;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,15 +15,15 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ShopUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.effect.SoundUtil;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 //ショップのNPCの名前を変更する
-public class ChangeNpcTypeListener implements Listener {
+public class ChangeMythicMobTypeListener implements Listener {
     private static HashMap<UUID, Long> changingTime = new HashMap<>();
     private static HashMap<UUID, String> changingShop = new HashMap<>();
 
@@ -40,12 +41,12 @@ public class ChangeNpcTypeListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
         int slot = event.getSlot();
-        if (slot != 5 * 9 + 4) return;
+        if (slot != 5 * 9 + 3) return;
 
         //チャット入力待機
         changingTime.put(p.getUniqueId(), System.currentTimeMillis());
         changingShop.put(p.getUniqueId(), shop.getID());
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティIDを入力してください");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "MythicMobIDを入力してください");
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
 
         //音を出す
@@ -61,20 +62,21 @@ public class ChangeNpcTypeListener implements Listener {
         if (!changingTime.containsKey(p.getUniqueId())) return;
         if ((double) (System.currentTimeMillis() - changingTime.get(p.getUniqueId())) / 1000 > 20) return;
         if (event.getMessage().equalsIgnoreCase("Cancel")) {
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティタイプ変更をキャンセルしました");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "MythicMobID設定をキャンセルしました");
             SoundUtil.playClickShopSound(p);
         } else {
             //同期させてNPCを再構築する
             Shop shop = ShopUtil.getShop(changingShop.get(p.getUniqueId()));
             Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> {
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティタイプを変更しました");
-                SoundUtil.playSuccessSound(p);
-                try {
-                    ShopUtil.overwriteShop(shop.getLocation(), shop.convertShopToString(), EntityType.valueOf(event.getMessage().toUpperCase()));
-                } catch (IllegalArgumentException e) {
+                if(MythicMobs.inst().getAPIHelper().getMythicMob(event.getMessage()) == null) {
                     SoundUtil.playFailSound(p);
-                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なエンティティタイプを入力して下さい");
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なMythicMobIDを入力して下さい");
+                    return;
                 }
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "MythicMobIDを設定しました");
+                SoundUtil.playSuccessSound(p);
+                ShopUtil.overwriteShop(shop.getLocation(), shop.convertShopToString(), event.getMessage());
+
             }, 1L);
         }
         changingTime.remove(p.getUniqueId());

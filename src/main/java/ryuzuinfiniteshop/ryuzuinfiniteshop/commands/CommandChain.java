@@ -2,12 +2,14 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.commands;
 
 import com.github.ryuzu.ryuzucommandsgenerator.CommandData;
 import com.github.ryuzu.ryuzucommandsgenerator.CommandsGenerator;
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.configs.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopListGui;
@@ -34,6 +36,21 @@ public class CommandChain {
         );
 
         CommandsGenerator.registerCommand(
+                "ris.reload",
+                data -> {
+                    ShopUtil.removeAllNPC();
+                    DisplayPanelConfig.load();
+                    ShopUtil.loadAllShops();
+                    TradeUtil.loadTradeLimits();
+                    ShopUtil.closeAllShopTradeInventory();
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのショップを更新しました");
+                },
+                "ris.op",
+                data -> true,
+                data -> data.getArgs().length == 1
+        );
+
+        CommandsGenerator.registerCommand(
                 "ris.spawn",
                 data -> {
                     Player p = (Player) data.getSender();
@@ -42,7 +59,7 @@ public class CommandChain {
                         p.sendMessage(RyuZUInfiniteShop.prefixCommand + RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "既にその場所にはショップが存在します");
                         return;
                     }
-                    ShopUtil.createShop(loc, EntityType.VILLAGER);
+                    ShopUtil.createNewShop(loc, EntityType.VILLAGER);
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ショップを設置しました");
                 },
                 "ris.op",
@@ -61,7 +78,10 @@ public class CommandChain {
                 data -> {
                     Player p = (Player) data.getSender();
                     Location loc = p.getLocation();
-                    ShopUtil.createShop(loc, EntityType.valueOf(data.getArgs()[1].toUpperCase()));
+                    if(MythicMobs.inst().getMobManager().getMythicMob(data.getArgs()[1]) == null)
+                        ShopUtil.createNewShop(loc, EntityType.valueOf(data.getArgs()[1].toUpperCase()));
+                    else
+                        ShopUtil.createNewShop(loc, data.getArgs()[1]);
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ショップを設置しました");
                 },
                 "ris.op",
@@ -76,8 +96,11 @@ public class CommandChain {
                         EntityType.valueOf(data.getArgs()[1].toUpperCase());
                         return true;
                     } catch (IllegalArgumentException e) {
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なエンティティタイプを入力して下さい");
-                        return false;
+                        if(MythicMobs.inst().getMobManager().getMythicMob(data.getArgs()[1]) == null) {
+                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なエンティティタイプまたはMythicMobIDを入力して下さい");
+                            return false;
+                        }
+                        return true;
                     }
                 },
                 data -> {

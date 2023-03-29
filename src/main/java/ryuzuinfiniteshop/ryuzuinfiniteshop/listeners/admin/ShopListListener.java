@@ -86,8 +86,10 @@ public class ShopListListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + "にテレポートしました");
         } else {
             //エディターを開く
+            ShopUtil.closeAllShopTradeInventory(shop);
             p.openInventory(shop.getEditor(1).getInventory(mode, holder));
             SoundUtil.playClickShopSound(p);
+            shop.setEditting(true);
         }
     }
 }

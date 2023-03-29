@@ -77,6 +77,10 @@ public class ShopEditorGui extends ShopGui {
         inv.setItem(5 * 9 + 4, ItemUtil.getNamedItem(Material.EGG, ChatColor.GREEN + "エンティティタイプを変更する"));
     }
 
+    private void setMythicMobType(Inventory inv) {
+        inv.setItem(5 * 9 + 3, ItemUtil.getNamedItem(Material.EGG, ChatColor.GREEN + "MythicMobIDを設定する"));
+    }
+
     private void setShopType(Inventory inv) {
         inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, getShop().getShopTypeDisplay()));
     }
@@ -102,7 +106,11 @@ public class ShopEditorGui extends ShopGui {
     }
 
     private void setRemoveShop(Inventory inv) {
-        inv.setItem(3 * 9 + 6, ItemUtil.getNamedItem(Material.BARRIER, ChatColor.RED + "ショップを削除する"));
+        inv.setItem(3 * 9 + 5, ItemUtil.getNamedItem(Material.BARRIER, ChatColor.RED + "ショップを削除する"));
+    }
+
+    private void setReloadShop(Inventory inv) {
+        inv.setItem(3 * 9 + 6, ItemUtil.getNamedItem(Material.NAUTILUS_SHELL, ChatColor.RED + "ショップを更新する"));
     }
 
     public void setDisplay(Inventory inv) {
@@ -113,10 +121,12 @@ public class ShopEditorGui extends ShopGui {
         setConvertTrades(inv);
         setConvertShop(inv);
         setRemoveShop(inv);
+        setReloadShop(inv);
+        setMythicMobType(inv);
+        setEntityType(inv);
         if(!MythicMobs.inst().getAPIHelper().isMythicMob(getShop().getNPC())) {
             setEquipment(inv);
             setDisplayName(inv);
-            setEntityType(inv);
             setSettings(inv);
         }
         setCover(inv);
@@ -124,7 +134,7 @@ public class ShopEditorGui extends ShopGui {
 
     public void setCover(Inventory inv) {
         ItemStack item = ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, "");
-        for (int i = 2 * 9 ; i < 5 * 9 + 8 ; i++)
+        for (int i = 2 * 9 ; i < 6 * 9 ; i++)
             if(ItemUtil.isAir(inv.getItem(i))) inv.setItem(i, item);
     }
 

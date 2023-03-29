@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 public class ShopUtil {
     private static HashMap<String, Shop> shops = new HashMap<>();
@@ -75,13 +77,13 @@ public class ShopUtil {
             } catch (IOException | InvalidConfigurationException e) {
                 e.printStackTrace();
             }
-            createShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("Npc.Options.EntityType")));
+            createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("Npc.Options.EntityType")));
         }
     }
 
     public static void removeAllNPC() {
-        for(World world : Bukkit.getWorlds()) {
-            for(Entity entity : world.getEntities()) {
+        for (World world : Bukkit.getWorlds()) {
+            for (Entity entity : world.getEntities()) {
                 String id = PersistentUtil.getNMSStringTag(entity, "Shop");
                 if (id != null) entity.remove();
             }
@@ -100,7 +102,7 @@ public class ShopUtil {
 
     public static HashMap<String, Shop> getSortedShops() {
         HashMap<String, Shop> sorted = new HashMap<>();
-        shops.keySet().stream().sorted(Comparator.naturalOrder()).forEach(key -> sorted.put(key , shops.get(key)));
+        shops.keySet().stream().sorted(Comparator.naturalOrder()).forEach(key -> sorted.put(key, shops.get(key)));
         return sorted;
     }
 
@@ -112,7 +114,11 @@ public class ShopUtil {
         shops.put(id, shop);
     }
 
-    public static Shop createShop(Location location, EntityType type) {
+    public static Shop createNewShop(Location location, String mmid) {
+        return new Shop(location, mmid);
+    }
+
+    public static Shop createNewShop(Location location, EntityType type) {
         if (type.equals(EntityType.VILLAGER) || type.equals(EntityType.ZOMBIE_VILLAGER)) {
             return new VillagerableShop(location, type);
         }
@@ -138,29 +144,15 @@ public class ShopUtil {
         shops.remove(id);
     }
 
-    public static Shop createShop(Location location, String data) {
-        File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
-        YamlConfiguration config = new YamlConfiguration();
-        try {
-            config.loadFromString(data);
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-
-        String stringlocation = LocationUtil.toStringFromLocation(location);
-        if (shops.containsKey(stringlocation)) shops.get(stringlocation).removeShop();
-
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        EntityType type = EntityType.valueOf(config.getString("Npc.Options.EntityType"));
-        return createShop(location, type);
+    public static Shop reloadShop(Shop shop) {
+        return reloadShop(shop.getLocation(), shop.convertShopToString(), config -> {});
     }
 
-    public static Shop createShop(Location location, String data, EntityType type) {
+    public static Shop reloadShop(Location location, String data) {
+        return reloadShop(location, data, config -> {});
+    }
+
+    private static Shop reloadShop(Location location, String data, Consumer<YamlConfiguration> consumer) {
         File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
         YamlConfiguration config = new YamlConfiguration();
         try {
@@ -168,8 +160,8 @@ public class ShopUtil {
         } catch (InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        config.set("Npc.Options.EntityType", type.toString());
 
+        consumer.accept(config);
         String stringlocation = LocationUtil.toStringFromLocation(location);
         if (shops.containsKey(stringlocation)) shops.get(stringlocation).removeShop();
 
@@ -179,6 +171,46 @@ public class ShopUtil {
             e.printStackTrace();
         }
 
-        return createShop(location, type);
+        EntityType type = EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER"));
+        return createNewShop(location, type);
+    }
+
+    public static Shop overwriteShop(Location location, String data, EntityType type) {
+        return reloadShop(location, data, config -> {
+            config.set("Npc.Options.MythicMob", null);
+            config.set("Npc.Options.EntityType", type.toString());
+        });
+    }
+
+    public static Shop overwriteShop(Location location, String data, String mmid) {
+        return reloadShop(location, data, config -> config.set("Npc.Options.MythicMob", mmid));
+    }
+
+    public static void closeShopTradeInventory(Player p) {
+        if (p.getOpenInventory().getTopInventory().getHolder() instanceof ShopHolder) {
+            ShopHolder holder = (ShopHolder) p.getOpenInventory().getTopInventory().getHolder();
+            if (holder.getMode().equals(ShopHolder.ShopMode.Trade))
+                p.closeInventory();
+        }
+    }
+
+    public static void closeShopTradeInventory(Player p, Shop shop) {
+        if (p.getOpenInventory().getTopInventory().getHolder() instanceof ShopHolder) {
+            ShopHolder holder = (ShopHolder) p.getOpenInventory().getTopInventory().getHolder();
+            if (holder.getMode().equals(ShopHolder.ShopMode.Trade) && holder.getShop().equals(shop))
+                p.closeInventory();
+        }
+    }
+
+    public static void closeAllShopTradeInventory() {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            closeShopTradeInventory(p);
+        }
+    }
+
+    public static void closeAllShopTradeInventory(Shop shop) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            closeShopTradeInventory(p, shop);
+        }
     }
 }

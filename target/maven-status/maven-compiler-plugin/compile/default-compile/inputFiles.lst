@@ -1,5 +1,6 @@
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\ParrotShop.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\inventory\PersistentUtil.java
+C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\Language.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\inventory\TradeUtil.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\trade\ShopGui6to2.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\PlayerableShop.java
@@ -12,9 +13,11 @@ C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\DisplayPanel.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\commands\CommandChain.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\edit\EditMainPageListener.java
+C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\configs\LanguageConfig.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\effect\SoundUtil.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\canceller\CancelAffectNpc.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\TradeLimit.java
+C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\change\ChangeMythicMobTypeListener.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\DyeableShop.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\change\ChangeNpcDirecationListener.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\RyuZUInfiniteShop.java
@@ -27,6 +30,7 @@ C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\VillagerableShop.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\change\ChangeDisplayNameListener.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\inventory\ShopUtil.java
+C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\utils\configuration\MessageUtil.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\HorseShop.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\change\ChangeIndividualSettingsListener.java
 C:\Users\atsuk\Desktop\MinecraftDevelopments\Plugins\RyuZUInfiniteShop\src\main\java\ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\editor\ConfirmRemoveGui.java

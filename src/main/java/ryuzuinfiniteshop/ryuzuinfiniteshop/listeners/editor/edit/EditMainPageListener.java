@@ -33,6 +33,7 @@ public class EditMainPageListener implements Listener {
         Shop shop = ShopUtil.getShop(id);
         if (shop.isEditting()) return;
 
+        ShopUtil.closeAllShopTradeInventory(shop);
         p.openInventory(shop.getEditor(1).getInventory(ShopHolder.ShopMode.Edit));
 
         shop.setEditting(true);

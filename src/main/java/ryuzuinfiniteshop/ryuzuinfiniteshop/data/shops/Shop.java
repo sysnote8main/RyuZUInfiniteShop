@@ -54,7 +54,19 @@ public class Shop {
 
     public Shop(Location location, EntityType entitytype) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
-        initializeShop(location, entitytype);
+        initializeShop(location);
+        spawnNPC(entitytype);
+        loadYamlProcess(getFile());
+        if (!exsited) {
+            createEditorNewPage();
+            saveYaml();
+        }
+    }
+
+    public Shop(Location location, String mmid) {
+        boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
+        initializeShop(location);
+        this.mythicmob = Optional.of(mmid);
         loadYamlProcess(getFile());
         if (!exsited) {
             createEditorNewPage();
@@ -69,7 +81,6 @@ public class Shop {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        this.location = LocationUtil.toLocationFromString(file.getName().replace(".yml", ""));
         getLoadYamlProcess().accept(config);
     }
 
@@ -81,11 +92,9 @@ public class Shop {
                 this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, Object>) tradeconfig)).collect(Collectors.toList());
                 updateTradeContents();
             }
-            this.location.setYaw(yaml.getInt("Npc.Status.Yaw", 0));
-            npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
-            this.mythicmob = Optional.ofNullable(yaml.getString("Npc.Options.MythicMob"));
+            if(!mythicmob.isPresent()) this.mythicmob = Optional.ofNullable(yaml.getString("Npc.Options.MythicMob"));
             if(mythicmob.isPresent() && MythicMobs.inst().getAPIHelper().getMythicMob(mythicmob.get()) != null) {
-                npc.remove();
+                if(npc != null) npc.remove();
                 try {
                     npc = MythicMobs.inst().getAPIHelper().spawnMythicMob(mythicmob.get(), location);
                 } catch (InvalidMobTypeException e) {
@@ -101,13 +110,14 @@ public class Shop {
                 if (npc instanceof LivingEntity)
                     ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Npc.Options.Visible", true));
             }
+            this.location.setYaw(yaml.getInt("Npc.Status.Yaw", 0));
+            npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
         };
     }
 
-    public void initializeShop(Location location, EntityType entitytype) {
+    public void initializeShop(Location location) {
         this.location = location;
         this.type = ShopType.TwotoOne;
-        spawnNPC(entitytype);
         equipments = new ObjectItems(IntStream.range(0, 6).mapToObj(i -> new ItemStack(Material.AIR)).collect(Collectors.toList()));
         ShopUtil.addShop(getID(), this);
     }
@@ -402,14 +412,16 @@ public class Shop {
 
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return yaml -> {
-            yaml.set("Npc.Options.EntityType", npc.getType().toString());
-            yaml.set("Npc.Options.DisplayName", npc.getCustomName());
+            mythicmob.ifPresent(mythicmob -> yaml.set("Npc.Options.MythicMob", mythicmob));
+            if(npc != null) {
+                yaml.set("Npc.Options.EntityType", npc.getType().toString());
+                yaml.set("Npc.Options.DisplayName", npc.getCustomName());
+                if (npc instanceof LivingEntity) yaml.set("Npc.Options.Visible", !((LivingEntity) npc).isInvisible());
+            }
             yaml.set("Shop.Options.ShopType", type.toString());
             yaml.set("Npc.Options.Equipments", equipments.getObjects());
-            mythicmob.ifPresent(mythicmob -> yaml.set("Npc.Options.MythicMob", mythicmob));
             yaml.set("Npc.Status.Lock", lock);
             yaml.set("Trades", getTrades().stream().map(ShopTrade::serialize).collect(Collectors.toList()));
-            if (npc instanceof LivingEntity) yaml.set("Npc.Options.Visible", !((LivingEntity) npc).isInvisible());
             yaml.set("Npc.Status.Yaw", location.getYaw());
         };
     }
@@ -537,5 +549,14 @@ public class Shop {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Shop) {
+            Shop shop = (Shop) obj;
+            return shop.getID().equals(getID());
+        }
+        return false;
     }
 }

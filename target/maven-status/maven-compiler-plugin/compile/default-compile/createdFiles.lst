@@ -1,3 +1,4 @@
+ryuzuinfiniteshop\ryuzuinfiniteshop\configs\LanguageConfig.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\effect\SoundUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\configuration\FileUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\trade\ShopGui4to4.class
@@ -10,6 +11,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\change\ChangeDisplayNameLis
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\edit\EditMainPageListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\AgeableShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopTrade$TradeResult.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\data\Language.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\configuration\EquipmentUtil$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\editor\ShopEditorGui$ShopSettings.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\Shop$1.class
@@ -24,6 +26,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\change\ChangeNpcTypeListene
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\VillagerableShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\guis\editor\ShopEditorGui.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopHolder$ShopMode.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\change\ChangeMythicMobTypeListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\inventory\TradeUtil$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\configs\Config.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\change\ChangeLockListener.class
@@ -46,6 +49,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\configs\DisplayPanelConfig.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\VillagerableShop$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\change\ChangeNpcDirecationListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\TradeLimit.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\configs\LanguageConfig$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ObjectItems.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\delete\RemoveShopListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\commands\CommandChain.class
@@ -59,6 +63,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\ParrotShop$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\edit\EditTradePageListener$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\ShopHolder.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\utils\inventory\TradeUtil.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\utils\configuration\MessageUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\configs\DisplayPanelConfig$2.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\ParrotShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listeners\editor\change\ChangeIndividualSettingsListener.class

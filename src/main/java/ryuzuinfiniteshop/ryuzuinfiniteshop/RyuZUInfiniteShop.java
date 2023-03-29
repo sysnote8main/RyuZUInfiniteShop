@@ -12,8 +12,9 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.canceller.CancelAffectNpc;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.canceller.CancelItemMoveListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.admin.ShopListListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.change.*;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.convert.ConvartListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.delete.RemoveShopListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.system.ConvartListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.system.ReloadShopListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.system.RemoveShopListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.edit.EditMainPageListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.edit.EditTradePageListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.OpenShopListener;
@@ -65,10 +66,12 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeNpcTypeListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeIndividualSettingsListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeShopTypeListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new ChangeMythicMobTypeListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeNpcDirecationListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeLockListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ConvartListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new RemoveShopListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new ReloadShopListener(), getPlugin());
 //        try {
 //            String listenerspath = RyuZUInfiniteShop.getPlugin().getClass().getResource("listeners").getFile()
 //                    .replaceFirst("file:/" , "")
