@@ -34,10 +34,10 @@ public class ConvartListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
         int slot = event.getSlot();
-        if (slot != 3 * 9 + 7 && slot != 3 * 9 + 8) return;
+        if (slot != 5 * 9 + 6 && slot != 5 * 9 + 7) return;
 
         //コンバート
-        ItemStack item = slot == 3 * 9 + 7 ? shop.convertTrades() : shop.convertShopToItemStack();
+        ItemStack item = slot == 5 * 9 + 7 ? shop.convertTrades() : shop.convertShopToItemStack();
         if (ItemUtil.ableGive(p.getInventory(), item)) {
             p.getInventory().addItem(item);
             SoundUtil.playSuccessSound(p);
@@ -63,7 +63,7 @@ public class ConvartListener implements Listener {
         String tag = PersistentUtil.getNMSStringTag(item, "ShopType");
         int slot = event.getSlot();
 
-        if (slot != 2 * 9 + 8) return;
+        if (slot != 5 * 9 + 8) return;
         if (tag == null) {
             SoundUtil.playFailSound(p);
             return;
@@ -105,7 +105,7 @@ public class ConvartListener implements Listener {
 
         if (!p.hasPermission("ris.op")) return;
         if (!p.isSneaking()) return;
-        if (item == null || PersistentUtil.getNMSStringTag(item, "Shop") == null) return;
+        if (item == null || PersistentUtil.getNMSStringTag(item, "ShopData") == null) return;
         if (block == null) return;
 
         //ショップを読み込む

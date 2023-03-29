@@ -17,6 +17,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.ReloadShopList
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.RemoveShopListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.EditMainPageListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.EditTradePageListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.SearchTradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.trades.OpenShopListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
@@ -72,6 +73,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         getPlugin().getServer().getPluginManager().registerEvents(new ConvartListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new RemoveShopListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ReloadShopListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new SearchTradeListener(), getPlugin());
 //        try {
 //            String listenerspath = RyuZUInfiniteShop.getPlugin().getClass().getResource("listeners").getFile()
 //                    .replaceFirst("file:/" , "")

@@ -28,7 +28,7 @@ public class ChangeNpcDirecationListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
         int slot = event.getSlot();
-        if (slot != 5 * 9 + 6) return;
+        if (slot != 4 * 9 + 7) return;
 
         //NPCの向きを45度回す
         shop.changeNPCDirecation();

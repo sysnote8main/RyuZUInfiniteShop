@@ -86,7 +86,7 @@ public class Shop {
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return yaml -> {
             this.type = ShopType.valueOf(yaml.getString("Shop.Options.ShopType", "TwotoOne"));
-            this.lock = yaml.getBoolean("Shop.Status.Lock", false);
+            this.lock = yaml.getBoolean("Npc.Status.Lock", false);
             if (yaml.contains("Trades")) {
                 this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, Object>) tradeconfig)).collect(Collectors.toList());
                 updateTradeContents();
@@ -105,7 +105,7 @@ public class Shop {
                     this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments"));
                     updateEquipments();
                 }
-                if (yaml.getString("Npc.DisplayName") != null) npc.setCustomName(yaml.getString("Npc.Options.DisplayName"));
+                if (yaml.getString("Npc.Options.DisplayName") != null) npc.setCustomName(yaml.getString("Npc.Options.DisplayName"));
                 if (npc instanceof LivingEntity)
                     ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Npc.Options.Visible", true));
             }

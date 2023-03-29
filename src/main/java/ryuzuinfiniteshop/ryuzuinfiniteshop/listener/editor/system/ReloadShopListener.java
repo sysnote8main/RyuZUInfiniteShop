@@ -23,7 +23,7 @@ public class ReloadShopListener implements Listener {
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         int slot = event.getSlot();
-        if (slot != 3 * 9 + 6) return;
+        if (slot != 5 * 9 + 5) return;
 
         //音を出す
         SoundUtil.playCautionSound(p);

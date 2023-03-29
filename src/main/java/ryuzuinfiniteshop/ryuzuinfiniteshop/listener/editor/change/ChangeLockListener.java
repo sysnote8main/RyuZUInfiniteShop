@@ -28,7 +28,7 @@ public class ChangeLockListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
         int slot = event.getSlot();
-        if (slot != 5 * 9 + 5) return;
+        if (slot != 4 * 9 + 6) return;
 
         //音を出す
         SoundUtil.playClickShopSound(p);

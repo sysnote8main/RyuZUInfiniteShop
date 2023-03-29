@@ -12,6 +12,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.ColorUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
@@ -38,14 +39,14 @@ public class ChangeDisplayNameListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
         int slot = event.getSlot();
-        if (slot != 5 * 9 + 8) return;
+        if (slot != 4 * 9 + 3) return;
 
         //チャット入力待機
         namingTime.put(p.getUniqueId(), System.currentTimeMillis());
         namingShop.put(p.getUniqueId(), shop.getID());
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ページに設定する名前をチャットに入力してください");
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "カラーコードを使う際は'&'か'{color:R,G,B}'を使用してください");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "カラーコードを使う際は'&'を使用してください");
 
         //音を出す
         SoundUtil.playClickShopSound(p);
@@ -66,7 +67,7 @@ public class ChangeDisplayNameListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "名前が設定されました");
             SoundUtil.playSuccessSound(p);
             Shop shop = ShopUtil.getShop(namingShop.get(p.getUniqueId()));
-            shop.getNPC().setCustomName(event.getMessage());
+            shop.getNPC().setCustomName(ColorUtil.color(event.getMessage()));
         }
         namingTime.remove(p.getUniqueId());
         namingShop.remove(p.getUniqueId());

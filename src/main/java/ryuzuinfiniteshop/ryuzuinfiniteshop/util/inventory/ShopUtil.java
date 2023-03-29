@@ -69,14 +69,23 @@ public class ShopUtil {
         return isTradeMode(getSecureInventory(event));
     }
 
+    public static boolean isSearchMode(InventoryClickEvent event) {
+        return isTradeMode(getSecureInventory(event));
+    }
+
     public static boolean isEditMode(Inventory inv) {
-        if (getShopHolder(inv) == null) return false;
+        if (getModeHolder(inv) == null) return false;
         return ((ShopHolder) inv.getHolder()).getMode().equals(ShopMode.Edit);
     }
 
     public static boolean isTradeMode(Inventory inv) {
-        if (getShopHolder(inv) == null) return false;
+        if (getModeHolder(inv) == null) return false;
         return ((ShopHolder) inv.getHolder()).getMode().equals(ShopMode.Trade);
+    }
+
+    public static boolean isSearchMode(Inventory inv) {
+        if (getModeHolder(inv) == null) return false;
+        return ((ShopHolder) inv.getHolder()).getMode().equals(ShopMode.Search);
     }
 
     public static void loadAllShops() {

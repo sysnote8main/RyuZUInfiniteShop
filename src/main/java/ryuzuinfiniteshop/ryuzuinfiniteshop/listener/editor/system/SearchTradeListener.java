@@ -36,7 +36,6 @@ public class SearchTradeListener implements Listener {
         ModeHolder holder = ShopUtil.getModeHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof SelectSearchItemGui)) return;
-        if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
 
         event.setCancelled(true);
@@ -46,18 +45,28 @@ public class SearchTradeListener implements Listener {
         int slot = event.getSlot();
         ClickType type = event.getClick();
         ItemStack searchItem = event.getView().getTopInventory().getItem(4);
+        ItemStack panel = ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.BLUE + "検索するアイテムを持ってクリック");
         if (slot != 0 && slot != 4 && slot != 8) return;
 
         if ((type.isRightClick() || type.isLeftClick())) {
             if (slot == 4) {
-                event.setCurrentItem(ItemUtil.getOneItemStack(event.getCursor()));
+                if(ItemUtil.isAir(event.getCursor()))
+                    event.setCurrentItem(panel);
+                else
+                    event.setCurrentItem(ItemUtil.getOneItemStack(event.getCursor()));
                 SoundUtil.playClickShopSound(p);
             } else {
-                if (ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.BLUE + "検索するアイテムを持ってクリック").equals(searchItem)) {
+                if (panel.equals(searchItem)) {
                     SoundUtil.playFailSound(p);
                 } else {
                     LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTake(searchItem) : TradeUtil.getTradesFromGive(searchItem);
+                    if(searchedTrades.size() == 0) {
+                        p.sendMessage(ChatColor.RED + "検索結果がありませんでした");
+                        SoundUtil.playFailSound(p);
+                        return;
+                    }
                     p.openInventory(new TradeSearchGui(1, searchedTrades).getInventory(ShopMode.Search));
+                    SoundUtil.playClickShopSound(p);
                 }
             }
         }
@@ -112,7 +121,7 @@ public class SearchTradeListener implements Listener {
 
         //必要なデータを取得
         Inventory inv = event.getView().getTopInventory();
-        ItemStack item = PersistentUtil.getNMSStringTag(inv.getItem(4), "Shop") == null ? inv.getItem(6) : inv.getItem(4);
+        ItemStack item = PersistentUtil.getNMSStringTag(inv.getItem(4), "Shop") == null ? inv.getItem(6 + (event.getSlot() / 9)) : inv.getItem(4 + (event.getSlot() / 9));
         if(item == null) return;
         Player p = (Player) event.getWhoClicked();
         ShopMode mode = holder.getMode();

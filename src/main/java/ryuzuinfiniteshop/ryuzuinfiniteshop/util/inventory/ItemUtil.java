@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -111,7 +112,8 @@ public class ItemUtil {
     public static ItemStack getNamedItem(ItemStack base, String name, boolean enchanted, String... lore) {
         ItemStack item = base.clone();
         ItemMeta meta = item.getItemMeta();
-        if(enchanted) meta.setDisplayName(name);
+        meta.setDisplayName(name);
+        if(enchanted) meta.addEnchant(Enchantment.DURABILITY, 1, true);
         if(lore.length != 0) meta.setLore(Arrays.asList(lore));
         meta.addItemFlags(ItemFlag.values());
         item.setItemMeta(meta);

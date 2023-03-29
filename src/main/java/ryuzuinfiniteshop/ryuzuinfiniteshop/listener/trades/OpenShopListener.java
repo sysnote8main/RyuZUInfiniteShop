@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
@@ -94,7 +95,7 @@ public class OpenShopListener implements Listener {
     public void openBeforePage(InventoryCloseEvent event) {
         //インベントリがショップなのかチェック
         Inventory inv = event.getInventory();
-        ShopHolder holder = ShopUtil.getShopHolder(inv);
+        ModeHolder holder = ShopUtil.getModeHolder(inv);
         if (holder == null) return;
 
         //必要なデータを取得
@@ -102,7 +103,7 @@ public class OpenShopListener implements Listener {
 
         Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> {
             if(p.getOpenInventory().getType().equals(InventoryType.CREATIVE) || p.getOpenInventory().getType().equals(InventoryType.CRAFTING)) SoundUtil.playCloseShopSound(p);
-            if (ShopUtil.getShopHolder(p.getOpenInventory().getTopInventory()) != null) return;
+            if (ShopUtil.getModeHolder(p.getOpenInventory().getTopInventory()) != null) return;
             if (holder.getBefore() == null) return;
             p.openInventory(holder.getBefore().getGui().getInventory(holder.getMode(), holder.getBefore().getBefore()));
         }, 1L);

@@ -31,7 +31,7 @@ public class ShopEditorGui extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, JavaUtil.getOrDefault(getShop().getNPC().getCustomName(), "ショップ") + " エディター ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, ChatColor.DARK_BLUE + JavaUtil.getOrDefault(getShop().getNPC().getCustomName(), "ショップ") + ChatColor.DARK_BLUE + " エディター ページ" + getPage());
 
         //アイテムを設置
         setDisplay(inv);
@@ -70,61 +70,33 @@ public class ShopEditorGui extends ShopGui {
             inv.setItem(newslot, ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.YELLOW + "新規ページ"));
     }
 
-    private void setDisplayName(Inventory inv) {
-        inv.setItem(5 * 9 + 8, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + "名前を変更する" , ChatColor.YELLOW + "現在の名前: " + JavaUtil.getOrDefault(getShop().getNPC().getCustomName() , "<none>")));
+    public void setDisplayName(Inventory inv) {
+        inv.setItem(5 * 9 + 3, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + "名前を変更する" , ChatColor.YELLOW + "現在の名前: " + JavaUtil.getOrDefault(getShop().getNPC().getCustomName() , "<none>")));
     }
 
-    private void setEntityType(Inventory inv) {
-        inv.setItem(5 * 9 + 4, ItemUtil.getNamedItem(Material.EGG, ChatColor.GREEN + "エンティティタイプを変更する"));
-    }
-
-    private void setMythicMobType(Inventory inv) {
-        inv.setItem(5 * 9 + 3, ItemUtil.getNamedItem(Material.TURTLE_EGG, ChatColor.GREEN + "MythicMobIDを設定する"));
-    }
-
-    private void setShopType(Inventory inv) {
-        inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, getShop().getShopTypeDisplay()));
-    }
-
-    private void setNPCDirecation(Inventory inv) {
-        inv.setItem(5 * 9 + 6, ItemUtil.getNamedItem(Material.ARROW, ChatColor.GREEN + "方向切り替え"));
-    }
-
-    private void setLock(Inventory inv) {
-        ItemStack item = getShop().isLock() ?
+    private void setShopStatus(Inventory inv) {
+        inv.setItem(4 * 9 + 4, ItemUtil.getNamedItem(Material.TURTLE_EGG, ChatColor.GREEN + "MythicMobIDを設定する"));
+        inv.setItem(4 * 9 + 5, ItemUtil.getNamedItem(Material.EGG, ChatColor.GREEN + "エンティティタイプを変更する"));
+        inv.setItem(4 * 9 + 6, getShop().isLock() ?
                 ItemUtil.getNamedEnchantedItem(Material.TRIPWIRE_HOOK, ChatColor.GREEN + "ロック") :
-                ItemUtil.getNamedItem(Material.TRIPWIRE_HOOK, ChatColor.GREEN + "アンロック");
-        inv.setItem(5 * 9 + 5, item);
+                ItemUtil.getNamedItem(Material.TRIPWIRE_HOOK, ChatColor.GREEN + "アンロック")
+        );
+        inv.setItem(4 * 9 + 7, ItemUtil.getNamedItem(Material.ARROW, ChatColor.GREEN + "方向切り替え"));
+        inv.setItem(4 * 9 + 8, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, getShop().getShopTypeDisplay()));
     }
 
-    private void setConvertTrades(Inventory inv) {
-        inv.setItem(3 * 9 + 7, ItemUtil.getNamedItem(Material.EMERALD, ChatColor.GREEN + "トレード内容をアイテム化する"));
-        inv.setItem(2 * 9 + 8, ItemUtil.getNamedEnchantedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.GREEN + "トレードを読み込む"));
-    }
-
-    private void setConvertShop(Inventory inv) {
-        inv.setItem(3 * 9 + 8, ItemUtil.getNamedItem(Material.DIAMOND, ChatColor.GREEN + "ショップをアイテム化する"));
-    }
-
-    private void setRemoveShop(Inventory inv) {
-        inv.setItem(3 * 9 + 5, ItemUtil.getNamedItem(Material.BARRIER, ChatColor.RED + "ショップを削除する"));
-    }
-
-    private void setReloadShop(Inventory inv) {
-        inv.setItem(3 * 9 + 6, ItemUtil.getNamedItem(Material.NAUTILUS_SHELL, ChatColor.RED + "ショップを更新する"));
+    private void setShopOperation(Inventory inv) {
+        inv.setItem(5 * 9 + 4, ItemUtil.getNamedItem(Material.BARRIER, ChatColor.RED + "ショップを削除する"));
+        inv.setItem(5 * 9 + 5, ItemUtil.getNamedItem(Material.NAUTILUS_SHELL, ChatColor.YELLOW + "ショップを更新する"));
+        inv.setItem(5 * 9 + 6, ItemUtil.getNamedItem(Material.EMERALD, ChatColor.GREEN + "トレード内容をアイテム化する"));
+        inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.DIAMOND, ChatColor.GREEN + "ショップをアイテム化する"));
+        inv.setItem(5 * 9 + 8, ItemUtil.getNamedEnchantedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.GREEN + "トレードを読み込む"));
     }
 
     public void setDisplay(Inventory inv) {
-        setLock(inv);
         setTradesPage(inv);
-        setShopType(inv);
-        setNPCDirecation(inv);
-        setConvertTrades(inv);
-        setConvertShop(inv);
-        setRemoveShop(inv);
-        setReloadShop(inv);
-        setMythicMobType(inv);
-        setEntityType(inv);
+        setShopStatus(inv);
+        setShopOperation(inv);
         if(!MythicMobs.inst().getAPIHelper().isMythicMob(getShop().getNPC())) {
             setEquipment(inv);
             setDisplayName(inv);
@@ -157,7 +129,7 @@ public class ShopEditorGui extends ShopGui {
         ItemStack item = ((AgeableShop) getShop()).isAdult() ?
                 ItemUtil.getNamedItem(Material.STONE, ChatColor.GREEN + "大人") :
                 ItemUtil.getNamedItem(Material.STONE_BUTTON, ChatColor.GREEN + "子供");
-        int slot = 4 * 9 + 8 - SettingsMap.size();
+        int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Age);
     }
@@ -167,7 +139,7 @@ public class ShopEditorGui extends ShopGui {
         ItemStack item = ((PoweredableShop) getShop()).isPowered() ?
                 ItemUtil.getNamedEnchantedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + "帯電") :
                 ItemUtil.getNamedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + "通常");
-        int slot = 4 * 9 + 8 - SettingsMap.size();
+        int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Power);
     }
@@ -175,7 +147,7 @@ public class ShopEditorGui extends ShopGui {
     private void setParrotColor(Inventory inv) {
         if (!(getShop() instanceof ParrotShop)) return;
         ItemStack item = ItemUtil.getNamedItem(((ParrotShop) getShop()).getColorMaterial(), ChatColor.GREEN + "色の変更");
-        int slot = 4 * 9 + 8 - SettingsMap.size();
+        int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.ParrotColor);
     }
@@ -183,7 +155,7 @@ public class ShopEditorGui extends ShopGui {
     private void setDyeColor(Inventory inv) {
         if (!(getShop() instanceof DyeableShop)) return;
         ItemStack item = ItemUtil.getNamedItem(((DyeableShop) getShop()).getColorMaterial(), ChatColor.GREEN + "色の変更");
-        int slot = 4 * 9 + 8 - SettingsMap.size();
+        int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.DyeColor);
     }
@@ -191,7 +163,7 @@ public class ShopEditorGui extends ShopGui {
     private void setHorseColor(Inventory inv) {
         if (!(getShop() instanceof HorseShop)) return;
         ItemStack item = ItemUtil.getNamedItem(((HorseShop) getShop()).getColorMaterial(), ChatColor.GREEN + "色の変更");
-        int slot = 4 * 9 + 8 - SettingsMap.size();
+        int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.HorseColor);
     }
@@ -199,21 +171,21 @@ public class ShopEditorGui extends ShopGui {
     private void setHorseStyle(Inventory inv) {
         if (!(getShop() instanceof HorseShop)) return;
         ItemStack item = ItemUtil.getNamedItem(Material.TERRACOTTA, ChatColor.GREEN + "模様の変更");
-        int slot = 4 * 9 + 8 - SettingsMap.size();
+        int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.HorseStyle);
     }
 
     private void setProfession(Inventory inv) {
         if (!(getShop() instanceof VillagerableShop)) return;
-        int slot = 4 * 9 + 8 - SettingsMap.size();
+        int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getJobBlockMaterial(), ChatColor.GREEN + "ジョブチェンジ"));
         SettingsMap.put(slot, ShopSettings.Profession);
     }
 
     private void setBiome(Inventory inv) {
         if (!(getShop() instanceof VillagerableShop)) return;
-        int slot = 4 * 9 + 8 - SettingsMap.size();
+        int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getBiomeImageMaterial(), ChatColor.GREEN + "バイオームチェンジ"));
         SettingsMap.put(slot, ShopSettings.Biome);
     }
@@ -223,7 +195,7 @@ public class ShopEditorGui extends ShopGui {
         ItemStack item = ((LivingEntity) getShop().getNPC()).isInvisible() ?
                 ItemUtil.getNamedItem(Material.GLASS, ChatColor.GREEN + "透明") :
                 ItemUtil.getNamedItem(Material.POLISHED_ANDESITE, ChatColor.GREEN + "不透明");
-        int slot = 4 * 9 + 8 - SettingsMap.size();
+        int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Visible);
     }

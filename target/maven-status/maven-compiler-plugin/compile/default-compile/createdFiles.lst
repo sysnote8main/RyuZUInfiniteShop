@@ -35,6 +35,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\system\ShopTrade$TradeResult.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listener\editor\change\ChangeIndividualSettingsListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listener\editor\system\ReloadShopListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listener\editor\change\ChangeDisplayNameListener.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\util\effect\ColorUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\command\CommandChain.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listener\admin\MythicListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listener\admin\ShopListListener.class

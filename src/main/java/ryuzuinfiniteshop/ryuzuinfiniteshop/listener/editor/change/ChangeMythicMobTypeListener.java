@@ -40,7 +40,7 @@ public class ChangeMythicMobTypeListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
         int slot = event.getSlot();
-        if (slot != 5 * 9 + 3) return;
+        if (slot != 4 * 9 + 4) return;
 
         //チャット入力待機
         changingTime.put(p.getUniqueId(), System.currentTimeMillis());
