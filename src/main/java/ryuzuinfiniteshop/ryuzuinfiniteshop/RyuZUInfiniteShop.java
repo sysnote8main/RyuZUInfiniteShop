@@ -4,27 +4,27 @@ import com.github.ryuzu.ryuzucommandsgenerator.RyuZUCommandsGenerator;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.commands.CommandChain;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.configs.DisplayPanelConfig;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.MythicItem;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.admin.MythicListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.canceller.CancelAffectNpc;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.canceller.CancelItemMoveListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.admin.ShopListListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.change.*;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.system.ConvartListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.system.ReloadShopListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.system.RemoveShopListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.edit.EditMainPageListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.editor.edit.EditTradePageListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listeners.trades.OpenShopListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ShopUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.TradeUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.command.CommandChain;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.MythicItem;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.admin.MythicListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.canceller.CancelAffectNpc;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.canceller.CancelItemMoveListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.admin.ShopListListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.change.*;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.ConvartListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.ReloadShopListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.RemoveShopListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.EditMainPageListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.EditTradePageListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.trades.OpenShopListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
 public final class RyuZUInfiniteShop extends JavaPlugin {
     private static RyuZUInfiniteShop plugin;
     public final static String prefixCommand = ChatColor.GOLD + "[RyuZUInfiniteShop]";
-    public final static String prefixPersistent = ChatColor.GOLD + "RyuZU.Infinite.Shop.";
+    public final static String prefixPersistent = "RyuZU.Infinite.Shop.";
 
     @Override
     public void onEnable() {

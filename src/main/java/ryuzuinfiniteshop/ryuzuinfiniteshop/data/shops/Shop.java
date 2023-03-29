@@ -11,25 +11,24 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.MetadataValue;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ObjectItems;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.editor.ShopEditorGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopGui2to1;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopGui4to4;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopGui6to2;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.guis.trade.ShopTradeGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.EquipmentUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.FileUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.JavaUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.LocationUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.effect.SoundUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.PersistentUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.ShopUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.inventory.TradeUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopGui2to1;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopGui4to4;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopGui6to2;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.EquipmentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -288,13 +287,13 @@ public class Shop {
                                                         ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay(),
                                                         ChatColor.YELLOW + "名前: " + JavaUtil.getOrDefault(npc.getCustomName(), "<none>")
         );
-        return PersistentUtil.setNMSTag(item, "Shop", convertShopToString());
+        return PersistentUtil.setNMSTag(item, "ShopData", convertShopToString());
     }
 
     public void removeShop() {
         npc.remove();
         getFile().delete();
-        ShopUtil.removeShop(LocationUtil.toStringFromLocation(location));
+        ShopUtil.removeShop(getID());
     }
 
     public List<ShopTrade> getTrades() {
@@ -352,12 +351,8 @@ public class Shop {
         return getPage(page).getTrades().size() == getLimitSize();
     }
 
-    public int getTradePageCount() {
+    public int getPageCount() {
         return pages.size();
-    }
-
-    public int getEditorPageCount() {
-        return editors.size();
     }
 
     public int getTradePageCountFromTradesCount() {
@@ -385,13 +380,13 @@ public class Shop {
         if (!ableCreateNewPage()) return;
         switch (type) {
             case TwotoOne:
-                pages.add(new ShopGui2to1(this, getTradePageCount() + 1));
+                pages.add(new ShopGui2to1(this, getPageCount() + 1));
                 break;
             case FourtoFour:
-                pages.add(new ShopGui4to4(this, getTradePageCount() + 1));
+                pages.add(new ShopGui4to4(this, getPageCount() + 1));
                 break;
             case SixtoTwo:
-                pages.add(new ShopGui6to2(this, getTradePageCount() + 1));
+                pages.add(new ShopGui6to2(this, getPageCount() + 1));
                 break;
         }
     }
@@ -403,7 +398,7 @@ public class Shop {
 
     public void createEditorNewPage() {
         if (!ableCreateEditorNewPage()) return;
-        editors.add(new ShopEditorGui(this, getEditorPageCount() + 1));
+        editors.add(new ShopEditorGui(this, getPageCount() + 1));
     }
 
     public void addTrade(Inventory inv, int slot, int limit) {
@@ -438,7 +433,7 @@ public class Shop {
     }
 
     public File getFile() {
-        return FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
+        return FileUtil.initializeFile("shops/" + getID() + ".yml");
     }
 
     public void setLock(boolean lock) {
@@ -463,6 +458,10 @@ public class Shop {
 
     public String getDisplayName() {
         return JavaUtil.getOrDefault(npc.getCustomName(), "ショップ");
+    }
+
+    public String getDisplayNameOrElseNone() {
+        return JavaUtil.getOrDefault(npc.getCustomName(), ChatColor.YELLOW + "<none>");
     }
 
     public void spawnNPC(EntityType entitytype) {

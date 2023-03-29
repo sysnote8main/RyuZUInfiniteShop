@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.utils.configuration.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
