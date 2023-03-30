@@ -1,6 +1,8 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop;
 
 import com.github.ryuzu.ryuzucommandsgenerator.RyuZUCommandsGenerator;
+import de.tr7zw.nbtinjector.NBTInjector;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +28,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
     private static RyuZUInfiniteShop plugin;
     public final static String prefixCommand = ChatColor.GOLD + "[RyuZUInfiniteShop]";
     public final static String prefixPersistent = "RyuZU.Infinite.Shop.";
+    public static int VERSION = Integer.parseInt((Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".").substring(3).substring(0, (Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".").substring(3).indexOf("_")));
 
     @Override
     public void onEnable() {
@@ -36,6 +39,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         new RyuZUCommandsGenerator(this);
         ConfigurationSerialization.registerClass(MythicItem.class);
         MythicInstanceProvider.setInstance();
+        if(VERSION < 16) NBTInjector.inject();
         ShopUtil.removeAllNPC();
         DisplayPanelConfig.load();
         ShopUtil.loadAllShops();
@@ -70,6 +74,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeMythicMobTypeListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeNpcDirecationListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeLockListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new ChangeSearchableListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ConvartListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new RemoveShopListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ReloadShopListener(), getPlugin());

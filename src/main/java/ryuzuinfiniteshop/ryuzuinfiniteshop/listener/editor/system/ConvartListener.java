@@ -105,7 +105,7 @@ public class ConvartListener implements Listener {
 
         if (!p.hasPermission("ris.op")) return;
         if (!p.isSneaking()) return;
-        if (item == null || PersistentUtil.getNMSStringTag(item, "ShopData") == null) return;
+        if (ItemUtil.isAir(item) || PersistentUtil.getNMSStringTag(item, "ShopData") == null) return;
         if (block == null) return;
 
         //ショップを読み込む

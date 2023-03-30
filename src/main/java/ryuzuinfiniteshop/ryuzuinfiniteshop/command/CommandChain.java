@@ -85,7 +85,7 @@ public class CommandChain {
                 "ris.spawn",
                 data -> {
                     Location loc;
-                    if(LocationUtil.isLocationString(data.getArgs()[1])) {
+                    if (LocationUtil.isLocationString(data.getArgs()[1])) {
                         loc = LocationUtil.toLocationFromString(data.getArgs()[1]);
                         if (ShopUtil.getShops().containsKey(data.getArgs()[1])) {
                             ShopUtil.reloadShop(ShopUtil.getShop(data.getArgs()[1]));
@@ -96,15 +96,15 @@ public class CommandChain {
                         Player p = (Player) data.getSender();
                         loc = p.getLocation();
                     }
-                    if(MythicInstanceProvider.getInstance().getMythicMob(data.getArgs()[1]) == null)
-                        ShopUtil.createNewShop(loc, EntityType.valueOf(data.getArgs()[1].toUpperCase()));
-                    else
+                    if (MythicInstanceProvider.isLoaded())
                         ShopUtil.createNewShop(loc, data.getArgs()[1]);
+                    else
+                        ShopUtil.createNewShop(loc, EntityType.valueOf(data.getArgs()[1].toUpperCase()));
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ショップを設置しました");
                 },
                 "ris.op",
                 data -> {
-                    if(LocationUtil.isLocationString(data.getArgs()[1]))
+                    if (LocationUtil.isLocationString(data.getArgs()[1]))
                         return true;
                     else {
                         Player p = (Player) data.getSender();
@@ -118,7 +118,7 @@ public class CommandChain {
                         EntityType.valueOf(data.getArgs()[1].toUpperCase());
                         return true;
                     } catch (IllegalArgumentException e) {
-                        if(MythicInstanceProvider.getInstance().getMythicMob(data.getArgs()[1]) == null) {
+                        if (MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(data.getArgs()[1]) == null) {
                             data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なエンティティタイプまたはMythicMobIDを入力して下さい");
                             return false;
                         }
@@ -132,7 +132,7 @@ public class CommandChain {
                 "ris.list",
                 data -> {
                     Player p = (Player) data.getSender();
-                    p.openInventory(new ShopListGui( 1).getInventory(ShopMode.Edit));
+                    p.openInventory(new ShopListGui(1).getInventory(ShopMode.Edit));
                     SoundUtil.playClickShopSound(p);
                 },
                 "ris.op",

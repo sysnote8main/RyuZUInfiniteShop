@@ -1,5 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,12 +41,23 @@ import java.util.stream.IntStream;
 public class Shop {
     public enum ShopType {TwotoOne, FourtoFour, SixtoTwo}
 
+    @Getter
     protected Entity npc;
+    @Getter
+    @Setter
     protected Location location;
     protected Optional<String> mythicmob = Optional.empty();
     protected ShopType type;
     protected List<ShopTrade> trades = new ArrayList<>();
+    @Setter
+    @Getter
     protected boolean lock = false;
+    @Setter
+    @Getter
+    protected boolean searchable = false;
+
+    @Setter
+    @Getter
     protected boolean editting = false;
     protected List<ShopEditorGui> editors = new ArrayList<>();
     protected List<ShopTradeGui> pages = new ArrayList<>();
@@ -86,6 +99,7 @@ public class Shop {
         return yaml -> {
             this.type = ShopType.valueOf(yaml.getString("Shop.Options.ShopType", "TwotoOne"));
             this.lock = yaml.getBoolean("Npc.Status.Lock", false);
+            this.searchable = yaml.getBoolean("Npc.Status.Searchable", true);
             if (yaml.contains("Trades")) {
                 this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, Object>) tradeconfig)).collect(Collectors.toList());
                 updateTradeContents();
@@ -416,6 +430,7 @@ public class Shop {
             yaml.set("Shop.Options.ShopType", type.toString());
             yaml.set("Npc.Options.Equipments", equipments.getObjects());
             yaml.set("Npc.Status.Lock", lock);
+            yaml.set("Npc.Status.Searchable", searchable);
             yaml.set("Trades", getTrades().stream().map(ShopTrade::serialize).collect(Collectors.toList()));
             yaml.set("Npc.Status.Yaw", location.getYaw());
         };
@@ -434,22 +449,6 @@ public class Shop {
 
     public File getFile() {
         return FileUtil.initializeFile("shops/" + getID() + ".yml");
-    }
-
-    public void setLock(boolean lock) {
-        this.lock = lock;
-    }
-
-    public boolean isLock() {
-        return lock;
-    }
-
-    public void setEditting(boolean editting) {
-        this.editting = editting;
-    }
-
-    public boolean isEditting() {
-        return editting;
     }
 
     public Entity getNPC() {
@@ -511,10 +510,6 @@ public class Shop {
 
     public ItemStack getEquipmentDisplayItem(EquipmentSlot slot) {
         return JavaUtil.getOrDefault(getEquipmentItem(slot.ordinal()), EquipmentUtil.getEquipmentDisplayItem(slot));
-    }
-
-    public Location getLocation() {
-        return location;
     }
 
     public void updateEquipments() {

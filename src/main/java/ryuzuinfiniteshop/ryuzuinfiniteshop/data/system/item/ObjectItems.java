@@ -42,7 +42,7 @@ public class ObjectItems {
     }
 
     private static Object convert(Object object) {
-        if (object instanceof ItemStack && MythicInstanceProvider.getInstance().getID((ItemStack) object) != null)
+        if (object instanceof ItemStack && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getID((ItemStack) object) != null)
             return new MythicItem(MythicInstanceProvider.getInstance().getID((ItemStack) object), ((ItemStack) object).getAmount());
         else
             return object;

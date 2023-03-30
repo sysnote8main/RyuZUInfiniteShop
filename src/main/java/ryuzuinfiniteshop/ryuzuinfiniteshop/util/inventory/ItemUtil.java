@@ -17,7 +17,7 @@ public class ItemUtil {
     //アイテムを与えることが可能か調べる
     public static boolean ableGive(Inventory inventory, ItemStack item) {
         if (inventory.firstEmpty() != -1) return true;
-        if (item == null) return true;
+        if (ItemUtil.isAir(item)) return true;
         int stackSize = item.getType().getMaxStackSize();
         int sum = Arrays.stream(getContents(inventory)).filter(Objects::nonNull).filter(i -> i.isSimilar(item)).mapToInt(i -> stackSize - i.getAmount()).sum();
         return item.getAmount() <= sum;
@@ -71,7 +71,7 @@ public class ItemUtil {
 
     //アイテムを含んでいるか調べる
     public static boolean contains(Inventory inventory, ItemStack item) {
-        if (item == null) return true;
+        if (ItemUtil.isAir(item)) return true;
         int sum = containsCount(getContents(inventory), item);
         return item.getAmount() <= sum;
     }
@@ -197,7 +197,7 @@ public class ItemUtil {
     }
 
     public static boolean hasCustomModelData(@Nullable ItemStack item) {
-        if(item == null) return false;
+        if(ItemUtil.isAir(item)) return false;
         ItemMeta meta = item.getItemMeta();
         if(meta == null) return false;
         return meta.hasCustomModelData();

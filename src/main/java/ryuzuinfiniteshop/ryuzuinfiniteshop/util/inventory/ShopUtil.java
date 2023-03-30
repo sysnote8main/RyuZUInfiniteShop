@@ -102,7 +102,7 @@ public class ShopUtil {
                 e.printStackTrace();
             }
             Optional<String> mmid = Optional.ofNullable(config.getString("Npc.Options.MythicMob"));
-            if(mmid.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mmid.get()) != null)
+            if(mmid.isPresent() && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(mmid.get()) != null)
                 createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), mmid.get());
             else
                 createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER")));

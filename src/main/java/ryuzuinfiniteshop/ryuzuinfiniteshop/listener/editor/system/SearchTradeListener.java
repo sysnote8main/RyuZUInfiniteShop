@@ -124,16 +124,18 @@ public class SearchTradeListener implements Listener {
         //必要なデータを取得
         Inventory inv = event.getView().getTopInventory();
         ItemStack item = PersistentUtil.getNMSStringTag(inv.getItem(4), "Shop") == null ? inv.getItem(6 + (event.getSlot() / 9)) : inv.getItem(4 + (event.getSlot() / 9));
-        if(item == null) return;
+        if(ItemUtil.isAir(item)) return;
         Player p = (Player) event.getWhoClicked();
         Shop shop = ShopUtil.getShop(PersistentUtil.getNMSStringTag(item, "Shop"));
 
         if(event.isShiftClick()) {
+            if(!p.hasPermission("ris.op")) return;
             p.closeInventory();
             p.teleport(shop.getLocation());
             SoundUtil.playSuccessSound(p);
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + "にテレポートしました");
         } else {
+            if (!shop.isAvailableShop(p)) return;
             Inventory shopInventory = shop.getPage(Integer.parseInt(PersistentUtil.getNMSStringTag(item, "Page"))).getInventory(ShopMode.Trade, holder);
             ((ShopTradeGui) ShopUtil.getShopHolder(shopInventory).getGui()).setTradeStatus(p , shopInventory);
             p.openInventory(shopInventory);

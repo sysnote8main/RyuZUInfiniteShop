@@ -75,10 +75,14 @@ public class ShopEditorGui extends ShopGui {
     }
 
     private void setShopStatus(Inventory inv) {
-        if(MythicInstanceProvider.isLoaded()) inv.setItem(4 * 9 + 4, ItemUtil.getNamedItem(Material.TURTLE_EGG, ChatColor.GREEN + "MythicMobIDを設定する"));
-        inv.setItem(4 * 9 + 5, ItemUtil.getNamedItem(Material.EGG, ChatColor.GREEN + "エンティティタイプを変更する"));
+        if(MythicInstanceProvider.isLoaded()) inv.setItem(4 * 9 + 3, ItemUtil.getNamedItem(Material.ENDER_EYE, ChatColor.GREEN + "MythicMobIDを設定する"));
+        inv.setItem(4 * 9 + 4, ItemUtil.getNamedItem(Material.ENDER_PEARL, ChatColor.GREEN + "エンティティタイプを変更する"));
+        inv.setItem(4 * 9 + 5, getShop().isSearchable() ?
+                ItemUtil.getNamedEnchantedItem(Material.CLOCK, ChatColor.RED + "検索不可") :
+                ItemUtil.getNamedItem(Material.CLOCK, ChatColor.GREEN + "検索可能")
+        );
         inv.setItem(4 * 9 + 6, getShop().isLock() ?
-                ItemUtil.getNamedEnchantedItem(Material.TRIPWIRE_HOOK, ChatColor.GREEN + "ロック") :
+                ItemUtil.getNamedEnchantedItem(Material.TRIPWIRE_HOOK, ChatColor.RED + "ロック") :
                 ItemUtil.getNamedItem(Material.TRIPWIRE_HOOK, ChatColor.GREEN + "アンロック")
         );
         inv.setItem(4 * 9 + 7, ItemUtil.getNamedItem(Material.ARROW, ChatColor.GREEN + "方向切り替え"));
@@ -87,7 +91,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setShopOperation(Inventory inv) {
         inv.setItem(5 * 9 + 4, ItemUtil.getNamedItem(Material.BARRIER, ChatColor.RED + "ショップを削除する"));
-        inv.setItem(5 * 9 + 5, ItemUtil.getNamedItem(Material.NAUTILUS_SHELL, ChatColor.YELLOW + "ショップを更新する"));
+        inv.setItem(5 * 9 + 5, ItemUtil.getNamedItem(Material.COMPASS, ChatColor.YELLOW + "ショップを更新する"));
         inv.setItem(5 * 9 + 6, ItemUtil.getNamedItem(Material.EMERALD, ChatColor.GREEN + "トレード内容をアイテム化する"));
         inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.DIAMOND, ChatColor.GREEN + "ショップをアイテム化する"));
         inv.setItem(5 * 9 + 8, ItemUtil.getNamedEnchantedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.GREEN + "トレードを読み込む"));
@@ -97,7 +101,7 @@ public class ShopEditorGui extends ShopGui {
         setTradesPage(inv);
         setShopStatus(inv);
         setShopOperation(inv);
-        if(!MythicInstanceProvider.getInstance().isMythicMob(getShop().getNPC())) {
+        if(!MythicInstanceProvider.isLoaded() || !MythicInstanceProvider.getInstance().isMythicMob(getShop().getNPC())) {
             setEquipment(inv);
             setDisplayName(inv);
             setSettings(inv);

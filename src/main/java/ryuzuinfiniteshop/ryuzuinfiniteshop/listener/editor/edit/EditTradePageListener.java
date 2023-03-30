@@ -56,7 +56,7 @@ public class EditTradePageListener implements Listener {
         //トレードをアイテム化する
         if (!event.isShiftClick()) return;
         if (!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
-        if (item == null) {
+        if (ItemUtil.isAir(item)) {
             SoundUtil.playFailSound(p);
             return;
         }
