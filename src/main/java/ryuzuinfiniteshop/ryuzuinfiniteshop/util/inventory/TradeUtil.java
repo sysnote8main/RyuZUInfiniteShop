@@ -84,25 +84,27 @@ public class TradeUtil {
 
     public static LinkedHashMap<ShopTrade, Shop> getTradesFromGive(ItemStack item) {
         LinkedHashMap<ShopTrade, Shop> trades = new LinkedHashMap<>();
-        ShopUtil.getShops().values().forEach(shop ->
-            shop.getTrades().forEach(trade ->
-                Arrays.stream(trade.getGiveItems()).forEach(give -> {
-                    if (give.isSimilar(item)) trades.put(trade, shop);
-                })
-            )
-        );
+        ShopUtil.getShops().values().forEach(shop -> {
+            if (shop.isSearchable())
+                shop.getTrades().forEach(trade -> Arrays.stream(trade.getGiveItems()).forEach(take -> {
+                                             if (take.isSimilar(item))
+                                                 trades.put(trade, shop);
+                                         })
+                );
+        });
         return trades;
     }
 
     public static LinkedHashMap<ShopTrade, Shop> getTradesFromTake(ItemStack item) {
         LinkedHashMap<ShopTrade, Shop> trades = new LinkedHashMap<>();
-        ShopUtil.getShops().values().forEach(shop ->
-            shop.getTrades().forEach(trade ->
-                Arrays.stream(trade.getTakeItems()).forEach(take -> {
-                    if (take.isSimilar(item)) trades.put(trade, shop);
-                })
-            )
-        );
+        ShopUtil.getShops().values().forEach(shop -> {
+            if (shop.isSearchable())
+                shop.getTrades().forEach(trade -> Arrays.stream(trade.getTakeItems()).forEach(take -> {
+                                             if (take.isSimilar(item))
+                                                 trades.put(trade, shop);
+                                         })
+                );
+        });
         return trades;
     }
 }

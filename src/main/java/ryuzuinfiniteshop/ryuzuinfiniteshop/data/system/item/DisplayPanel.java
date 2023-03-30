@@ -30,7 +30,9 @@ public class DisplayPanel {
 
     public ItemStack getItemStack(ShopTrade.TradeResult result, int limit, int count) {
         ItemStack item = ItemUtil.withCustomModelData(ItemUtil.getNamedItem(material, panels.get(result)), data);
-        if(result.equals(ShopTrade.TradeResult.Success) && limit != 0) item = ItemUtil.withLore(item, ChatColor.YELLOW + "残り取引回数: " + (limit - count) + "回");
+        if(result.equals(ShopTrade.TradeResult.Success) && limit != 0) {
+            ItemUtil.withLore(item, ChatColor.YELLOW + "残り取引回数: " + (limit - count) + "回");
+        }
         return item;
     }
 

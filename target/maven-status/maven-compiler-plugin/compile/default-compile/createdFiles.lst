@@ -1,6 +1,7 @@
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\gui\holder\ModeHolder.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\DyeableShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listener\editor\change\ChangeEquipmentListener.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\listener\editor\change\ChangeSearchableListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listener\editor\edit\EditTradePageListener$1.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\shops\PoweredableShop.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\util\configuration\EquipmentUtil$1.class

@@ -122,11 +122,15 @@ public class SearchTradeListener implements Listener {
         event.setCancelled(true);
 
         //必要なデータを取得
-        Inventory inv = event.getView().getTopInventory();
-        ItemStack item = PersistentUtil.getNMSStringTag(inv.getItem(4), "Shop") == null ? inv.getItem(6 + (event.getSlot() / 9)) : inv.getItem(4 + (event.getSlot() / 9));
-        if(ItemUtil.isAir(item)) return;
         Player p = (Player) event.getWhoClicked();
+        Inventory inv = event.getView().getTopInventory();
+        int base = (event.getSlot() / 9) * 9;
+        ItemStack item = PersistentUtil.getNMSStringTag(inv.getItem(4 + base), "Shop") == null ? inv.getItem(6 + base) : inv.getItem(4 + base);
         Shop shop = ShopUtil.getShop(PersistentUtil.getNMSStringTag(item, "Shop"));
+        if(shop == null) {
+            SoundUtil.playFailSound(p);
+            return;
+        }
 
         if(event.isShiftClick()) {
             if(!p.hasPermission("ris.op")) return;
@@ -136,7 +140,12 @@ public class SearchTradeListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + "にテレポートしました");
         } else {
             if (!shop.isAvailableShop(p)) return;
-            Inventory shopInventory = shop.getPage(Integer.parseInt(PersistentUtil.getNMSStringTag(item, "Page"))).getInventory(ShopMode.Trade, holder);
+            ShopTradeGui gui = shop.getPage(Integer.parseInt(PersistentUtil.getNMSStringTag(item, "Page")));
+            if(gui == null) {
+                SoundUtil.playFailSound(p);
+                return;
+            }
+            Inventory shopInventory = gui.getInventory(ShopMode.Trade, holder);
             ((ShopTradeGui) ShopUtil.getShopHolder(shopInventory).getGui()).setTradeStatus(p , shopInventory);
             p.openInventory(shopInventory);
             SoundUtil.playClickShopSound(p);

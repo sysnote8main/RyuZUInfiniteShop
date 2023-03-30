@@ -34,7 +34,7 @@ public class ChangeSearchableListener implements Listener {
         SoundUtil.playClickShopSound(p);
 
         //ロック状態を切り替え
-        shop.setLock(!shop.isSearchable());
+        shop.setSearchable(!shop.isSearchable());
 
         //インベントリを更新する
         shop.getEditor(holder.getGui().getPage()).setDisplay(event.getClickedInventory());

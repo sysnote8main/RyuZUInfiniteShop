@@ -26,7 +26,7 @@ public class ItemUtil {
     //アイテムを与えることが可能か調べる
     public static boolean ableGive(Inventory inventory, ItemStack... items) {
         if (items == null) return true;
-        if(items.length <= Arrays.stream(getContents(inventory)).filter(ItemUtil::isAir).count()) return true;
+        if (items.length <= Arrays.stream(getContents(inventory)).filter(ItemUtil::isAir).count()) return true;
         HashMap<ItemStack, Integer> give = new HashMap<>();
         Arrays.stream(items).forEach(item -> give.put(item, containsCount(items, item)));
         give.replaceAll((i, v) -> give.get(i) - capacityCount(getContents(inventory), i));
@@ -59,7 +59,7 @@ public class ItemUtil {
     }
 
     public static ItemStack getOneItemStack(@Nullable ItemStack item) {
-        if(isAir(item)) return null;
+        if (isAir(item)) return null;
         ItemStack copy = item.clone();
         copy.setAmount(1);
         return copy;
@@ -113,26 +113,26 @@ public class ItemUtil {
         ItemStack item = base.clone();
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
-        if(enchanted) meta.addEnchant(Enchantment.DURABILITY, 1, true);
-        if(lore.length != 0) meta.setLore(Arrays.asList(lore));
+        if (enchanted) meta.addEnchant(Enchantment.DURABILITY, 1, true);
+        if (lore.length != 0) meta.setLore(Arrays.asList(lore));
         meta.addItemFlags(ItemFlag.values());
         item.setItemMeta(meta);
         return item;
     }
 
-    public static ItemStack withLore(ItemStack item , String lore) {
+    public static ItemStack withLore(ItemStack item, String lore) {
         ItemMeta meta = item.getItemMeta();
         List<String> lores = meta.getLore();
-        if(lores == null) lores = new ArrayList<>();
+        if (lores == null) lores = new ArrayList<>();
         lores.add(lore);
         meta.setLore(lores);
         item.setItemMeta(meta);
         return item;
     }
 
-    public static ItemStack withCustomModelData(ItemStack item , int data) {
+    public static ItemStack withCustomModelData(ItemStack item, int data) {
         ItemMeta meta = item.getItemMeta();
-        if(data!= -1) meta.setCustomModelData(data);
+        if (data != -1) meta.setCustomModelData(data);
         item.setItemMeta(meta);
         return item;
     }
@@ -197,14 +197,14 @@ public class ItemUtil {
     }
 
     public static boolean hasCustomModelData(@Nullable ItemStack item) {
-        if(ItemUtil.isAir(item)) return false;
+        if (ItemUtil.isAir(item)) return false;
         ItemMeta meta = item.getItemMeta();
-        if(meta == null) return false;
+        if (meta == null) return false;
         return meta.hasCustomModelData();
     }
 
     public static int getCustomModelData(@Nullable ItemStack item) {
-        if(!hasCustomModelData(item)) return -1;
+        if (!hasCustomModelData(item)) return -1;
         return item.getItemMeta().getCustomModelData();
     }
 }

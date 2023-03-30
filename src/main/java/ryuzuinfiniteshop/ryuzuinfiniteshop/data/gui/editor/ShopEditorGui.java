@@ -78,8 +78,8 @@ public class ShopEditorGui extends ShopGui {
         if(MythicInstanceProvider.isLoaded()) inv.setItem(4 * 9 + 3, ItemUtil.getNamedItem(Material.ENDER_EYE, ChatColor.GREEN + "MythicMobIDを設定する"));
         inv.setItem(4 * 9 + 4, ItemUtil.getNamedItem(Material.ENDER_PEARL, ChatColor.GREEN + "エンティティタイプを変更する"));
         inv.setItem(4 * 9 + 5, getShop().isSearchable() ?
-                ItemUtil.getNamedEnchantedItem(Material.CLOCK, ChatColor.RED + "検索不可") :
-                ItemUtil.getNamedItem(Material.CLOCK, ChatColor.GREEN + "検索可能")
+                            ItemUtil.getNamedItem(Material.CLOCK, ChatColor.GREEN + "検索可能") :
+                ItemUtil.getNamedEnchantedItem(Material.CLOCK, ChatColor.RED + "検索不可")
         );
         inv.setItem(4 * 9 + 6, getShop().isLock() ?
                 ItemUtil.getNamedEnchantedItem(Material.TRIPWIRE_HOOK, ChatColor.RED + "ロック") :
