@@ -3,6 +3,8 @@ version: 1.0.0
 main: ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop
 api-version: 1.13
 description: 無限にページを作成できるShopPluginです
+softdepend:
+  - MythicMobs
 
 commands:
   ris:

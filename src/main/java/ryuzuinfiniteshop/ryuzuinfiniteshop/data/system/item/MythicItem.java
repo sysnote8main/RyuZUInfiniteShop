@@ -4,7 +4,7 @@ import lombok.Value;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ public class MythicItem implements ConfigurationSerializable {
     int amount;
 
     public ItemStack convertItemStack() {
-        return ItemUtil.getMythicItem(id, amount);
+        return MythicInstanceProvider.getInstance().getMythicItem(id, amount);
     }
 
     @Override

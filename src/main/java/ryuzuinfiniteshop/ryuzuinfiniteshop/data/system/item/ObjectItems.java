@@ -2,7 +2,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item;
 
 import lombok.EqualsAndHashCode;
 import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.admin.MythicListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,8 +42,8 @@ public class ObjectItems {
     }
 
     private static Object convert(Object object) {
-        if (object instanceof ItemStack && MythicListener.getID((ItemStack) object) != null)
-            return new MythicItem(MythicListener.getID((ItemStack) object), ((ItemStack) object).getAmount());
+        if (object instanceof ItemStack && MythicInstanceProvider.getInstance().getID((ItemStack) object) != null)
+            return new MythicItem(MythicInstanceProvider.getInstance().getID((ItemStack) object), ((ItemStack) object).getAmount());
         else
             return object;
     }

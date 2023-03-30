@@ -1,55 +1,39 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
+import de.tr7zw.nbtapi.NBTEntity;
+import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 
 public class PersistentUtil {
     public static void setNMSTag(Entity ent , String key , String value) {
-        PersistentDataContainer entityTag = ent.getPersistentDataContainer();
-        entityTag.set(new NamespacedKey(RyuZUInfiniteShop.getPlugin() , key), PersistentDataType.STRING , value);
+        NBTEntity entityTag = new NBTEntity(ent);
+        entityTag.setString(RyuZUInfiniteShop.prefixPersistent + key , value);
     }
 
     public static String getNMSStringTag(Entity ent , String key){
-        String value = ent.getPersistentDataContainer().get(new NamespacedKey(RyuZUInfiniteShop.getPlugin() , key), PersistentDataType.STRING);
-        return value == null || value.equalsIgnoreCase("") ? null : value;
+        NBTEntity entityTag = new NBTEntity(ent);
+        String value = entityTag.getString(RyuZUInfiniteShop.prefixPersistent + key);
+        return value == null || value.isEmpty() ? null : value;
     }
 
     public static void removeNMSStringTag(Entity ent , String key){
         ent.getPersistentDataContainer().remove(new NamespacedKey(RyuZUInfiniteShop.getPlugin() , key));
     }
 
-    public static org.bukkit.inventory.ItemStack setNMSTag(ItemStack item , String key , String value){
-        net.minecraft.server.v1_16_R3.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        NBTTagCompound nbttag = nmsItem.getTag();
-        item.getItemMeta().getPersistentDataContainer().set(new NamespacedKey(RyuZUInfiniteShop.getPlugin() , key), PersistentDataType.STRING , value);
-
-        if(nbttag == null) return null;
-        nbttag.setString(RyuZUInfiniteShop.prefixPersistent + key, value);
-
-        nmsItem.setTag(nbttag);
-        return CraftItemStack.asBukkitCopy(nmsItem);
+    public static ItemStack setNMSTag(ItemStack item , String key , String value){
+        NBTItem nbtItem = new NBTItem(item);
+        nbtItem.setString(RyuZUInfiniteShop.prefixPersistent + key , value);
+        return nbtItem.getItem();
     }
 
     public static String getNMSStringTag(ItemStack item , String key){
         if(item == null) return null;
-        net.minecraft.server.v1_16_R3.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        NBTTagCompound nbttag = nmsItem.getTag();
-        String prefixedKey = RyuZUInfiniteShop.prefixPersistent + key;
+        NBTItem nbtItem = new NBTItem(item);
+        String value = nbtItem.getString(RyuZUInfiniteShop.prefixPersistent + key);
 
-        if(nbttag == null) return null;
-        if(nbttag.getString(prefixedKey) == null) return null;
-        if(nbttag.getString(prefixedKey).equals("")) return null;
-
-        return nbttag.getString(prefixedKey);
-    }
-
-    public static String getMythicID(ItemStack item) {
-        return getNMSStringTag(item, "MYTHIC_TYPE");
+        return value == null || value.isEmpty() ? null : value;
     }
 }

@@ -116,8 +116,18 @@ public class ShopTrade {
         return mode.equals(ShopMode.Edit) ? getSettingsFilter(value) : getFilter();
     }
 
-    public static ItemStack getFilter(String id) {
-        return PersistentUtil.setNMSTag(ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ShopUtil.getShop(id).getDisplayNameOrElseNone() + ChatColor.GREEN + "との取引"), "Shop", id);
+    public ItemStack getFilter(String id) {
+        String page = String.valueOf(ShopUtil.getShop(id).getPage(this));
+        return PersistentUtil.setNMSTag(
+                PersistentUtil.setNMSTag(
+                        ItemUtil.getNamedItem(
+                                Material.GREEN_STAINED_GLASS_PANE,
+                                ShopUtil.getShop(id).getDisplayNameOrElseNone() + ChatColor.GREEN + "との取引",
+                                ChatColor.GREEN + page + ChatColor.YELLOW + "ページ目"
+                        ),
+                        "Shop", id
+                ),"Page", page
+        );
     }
 
     private ItemStack getSettingsFilter() {

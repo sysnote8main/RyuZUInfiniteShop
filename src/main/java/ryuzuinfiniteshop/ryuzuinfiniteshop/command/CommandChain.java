@@ -2,7 +2,6 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.command;
 
 import com.github.ryuzu.ryuzucommandsgenerator.CommandData;
 import com.github.ryuzu.ryuzucommandsgenerator.CommandsGenerator;
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -13,6 +12,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SelectSearchItemGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopListGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
@@ -96,7 +96,7 @@ public class CommandChain {
                         Player p = (Player) data.getSender();
                         loc = p.getLocation();
                     }
-                    if(MythicMobs.inst().getMobManager().getMythicMob(data.getArgs()[1]) == null)
+                    if(MythicInstanceProvider.getInstance().getMythicMob(data.getArgs()[1]) == null)
                         ShopUtil.createNewShop(loc, EntityType.valueOf(data.getArgs()[1].toUpperCase()));
                     else
                         ShopUtil.createNewShop(loc, data.getArgs()[1]);
@@ -118,7 +118,7 @@ public class CommandChain {
                         EntityType.valueOf(data.getArgs()[1].toUpperCase());
                         return true;
                     } catch (IllegalArgumentException e) {
-                        if(MythicMobs.inst().getMobManager().getMythicMob(data.getArgs()[1]) == null) {
+                        if(MythicInstanceProvider.getInstance().getMythicMob(data.getArgs()[1]) == null) {
                             data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なエンティティタイプまたはMythicMobIDを入力して下さい");
                             return false;
                         }

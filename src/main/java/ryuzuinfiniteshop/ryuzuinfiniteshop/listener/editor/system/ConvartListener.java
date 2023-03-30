@@ -37,7 +37,7 @@ public class ConvartListener implements Listener {
         if (slot != 5 * 9 + 6 && slot != 5 * 9 + 7) return;
 
         //コンバート
-        ItemStack item = slot == 5 * 9 + 7 ? shop.convertTrades() : shop.convertShopToItemStack();
+        ItemStack item = slot == 5 * 9 + 6 ? shop.convertTrades() : shop.convertShopToItemStack();
         if (ItemUtil.ableGive(p.getInventory(), item)) {
             p.getInventory().addItem(item);
             SoundUtil.playSuccessSound(p);

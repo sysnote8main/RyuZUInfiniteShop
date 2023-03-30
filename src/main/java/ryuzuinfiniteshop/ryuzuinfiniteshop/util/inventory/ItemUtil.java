@@ -1,6 +1,5 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -9,6 +8,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.admin.MythicListener;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -178,16 +178,6 @@ public class ItemUtil {
             return null;
         }
         return ((List<ItemStack>) config.getList("ShopItemStacks", null)).toArray(new ItemStack[0]);
-    }
-
-    public static ItemStack getMythicItem(String id) {
-        return getMythicItem(id, 1);
-    }
-
-    public static ItemStack getMythicItem(String id , int amount) {
-        ItemStack item =  MythicMobs.inst().getItemManager().getItemStack(id);
-        item.setAmount(amount);
-        return item;
     }
 
     public static boolean isEmptySlot(Inventory inventory, int slot) {

@@ -1,6 +1,5 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,6 +18,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
@@ -102,7 +102,7 @@ public class ShopUtil {
                 e.printStackTrace();
             }
             Optional<String> mmid = Optional.ofNullable(config.getString("Npc.Options.MythicMob"));
-            if(mmid.isPresent() && MythicMobs.inst().getAPIHelper().getMythicMob(mmid.get()) != null)
+            if(mmid.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mmid.get()) != null)
                 createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), mmid.get());
             else
                 createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER")));

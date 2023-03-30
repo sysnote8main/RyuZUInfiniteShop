@@ -14,7 +14,10 @@ public class LocationUtil {
     }
 
     public static Location toBlockLocationFromLocation(Location loc) {
-        return loc.set(loc.getBlockX() + 0.5, loc.getBlockY(), loc.getBlockZ() + 0.5);
+        loc.setX(loc.getBlockX() + 0.5);
+        loc.setY(loc.getBlockY());
+        loc.setZ(loc.getBlockZ() + 0.5);
+        return loc;
     }
 
     public static boolean isLocationString(String stloc) {

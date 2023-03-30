@@ -1,7 +1,5 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.api.exceptions.InvalidMobTypeException;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,6 +10,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
@@ -92,13 +91,9 @@ public class Shop {
                 updateTradeContents();
             }
             if(!mythicmob.isPresent()) this.mythicmob = Optional.ofNullable(yaml.getString("Npc.Options.MythicMob"));
-            if(mythicmob.isPresent() && MythicMobs.inst().getAPIHelper().getMythicMob(mythicmob.get()) != null) {
+            if(mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
                 if(npc != null) npc.remove();
-                try {
-                    npc = MythicMobs.inst().getAPIHelper().spawnMythicMob(mythicmob.get(), location);
-                } catch (InvalidMobTypeException e) {
-                    throw new RuntimeException(e);
-                }
+                npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
                 setNpcMeta();
             } else {
                 if (yaml.contains("Npc.Options.Equipments")) {
@@ -308,6 +303,11 @@ public class Shop {
         if (page <= 0) return null;
         if (page > pages.size()) return null;
         return pages.get(page - 1);
+    }
+
+    public int getPage(ShopTrade trade) {
+        if(!trades.contains(trade)) return -1;
+        return (int) Math.ceil((double) (trades.indexOf(trade) + 1) / getLimitSize());
     }
 
     public void setTradePages() {

@@ -56,8 +56,8 @@
 
     <repositories>
         <repository>
-            <id>papermc-repo</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
             <id>sonatype</id>
@@ -72,19 +72,29 @@
             <name>Lumine Releases</name>
             <url>https://mvn.lumine.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.org/repository/maven-public/</url>
+            <layout>default</layout>
+        </repository>
     </repositories>
 
     <dependencies>
+<!--        <dependency>-->
+<!--            <groupId>com.destroystokyo.paper</groupId>-->
+<!--            <artifactId>paper-api</artifactId>-->
+<!--            <version>1.16.5-R0.1-SNAPSHOT</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>1.16.5-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
+            <groupId>de.tr7zw</groupId>
+            <artifactId>item-nbt-api-plugin</artifactId>
+            <version>2.10.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
+            <artifactId>spigot-api</artifactId>
             <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>

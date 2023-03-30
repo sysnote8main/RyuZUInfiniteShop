@@ -39,7 +39,7 @@ public class ChangeDisplayNameListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
         int slot = event.getSlot();
-        if (slot != 4 * 9 + 3) return;
+        if (slot != 5 * 9 + 3) return;
 
         //チャット入力待機
         namingTime.put(p.getUniqueId(), System.currentTimeMillis());

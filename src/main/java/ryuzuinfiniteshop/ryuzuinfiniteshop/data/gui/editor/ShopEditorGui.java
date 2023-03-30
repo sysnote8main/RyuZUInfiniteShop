@@ -1,6 +1,5 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,6 +10,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
@@ -75,7 +75,7 @@ public class ShopEditorGui extends ShopGui {
     }
 
     private void setShopStatus(Inventory inv) {
-        inv.setItem(4 * 9 + 4, ItemUtil.getNamedItem(Material.TURTLE_EGG, ChatColor.GREEN + "MythicMobIDを設定する"));
+        if(MythicInstanceProvider.isLoaded()) inv.setItem(4 * 9 + 4, ItemUtil.getNamedItem(Material.TURTLE_EGG, ChatColor.GREEN + "MythicMobIDを設定する"));
         inv.setItem(4 * 9 + 5, ItemUtil.getNamedItem(Material.EGG, ChatColor.GREEN + "エンティティタイプを変更する"));
         inv.setItem(4 * 9 + 6, getShop().isLock() ?
                 ItemUtil.getNamedEnchantedItem(Material.TRIPWIRE_HOOK, ChatColor.GREEN + "ロック") :
@@ -97,7 +97,7 @@ public class ShopEditorGui extends ShopGui {
         setTradesPage(inv);
         setShopStatus(inv);
         setShopOperation(inv);
-        if(!MythicMobs.inst().getAPIHelper().isMythicMob(getShop().getNPC())) {
+        if(!MythicInstanceProvider.getInstance().isMythicMob(getShop().getNPC())) {
             setEquipment(inv);
             setDisplayName(inv);
             setSettings(inv);

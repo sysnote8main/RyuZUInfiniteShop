@@ -1,6 +1,5 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.change;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,6 +13,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
@@ -67,7 +67,7 @@ public class ChangeMythicMobTypeListener implements Listener {
             //同期させてNPCを再構築する
             Shop shop = ShopUtil.getShop(changingShop.get(p.getUniqueId()));
             Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> {
-                if(MythicMobs.inst().getAPIHelper().getMythicMob(event.getMessage()) == null) {
+                if(MythicInstanceProvider.getInstance().getMythicMob(event.getMessage()) == null) {
                     SoundUtil.playFailSound(p);
                     p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なMythicMobIDを入力して下さい");
                     return;

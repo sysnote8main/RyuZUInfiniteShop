@@ -56,6 +56,7 @@ ryuzuinfiniteshop\ryuzuinfiniteshop\data\system\TradeLimit.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\gui\trade\ShopTradeGui.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\gui\common\TradeSearchGui.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listener\editor\edit\EditMainPageListener.class
+ryuzuinfiniteshop\ryuzuinfiniteshop\util\configuration\MythicInstanceProvider.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\util\configuration\JavaUtil.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\listener\editor\system\SearchTradeListener.class
 ryuzuinfiniteshop\ryuzuinfiniteshop\data\gui\editor\ConfirmRemoveGui.class
