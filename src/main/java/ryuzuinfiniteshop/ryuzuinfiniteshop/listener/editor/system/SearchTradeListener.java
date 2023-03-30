@@ -50,7 +50,7 @@ public class SearchTradeListener implements Listener {
 
         if ((type.isRightClick() || type.isLeftClick())) {
             if (slot == 4) {
-                if(ItemUtil.isAir(event.getCursor()))
+                if (ItemUtil.isAir(event.getCursor()))
                     event.setCurrentItem(panel);
                 else
                     event.setCurrentItem(ItemUtil.getOneItemStack(event.getCursor()));
@@ -60,12 +60,12 @@ public class SearchTradeListener implements Listener {
                     SoundUtil.playFailSound(p);
                 } else {
                     LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTake(searchItem) : TradeUtil.getTradesFromGive(searchItem);
-                    if(searchedTrades.size() == 0) {
+                    if (searchedTrades.size() == 0) {
                         p.sendMessage(ChatColor.RED + "検索結果がありませんでした");
                         SoundUtil.playFailSound(p);
                         return;
                     }
-                    p.openInventory(new TradeSearchGui(1, searchedTrades).getInventory(ShopMode.Search));
+                    p.openInventory(new TradeSearchGui(1, p, searchedTrades).getInventory(ShopMode.Search));
                     SoundUtil.playClickShopSound(p);
                 }
             }
@@ -93,13 +93,13 @@ public class SearchTradeListener implements Listener {
             if (page - 1 == 0)
                 fail = true;
             else
-                p.openInventory(new TradeSearchGui(page - 1, seachTradeHolder.getTrades()).getInventory(mode));
+                p.openInventory(new TradeSearchGui(page - 1, p, seachTradeHolder.getTrades()).getInventory(mode));
         }
         if (type.isRightClick()) {
             if (page == seachTradeHolder.getMaxPage()) {
                 fail = true;
             } else
-                p.openInventory(new TradeSearchGui(page + 1, seachTradeHolder.getTrades()).getInventory(mode));
+                p.openInventory(new TradeSearchGui(page + 1, p, seachTradeHolder.getTrades()).getInventory(mode));
         }
         if (fail) {
             SoundUtil.playFailSound(p);
@@ -127,26 +127,26 @@ public class SearchTradeListener implements Listener {
         int base = (event.getSlot() / 9) * 9;
         ItemStack item = PersistentUtil.getNMSStringTag(inv.getItem(4 + base), "Shop") == null ? inv.getItem(6 + base) : inv.getItem(4 + base);
         Shop shop = ShopUtil.getShop(PersistentUtil.getNMSStringTag(item, "Shop"));
-        if(shop == null) {
+        if (shop == null) {
             SoundUtil.playFailSound(p);
             return;
         }
 
-        if(event.isShiftClick()) {
-            if(!p.hasPermission("ris.op")) return;
+        if (event.isShiftClick()) {
+            if (!p.hasPermission("ris.op")) return;
             p.closeInventory();
             p.teleport(shop.getLocation());
             SoundUtil.playSuccessSound(p);
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + "にテレポートしました");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "にテレポートしました");
         } else {
             if (!shop.isAvailableShop(p)) return;
             ShopTradeGui gui = shop.getPage(Integer.parseInt(PersistentUtil.getNMSStringTag(item, "Page")));
-            if(gui == null) {
+            if (gui == null) {
                 SoundUtil.playFailSound(p);
                 return;
             }
             Inventory shopInventory = gui.getInventory(ShopMode.Trade, holder);
-            ((ShopTradeGui) ShopUtil.getShopHolder(shopInventory).getGui()).setTradeStatus(p , shopInventory);
+            ((ShopTradeGui) ShopUtil.getShopHolder(shopInventory).getGui()).setTradeStatus(p, shopInventory);
             p.openInventory(shopInventory);
             SoundUtil.playClickShopSound(p);
         }

@@ -123,4 +123,18 @@ public class OpenShopListener implements Listener {
 
         ((ShopTradeGui) holder.getGui()).setTradeStatus(p, inv);
     }
+
+    @EventHandler
+    public void updateStatus(InventoryClickEvent event) {
+        //インベントリがショップなのかチェック
+        ShopHolder holder = ShopUtil.getShopHolder(event.getView().getTopInventory());
+        if (holder == null) return;
+        if (!ShopUtil.isTradeMode(event.getInventory())) return;
+
+        //必要なデータを取得
+        Player p = (Player) event.getWhoClicked();
+        Inventory inv = event.getView().getTopInventory();
+
+        ((ShopTradeGui) holder.getGui()).setTradeStatus(p, inv);
+    }
 }

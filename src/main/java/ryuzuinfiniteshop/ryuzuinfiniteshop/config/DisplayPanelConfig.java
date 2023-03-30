@@ -17,6 +17,8 @@ public class DisplayPanelConfig {
         put(ShopTrade.TradeResult.NotAfford, Material.RED_STAINED_GLASS_PANE);
         put(ShopTrade.TradeResult.Limited, Material.RED_STAINED_GLASS_PANE);
         put(ShopTrade.TradeResult.Full, Material.YELLOW_STAINED_GLASS_PANE);
+        put(ShopTrade.TradeResult.Normal, Material.WHITE_STAINED_GLASS_PANE);
+        put(ShopTrade.TradeResult.Locked, Material.ORANGE_STAINED_GLASS_PANE);
     }};
     private static HashMap<ShopTrade.TradeResult, DisplayPanel> panels = new HashMap<>();
 
@@ -35,8 +37,9 @@ public class DisplayPanelConfig {
             for(ShopTrade.TradeResult result : defaultResultMaterial.keySet()) {
                 put(result,
                     new DisplayPanel(
+                            result,
                             Material.valueOf(yaml.getString(getResultConfig(result) + ".Material", defaultResultMaterial.get(result).name())),
-                            yaml.getInt(getResultConfig(result) + ".Data", -1)
+                            yaml.getInt(getResultConfig(result) + ".CustomModelData", -1)
                     )
                 );
             }

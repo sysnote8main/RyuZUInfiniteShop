@@ -19,6 +19,8 @@ public class DisplayPanel {
         put(ShopTrade.TradeResult.Full, ChatColor.YELLOW + "インベントリに十分な空きがありません");
         put(ShopTrade.TradeResult.Limited, ChatColor.RED + "取引上限です");
     }};
+
+    ShopTrade.TradeResult result;
     Material material;
     int data;
     public ConfigurationSection serialize() {
@@ -28,7 +30,7 @@ public class DisplayPanel {
         return result;
     }
 
-    public ItemStack getItemStack(ShopTrade.TradeResult result, int limit, int count) {
+    public ItemStack getItemStack(int limit, int count) {
         ItemStack item = ItemUtil.withCustomModelData(ItemUtil.getNamedItem(material, panels.get(result)), data);
         if(result.equals(ShopTrade.TradeResult.Success) && limit != 0) {
             ItemUtil.withLore(item, ChatColor.YELLOW + "残り取引回数: " + (limit - count) + "回");
@@ -36,7 +38,7 @@ public class DisplayPanel {
         return item;
     }
 
-    public ItemStack getItemStack(ShopTrade.TradeResult result) {
-        return getItemStack(result, 0, 0);
+    public ItemStack getItemStack() {
+        return getItemStack(0, 0);
     }
 }

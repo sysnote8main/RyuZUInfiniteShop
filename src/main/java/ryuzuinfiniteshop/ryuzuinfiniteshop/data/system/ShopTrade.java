@@ -11,6 +11,7 @@ import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
@@ -30,7 +31,7 @@ public class ShopTrade {
     public static final Table<UUID, UUID, Integer> tradeCounts = HashBasedTable.create();
     public static final HashMap<UUID, Integer> tradeLimits = new HashMap<>();
 
-    public enum TradeResult {NotAfford, Full, Success, Lack, Limited}
+    public enum TradeResult {NotAfford, Full, Success, Lack, Limited, Locked, Normal}
 
     private ObjectItems giveData;
     private ObjectItems takeData;
@@ -116,17 +117,21 @@ public class ShopTrade {
         return mode.equals(ShopMode.Edit) ? getSettingsFilter(value) : getFilter();
     }
 
-    public ItemStack getFilter(String id) {
-        String page = String.valueOf(ShopUtil.getShop(id).getPage(this));
+    public ItemStack getFilter(String id, Player player) {
+        Shop shop = ShopUtil.getShop(id);
+        String page = String.valueOf(shop.getPage(this));
+        TradeResult result = getResult(player, shop);
         return PersistentUtil.setNMSTag(
                 PersistentUtil.setNMSTag(
                         ItemUtil.getNamedItem(
-                                Material.GREEN_STAINED_GLASS_PANE,
+                                DisplayPanelConfig.getPanel(result).getItemStack(getLimit(), getTradeCount(player)),
                                 ShopUtil.getShop(id).getDisplayNameOrElseNone() + ChatColor.GREEN + "との取引",
-                                ChatColor.GREEN + page + ChatColor.YELLOW + "ページ目"
+                                false,
+                                ChatColor.GREEN + page + ChatColor.YELLOW + "ページ目",
+                                player.hasPermission("ris.op") ? ChatColor.GREEN + "シフトクリック: NPCの位置までテレポート" : null
                         ),
                         "Shop", id
-                ),"Page", page
+                ), "Page", page
         );
     }
 
@@ -135,7 +140,9 @@ public class ShopTrade {
     }
 
     private static ItemStack getSettingsFilter(int value) {
-        return PersistentUtil.setNMSTag(ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "取引上限設定と取引のアイテム化",
+        return PersistentUtil.setNMSTag(ItemUtil.getNamedItem(DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack(),
+                                                              ChatColor.GREEN + "取引上限設定と取引のアイテム化",
+                                                              false,
                                                               ChatColor.GREEN + "クリック: 取引上限設定" + ChatColor.YELLOW + " 取引上限: " + value,
                                                               ChatColor.GREEN + "シフトクリック: 取引のアイテム化"
         ), "TradeLimit", String.valueOf(value));
@@ -188,9 +195,9 @@ public class ShopTrade {
         return items;
     }
 
-    public ItemStack[] getTradeItems(Shop.ShopType type, String id) {
+    public ItemStack[] getTradeItems(Shop.ShopType type, String id, Player player) {
         ItemStack[] items;
-        ItemStack filter = getFilter(id);
+        ItemStack filter = getFilter(id, player);
         switch (type) {
             case TwotoOne:
             case FourtoFour:
@@ -233,6 +240,13 @@ public class ShopTrade {
         if (!affordTrade(p)) result = TradeResult.NotAfford;
         else if (isLimited(p)) result = TradeResult.Limited;
         else if (!hasEnoughSpace(p)) result = TradeResult.Full;
+        return result;
+    }
+
+    public TradeResult getResult(Player p, Shop shop) {
+        TradeResult result = getResult(p);
+        if (shop.isLock()) result = TradeResult.Locked;
+
         return result;
     }
 

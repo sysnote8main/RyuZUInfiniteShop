@@ -12,6 +12,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.admin.MythicListener;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ItemUtil {
     //アイテムを与えることが可能か調べる
@@ -114,7 +115,7 @@ public class ItemUtil {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
         if (enchanted) meta.addEnchant(Enchantment.DURABILITY, 1, true);
-        if (lore.length != 0) meta.setLore(Arrays.asList(lore));
+        if (lore.length != 0) meta.setLore(Arrays.stream(lore).filter(Objects::nonNull).collect(Collectors.toList()));
         meta.addItemFlags(ItemFlag.values());
         item.setItemMeta(meta);
         return item;
