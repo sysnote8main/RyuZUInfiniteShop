@@ -1,6 +1,5 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,15 +11,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SelectSearchItemGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.TradeSearchGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ConfirmRemoveGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopListGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.TradesGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.PersistentUtil;
@@ -50,7 +46,18 @@ public class SearchTradeListener implements Listener {
 
         if ((type.isRightClick() || type.isLeftClick())) {
             if (slot == 4) {
-                if (ItemUtil.isAir(event.getCursor()))
+                if(event.isShiftClick()) {
+                    SchedulerListener.setSchedulers(p, "search", (message) -> {
+                        //成功時の処理
+                        p.openInventory(new ShopListGui(1, message).getInventory(ShopMode.Trade));
+                        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "名前が設定されました");
+                    });
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "検索するNPCの名前をチャットに入力してください");
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
+
+                    SoundUtil.playClickShopSound(p);
+                }
+                else if (ItemUtil.isAir(event.getCursor()))
                     event.setCurrentItem(panel);
                 else
                     event.setCurrentItem(ItemUtil.getOneItemStack(event.getCursor()));
@@ -107,7 +114,6 @@ public class SearchTradeListener implements Listener {
             SoundUtil.playClickShopSound(p);
         }
 
-        //イベントキャンセル
         event.setCancelled(true);
     }
 

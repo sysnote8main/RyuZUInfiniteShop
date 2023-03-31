@@ -14,7 +14,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SelectSearchItemGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopListGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
@@ -132,7 +132,7 @@ public class CommandChain {
                 "ris.list",
                 data -> {
                     Player p = (Player) data.getSender();
-                    p.openInventory(new ShopListGui(1).getInventory(ShopMode.Edit));
+                    p.openInventory(new ShopListGui(1, null).getInventory(ShopMode.Edit));
                     SoundUtil.playClickShopSound(p);
                 },
                 "ris.op",

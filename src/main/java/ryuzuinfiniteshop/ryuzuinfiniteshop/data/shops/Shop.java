@@ -459,6 +459,12 @@ public class Shop {
         return JavaUtil.getOrDefault(npc.getCustomName(), "ショップ");
     }
 
+    public boolean containsDisplayName(String name) {
+        if(npc.getCustomName() == null || npc.getCustomName().isEmpty()) return false;
+        if(name == null || name.isEmpty()) return false;
+        return ChatColor.stripColor(npc.getCustomName()).contains(name);
+    }
+
     public String getDisplayNameOrElseNone() {
         return JavaUtil.getOrDefault(npc.getCustomName(), ChatColor.YELLOW + "<none>");
     }

@@ -11,10 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.PageableHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopListHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopListGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.PersistentUtil;
@@ -32,12 +31,12 @@ public class ShopListListener implements Listener {
         if (event.getClickedInventory() != null) return;
 
         //必要なデータを取得
-        PageableHolder pageableHolder = (PageableHolder) holder;
+        ShopListHolder shopListHolder = (ShopListHolder) holder;
         Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
         Inventory inv = event.getView().getTopInventory();
         ShopMode mode = holder.getMode();
-        int page = pageableHolder.getGui().getPage();
+        int page = shopListHolder.getGui().getPage();
 
         //ページ切り替え
         boolean fail = false;
@@ -45,13 +44,13 @@ public class ShopListListener implements Listener {
             if (page - 1 == 0)
                 fail = true;
             else
-                p.openInventory(new ShopListGui(page - 1).getInventory(mode));
+                p.openInventory(new ShopListGui(page - 1, shopListHolder.getName()).getInventory(mode));
         }
         if (type.isRightClick()) {
-            if (page == pageableHolder.getMaxPage()) {
+            if (page == shopListHolder.getMaxPage()) {
                 fail = true;
             } else
-                p.openInventory(new ShopListGui(page + 1).getInventory(mode));
+                p.openInventory(new ShopListGui(page + 1, shopListHolder.getName()).getInventory(mode));
         }
         if (fail) {
             SoundUtil.playFailSound(p);
@@ -65,7 +64,7 @@ public class ShopListListener implements Listener {
 
     //ショップのページ切り替え
     @EventHandler
-    public void openEditor(InventoryClickEvent event) {
+    public void openShopList(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
         ModeHolder holder = ShopUtil.getModeHolder(event);
         if (holder == null) return;
@@ -74,23 +73,28 @@ public class ShopListListener implements Listener {
 
         //必要なデータを取得
         ItemStack item = event.getCurrentItem();
-        if(ItemUtil.isAir(item)) return;
+        if (ItemUtil.isAir(item)) return;
         Player p = (Player) event.getWhoClicked();
         ShopMode mode = holder.getMode();
         Shop shop = ShopUtil.getShop(PersistentUtil.getNMSStringTag(item, "Shop"));
 
-        if(event.isShiftClick()) {
-            //ショップにTPする
-            p.closeInventory();
-            p.teleport(shop.getLocation());
-            SoundUtil.playSuccessSound(p);
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "にテレポートしました");
+        if(holder.getMode().equals(ShopMode.Edit)) {
+            if (event.isShiftClick()) {
+                //ショップにTPする
+                p.closeInventory();
+                p.teleport(shop.getLocation());
+                SoundUtil.playSuccessSound(p);
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "にテレポートしました");
+            } else {
+                //エディターを開く
+                ShopUtil.closeAllShopTradeInventory(shop);
+                p.openInventory(shop.getEditor(1).getInventory(mode, holder));
+                SoundUtil.playClickShopSound(p);
+                shop.setEditting(true);
+            }
         } else {
-            //エディターを開く
-            ShopUtil.closeAllShopTradeInventory(shop);
-            p.openInventory(shop.getEditor(1).getInventory(mode, holder));
+            p.openInventory(shop.getPage(1).getInventory(mode, holder));
             SoundUtil.playClickShopSound(p);
-            shop.setEditting(true);
         }
     }
 }

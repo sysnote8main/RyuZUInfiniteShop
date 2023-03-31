@@ -19,7 +19,7 @@ public class SelectSearchItemGui extends ModeGui {
         for (int i = 1; i < 8; i++) inv.setItem(i, ShopTrade.getFilter());
         inv.setItem(0, ItemUtil.getNamedItem(Material.RED_STAINED_GLASS_PANE, ChatColor.RED + "対価で検索"));
         inv.setItem(8, ItemUtil.getNamedItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "商品で検索"));
-        inv.setItem(4, ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.BLUE + "検索するアイテムを持ってクリック"));
+        inv.setItem(4, ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.BLUE + "検索するアイテムを持ってクリック", ChatColor.GREEN + "シフトクリック: NPCの名前で検索"));
 
         return inv;
     }
