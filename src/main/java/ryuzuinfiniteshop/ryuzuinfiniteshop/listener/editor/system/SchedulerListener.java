@@ -8,6 +8,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ScheduleData;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
@@ -36,7 +38,7 @@ public class SchedulerListener implements Listener {
         event.setCancelled(true);
         if (shop == null) {
             if(data.getId().equals("search"))
-                data.getSuccessProcess().accept(event.getMessage());
+                Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> data.getSuccessProcess().accept(event.getMessage()));
             else {
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップが見つかりませんでした");
                 SoundUtil.playFailSound(p);

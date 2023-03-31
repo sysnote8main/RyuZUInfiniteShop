@@ -15,6 +15,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.PageableHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopListHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.PersistentUtil;
@@ -94,7 +95,9 @@ public class ShopListListener implements Listener {
                 shop.setEditting(true);
             }
         } else {
-            p.openInventory(shop.getPage(1).getInventory(mode, holder));
+            Inventory inv = shop.getPage(1).getInventory(mode, holder);
+            ((ShopTradeGui) ShopUtil.getShopHolder(inv).getGui()).setTradeStatus(p, inv);
+            p.openInventory(inv);
             SoundUtil.playClickShopSound(p);
         }
     }

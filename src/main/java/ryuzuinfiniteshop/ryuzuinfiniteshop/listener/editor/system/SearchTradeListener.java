@@ -42,7 +42,7 @@ public class SearchTradeListener implements Listener {
         int slot = event.getSlot();
         ClickType type = event.getClick();
         ItemStack searchItem = event.getView().getTopInventory().getItem(4);
-        ItemStack panel = ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.BLUE + "検索するアイテムを持ってクリック");
+        ItemStack panel = ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.BLUE + "検索するアイテムを持ってクリック", ChatColor.GREEN + "シフトクリック: NPCの名前で検索");
         if (slot != 0 && slot != 4 && slot != 8) return;
 
         if ((type.isRightClick() || type.isLeftClick())) {

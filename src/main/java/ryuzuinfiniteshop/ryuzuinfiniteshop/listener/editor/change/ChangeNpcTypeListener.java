@@ -36,7 +36,7 @@ public class ChangeNpcTypeListener implements Listener {
         //チャット入力待機
         SchedulerListener.setSchedulers(p, shop.getID(), (message) -> {
             //成功時の処理
-            //同期させてNPCを再構築する
+            //NPCを再構築する
             try {
                 ShopUtil.overwriteShop(shop.getLocation(), shop.convertShopToString(), EntityType.valueOf(message.toUpperCase()));
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティタイプを変更しました");
