@@ -38,11 +38,12 @@ public class ChangeMythicMobTypeListener implements Listener {
             //成功時の処理
             //同期させてNPCを再構築する
             if (MythicInstanceProvider.getInstance().getMythicMob(message) == null) {
-                SoundUtil.playFailSound(p);
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なMythicMobIDを入力して下さい");
+                SoundUtil.playFailSound(p);
                 return;
             }
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "MythicMobIDを設定しました");
+            SoundUtil.playSuccessSound(p);
             ShopUtil.overwriteShop(shop.getLocation(), shop.convertShopToString(), message);
         });
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "MythicMobIDを入力してください");
@@ -50,6 +51,5 @@ public class ChangeMythicMobTypeListener implements Listener {
 
         SoundUtil.playClickShopSound(p);
         holder.getShop().setEditting(false);
-        p.closeInventory();
     }
 }

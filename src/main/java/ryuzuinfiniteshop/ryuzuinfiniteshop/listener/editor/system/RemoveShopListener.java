@@ -75,7 +75,7 @@ public class RemoveShopListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "を削除しました");
 
             //インベントリを閉じる
-            p.closeInventory();
+            Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
         }
     }
 }

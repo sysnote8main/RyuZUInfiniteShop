@@ -22,7 +22,7 @@ public class SchedulerListener implements Listener {
 
     public static void setSchedulers(Player p, String id, Consumer<String> successProcess) {
         schedulers.put(p.getUniqueId(), new ScheduleData(System.currentTimeMillis(), id, successProcess));
-        Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), p::closeInventory);
+        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -35,16 +35,17 @@ public class SchedulerListener implements Listener {
         schedulers.remove(p.getUniqueId());
         event.setCancelled(true);
         if (shop == null) {
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップが見つかりませんでした");
-            SoundUtil.playFailSound(p);
-        } else if(data.getId().equals("search")) {
-
+            if(data.getId().equals("search"))
+                data.getSuccessProcess().accept(event.getMessage());
+            else {
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップが見つかりませんでした");
+                SoundUtil.playFailSound(p);
+            }
         } else if (event.getMessage().equalsIgnoreCase("Cancel")) {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "キャンセルしました");
             SoundUtil.playClickShopSound(p);
         } else {
             data.getSuccessProcess().accept(event.getMessage());
-            SoundUtil.playSuccessSound(p);
         }
     }
 }

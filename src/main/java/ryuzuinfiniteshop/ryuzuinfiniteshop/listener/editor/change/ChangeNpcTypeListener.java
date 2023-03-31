@@ -42,8 +42,8 @@ public class ChangeNpcTypeListener implements Listener {
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティタイプを変更しました");
                 SoundUtil.playSuccessSound(p);
             } catch (IllegalArgumentException e) {
-                SoundUtil.playFailSound(p);
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なエンティティタイプを入力して下さい");
+                SoundUtil.playFailSound(p);
             }
         });
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティIDを入力してください");
@@ -51,6 +51,5 @@ public class ChangeNpcTypeListener implements Listener {
 
         SoundUtil.playClickShopSound(p);
         holder.getShop().setEditting(false);
-        p.closeInventory();
     }
 }

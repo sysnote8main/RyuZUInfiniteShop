@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -50,7 +51,7 @@ public class SearchTradeListener implements Listener {
                     SchedulerListener.setSchedulers(p, "search", (message) -> {
                         //成功時の処理
                         p.openInventory(new ShopListGui(1, message).getInventory(ShopMode.Trade));
-                        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "名前が設定されました");
+                        SoundUtil.playClickShopSound(p);
                     });
                     p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "検索するNPCの名前をチャットに入力してください");
                     p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
@@ -140,7 +141,7 @@ public class SearchTradeListener implements Listener {
 
         if (event.isShiftClick()) {
             if (!p.hasPermission("ris.op")) return;
-            p.closeInventory();
+            Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
             p.teleport(shop.getLocation());
             SoundUtil.playSuccessSound(p);
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "にテレポートしました");

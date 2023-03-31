@@ -39,6 +39,7 @@ public class ChangeDisplayNameListener implements Listener {
             //成功時の処理
             shop.getNPC().setCustomName(ColorUtil.color(message));
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "名前が設定されました");
+            SoundUtil.playSuccessSound(p);
         });
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "NPCの名前をチャットに入力してください");
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
@@ -46,6 +47,5 @@ public class ChangeDisplayNameListener implements Listener {
 
         SoundUtil.playClickShopSound(p);
         holder.getShop().setEditting(false);
-        p.closeInventory();
     }
 }

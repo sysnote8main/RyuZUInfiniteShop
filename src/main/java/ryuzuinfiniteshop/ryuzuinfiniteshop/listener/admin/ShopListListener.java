@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.admin;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -81,7 +82,7 @@ public class ShopListListener implements Listener {
         if(holder.getMode().equals(ShopMode.Edit)) {
             if (event.isShiftClick()) {
                 //ショップにTPする
-                p.closeInventory();
+                Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
                 p.teleport(shop.getLocation());
                 SoundUtil.playSuccessSound(p);
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "にテレポートしました");
