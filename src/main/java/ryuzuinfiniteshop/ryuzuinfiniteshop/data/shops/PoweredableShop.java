@@ -13,8 +13,7 @@ public class PoweredableShop extends Shop {
 
     public PoweredableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        if(!mythicmob.isPresent())
-            ((Creeper) npc).setPowered(powered);
+        ((Creeper) npc).setPowered(powered);
     }
 
     public boolean isPowered() {

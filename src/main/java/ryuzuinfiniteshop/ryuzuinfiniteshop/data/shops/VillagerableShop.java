@@ -17,10 +17,8 @@ public class VillagerableShop extends AgeableShop {
     public VillagerableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
         if(entitytype.equals(EntityType.VILLAGER)) ((Villager) npc).setRecipes(new ArrayList<>());
-        if(!mythicmob.isPresent()) {
-            setProfession(profession);
-            setBiome(biome);
-        }
+        setProfession(profession);
+        setBiome(biome);
     }
 
     public Villager.Profession getProfession() {

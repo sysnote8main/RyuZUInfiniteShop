@@ -204,7 +204,11 @@ public class ShopUtil {
         }
 
         EntityType type = EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER"));
-        return createNewShop(location, type);
+        String mythicmob = config.getString("Npc.Options.MythicMob");
+        if(mythicmob != null && MythicInstanceProvider.getInstance().getMythicMob(mythicmob) != null)
+            return createNewShop(location, mythicmob);
+        else
+            return createNewShop(location, type);
     }
 
     public static Shop overwriteShop(Location location, String data, EntityType type) {

@@ -16,8 +16,7 @@ public class ParrotShop extends Shop {
 
     public ParrotShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        if(!mythicmob.isPresent())
-            ((Parrot) npc).setVariant(color);
+        ((Parrot) npc).setVariant(color);
     }
 
     public Parrot.Variant setColor() {
