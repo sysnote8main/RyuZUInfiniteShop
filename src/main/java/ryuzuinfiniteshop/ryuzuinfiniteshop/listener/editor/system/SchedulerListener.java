@@ -47,7 +47,7 @@ public class SchedulerListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "キャンセルしました");
             SoundUtil.playClickShopSound(p);
         } else {
-            data.getSuccessProcess().accept(event.getMessage());
+            Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> data.getSuccessProcess().accept(event.getMessage()));
         }
     }
 }

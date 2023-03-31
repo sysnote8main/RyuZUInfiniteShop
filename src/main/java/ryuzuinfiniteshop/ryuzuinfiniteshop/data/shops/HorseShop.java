@@ -18,8 +18,10 @@ public class HorseShop extends AgeableShop {
 
     public HorseShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        ((Horse) npc).setColor(color);
-        ((Horse) npc).setStyle(style);
+        if (!mythicmob.isPresent()) {
+            ((Horse) npc).setColor(color);
+            ((Horse) npc).setStyle(style);
+        }
     }
 
     public Horse.Color setColor() {

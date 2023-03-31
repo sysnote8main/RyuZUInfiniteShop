@@ -16,7 +16,8 @@ public class DyeableShop extends Shop {
 
     public DyeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        setColor(color);
+        if(!mythicmob.isPresent())
+            setColor(color);
     }
 
     public DyeColor getColor() {

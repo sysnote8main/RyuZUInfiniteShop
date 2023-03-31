@@ -12,7 +12,8 @@ public class AgeableShop extends Shop {
 
     public AgeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        setAgeLook(adult);
+        if (!mythicmob.isPresent())
+            setAgeLook(adult);
     }
 
     public boolean isAdult() {
@@ -37,7 +38,7 @@ public class AgeableShop extends Shop {
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.adult = yaml.getBoolean("Npc.Options.Adult" , true);
+            this.adult = yaml.getBoolean("Npc.Options.Adult", true);
         });
     }
 }
