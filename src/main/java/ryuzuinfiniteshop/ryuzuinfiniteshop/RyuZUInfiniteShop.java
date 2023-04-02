@@ -27,7 +27,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
 public final class RyuZUInfiniteShop extends JavaPlugin {
     private static RyuZUInfiniteShop plugin;
-    public final static String prefixCommand = ChatColor.GOLD + "[SearchableInfiniteShopkeepers]";
+    public final static String prefixCommand = ChatColor.GOLD + "[SIS]";
     public final static String prefixPersistent = "RyuZU.Infinite.Shop.";
     public static int VERSION = Integer.parseInt((Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".").substring(3).substring(0, (Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".").substring(3).indexOf("_")));
 

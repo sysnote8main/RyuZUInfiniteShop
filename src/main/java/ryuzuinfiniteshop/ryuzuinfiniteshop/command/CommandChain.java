@@ -28,10 +28,12 @@ public class CommandChain {
                 "ris",
                 data -> {
                     data.sendMessage("§a§l-------§e§l=====§b§lRyuZU Infinite Shop§e§l=====§a§l-------");
-                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " spawn " + "§6§oショップの作成または更新をします");
-                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " spawn [x,y,z/EntityType/MythicMobID] " + "§6§oショップの作成または更新をします");
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " spawn <world,x,y,z/EntityType/MythicMobID> " + "§6§oショップの作成または更新をします");
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " open [world,x,y,z] <player>" + "§6§oショップの取引画面を開きます");
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " list " + "§6§oショップの一覧を表示します");
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " limit [increase/decrease/set] [player] [limit] " + "§6§o取引回数を変更します");
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "[arg] " + "§6§o必須");
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "<arg> " + "§6§o任意");
                     data.sendMessage("§a§l-------§e§l==============================§a§l-------");
                 },
                 "ris.op",
@@ -126,6 +128,46 @@ public class CommandChain {
                     }
                 },
                 data -> data.getArgs().length != 1
+        );
+
+        CommandsGenerator.registerCommand(
+                "ris.open",
+                data -> {
+                    Player p = data.getArgs().length == 2 ? (Player) data.getSender() : Bukkit.getServer().getPlayer(data.getArgs()[2]);
+                    p.openInventory(ShopUtil.getShop(data.getArgs()[1]).getPage(1).getInventory(ShopMode.Trade));
+                },
+                "ris.op",
+                data -> {
+                    if(data.getArgs().length == 2) {
+                        if(!(data.getSender() instanceof Player)) {
+                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
+                            return false;
+                        }
+                        if(!ShopUtil.getShops().containsKey(data.getArgs()[1])) {
+                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "そのショップは存在しません");
+                            return false;
+                        }
+                        if(ShopUtil.getShops().get(data.getArgs()[1]).getPageCount() == 0) {
+                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "そのショップには取引がありません");
+                            return false;
+                        }
+                        return true;
+                    } else {
+                        if(!ShopUtil.getShops().containsKey(data.getArgs()[1])) {
+                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "そのショップは存在しません");
+                            return false;
+                        }
+                        if(ShopUtil.getShops().get(data.getArgs()[1]).getPageCount() == 0) {
+                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "そのショップには取引がありません");
+                            return false;
+                        }
+                        if (Bukkit.getServer().getPlayer(data.getArgs()[2]) == null) {
+                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "そのプレイヤーは存在しません");
+                            return false;
+                        }
+                        return true;
+                    }
+                }
         );
 
         CommandsGenerator.registerCommand(
