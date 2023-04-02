@@ -31,9 +31,8 @@ public class CommandChain {
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " spawn <world,x,y,z/EntityType/MythicMobID> " + "§6§oショップの作成または更新をします");
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " open [world,x,y,z] <player>" + "§6§oショップの取引画面を開きます");
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " list " + "§6§oショップの一覧を表示します");
-                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " limit [increase/decrease/set] [player] [limit] " + "§6§o取引回数を変更します");
-                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "[arg] " + "§6§o必須");
-                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "<arg> " + "§6§o任意");
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " limit [increase/decrease/set] [player] [value] " + "§6§o取引回数を変更します");
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "[arg] " + "§6§o必須, " + ChatColor.BLUE + "<arg> " + "§6§o任意");
                     data.sendMessage("§a§l-------§e§l==============================§a§l-------");
                 },
                 "ris.op",
