@@ -134,7 +134,7 @@ public class CommandChain {
                 "ris.open",
                 data -> {
                     Player p = data.getArgs().length == 2 ? (Player) data.getSender() : Bukkit.getServer().getPlayer(data.getArgs()[2]);
-                    p.openInventory(ShopUtil.getShop(data.getArgs()[1]).getPage(1).getInventory(ShopMode.Trade));
+                    p.openInventory(ShopUtil.getShop(data.getArgs()[1]).getPage(1).getInventory(ShopMode.Trade, p));
                 },
                 "ris.op",
                 data -> {
