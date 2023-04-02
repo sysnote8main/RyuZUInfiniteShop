@@ -96,7 +96,7 @@ public class CommandChain {
                         Player p = (Player) data.getSender();
                         loc = p.getLocation();
                     }
-                    if (MythicInstanceProvider.isLoaded())
+                    if (MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(data.getArgs()[1]) != null)
                         ShopUtil.createNewShop(loc, data.getArgs()[1]);
                     else
                         ShopUtil.createNewShop(loc, EntityType.valueOf(data.getArgs()[1].toUpperCase()));

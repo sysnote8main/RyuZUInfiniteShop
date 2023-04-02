@@ -37,6 +37,5 @@
     <orderEntry type="library" name="Maven: com.github.Y-RyuZU:RyuZUCommandsGenerator:1.6" level="project" />
     <orderEntry type="library" name="Maven: de.tr7zw:item-nbt-api-plugin:2.11.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.lumine.xikage:MythicMobs:4.12.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.nisovin.shopkeepers:ShopkeepersAPI:2.16.5" level="project" />
   </component>
 </module>

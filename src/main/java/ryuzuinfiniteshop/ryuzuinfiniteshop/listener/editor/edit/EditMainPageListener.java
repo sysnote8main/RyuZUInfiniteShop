@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -21,7 +22,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 public class EditMainPageListener implements Listener {
     //ショップの編集画面を開く
     @EventHandler
-    public void openShopEditor(PlayerInteractEntityEvent event) {
+    public void openShopEditor(PlayerInteractAtEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
         if (!p.hasPermission("ris.op")) return;

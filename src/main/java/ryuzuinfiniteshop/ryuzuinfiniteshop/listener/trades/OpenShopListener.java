@@ -2,11 +2,14 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.trades;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -23,7 +26,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 public class OpenShopListener implements Listener {
     //ショップを開く
     @EventHandler
-    public void openShop(PlayerInteractEntityEvent event) {
+    public void openShop(PlayerInteractAtEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
         if (p.isSneaking()) return;

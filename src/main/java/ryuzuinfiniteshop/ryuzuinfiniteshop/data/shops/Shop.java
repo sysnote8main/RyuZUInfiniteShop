@@ -482,8 +482,11 @@ public class Shop {
     public void setNpcMeta() {
         npc.setSilent(true);
         npc.setInvulnerable(true);
+        npc.setGravity(false);
         PersistentUtil.setNMSTag(npc, "Shop", getID());
         initializeLivingEntitiy();
+        if(npc.getType().equals(EntityType.ENDER_CRYSTAL))
+            ((EnderCrystal) npc).setShowingBottom(false);
     }
 
     public void initializeLivingEntitiy() {
