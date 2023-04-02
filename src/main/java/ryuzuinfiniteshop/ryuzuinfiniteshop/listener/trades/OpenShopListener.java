@@ -85,8 +85,6 @@ public class OpenShopListener implements Listener {
             SoundUtil.playClickShopSound(p);
         }
 
-        if (ShopUtil.isTradeMode(event)) ((ShopTradeGui) holder.getGui()).setTradeStatus(p, inv);
-
         //イベントキャンセル
         event.setCancelled(true);
     }
@@ -112,29 +110,23 @@ public class OpenShopListener implements Listener {
     //ショップのステータスの更新
     @EventHandler
     public void updateStatus(InventoryDragEvent event) {
-        //インベントリがショップなのかチェック
-        ShopHolder holder = ShopUtil.getShopHolder(event.getInventory());
-        if (holder == null) return;
-        if (!ShopUtil.isTradeMode(event.getInventory())) return;
-
-        //必要なデータを取得
-        Player p = (Player) event.getWhoClicked();
-        Inventory inv = event.getView().getTopInventory();
-
-        ((ShopTradeGui) holder.getGui()).setTradeStatus(p, inv);
+        updateStatusProcess(event);
     }
 
     @EventHandler
     public void updateStatus(InventoryClickEvent event) {
-        //インベントリがショップなのかチェック
+        updateStatusProcess(event);
+    }
+
+    private void updateStatusProcess(InventoryInteractEvent event) {
         ShopHolder holder = ShopUtil.getShopHolder(event.getView().getTopInventory());
         if (holder == null) return;
-        if (!ShopUtil.isTradeMode(event.getInventory())) return;
+        if (!holder.getMode().equals(ShopMode.Trade)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         Inventory inv = event.getView().getTopInventory();
 
-        ((ShopTradeGui) holder.getGui()).setTradeStatus(p, inv);
+        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> ((ShopTradeGui) holder.getGui()).setTradeStatus(p, inv), 1L);
     }
 }

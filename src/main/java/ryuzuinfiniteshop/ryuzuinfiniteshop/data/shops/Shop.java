@@ -178,6 +178,7 @@ public class Shop {
             boolean available = TradeUtil.isAvailableTrade(inv, i, getShopType());
             String limitString = PersistentUtil.getNMSStringTag(inv.getItem(limitSlot) , "TradeLimit");
             int limit = limitString == null ? 0 : Integer.parseInt(limitString);
+            limit = limit == 0 && expectedTrade != null && expectedTrade.getLimit() > 0 ? expectedTrade.getLimit() : limit;
             if(available && this.trades.contains(expectedTrade) && !expectedTrade.equals(trade)) duplication = true;
 
             // 編集画面上に重複した取引が存在するかチェックする
@@ -462,7 +463,7 @@ public class Shop {
     public boolean containsDisplayName(String name) {
         if(npc.getCustomName() == null || npc.getCustomName().isEmpty()) return false;
         if(name == null || name.isEmpty()) return false;
-        return ChatColor.stripColor(npc.getCustomName()).contains(name);
+        return ChatColor.stripColor(npc.getCustomName().toUpperCase()).contains(name.toUpperCase());
     }
 
     public String getDisplayNameOrElseNone() {

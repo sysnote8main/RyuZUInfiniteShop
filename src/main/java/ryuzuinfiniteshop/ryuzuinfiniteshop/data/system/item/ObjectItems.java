@@ -1,11 +1,14 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item;
 
 import lombok.EqualsAndHashCode;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode
@@ -32,9 +35,11 @@ public class ObjectItems {
         return objects.stream().map(obj -> {
             if (obj instanceof MythicItem)
                 return ((MythicItem) obj).convertItemStack();
+            else if (obj == null || ItemUtil.isAir((ItemStack) obj))
+                return new ItemStack(Material.AIR);
             else
-                return obj;
-        }).map(obj -> ((ItemStack) obj).clone()).toArray(ItemStack[]::new);
+                return (ItemStack) obj;
+        }).filter(Objects::nonNull).map(ItemStack::clone).toArray(ItemStack[]::new);
     }
 
     public void setObject(Object object, int index) {

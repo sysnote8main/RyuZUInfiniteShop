@@ -36,7 +36,6 @@ public class ShopListListener implements Listener {
         ShopListHolder shopListHolder = (ShopListHolder) holder;
         Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
-        Inventory inv = event.getView().getTopInventory();
         ShopMode mode = holder.getMode();
         int page = shopListHolder.getGui().getPage();
 
@@ -80,7 +79,7 @@ public class ShopListListener implements Listener {
         ShopMode mode = holder.getMode();
         Shop shop = ShopUtil.getShop(PersistentUtil.getNMSStringTag(item, "Shop"));
 
-        if(holder.getMode().equals(ShopMode.Edit)) {
+        if (holder.getMode().equals(ShopMode.Edit)) {
             if (event.isShiftClick()) {
                 //ショップにTPする
                 Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
@@ -95,9 +94,7 @@ public class ShopListListener implements Listener {
                 shop.setEditting(true);
             }
         } else {
-            Inventory inv = shop.getPage(1).getInventory(mode, holder);
-            ((ShopTradeGui) ShopUtil.getShopHolder(inv).getGui()).setTradeStatus(p, inv);
-            p.openInventory(inv);
+            p.openInventory(shop.getPage(1).getInventory(mode, p, holder));
             SoundUtil.playClickShopSound(p);
         }
     }

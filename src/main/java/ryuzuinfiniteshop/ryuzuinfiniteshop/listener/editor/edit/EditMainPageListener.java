@@ -36,6 +36,7 @@ public class EditMainPageListener implements Listener {
         p.openInventory(shop.getEditor(1).getInventory(ShopMode.Edit));
 
         shop.setEditting(true);
+        event.setCancelled(true);
     }
 
     //編集画面を閉じたとき、ロックを解除する

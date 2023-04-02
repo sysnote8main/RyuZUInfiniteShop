@@ -11,6 +11,7 @@ import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
@@ -150,6 +151,10 @@ public class ShopTrade {
 
     public ItemStack changeLimit(int variation) {
         int value = Math.max(getLimit() + variation, 0);
+        if(value == 0)
+            tradeUUID.remove(this);
+        else
+            tradeUUID.put(this, UUID.randomUUID());
         tradeLimits.put(tradeUUID.get(this), value);
         return getSettingsFilter(value);
     }
@@ -299,19 +304,19 @@ public class ShopTrade {
     private void playResultEffect(Player p, TradeResult result) {
         switch (result) {
             case NotAfford:
-                p.sendMessage(ChatColor.RED + "アイテムが足りません");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "アイテムが足りません");
                 SoundUtil.playFailSound(p);
                 break;
             case Limited:
-                p.sendMessage(ChatColor.RED + "取引上限です");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "取引上限です");
                 SoundUtil.playFailSound(p);
                 break;
             case Lack:
-                p.sendMessage(ChatColor.RED + "すべてを購入できませんでした");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "すべてを購入できませんでした");
                 SoundUtil.playCautionSound(p);
                 break;
             case Full:
-                p.sendMessage(ChatColor.RED + "インベントリに十分な空きがありません");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "インベントリに十分な空きがありません");
                 SoundUtil.playCautionSound(p);
                 break;
             case Success:

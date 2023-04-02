@@ -47,7 +47,7 @@ public class SearchTradeListener implements Listener {
 
         if ((type.isRightClick() || type.isLeftClick())) {
             if (slot == 4) {
-                if(event.isShiftClick()) {
+                if (event.isShiftClick()) {
                     SchedulerListener.setSchedulers(p, "search", (message) -> {
                         //成功時の処理
                         p.openInventory(new ShopListGui(1, message).getInventory(ShopMode.Trade));
@@ -55,10 +55,7 @@ public class SearchTradeListener implements Listener {
                     });
                     p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "検索するNPCの名前をチャットに入力してください");
                     p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
-
-                    SoundUtil.playClickShopSound(p);
-                }
-                else if (ItemUtil.isAir(event.getCursor()))
+                } else if (ItemUtil.isAir(event.getCursor()))
                     event.setCurrentItem(panel);
                 else
                     event.setCurrentItem(ItemUtil.getOneItemStack(event.getCursor()));
@@ -69,7 +66,7 @@ public class SearchTradeListener implements Listener {
                 } else {
                     LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTake(searchItem) : TradeUtil.getTradesFromGive(searchItem);
                     if (searchedTrades.size() == 0) {
-                        p.sendMessage(ChatColor.RED + "検索結果がありませんでした");
+                        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
                         SoundUtil.playFailSound(p);
                         return;
                     }
@@ -152,9 +149,7 @@ public class SearchTradeListener implements Listener {
                 SoundUtil.playFailSound(p);
                 return;
             }
-            Inventory shopInventory = gui.getInventory(ShopMode.Trade, holder);
-            ((ShopTradeGui) ShopUtil.getShopHolder(shopInventory).getGui()).setTradeStatus(p, shopInventory);
-            p.openInventory(shopInventory);
+            p.openInventory(gui.getInventory(ShopMode.Trade, p, holder));
             SoundUtil.playClickShopSound(p);
         }
     }

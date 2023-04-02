@@ -128,13 +128,10 @@ public class EditTradePageListener implements Listener {
                 times = 10;
                 break;
             case MIDDLE:
-                times = 100;
+                times = 64;
                 break;
         }
         trade.trade(p, times);
-
-        //ステータスの更新
-        ((ShopTradeGui) holder.getGui()).setTradeStatus(p , event.getView().getTopInventory());
 
         //イベントキャンセル
         event.setCancelled(true);
