@@ -11,8 +11,10 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SelectSearchItemGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
@@ -22,12 +24,13 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
+import java.util.HashMap;
 import java.util.function.Predicate;
 
 public class CommandChain {
     public static void registerCommand() {
         CommandsGenerator.registerCommand(
-                "ris",
+                "sis",
                 data -> {
                     data.sendMessage("§a§l-------§e§l=====§b§lSearchable Infinite Shop§e§l=====§a§l-------");
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " spawn <world,x,y,z/EntityType/MythicMobID> " + "§6§oショップの作成または更新をします");
@@ -37,31 +40,26 @@ public class CommandChain {
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "[arg] " + "§6§o必須, " + ChatColor.BLUE + "<arg> " + "§6§o任意");
                     data.sendMessage("§a§l-------§e§l==============================§a§l-------");
                 },
-                "ris.op",
+                "sis.op",
                 data -> data.getArgs().length == 0
         );
 
         CommandsGenerator.registerCommand(
-                "ris.reload",
+                "sis.reload",
                 data -> {
-                    ShopUtil.reloadAllShopTradeInventory(() -> {
-                        TradeUtil.saveTradeLimits();
-                        ShopUtil.saveAllShops();
-                        ShopUtil.removeAllNPC();
-                        Config.load();
-                        DisplayPanelConfig.load();
-                        ShopUtil.loadAllShops();
-                        TradeUtil.loadTradeLimits();
-                    });
+                    FileUtil.reloadAllWithMessage();
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのショップを更新しました");
                 },
-                "ris.op",
+                "sis.op",
                 data -> true,
-                data -> data.getArgs().length == 1
+                data -> {
+                    if(FileUtil.isSaveBlock(data)) return false;
+                    return data.getArgs().length != 1;
+                }
         );
 
         CommandsGenerator.registerCommand(
-                "ris.spawn",
+                "sis.spawn",
                 data -> {
                     Player p = (Player) data.getSender();
                     Location loc = p.getLocation();
@@ -75,19 +73,20 @@ public class CommandChain {
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ショップを設置しました");
                     LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(loc));
                 },
-                "ris.op",
+                "sis.op",
                 data -> true,
                 data -> {
                     if (!(data.getSender() instanceof Player)) {
                         data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                         return false;
                     }
+                    if(FileUtil.isSaveBlock(data)) return false;
                     return data.getArgs().length == 1;
                 }
         );
 
         CommandsGenerator.registerCommand(
-                "ris.spawn",
+                "sis.spawn",
                 data -> {
                     Location loc;
                     if (LocationUtil.isLocationString(data.getArgs()[1])) {
@@ -109,7 +108,7 @@ public class CommandChain {
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ショップを設置しました");
                     LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(loc));
                 },
-                "ris.op",
+                "sis.op",
                 data -> {
                     if (LocationUtil.isLocationString(data.getArgs()[1]))
                         return true;
@@ -132,16 +131,19 @@ public class CommandChain {
                         return true;
                     }
                 },
-                data -> data.getArgs().length != 1
+                data -> {
+                    if(FileUtil.isSaveBlock(data)) return false;
+                    return data.getArgs().length != 1;
+                }
         );
 
         CommandsGenerator.registerCommand(
-                "ris.open",
+                "sis.open",
                 data -> {
                     Player p = data.getArgs().length == 2 ? (Player) data.getSender() : Bukkit.getServer().getPlayer(data.getArgs()[2]);
                     p.openInventory(ShopUtil.getShop(data.getArgs()[1]).getPage(1).getInventory(ShopMode.Trade, p));
                 },
-                "ris.op",
+                "sis.op",
                 data -> {
                     if(data.getArgs().length == 2) {
                         if(!(data.getSender() instanceof Player)) {
@@ -172,58 +174,61 @@ public class CommandChain {
                         }
                         return true;
                     }
-                }
+                }, data -> !FileUtil.isSaveBlock(data)
         );
 
         CommandsGenerator.registerCommand(
-                "ris.list",
+                "sis.list",
                 data -> {
                     Player p = (Player) data.getSender();
                     p.openInventory(new ShopListGui(1, null).getInventory(ShopMode.Edit));
                     SoundUtil.playClickShopSound(p);
                 },
-                "ris.op",
+                "sis.op",
                 data -> true,
                 data -> {
                     if (!(data.getSender() instanceof Player)) {
                         data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                         return false;
                     }
+                    if(FileUtil.isSaveBlock(data)) return false;
                     return data.getArgs().length == 1;
                 }
         );
 
         CommandsGenerator.registerCommand(
-                "ris.limit",
+                "sis.limit",
                 data -> {
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "/" + data.getLabel() + "limit [increase/decrease/set] [player] [limit]");
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "トレード圧縮宝石を持った状態で実行してください");
                 },
-                "ris.op",
+                "sis.op",
                 data -> true,
                 data -> {
                     if (!(data.getSender() instanceof Player)) {
                         data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                         return false;
                     }
+                    if(FileUtil.isSaveBlock(data)) return false;
                     return data.getArgs().length <= 3;
                 }
         );
 
         CommandsGenerator.registerCommand(
-                "ris.search",
+                "sis.search",
                 data -> {
                     Player p = (Player) data.getSender();
                     p.openInventory(new SelectSearchItemGui().getInventory(ShopMode.Search));
                     SoundUtil.playClickShopSound(p);
                 },
-                "ris.op",
+                "sis.op",
                 data -> true,
                 data -> {
                     if (!(data.getSender() instanceof Player)) {
                         data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                         return false;
                     }
+                    if(FileUtil.isSaveBlock(data)) return false;
                     return true;
                 }
         );
@@ -252,11 +257,12 @@ public class CommandChain {
                 data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                 return false;
             }
+            if(FileUtil.isSaveBlock(data)) return false;
             return true;
         };
 
         CommandsGenerator.registerCommand(
-                "ris.limit.increase",
+                "sis.limit.increase",
                 data -> {
                     Player p = (Player) data.getSender();
                     Player target = Bukkit.getServer().getPlayer(data.getArgs()[2]);
@@ -265,11 +271,11 @@ public class CommandChain {
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + target.getName() + "の取引上限に変更を加えました");
                     SoundUtil.playClickShopSound(p);
                 },
-                "ris.op", limitCondition, limitTabCondition
+                "sis.op", limitCondition, limitTabCondition
         );
 
         CommandsGenerator.registerCommand(
-                "ris.limit.decrease",
+                "sis.limit.decrease",
                 data -> {
                     Player p = (Player) data.getSender();
                     Player target = Bukkit.getServer().getPlayer(data.getArgs()[2]);
@@ -278,11 +284,11 @@ public class CommandChain {
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + target.getName() + "の取引上限に変更を加えました");
                     SoundUtil.playClickShopSound(p);
                 },
-                "ris.op", limitCondition, limitTabCondition
+                "sis.op", limitCondition, limitTabCondition
         );
 
         CommandsGenerator.registerCommand(
-                "ris.limit.set",
+                "sis.limit.set",
                 data -> {
                     Player p = (Player) data.getSender();
                     Player target = Bukkit.getServer().getPlayer(data.getArgs()[2]);
@@ -291,7 +297,7 @@ public class CommandChain {
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + target.getName() + "の取引上限に変更を加えました");
                     SoundUtil.playClickShopSound(p);
                 },
-                "ris.op", limitCondition, limitTabCondition
+                "sis.op", limitCondition, limitTabCondition
         );
     }
 }

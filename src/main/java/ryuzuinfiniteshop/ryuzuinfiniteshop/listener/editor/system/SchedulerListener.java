@@ -12,6 +12,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ScheduleData;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
@@ -32,6 +33,7 @@ public class SchedulerListener implements Listener {
         Player p = event.getPlayer();
         if (!schedulers.containsKey(p.getUniqueId())) return;
         if ((double) (System.currentTimeMillis() - schedulers.get(p.getUniqueId()).getTime()) / 1000 > 20) return;
+        if(FileUtil.isSaveBlock(p)) return;
         ScheduleData data = schedulers.get(p.getUniqueId());
         Shop shop = ShopUtil.getShop(data.getId());
         schedulers.remove(p.getUniqueId());

@@ -8,6 +8,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.command.CommandChain;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.MythicItem;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.canceller.CancelAffectNpc;
@@ -41,10 +42,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         ConfigurationSerialization.registerClass(MythicItem.class);
         MythicInstanceProvider.setInstance();
         if(VERSION < 16) NBTInjector.inject();
-        ShopUtil.removeAllNPC();
-        DisplayPanelConfig.load();
-        ShopUtil.loadAllShops();
-        TradeUtil.loadTradeLimits();
+        FileUtil.loadAll(() -> {});
     }
 
     @Override
@@ -53,7 +51,6 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         TradeUtil.saveTradeLimits();
         ShopUtil.saveAllShops();
         ShopUtil.removeAllNPC();
-        DisplayPanelConfig.save();
     }
 
     public static RyuZUInfiniteShop getPlugin() {

@@ -1,4 +1,4 @@
-name: RyuZUInfiniteShop
+name: SearchableInfiniteShop
 version: ${project.version}
 main: ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop
 api-version: 1.13
@@ -7,16 +7,16 @@ softdepend:
   - MythicMobs
 
 commands:
-  ris:
-    usage:  /ris
-    description: RyuZUInfinityShopのコマンド
+  sis:
+    usage:  /sis
+    description: SearchableInfiniteShopのコマンド
 
 permissions:
-  ris.player:
+  sis.player:
     default: true
-  ris.op:
+  sis.op:
     default: op
-  ris.*:
+  sis.*:
     children:
-      ris.op: true
-      ris.player: true
+      sis.op: true
+      sis.player: true

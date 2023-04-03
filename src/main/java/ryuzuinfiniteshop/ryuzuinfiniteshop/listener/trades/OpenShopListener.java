@@ -16,6 +16,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
@@ -30,6 +31,7 @@ public class OpenShopListener implements Listener {
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
         String id = NBTUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;
+        if(FileUtil.isSaveBlock(p)) return;
         Shop shop = ShopUtil.getShop(id);
         if (!shop.isAvailableShop(p)) return;
 
@@ -98,6 +100,7 @@ public class OpenShopListener implements Listener {
 
         //必要なデータを取得
         Player p = (Player) event.getPlayer();
+        if(FileUtil.isSaveBlock(p)) return;
 
         Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> {
             if(p.getOpenInventory().getType().equals(InventoryType.CREATIVE) || p.getOpenInventory().getType().equals(InventoryType.CRAFTING)) SoundUtil.playCloseShopSound(p);

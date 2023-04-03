@@ -68,8 +68,8 @@ public class DyeableShop extends Shop {
     }
 
     @Override
-    public Consumer<YamlConfiguration> getLoadYamlProcess() {
-        return super.getLoadYamlProcess().andThen(yaml -> {
+    public Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
+        return super.getSyncLoadYamlProcess().andThen(yaml -> {
             this.color = DyeColor.valueOf(yaml.getString("Npc.Options.Color", "WHITE"));
             this.optionalInfo = yaml.getBoolean("Npc.Options.OptionalInfo", false);
         });

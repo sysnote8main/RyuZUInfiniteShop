@@ -2,10 +2,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -49,6 +46,7 @@ public class Shop {
     @Setter
     protected Location location;
     protected Optional<String> mythicmob = Optional.empty();
+    protected EntityType entityType;
     protected ShopType type;
     protected List<ShopTrade> trades = new ArrayList<>();
     @Setter
@@ -60,17 +58,21 @@ public class Shop {
 
     @Setter
     @Getter
+    protected boolean invisible = false;
+
+    @Setter
+    @Getter
     protected boolean editting = false;
     protected List<ShopEditorGui> editors = new ArrayList<>();
     protected List<ShopTradeGui> pages = new ArrayList<>();
     protected ObjectItems equipments;
 
-    public Shop(Location location, EntityType entitytype) {
+    public Shop(Location location, EntityType entityType) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         initializeShop(location);
-        spawnNPC(entitytype);
-        loadYamlProcess(getFile());
+        this.entityType = entityType;
         this.NBTBuilder = new EntityNBTBuilder(npc);
+        loadYamlProcess(getFile());
         if (!exsited) {
             createEditorNewPage();
             saveYaml();
@@ -99,7 +101,40 @@ public class Shop {
         getLoadYamlProcess().accept(config);
     }
 
-    public Consumer<YamlConfiguration> getLoadYamlProcess() {
+    private Consumer<YamlConfiguration> getLoadYamlProcess() {
+        return yaml -> {
+            getAsyncLoadYamlProcess().accept(yaml);
+            getSyncLoadYamlProcess().accept(yaml);
+        };
+    }
+
+    protected Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
+        return yaml -> Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
+            if (!mythicmob.isPresent()) this.mythicmob = Optional.ofNullable(yaml.getString("Npc.Options.MythicMob"));
+            if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
+                if (npc != null) npc.remove();
+                npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
+                setNpcMeta();
+            } else {
+                spawnNPC(entityType);
+                if (yaml.contains("Npc.Options.Equipments")) {
+                    this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments"));
+                    updateEquipments();
+                }
+                if (yaml.getString("Npc.Options.DisplayName") != null)
+                    npc.setCustomName(yaml.getString("Npc.Options.DisplayName"));
+                if (npc instanceof LivingEntity) {
+                    this.invisible = yaml.getBoolean("Npc.Options.Invisible", false);
+                    NBTBuilder.setInvisible(invisible);
+                }
+//                    ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Npc.Options.Invisible", true));
+            }
+            this.location.setYaw(yaml.getInt("Npc.Status.Yaw", 0));
+            npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
+        });
+    }
+
+    private Consumer<YamlConfiguration> getAsyncLoadYamlProcess() {
         return yaml -> {
             this.type = ShopType.valueOf(yaml.getString("Shop.Options.ShopType", "TwotoOne"));
             this.lock = yaml.getBoolean("Npc.Status.Lock", false);
@@ -108,27 +143,10 @@ public class Shop {
                 this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, Object>) tradeconfig)).collect(Collectors.toList());
                 updateTradeContents();
             }
-            if (!mythicmob.isPresent()) this.mythicmob = Optional.ofNullable(yaml.getString("Npc.Options.MythicMob"));
-            if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
-                if (npc != null) npc.remove();
-                npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
-                setNpcMeta();
-            } else {
-                if (yaml.contains("Npc.Options.Equipments")) {
-                    this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments"));
-                    updateEquipments();
-                }
-                if (yaml.getString("Npc.Options.DisplayName") != null)
-                    npc.setCustomName(yaml.getString("Npc.Options.DisplayName"));
-                if (npc instanceof LivingEntity)
-                    ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Npc.Options.Visible", true));
-            }
-            this.location.setYaw(yaml.getInt("Npc.Status.Yaw", 0));
-            npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
         };
     }
 
-    public void initializeShop(Location location) {
+    private void initializeShop(Location location) {
         this.location = location;
         this.type = ShopType.TwotoOne;
         equipments = new ObjectItems(IntStream.range(0, 6).mapToObj(i -> new ItemStack(Material.AIR)).collect(Collectors.toList()));
@@ -196,7 +214,8 @@ public class Shop {
                 addTrade(inv, i, limit);
                 LogUtil.log(LogUtil.LogType.ADDTRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), expectedTrade, expectedTrade.getLimit());
             } else if (available) {
-                if (!trade.equals(expectedTrade)) LogUtil.log(LogUtil.LogType.REPLACETRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), trade, expectedTrade, trade.getLimit(), limit);
+                if (!trade.equals(expectedTrade))
+                    LogUtil.log(LogUtil.LogType.REPLACETRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), trade, expectedTrade, trade.getLimit(), limit);
                 trade.setTrade(inv, i, getShopType());
                 trade.setTradeLimits(limit, true);
             } else if (trade != null) {
@@ -289,7 +308,6 @@ public class Shop {
     }
 
     public String convertShopToString() {
-        saveYaml();
         File file = getFile();
         YamlConfiguration config = new YamlConfiguration();
         try {
@@ -441,7 +459,7 @@ public class Shop {
             if (npc != null) {
                 yaml.set("Npc.Options.EntityType", npc.getType().toString());
                 yaml.set("Npc.Options.DisplayName", npc.getCustomName());
-                if (npc instanceof LivingEntity) yaml.set("Npc.Options.Visible", !((LivingEntity) npc).isInvisible());
+                if (npc instanceof LivingEntity) yaml.set("Npc.Options.Invisible", invisible);
             }
             yaml.set("Shop.Options.ShopType", type.toString());
             yaml.set("Npc.Options.Equipments", equipments.getObjects());
@@ -481,8 +499,7 @@ public class Shop {
         return JavaUtil.getOrDefault(npc.getCustomName(), ChatColor.YELLOW + "<none>");
     }
 
-    public void spawnNPC(EntityType entitytype) {
-        if (npc != null) npc.remove();
+    private void spawnNPC(EntityType entitytype) {
         this.location.setPitch(0);
         this.location.setYaw(0);
         Entity npc = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entitytype);
@@ -491,13 +508,20 @@ public class Shop {
     }
 
     public void setNpcMeta() {
-        NBTBuilder.setSilent(true);
-        NBTBuilder.setInvulnerable(true);
-        NBTBuilder.setNoGravity(true);
+        npc.setSilent(true);
+        npc.setInvulnerable(true);
+        npc.setGravity(false);
         NBTUtil.setNMSTag(npc, "Shop", getID());
         initializeLivingEntitiy();
         if (npc.getType().equals(EntityType.ENDER_CRYSTAL))
-            NBTBuilder.setShowBottom(true);
+            ((EnderCrystal) npc).setShowingBottom(false);
+//        NBTBuilder.setSilent(true);
+//        NBTBuilder.setInvulnerable(true);
+//        NBTBuilder.setNoGravity(true);
+//        NBTUtil.setNMSTag(npc, "Shop", getID());
+//        initializeLivingEntitiy();
+//        if (npc.getType().equals(EntityType.ENDER_CRYSTAL))
+//            NBTBuilder.setSilent(true);
     }
 
     public void setNpcMeta(ConfigurationSection section) {
@@ -525,13 +549,18 @@ public class Shop {
 
     public void initializeLivingEntitiy() {
         if (!(npc instanceof LivingEntity)) return;
-        NBTBuilder.setNoAI(true);
-        NBTBuilder.setPersistenceRequired(true);
+        LivingEntity livnpc = (LivingEntity) npc;
+        livnpc.setAI(false);
+        livnpc.setRemoveWhenFarAway(false);
+//        NBTBuilder.setNoAI(true);
+//        NBTBuilder.setPersistenceRequired(true);
     }
 
     public void changeInvisible() {
         if (!(npc instanceof LivingEntity)) return;
-        NBTBuilder.setInvisible(true);
+        LivingEntity livnpc = (LivingEntity) npc;
+//        livnpc.setInvisible(!invisible);
+        NBTBuilder.setInvisible(invisible);
     }
 
     public void changeNPCDirecation() {
@@ -569,7 +598,7 @@ public class Shop {
     }
 
     public boolean isAvailableShop(Player p) {
-        if (isLock() && !p.hasPermission("ris.op")) {
+        if (isLock() && !p.hasPermission("sis.op")) {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "現在このショップはロックされています");
             SoundUtil.playFailSound(p);
             return false;

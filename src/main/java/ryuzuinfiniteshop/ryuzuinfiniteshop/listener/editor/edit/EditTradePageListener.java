@@ -15,6 +15,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
@@ -33,6 +34,8 @@ public class EditTradePageListener implements Listener {
         //必要なデータを取得
         Player p = (Player) event.getPlayer();
         Shop shop = holder.getShop();
+
+        if(FileUtil.isSaveBlock(p)) return;
 
         //取引を上書きし、取引として成立しないものは削除する
         boolean warn = shop.checkTrades(inv);

@@ -34,8 +34,8 @@ public class PoweredableShop extends Shop {
     }
 
     @Override
-    public Consumer<YamlConfiguration> getLoadYamlProcess() {
-        return super.getLoadYamlProcess().andThen(yaml -> {
+    public Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
+        return super.getSyncLoadYamlProcess().andThen(yaml -> {
             this.powered = yaml.getBoolean("Npc.Options.Powered" , false);
         });
     }

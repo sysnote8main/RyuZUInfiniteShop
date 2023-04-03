@@ -132,19 +132,20 @@ public class ShopUtil {
                 continue;
             }
             String base = key + ".";
-            if (!config.getString(base + "type" , "none").equals("admin")) continue;
+            if (!config.getString(base + "type", "none").equals("admin")) continue;
+            if (Bukkit.getWorld(config.getString(base + ".world")) == null) continue;
             Location location = LocationUtil.toLocationFromString(config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z"));
             Shop shop = createNewShop(location, type);
             shop.setNpcMeta(config.getConfigurationSection(base + "object"));
             shop.getNpc().setCustomName(config.getString(base + "name", "").isEmpty() ? "" : ChatColor.GREEN + config.getString(base + "name"));
             List<ShopTrade> trades = new ArrayList<>();
-            for(String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
+            for (String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
                 boolean hasItem2 = config.contains(base + "recipes." + recipe + ".item2");
                 ItemStack[] items = new ItemStack[hasItem2 ? 2 : 1];
                 ItemStack[] results = new ItemStack[1];
                 results[0] = config.getItemStack(base + "recipes." + recipe + ".resultItem");
                 items[0] = config.getItemStack(base + "recipes." + recipe + ".item1");
-                if(hasItem2) items[1] = config.getItemStack(base + "recipes." + recipe + ".item2");
+                if (hasItem2) items[1] = config.getItemStack(base + "recipes." + recipe + ".item2");
                 trades.add(new ShopTrade(results, items));
             }
             shop.setTrades(trades);
@@ -274,17 +275,6 @@ public class ShopUtil {
         return reloadShop(location, data, config -> config.set("Npc.Options.MythicMob", mmid));
     }
 
-    public static ShopHolder closeShopTradeInventory(Player p) {
-        if (p.getOpenInventory().getTopInventory().getHolder() instanceof ShopHolder) {
-            ShopHolder holder = (ShopHolder) p.getOpenInventory().getTopInventory().getHolder();
-            if (holder.getMode().equals(ShopMode.Trade)) {
-                p.closeInventory();
-                return holder;
-            }
-        }
-        return null;
-    }
-
     public static void closeShopTradeInventory(Player p, Shop shop) {
         if (p.getOpenInventory().getTopInventory().getHolder() instanceof ShopHolder) {
             ShopHolder holder = (ShopHolder) p.getOpenInventory().getTopInventory().getHolder();
@@ -296,6 +286,42 @@ public class ShopUtil {
     public static void closeAllShopTradeInventory(Shop shop) {
         for (Player p : Bukkit.getOnlinePlayers()) {
             closeShopTradeInventory(p, shop);
+        }
+    }
+
+    public static ShopHolder closeShopTradeInventory(Player p) {
+        if (p.getOpenInventory().getTopInventory().getHolder() instanceof ShopHolder) {
+            ShopHolder holder = (ShopHolder) p.getOpenInventory().getTopInventory().getHolder();
+            if (holder.getMode().equals(ShopMode.Trade)) {
+                p.closeInventory();
+                return holder;
+            }
+        }
+        return null;
+    }
+
+    public static ShopHolder closeShopInventory(Player p) {
+        if (p.getOpenInventory().getTopInventory().getHolder() instanceof ShopHolder) {
+            ShopHolder holder = (ShopHolder) p.getOpenInventory().getTopInventory().getHolder();
+            p.closeInventory();
+            return holder;
+        }
+        return null;
+    }
+
+    public static HashMap<Player, ShopHolder> getAllShopInventoryViewer() {
+        HashMap<Player, ShopHolder> holders = new HashMap<>();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            ShopHolder holder = closeShopInventory(p);
+            if (holder != null) holders.put(p, holder);
+        }
+        return holders;
+    }
+
+    public static void openAllShopInventory(HashMap<Player, ShopHolder> holders) {
+        for (Player p : holders.keySet()) {
+            ShopHolder holder = holders.get(p);
+            p.openInventory(holder.getInventory());
         }
     }
 

@@ -127,7 +127,7 @@ public class ShopTrade {
                                 ShopUtil.getShop(id).getDisplayNameOrElseNone() + ChatColor.GREEN + "との取引",
                                 false,
                                 ChatColor.GREEN + page + ChatColor.YELLOW + "ページ目",
-                                player.hasPermission("ris.op") ? ChatColor.GREEN + "シフトクリック: NPCの位置までテレポート" : null
+                                player.hasPermission("sis.op") ? ChatColor.GREEN + "シフトクリック: NPCの位置までテレポート" : null
                         ),
                         "Shop", id
                 ), "Page", page

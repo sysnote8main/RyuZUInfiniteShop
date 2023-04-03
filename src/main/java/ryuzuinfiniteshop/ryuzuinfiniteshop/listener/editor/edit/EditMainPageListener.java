@@ -14,6 +14,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
@@ -24,13 +25,14 @@ public class EditMainPageListener implements Listener {
     public void openShopEditor(PlayerInteractAtEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
-        if (!p.hasPermission("ris.op")) return;
+        if (!p.hasPermission("sis.op")) return;
         if (!p.isSneaking()) return;
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
         String id = NBTUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;
         Shop shop = ShopUtil.getShop(id);
         if (shop.isEditting()) return;
+        if(FileUtil.isSaveBlock(p)) return;
 
         ShopUtil.closeAllShopTradeInventory(shop);
         p.openInventory(shop.getEditor(1).getInventory(ShopMode.Edit));
@@ -50,7 +52,6 @@ public class EditMainPageListener implements Listener {
         if (!ShopUtil.isEditMode(inv)) return;
 
         //必要なデータを取得
-        Player p = (Player) event.getPlayer();
         ShopHolder shopholder = (ShopHolder) inv.getHolder();
         Shop shop = shopholder.getShop();
 

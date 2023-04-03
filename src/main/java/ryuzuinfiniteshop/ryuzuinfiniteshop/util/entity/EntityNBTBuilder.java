@@ -4,13 +4,17 @@ import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtinjector.NBTInjector;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class EntityNBTBuilder {
+    private final Entity entity;
     private final NBTCompound compound;
     private final static HashMap<String, Integer> variantMap = new HashMap<String, Integer>() {{
         Arrays.stream(Horse.Style.values()).forEach(style -> put(style.name(), style.ordinal() * 256));
@@ -18,11 +22,19 @@ public class EntityNBTBuilder {
     }};
 
     public EntityNBTBuilder(Entity entity) {
+        this.entity = entity;
         this.compound = NBTInjector.getNbtData(entity);
     }
 
     public void setInvisible(boolean invisible) {
-        compound.setByte("Invisible", invisible ? (byte) 1 : (byte) 0);
+//        compound.setByte("Invisible", invisible ? (byte) 1 : (byte) 0);
+        if(RyuZUInfiniteShop.VERSION <= 15) {
+            if(invisible)
+                ((LivingEntity)entity).addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 1, false, false));
+            else
+                ((LivingEntity)entity).removePotionEffect(PotionEffectType.INVISIBILITY);
+        } else
+            ((LivingEntity)entity).setInvisible(invisible);
     }
 
     public void setInvulnerable(boolean invulnerable) {

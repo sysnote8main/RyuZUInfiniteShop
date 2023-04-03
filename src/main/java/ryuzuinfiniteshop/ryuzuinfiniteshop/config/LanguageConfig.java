@@ -30,15 +30,4 @@ public class LanguageConfig {
 
         defaultTexts.forEach((key, value) -> texts.put(key, yaml.getString(key, value)));
     }
-
-    public static void save() {
-        File file = FileUtil.initializeFile("language.yml");
-        YamlConfiguration yaml = new YamlConfiguration();
-        texts.forEach(yaml::set);
-        try {
-            yaml.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

@@ -137,7 +137,7 @@ public class SearchTradeListener implements Listener {
         }
 
         if (event.isShiftClick()) {
-            if (!p.hasPermission("ris.op")) return;
+            if (!p.hasPermission("sis.op")) return;
             Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
             p.teleport(shop.getLocation());
             SoundUtil.playSuccessSound(p);

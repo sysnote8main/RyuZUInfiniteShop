@@ -46,17 +46,6 @@ public class DisplayPanelConfig {
         }};
     }
 
-    public static void save() {
-        File file = FileUtil.initializeFile("panel.yml");
-        YamlConfiguration yaml = new YamlConfiguration();
-        defaultResultMaterial.keySet().forEach(result -> yaml.set(getResultConfig(result), panels.get(result).serialize()));
-        try {
-            yaml.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private static String getResultConfig(ShopTrade.TradeResult result) {
         return "Display.Panel." + result.name();
     }

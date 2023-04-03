@@ -205,7 +205,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setVisible(Inventory inv) {
         if (!(getShop().getNpc() instanceof LivingEntity)) return;
-        ItemStack item = ((LivingEntity) getShop().getNpc()).isInvisible() ?
+        ItemStack item = getShop().isInvisible() ?
                 ItemUtil.getNamedItem(Material.GLASS, ChatColor.GREEN + "透明") :
                 ItemUtil.getNamedItem(Material.POLISHED_ANDESITE, ChatColor.GREEN + "不透明");
         int slot = 3 * 9 + 8 - SettingsMap.size();

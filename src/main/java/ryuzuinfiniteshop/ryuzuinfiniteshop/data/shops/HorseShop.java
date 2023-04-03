@@ -56,8 +56,8 @@ public class HorseShop extends AgeableShop {
     }
 
     @Override
-    public Consumer<YamlConfiguration> getLoadYamlProcess() {
-        return super.getLoadYamlProcess().andThen(yaml -> {
+    public Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
+        return super.getSyncLoadYamlProcess().andThen(yaml -> {
             this.color = Horse.Color.valueOf(yaml.getString("Npc.Options.Color" , "WHITE"));
             this.style = Horse.Style.valueOf(yaml.getString("Npc.Options.Style" , "NONE"));
         });

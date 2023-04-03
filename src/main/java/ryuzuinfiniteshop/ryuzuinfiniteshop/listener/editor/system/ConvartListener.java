@@ -15,6 +15,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
@@ -104,10 +105,11 @@ public class ConvartListener implements Listener {
         ItemStack item = event.getItem();
         Block block = event.getClickedBlock();
 
-        if (!p.hasPermission("ris.op")) return;
+        if (!p.hasPermission("sis.op")) return;
         if (!p.isSneaking()) return;
         if (ItemUtil.isAir(item) || NBTUtil.getNMSStringTag(item, "ShopData") == null) return;
         if (block == null) return;
+        if(FileUtil.isSaveBlock(p)) return;
 
         //ショップを読み込む
         Shop shop = ShopUtil.reloadShop(block.getLocation().add(0, 1, 0), NBTUtil.getNMSStringTag(item, "ShopData"));
