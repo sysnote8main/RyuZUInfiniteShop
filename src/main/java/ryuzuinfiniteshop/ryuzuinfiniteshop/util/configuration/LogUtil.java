@@ -41,7 +41,7 @@ public class LogUtil {
     }
 
     public static void log(LogType type, String player, String id, ShopTrade fromTrade, ShopTrade toTrade, int fromLimit, int toLimit) {
-        File file = FileUtil.initializeFile("csv.yml");
+        File file = FileUtil.initializeFile("log.csv");
         List<String> logBuilder = new ArrayList<>();
         logBuilder.add(type.name());
         logBuilder.add(player);
@@ -61,7 +61,7 @@ public class LogUtil {
     }
 
     public static void log(LogType type, String player, String id) {
-        File file = FileUtil.initializeFile("csv.yml");
+        File file = FileUtil.initializeFile("log.csv");
         List<String> logBuilder = new ArrayList<>();
         logBuilder.add(type.name());
         logBuilder.add(player);
