@@ -2,12 +2,14 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -118,5 +120,27 @@ public class ConvartListener implements Listener {
         SoundUtil.playSuccessSound(p);
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "を召喚しました");
         LogUtil.log(LogUtil.LogType.CREATESHOP, p.getName(), NBTUtil.getNMSStringTag(item, "ShopData"));
+    }
+
+    //ショップをマージする
+    @EventHandler
+    public void mergeShop(PlayerInteractAtEntityEvent event) {
+        Entity entity = event.getRightClicked();
+        Player p = event.getPlayer();
+        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
+        if (!p.hasPermission("sis.op")) return;
+        if (!p.isSneaking()) return;
+        String id = NBTUtil.getNMSStringTag(entity, "Shop");
+        if (id == null) return;
+        Shop shop = ShopUtil.getShop(id);
+        if (shop.isEditting()) return;
+        if(FileUtil.isSaveBlock(p)) return;
+        ItemStack item = p.getInventory().getItemInMainHand();
+        if (ItemUtil.isAir(item) || NBTUtil.getNMSStringTag(item, "ShopData") == null) return;
+
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "の取引を宝石のショップにマージしました");
+        ShopUtil.mergeShop(NBTUtil.getNMSStringTag(item, "ShopData"), shop, p);
+        //音を出し、メッセージを送信
+        SoundUtil.playSuccessSound(p);
     }
 }

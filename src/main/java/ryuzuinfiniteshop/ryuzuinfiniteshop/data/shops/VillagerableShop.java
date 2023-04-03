@@ -80,6 +80,7 @@ public class VillagerableShop extends AgeableShop {
             setProfession(profession);
             setBiome(biome);
             setLevel(level);
+            ((Villager) npc).setRecipes(new ArrayList<>());
         });
     }
 

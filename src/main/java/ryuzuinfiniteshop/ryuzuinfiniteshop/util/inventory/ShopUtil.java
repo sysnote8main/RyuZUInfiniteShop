@@ -22,15 +22,13 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class ShopUtil {
     private static HashMap<String, Shop> shops = new HashMap<>();
@@ -273,6 +271,23 @@ public class ShopUtil {
             return createNewShop(location, mythicmob);
         else
             return createNewShop(location, type);
+    }
+
+    public static String mergeShop(String data, Shop shop, Player p) {
+        YamlConfiguration config = new YamlConfiguration();
+        try {
+            config.loadFromString(data);
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        Shop.ShopType type = Shop.ShopType.valueOf(config.getString("Shop.Options.ShopType", "TwotoOne"));
+        if(!shop.getShopType().equals(type)) return null;
+        List<ShopTrade> trades = config.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, Object>) tradeconfig)).collect(Collectors.toList());
+        trades.addAll(shop.getTrades());
+        LogUtil.log(LogUtil.LogType.MERGESHOP, p.getName(), shop.getID());
+        shop.removeShop();
+        config.set("Trades", trades.stream().distinct().collect(Collectors.toList()));
+        return config.saveToString();
     }
 
     public static Shop overwriteShop(Location location, String data, EntityType type) {

@@ -28,7 +28,6 @@ public class Config {
             throw new RuntimeException(e);
         }
         autoSaveInterval = yaml.getInt("AutoSaveInterval", 20);
-        runAutoSave();
     }
 
     public static void save() {

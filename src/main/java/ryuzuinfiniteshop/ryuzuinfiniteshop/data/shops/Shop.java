@@ -333,6 +333,11 @@ public class Shop {
         ShopUtil.removeShop(getID());
     }
 
+    public void removeShop(Player p) {
+        LogUtil.log(LogUtil.LogType.REMOVESHOP, p.getName(), getID());
+        removeShop();
+    }
+
     public List<ShopTrade> getTrades() {
         return trades;
     }

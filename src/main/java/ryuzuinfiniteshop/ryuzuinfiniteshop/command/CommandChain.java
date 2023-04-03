@@ -217,7 +217,7 @@ public class CommandChain {
                     p.openInventory(new SelectSearchItemGui().getInventory(ShopMode.Search));
                     SoundUtil.playClickShopSound(p);
                 },
-                "sis.op",
+                "sis.player",
                 data -> true,
                 data -> {
                     if (!(data.getSender() instanceof Player)) {

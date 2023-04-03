@@ -68,7 +68,7 @@ public class RemoveShopListener implements Listener {
                 opener.closeInventory();
             }
             //ショップを削除
-            shop.removeShop();
+            shop.removeShop(p);
 
             //音を出し、メッセージを送信する
             SoundUtil.playSuccessSound(p);

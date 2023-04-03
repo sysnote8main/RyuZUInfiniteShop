@@ -20,6 +20,7 @@ public class LogUtil {
     public enum LogType {
         CREATESHOP,
         REMOVESHOP,
+        MERGESHOP,
         ADDTRADE,
         REMOVETRADE,
         REPLACETRADE

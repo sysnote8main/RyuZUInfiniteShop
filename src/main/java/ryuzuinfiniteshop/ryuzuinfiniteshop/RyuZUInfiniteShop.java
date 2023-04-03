@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.command.CommandChain;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
@@ -43,6 +44,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         MythicInstanceProvider.setInstance();
         if(VERSION < 16) NBTInjector.inject();
         FileUtil.loadAll(() -> {});
+        Config.runAutoSave();
     }
 
     @Override
