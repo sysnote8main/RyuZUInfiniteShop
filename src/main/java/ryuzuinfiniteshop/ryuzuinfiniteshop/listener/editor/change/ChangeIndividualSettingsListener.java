@@ -40,6 +40,7 @@ public class ChangeIndividualSettingsListener implements Listener {
         changeVisible(holder, event.getSlot());
         changeParrotColor(holder, event.getSlot());
         changeDyeColor(holder, event.getSlot());
+        changeOptionalInfo(holder, event.getSlot());
         changeHorseColor(holder, event.getSlot());
         changeHorseStyle(holder, event.getSlot());
 
@@ -103,7 +104,7 @@ public class ChangeIndividualSettingsListener implements Listener {
         ShopEditorGui editor = (ShopEditorGui) holder.getGui();
 
         if (!editor.getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.Visible)) return;
-        if (!(holder.getShop().getNPC() instanceof LivingEntity)) return;
+        if (!(holder.getShop().getNpc() instanceof LivingEntity)) return;
 
         //透明か変更
         holder.getShop().changeInvisible();
@@ -131,6 +132,18 @@ public class ChangeIndividualSettingsListener implements Listener {
 
         //色を変更
         ((DyeableShop) holder.getShop()).setColor(((DyeableShop) holder.getShop()).getNextColor());
+    }
+
+    //追加情報の変更
+    public void changeOptionalInfo(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        ShopEditorGui editor = (ShopEditorGui) holder.getGui();
+
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.OptionalInfo)) return;
+        if (!(holder.getShop() instanceof DyeableShop)) return;
+
+        //色を変更
+        ((DyeableShop) holder.getShop()).setOptionalInfo(!((DyeableShop) holder.getShop()).getOptionalInfo());
     }
 
     //馬の色を変更

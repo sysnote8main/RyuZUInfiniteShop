@@ -59,7 +59,7 @@ public abstract class ShopTradeGui extends ShopGui {
     }
 
     public Inventory getInventory(Function<Integer, Integer> function, ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, ChatColor.DARK_BLUE + JavaUtil.getOrDefault(getShop().getNPC().getCustomName(), "ショップ") + ChatColor.DARK_BLUE +  " ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, ChatColor.DARK_BLUE + JavaUtil.getOrDefault(getShop().getNpc().getCustomName(), "ショップ") + ChatColor.DARK_BLUE +  " ページ" + getPage());
 
         for (int i = 0; i < getTrades().size(); i++) {
             ShopTrade trade = getTrades().get(i);

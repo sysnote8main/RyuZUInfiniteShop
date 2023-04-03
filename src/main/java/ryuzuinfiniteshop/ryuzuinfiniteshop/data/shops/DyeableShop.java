@@ -13,10 +13,12 @@ import java.util.function.Consumer;
 //狼、熱帯魚、羊などの染料と同じ色を付けられるもの
 public class DyeableShop extends Shop {
     protected DyeColor color;
+    protected boolean optionalInfo;
 
     public DyeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
         setColor(color);
+        setOptionalInfo(optionalInfo);
     }
 
     public DyeColor getColor() {
@@ -27,10 +29,21 @@ public class DyeableShop extends Shop {
         this.color = color;
         if (npc instanceof Colorable) ((Colorable) npc).setColor(color);
         if (npc instanceof TropicalFish) ((TropicalFish) npc).setBodyColor(color);
-        if (npc instanceof Wolf)  {
-            ((Wolf) npc).setTamed(true);
+        if (npc instanceof Wolf) {
+            ((Wolf) npc).setTamed(!color.equals(DyeColor.WHITE));
             ((Wolf) npc).setCollarColor(color);
         }
+    }
+
+    public void setOptionalInfo(boolean optionalInfo) {
+        this.optionalInfo = optionalInfo;
+        if(npc instanceof Wolf) {
+            if(color.equals(DyeColor.WHITE))
+                ((Wolf) npc).setAngry(optionalInfo);
+            else
+                ((Wolf) npc).setSitting(optionalInfo);
+        } else if(npc instanceof Sheep)
+            ((Sheep) npc).setSheared(optionalInfo);
     }
 
     public DyeColor getNextColor() {
@@ -40,18 +53,28 @@ public class DyeableShop extends Shop {
                 DyeColor.values()[nextindex];
     }
 
+    public boolean getOptionalInfo() {
+        return optionalInfo;
+    }
+
     @Override
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return super.getSaveYamlProcess().andThen(yaml -> {
             yaml.set("Npc.Options.Color", color.toString());
+            yaml.set("Npc.Options.OptionalInfo", optionalInfo);
         });
     }
 
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.color = DyeColor.valueOf(yaml.getString("Npc.Options.Color" , "WHITE"));
+            this.color = DyeColor.valueOf(yaml.getString("Npc.Options.Color", "WHITE"));
+            this.optionalInfo = yaml.getBoolean("Npc.Options.OptionalInfo", false);
         });
+    }
+
+    public Material getOptionalInfoMaterial() {
+        return optionalInfo ? Material.LIME_WOOL : Material.RED_WOOL;
     }
 
     public Material getColorMaterial() {

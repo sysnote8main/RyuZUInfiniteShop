@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Ageable;
@@ -12,12 +13,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.Colorable;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
@@ -25,9 +28,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class ShopUtil {
@@ -95,6 +96,10 @@ public class ShopUtil {
         if (ItemFiles == null) return;
         for (File f : ItemFiles) {
             if (!f.getName().endsWith(".yml")) continue;
+            if (f.getName().equals("save.yml")) {
+                convertAllShopkeepers(f);
+                continue;
+            }
             YamlConfiguration config = new YamlConfiguration();
             try {
                 config.load(f);
@@ -102,10 +107,55 @@ public class ShopUtil {
                 e.printStackTrace();
             }
             Optional<String> mmid = Optional.ofNullable(config.getString("Npc.Options.MythicMob"));
-            if(mmid.isPresent() && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(mmid.get()) != null)
+            if (mmid.isPresent() && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(mmid.get()) != null)
                 createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), mmid.get());
             else
                 createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER")));
+        }
+    }
+
+    private static void convertAllShopkeepers(File file) {
+        YamlConfiguration config = new YamlConfiguration();
+        try {
+            config.load(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        Set<String> keys = new HashSet<>();
+        for (String key : config.getKeys(false)) {
+            if (key.equals("data-version")) continue;
+            EntityType type;
+            try {
+                type = EntityType.valueOf(config.getString(key + ".object.type", "VILLAGER").toUpperCase());
+            } catch (Exception e) {
+                continue;
+            }
+            String base = key + ".";
+            if (!config.getString(base + "type" , "none").equals("admin")) continue;
+            Location location = LocationUtil.toLocationFromString(config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z"));
+            Shop shop = createNewShop(location, type);
+            shop.setNpcMeta(config.getConfigurationSection(base + "object"));
+            shop.getNpc().setCustomName(config.getString(base + "name"));
+            List<ShopTrade> trades = new ArrayList<>();
+            for(String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
+                ItemStack[] items = new ItemStack[2];
+                ItemStack[] results = new ItemStack[1];
+                results[0] = config.getItemStack(base + "recipes." + recipe + ".resultItem");
+                items[0] = config.getItemStack(base + "recipes." + recipe + ".item1");
+                items[1] = config.getItemStack(base + "recipes." + recipe + ".item2");
+                trades.add(new ShopTrade(results, items));
+            }
+            shop.setTrades(trades);
+            keys.add(key);
+        }
+
+        keys.forEach(key -> config.set(key, null));
+
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -130,7 +180,7 @@ public class ShopUtil {
 
     public static HashMap<String, Shop> getSortedShops(ShopMode mode, String name) {
         HashMap<String, Shop> sorted = new HashMap<>();
-        if(mode.equals(ShopMode.Edit))
+        if (mode.equals(ShopMode.Edit))
             shops.keySet().stream().sorted(Comparator.naturalOrder()).forEach(key -> sorted.put(key, shops.get(key)));
         else
             shops.keySet().stream().sorted(Comparator.naturalOrder()).filter(key -> shops.get(key).isSearchable() && shops.get(key).containsDisplayName(name)).forEach(key -> sorted.put(key, shops.get(key)));
@@ -205,7 +255,7 @@ public class ShopUtil {
 
         EntityType type = EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER"));
         String mythicmob = config.getString("Npc.Options.MythicMob");
-        if(mythicmob != null && MythicInstanceProvider.getInstance().getMythicMob(mythicmob) != null)
+        if (mythicmob != null && MythicInstanceProvider.getInstance().getMythicMob(mythicmob) != null)
             return createNewShop(location, mythicmob);
         else
             return createNewShop(location, type);

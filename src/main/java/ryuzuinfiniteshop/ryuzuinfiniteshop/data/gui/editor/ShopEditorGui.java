@@ -21,7 +21,7 @@ import java.util.List;
 
 //ショップエディターのメインページ
 public class ShopEditorGui extends ShopGui {
-    public enum ShopSettings {Age, Power, Profession, Biome, Visible, ParrotColor, DyeColor, HorseColor, HorseStyle}
+    public enum ShopSettings {Age, Power, Profession, Biome, Visible, ParrotColor, DyeColor, OptionalInfo, HorseColor, HorseStyle}
 
     private final HashMap<Integer, ShopSettings> SettingsMap = new HashMap<>();
 
@@ -31,7 +31,7 @@ public class ShopEditorGui extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, ChatColor.DARK_BLUE + JavaUtil.getOrDefault(getShop().getNPC().getCustomName(), "ショップ") + ChatColor.DARK_BLUE + " エディター ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, ChatColor.DARK_BLUE + JavaUtil.getOrDefault(getShop().getNpc().getCustomName(), "ショップ") + ChatColor.DARK_BLUE + " エディター ページ" + getPage());
 
         //アイテムを設置
         setDisplay(inv);
@@ -51,7 +51,7 @@ public class ShopEditorGui extends ShopGui {
 
     //エディターに装備を置く
     private void setEquipment(Inventory inv) {
-        if (getShop().getNPC() instanceof LivingEntity) {
+        if (getShop().getNpc() instanceof LivingEntity) {
             for (Integer slot : EquipmentUtil.getEquipmentsSlot().keySet()) {
                 inv.setItem(slot, getShop().getEquipmentDisplayItem(EquipmentUtil.getEquipmentSlot(slot)));
             }
@@ -71,7 +71,7 @@ public class ShopEditorGui extends ShopGui {
     }
 
     public void setDisplayName(Inventory inv) {
-        inv.setItem(5 * 9 + 3, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + "名前を変更する" , ChatColor.YELLOW + "現在の名前: " + JavaUtil.getOrDefault(getShop().getNPC().getCustomName() , "<none>")));
+        inv.setItem(5 * 9 + 3, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + "名前を変更する" , ChatColor.YELLOW + "現在の名前: " + JavaUtil.getOrDefault(getShop().getNpc().getCustomName() , "<none>")));
     }
 
     private void setShopStatus(Inventory inv) {
@@ -101,7 +101,7 @@ public class ShopEditorGui extends ShopGui {
         setTradesPage(inv);
         setShopStatus(inv);
         setShopOperation(inv);
-        if(!MythicInstanceProvider.isLoaded() || !MythicInstanceProvider.getInstance().isMythicMob(getShop().getNPC())) {
+        if(!MythicInstanceProvider.isLoaded() || !MythicInstanceProvider.getInstance().isMythicMob(getShop().getNpc())) {
             setEquipment(inv);
             setDisplayName(inv);
             setSettings(inv);
@@ -124,6 +124,7 @@ public class ShopEditorGui extends ShopGui {
         setBiome(inv);
         setParrotColor(inv);
         setDyeColor(inv);
+        setOptinalInfo(inv);
         setHorseColor(inv);
         setHorseStyle(inv);
     }
@@ -164,6 +165,14 @@ public class ShopEditorGui extends ShopGui {
         SettingsMap.put(slot, ShopSettings.DyeColor);
     }
 
+    private void setOptinalInfo(Inventory inv) {
+        if (!(getShop() instanceof DyeableShop)) return;
+        ItemStack item = ItemUtil.getNamedItem(((DyeableShop) getShop()).getOptionalInfoMaterial(), ChatColor.GREEN + "追加情報の変更");
+        int slot = 3 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.OptionalInfo);
+    }
+
     private void setHorseColor(Inventory inv) {
         if (!(getShop() instanceof HorseShop)) return;
         ItemStack item = ItemUtil.getNamedItem(((HorseShop) getShop()).getColorMaterial(), ChatColor.GREEN + "色の変更");
@@ -195,8 +204,8 @@ public class ShopEditorGui extends ShopGui {
     }
 
     private void setVisible(Inventory inv) {
-        if (!(getShop().getNPC() instanceof LivingEntity)) return;
-        ItemStack item = ((LivingEntity) getShop().getNPC()).isInvisible() ?
+        if (!(getShop().getNpc() instanceof LivingEntity)) return;
+        ItemStack item = ((LivingEntity) getShop().getNpc()).isInvisible() ?
                 ItemUtil.getNamedItem(Material.GLASS, ChatColor.GREEN + "透明") :
                 ItemUtil.getNamedItem(Material.POLISHED_ANDESITE, ChatColor.GREEN + "不透明");
         int slot = 3 * 9 + 8 - SettingsMap.size();

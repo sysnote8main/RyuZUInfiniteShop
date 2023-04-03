@@ -3,10 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Parrot;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.*;
 
 import java.util.Arrays;
 import java.util.function.Consumer;

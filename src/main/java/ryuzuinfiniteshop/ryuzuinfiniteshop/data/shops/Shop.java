@@ -3,8 +3,10 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
@@ -104,9 +106,9 @@ public class Shop {
                 this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, Object>) tradeconfig)).collect(Collectors.toList());
                 updateTradeContents();
             }
-            if(!mythicmob.isPresent()) this.mythicmob = Optional.ofNullable(yaml.getString("Npc.Options.MythicMob"));
-            if(mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
-                if(npc != null) npc.remove();
+            if (!mythicmob.isPresent()) this.mythicmob = Optional.ofNullable(yaml.getString("Npc.Options.MythicMob"));
+            if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
+                if (npc != null) npc.remove();
                 npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
                 setNpcMeta();
             } else {
@@ -114,7 +116,8 @@ public class Shop {
                     this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments"));
                     updateEquipments();
                 }
-                if (yaml.getString("Npc.Options.DisplayName") != null) npc.setCustomName(yaml.getString("Npc.Options.DisplayName"));
+                if (yaml.getString("Npc.Options.DisplayName") != null)
+                    npc.setCustomName(yaml.getString("Npc.Options.DisplayName"));
                 if (npc instanceof LivingEntity)
                     ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Npc.Options.Visible", true));
             }
@@ -170,34 +173,34 @@ public class Shop {
         for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TwotoOne) ? 4 : 9) {
             if (getShopType().equals(ShopType.TwotoOne) && i % 9 == 4) i++;
             int limitSlot = 0;
-            if(getShopType().equals(ShopType.TwotoOne)) limitSlot = i + 2;
-            else if(getShopType().equals(ShopType.FourtoFour)) limitSlot = i + 4;
-            else if(getShopType().equals(ShopType.SixtoTwo)) limitSlot = i + 6;
+            if (getShopType().equals(ShopType.TwotoOne)) limitSlot = i + 2;
+            else if (getShopType().equals(ShopType.FourtoFour)) limitSlot = i + 4;
+            else if (getShopType().equals(ShopType.SixtoTwo)) limitSlot = i + 6;
             ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(i);
             ShopTrade expectedTrade = TradeUtil.getTrade(inv, i, getShopType());
             boolean available = TradeUtil.isAvailableTrade(inv, i, getShopType());
-            String limitString = PersistentUtil.getNMSStringTag(inv.getItem(limitSlot) , "TradeLimit");
+            String limitString = PersistentUtil.getNMSStringTag(inv.getItem(limitSlot), "TradeLimit");
             int limit = limitString == null ? 0 : Integer.parseInt(limitString);
             limit = limit == 0 && expectedTrade != null && expectedTrade.getLimit() > 0 ? expectedTrade.getLimit() : limit;
-            if(available && this.trades.contains(expectedTrade) && !expectedTrade.equals(trade)) duplication = true;
+            if (available && this.trades.contains(expectedTrade) && !expectedTrade.equals(trade)) duplication = true;
 
             // 編集画面上に重複した取引が存在するかチェックする
-            if(expectedTrade == null) continue;
-            if(onTrades.contains(expectedTrade)) duplication = true;
+            if (expectedTrade == null) continue;
+            if (onTrades.contains(expectedTrade)) duplication = true;
             onTrades.add(expectedTrade);
 
             // 取引を追加、上書き、削除する
             if (trade == null && available) {
-                addTrade(inv, i , limit);
+                addTrade(inv, i, limit);
             } else if (available) {
                 trade.setTrade(inv, i, getShopType());
                 trade.setTradeLimits(limit, true);
-            } else if(trade != null) {
+            } else if (trade != null) {
                 emptyTrades.add(trade);
             }
         }
         this.trades.removeAll(emptyTrades);
-        if(duplication) this.trades = trades.stream().distinct().collect(Collectors.toList());
+        if (duplication) this.trades = trades.stream().distinct().collect(Collectors.toList());
 
         //ショップを更新する
         updateTradeContents();
@@ -262,7 +265,7 @@ public class Shop {
         if (temp == null) return false;
         boolean duplication = temp.stream().anyMatch(trade -> trades.contains(trade));
         trades.addAll(temp);
-        if(duplication) trades = trades.stream().distinct().collect(Collectors.toList());
+        if (duplication) trades = trades.stream().distinct().collect(Collectors.toList());
         updateTradeContents();
         return duplication;
     }
@@ -310,6 +313,11 @@ public class Shop {
         return trades;
     }
 
+    public void setTrades(List<ShopTrade> trades) {
+        this.trades = trades;
+        updateTradeContents();
+    }
+
     public String getID() {
         return LocationUtil.toStringFromLocation(location);
     }
@@ -321,7 +329,7 @@ public class Shop {
     }
 
     public int getPage(ShopTrade trade) {
-        if(!trades.contains(trade)) return -1;
+        if (!trades.contains(trade)) return -1;
         return (int) Math.ceil((double) (trades.indexOf(trade) + 1) / getLimitSize());
     }
 
@@ -354,6 +362,7 @@ public class Shop {
         for (int i = 1; i <= getEditorPageCountFromTradesCount(); i++) {
             editors.add(new ShopEditorGui(this, i));
         }
+        HashMap<String, List<Player>> map = new HashMap<>();
         if (ableCreateEditorNewPage())
             editors.add(new ShopEditorGui(this, getEditorPageCountFromTradesCount() + 1));
     }
@@ -423,7 +432,7 @@ public class Shop {
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return yaml -> {
             mythicmob.ifPresent(mythicmob -> yaml.set("Npc.Options.MythicMob", mythicmob));
-            if(npc != null) {
+            if (npc != null) {
                 yaml.set("Npc.Options.EntityType", npc.getType().toString());
                 yaml.set("Npc.Options.DisplayName", npc.getCustomName());
                 if (npc instanceof LivingEntity) yaml.set("Npc.Options.Visible", !((LivingEntity) npc).isInvisible());
@@ -452,17 +461,13 @@ public class Shop {
         return FileUtil.initializeFile("shops/" + getID() + ".yml");
     }
 
-    public Entity getNPC() {
-        return npc;
-    }
-
     public String getDisplayName() {
         return JavaUtil.getOrDefault(npc.getCustomName(), "ショップ");
     }
 
     public boolean containsDisplayName(String name) {
-        if(npc.getCustomName() == null || npc.getCustomName().isEmpty()) return false;
-        if(name == null || name.isEmpty()) return false;
+        if (npc.getCustomName() == null || npc.getCustomName().isEmpty()) return false;
+        if (name == null || name.isEmpty()) return false;
         return ChatColor.stripColor(npc.getCustomName().toUpperCase()).contains(name.toUpperCase());
     }
 
@@ -485,8 +490,31 @@ public class Shop {
         npc.setGravity(false);
         PersistentUtil.setNMSTag(npc, "Shop", getID());
         initializeLivingEntitiy();
-        if(npc.getType().equals(EntityType.ENDER_CRYSTAL))
+        if (npc.getType().equals(EntityType.ENDER_CRYSTAL))
             ((EnderCrystal) npc).setShowingBottom(false);
+    }
+
+    public void setNpcMeta(ConfigurationSection section) {
+        if (this instanceof AgeableShop)
+            ((AgeableShop) this).setAgeLook(section.getBoolean("baby" , false));
+        if (this instanceof PoweredableShop)
+            ((PoweredableShop) this).setPowered(section.getBoolean("powered" , false));
+        if (this instanceof HorseShop) {
+            ((HorseShop) this).setColor(Horse.Color.valueOf(section.getString("color")));
+            ((HorseShop) this).setStyle(Horse.Style.valueOf(section.getString("style")));
+        }
+        if (this instanceof ParrotShop)
+            ((ParrotShop) this).setColor(Parrot.Variant.valueOf(section.getString("parrotVariant")));
+        if (this instanceof DyeableShop) {
+            ((DyeableShop) this).setColor(DyeColor.valueOf(section.getString("color", "WHITE")));
+            ((DyeableShop) this).setOptionalInfo(
+                    (
+                            section.contains("sitting") ? section.getBoolean("sitting") :
+                                    (section.contains("angry") ? section.getBoolean("angry") :
+                                            (section.getBoolean("shaved", false)))
+                    )
+            );
+        }
     }
 
     public void initializeLivingEntitiy() {
@@ -514,7 +542,7 @@ public class Shop {
     }
 
     public void setEquipmentItem(ItemStack item, int slot) {
-        equipments.setObject(item , slot);
+        equipments.setObject(item, slot);
         updateEquipments();
     }
 
