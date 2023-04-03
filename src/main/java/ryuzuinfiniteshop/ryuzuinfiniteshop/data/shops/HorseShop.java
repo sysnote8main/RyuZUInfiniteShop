@@ -18,8 +18,6 @@ public class HorseShop extends AgeableShop {
 
     public HorseShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        setColor(color);
-        setStyle(style);
     }
 
     public void setStyle(Horse.Style style) {
@@ -60,6 +58,8 @@ public class HorseShop extends AgeableShop {
         return super.getSyncLoadYamlProcess().andThen(yaml -> {
             this.color = Horse.Color.valueOf(yaml.getString("Npc.Options.Color" , "WHITE"));
             this.style = Horse.Style.valueOf(yaml.getString("Npc.Options.Style" , "NONE"));
+            setColor(color);
+            setStyle(style);
         });
     }
 

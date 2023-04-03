@@ -12,7 +12,6 @@ public class AgeableShop extends Shop {
 
     public AgeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        setAgeLook(adult);
     }
 
     public boolean isAdult() {
@@ -39,6 +38,7 @@ public class AgeableShop extends Shop {
     public Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
         return super.getSyncLoadYamlProcess().andThen(yaml -> {
             this.adult = yaml.getBoolean("Npc.Options.Adult" , true);
+            setAgeLook(adult);
         });
     }
 }

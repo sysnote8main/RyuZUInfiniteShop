@@ -71,8 +71,8 @@ public class Shop {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         initializeShop(location);
         this.entityType = entityType;
-        this.NBTBuilder = new EntityNBTBuilder(npc);
         loadYamlProcess(getFile());
+        this.NBTBuilder = new EntityNBTBuilder(npc);
         if (!exsited) {
             createEditorNewPage();
             saveYaml();

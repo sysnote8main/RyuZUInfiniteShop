@@ -17,8 +17,6 @@ public class DyeableShop extends Shop {
 
     public DyeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        setColor(color);
-        setOptionalInfo(optionalInfo);
     }
 
     public DyeColor getColor() {
@@ -72,6 +70,8 @@ public class DyeableShop extends Shop {
         return super.getSyncLoadYamlProcess().andThen(yaml -> {
             this.color = DyeColor.valueOf(yaml.getString("Npc.Options.Color", "WHITE"));
             this.optionalInfo = yaml.getBoolean("Npc.Options.OptionalInfo", false);
+            setColor(color);
+            setOptionalInfo(optionalInfo);
         });
     }
 

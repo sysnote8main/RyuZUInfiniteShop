@@ -20,9 +20,6 @@ public class VillagerableShop extends AgeableShop {
 
     public VillagerableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        setProfession(profession);
-        setBiome(biome);
-        setLevel(level);
     }
 
     public void setProfession(Villager.Profession profession) {
@@ -80,6 +77,9 @@ public class VillagerableShop extends AgeableShop {
             this.profession = Villager.Profession.valueOf(yaml.getString("Npc.Options.Profession" , "FARMER"));
             this.biome = Villager.Type.valueOf(yaml.getString("Npc.Options.Biome" , "PLAINS"));
             this.level = yaml.getInt("Npc.Options.Level" , 1);
+            setProfession(profession);
+            setBiome(biome);
+            setLevel(level);
         });
     }
 

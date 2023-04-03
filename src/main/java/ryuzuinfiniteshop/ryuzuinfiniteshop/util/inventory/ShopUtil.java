@@ -95,22 +95,26 @@ public class ShopUtil {
         File[] ItemFiles = directory.listFiles();
         if (ItemFiles == null) return;
         for (File f : ItemFiles) {
-            if (!f.getName().endsWith(".yml")) continue;
-            if (f.getName().equals("save.yml")) {
-                convertAllShopkeepers(f);
-                continue;
-            }
-            YamlConfiguration config = new YamlConfiguration();
             try {
-                config.load(f);
-            } catch (IOException | InvalidConfigurationException e) {
-                e.printStackTrace();
+                if (!f.getName().endsWith(".yml")) continue;
+                if (f.getName().equals("save.yml")) {
+                    convertAllShopkeepers(f);
+                    continue;
+                }
+                YamlConfiguration config = new YamlConfiguration();
+                try {
+                    config.load(f);
+                } catch (IOException | InvalidConfigurationException e) {
+                    e.printStackTrace();
+                }
+                Optional<String> mmid = Optional.ofNullable(config.getString("Npc.Options.MythicMob"));
+                if (mmid.isPresent() && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(mmid.get()) != null)
+                    createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), mmid.get());
+                else
+                    createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER")));
+            } catch (Exception e) {
+                throw new RuntimeException("ShopID: " + f.getName() + " の読み込み中にエラーが発生しました", e);
             }
-            Optional<String> mmid = Optional.ofNullable(config.getString("Npc.Options.MythicMob"));
-            if (mmid.isPresent() && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(mmid.get()) != null)
-                createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), mmid.get());
-            else
-                createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER")));
         }
     }
 
@@ -124,33 +128,37 @@ public class ShopUtil {
 
         Set<String> keys = new HashSet<>();
         for (String key : config.getKeys(false)) {
-            if (key.equals("data-version")) continue;
-            EntityType type;
             try {
-                type = EntityType.valueOf(config.getString(key + ".object.type", "VILLAGER").toUpperCase());
+                if (key.equals("data-version")) continue;
+                EntityType type;
+                try {
+                    type = EntityType.valueOf(config.getString(key + ".object.type", "VILLAGER").toUpperCase());
+                } catch (Exception e) {
+                    continue;
+                }
+                String base = key + ".";
+                if (!config.getString(base + "type", "none").equals("admin")) continue;
+                if (Bukkit.getWorld(config.getString(base + ".world")) == null) continue;
+                Location location = LocationUtil.toLocationFromString(config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z"));
+                Shop shop = createNewShop(location, type);
+                shop.setNpcMeta(config.getConfigurationSection(base + "object"));
+                shop.getNpc().setCustomName(config.getString(base + "name", "").isEmpty() ? "" : ChatColor.GREEN + config.getString(base + "name"));
+                List<ShopTrade> trades = new ArrayList<>();
+                for (String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
+                    boolean hasItem2 = config.contains(base + "recipes." + recipe + ".item2");
+                    ItemStack[] items = new ItemStack[hasItem2 ? 2 : 1];
+                    ItemStack[] results = new ItemStack[1];
+                    results[0] = config.getItemStack(base + "recipes." + recipe + ".resultItem");
+                    items[0] = config.getItemStack(base + "recipes." + recipe + ".item1");
+                    if (hasItem2) items[1] = config.getItemStack(base + "recipes." + recipe + ".item2");
+                    trades.add(new ShopTrade(results, items));
+                }
+                shop.setTrades(trades);
+                shop.saveYaml();
+                keys.add(key);
             } catch (Exception e) {
-                continue;
+                throw new RuntimeException("ShopID: " + key + " のShopkeepersからのコンバート中にエラーが発生しました", e);
             }
-            String base = key + ".";
-            if (!config.getString(base + "type", "none").equals("admin")) continue;
-            if (Bukkit.getWorld(config.getString(base + ".world")) == null) continue;
-            Location location = LocationUtil.toLocationFromString(config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z"));
-            Shop shop = createNewShop(location, type);
-            shop.setNpcMeta(config.getConfigurationSection(base + "object"));
-            shop.getNpc().setCustomName(config.getString(base + "name", "").isEmpty() ? "" : ChatColor.GREEN + config.getString(base + "name"));
-            List<ShopTrade> trades = new ArrayList<>();
-            for (String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
-                boolean hasItem2 = config.contains(base + "recipes." + recipe + ".item2");
-                ItemStack[] items = new ItemStack[hasItem2 ? 2 : 1];
-                ItemStack[] results = new ItemStack[1];
-                results[0] = config.getItemStack(base + "recipes." + recipe + ".resultItem");
-                items[0] = config.getItemStack(base + "recipes." + recipe + ".item1");
-                if (hasItem2) items[1] = config.getItemStack(base + "recipes." + recipe + ".item2");
-                trades.add(new ShopTrade(results, items));
-            }
-            shop.setTrades(trades);
-            shop.saveYaml();
-            keys.add(key);
         }
 
         keys.forEach(key -> config.set(key, null));

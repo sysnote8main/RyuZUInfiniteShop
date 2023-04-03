@@ -13,7 +13,6 @@ public class ParrotShop extends Shop {
 
     public ParrotShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        setColor(color);
     }
 
     public void setColor(Parrot.Variant color) {
@@ -40,6 +39,7 @@ public class ParrotShop extends Shop {
     public Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
         return super.getSyncLoadYamlProcess().andThen(yaml -> {
             this.color = Parrot.Variant.valueOf(yaml.getString("Npc.Options.Color" , "RED"));
+            setColor(color);
         });
     }
 
