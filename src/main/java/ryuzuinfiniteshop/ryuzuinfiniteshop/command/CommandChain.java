@@ -12,6 +12,8 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SelectSearchItemGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
@@ -66,10 +68,12 @@ public class CommandChain {
                     if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(loc))) {
                         ShopUtil.reloadShop(ShopUtil.getShop(LocationUtil.toStringFromLocation(loc)));
                         p.sendMessage(RyuZUInfiniteShop.prefixCommand + RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップを更新しました");
+                        LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), data.getArgs()[1]);
                         return;
                     }
                     ShopUtil.createNewShop(loc, EntityType.VILLAGER);
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ショップを設置しました");
+                    LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(loc));
                 },
                 "ris.op",
                 data -> true,
@@ -91,6 +95,7 @@ public class CommandChain {
                         if (ShopUtil.getShops().containsKey(data.getArgs()[1])) {
                             ShopUtil.reloadShop(ShopUtil.getShop(data.getArgs()[1]));
                             data.sendMessage(RyuZUInfiniteShop.prefixCommand + RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップを更新しました");
+                            LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), data.getArgs()[1]);
                             return;
                         }
                     } else {
@@ -102,6 +107,7 @@ public class CommandChain {
                     else
                         ShopUtil.createNewShop(loc, EntityType.valueOf(data.getArgs()[1].toUpperCase()));
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ショップを設置しました");
+                    LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(loc));
                 },
                 "ris.op",
                 data -> {

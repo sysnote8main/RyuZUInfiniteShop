@@ -15,6 +15,8 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.PersistentUtil;
@@ -76,7 +78,7 @@ public class ConvartListener implements Listener {
 
         //トレードを読み込む
         if ((type.isRightClick() || type.isLeftClick()) && !type.isShiftClick()) {
-            boolean duplication = shop.loadTrades(item);
+            boolean duplication = shop.loadTrades(item, p);
 
             //音を出す
             if(duplication) {
@@ -114,5 +116,6 @@ public class ConvartListener implements Listener {
         //音を出し、メッセージを送信
         SoundUtil.playSuccessSound(p);
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "を召喚しました");
+        LogUtil.log(LogUtil.LogType.CREATESHOP, p.getName(), PersistentUtil.getNMSStringTag(item, "ShopData"));
     }
 }

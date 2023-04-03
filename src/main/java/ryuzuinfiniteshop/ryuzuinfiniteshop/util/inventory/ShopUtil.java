@@ -1,6 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -136,17 +137,19 @@ public class ShopUtil {
             Location location = LocationUtil.toLocationFromString(config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z"));
             Shop shop = createNewShop(location, type);
             shop.setNpcMeta(config.getConfigurationSection(base + "object"));
-            shop.getNpc().setCustomName(config.getString(base + "name"));
+            shop.getNpc().setCustomName(config.getString(base + "name", "").isEmpty() ? "" : ChatColor.GREEN + config.getString(base + "name"));
             List<ShopTrade> trades = new ArrayList<>();
             for(String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
-                ItemStack[] items = new ItemStack[2];
+                boolean hasItem2 = config.contains(base + "recipes." + recipe + ".item2");
+                ItemStack[] items = new ItemStack[hasItem2 ? 2 : 1];
                 ItemStack[] results = new ItemStack[1];
                 results[0] = config.getItemStack(base + "recipes." + recipe + ".resultItem");
                 items[0] = config.getItemStack(base + "recipes." + recipe + ".item1");
-                items[1] = config.getItemStack(base + "recipes." + recipe + ".item2");
+                if(hasItem2) items[1] = config.getItemStack(base + "recipes." + recipe + ".item2");
                 trades.add(new ShopTrade(results, items));
             }
             shop.setTrades(trades);
+            shop.saveYaml();
             keys.add(key);
         }
 

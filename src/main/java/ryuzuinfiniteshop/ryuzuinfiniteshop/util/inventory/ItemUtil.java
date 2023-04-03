@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.admin.MythicListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -207,5 +208,12 @@ public class ItemUtil {
     public static int getCustomModelData(@Nullable ItemStack item) {
         if (!hasCustomModelData(item)) return -1;
         return item.getItemMeta().getCustomModelData();
+    }
+
+    public static String getString(ItemStack item) {
+        if(isAir(item)) return "Air";
+        if(MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getID(item) != null) return MythicInstanceProvider.getInstance().getID(item);
+        if(item.hasItemMeta() && item.getItemMeta().hasDisplayName()) return item.getItemMeta().getDisplayName();
+        return item.getType().name();
     }
 }

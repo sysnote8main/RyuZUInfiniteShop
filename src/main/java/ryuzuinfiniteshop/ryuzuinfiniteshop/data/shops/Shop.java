@@ -14,7 +14,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
@@ -23,10 +23,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopGui2to1;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopGui4to4;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopGui6to2;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.EquipmentUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.PersistentUtil;
@@ -192,11 +188,14 @@ public class Shop {
             // 取引を追加、上書き、削除する
             if (trade == null && available) {
                 addTrade(inv, i, limit);
+                LogUtil.log(LogUtil.LogType.ADDTRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), expectedTrade, expectedTrade.getLimit());
             } else if (available) {
+                if (!trade.equals(expectedTrade)) LogUtil.log(LogUtil.LogType.REPLACETRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), trade, expectedTrade, trade.getLimit(), limit);
                 trade.setTrade(inv, i, getShopType());
                 trade.setTradeLimits(limit, true);
             } else if (trade != null) {
                 emptyTrades.add(trade);
+                LogUtil.log(LogUtil.LogType.REMOVETRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), trade, trade.getLimit());
             }
         }
         this.trades.removeAll(emptyTrades);
@@ -260,11 +259,12 @@ public class Shop {
         return item;
     }
 
-    public boolean loadTrades(ItemStack item) {
+    public boolean loadTrades(ItemStack item, Player p) {
         List<ShopTrade> temp = getTrades(item);
         if (temp == null) return false;
         boolean duplication = temp.stream().anyMatch(trade -> trades.contains(trade));
         trades.addAll(temp);
+        temp.forEach(trade -> LogUtil.log(LogUtil.LogType.ADDTRADE, p.getName(), getID(), trade, trade.getLimit()));
         if (duplication) trades = trades.stream().distinct().collect(Collectors.toList());
         updateTradeContents();
         return duplication;
@@ -496,9 +496,9 @@ public class Shop {
 
     public void setNpcMeta(ConfigurationSection section) {
         if (this instanceof AgeableShop)
-            ((AgeableShop) this).setAgeLook(section.getBoolean("baby" , false));
+            ((AgeableShop) this).setAgeLook(section.getBoolean("baby", false));
         if (this instanceof PoweredableShop)
-            ((PoweredableShop) this).setPowered(section.getBoolean("powered" , false));
+            ((PoweredableShop) this).setPowered(section.getBoolean("powered", false));
         if (this instanceof HorseShop) {
             ((HorseShop) this).setColor(Horse.Color.valueOf(section.getString("color")));
             ((HorseShop) this).setStyle(Horse.Style.valueOf(section.getString("style")));
@@ -509,8 +509,8 @@ public class Shop {
             ((DyeableShop) this).setColor(DyeColor.valueOf(section.getString("color", "WHITE")));
             ((DyeableShop) this).setOptionalInfo(
                     (
-                            section.contains("sitting") ? section.getBoolean("sitting") :
-                                    (section.contains("angry") ? section.getBoolean("angry") :
+                            section.contains("angry") ? section.getBoolean("angry") :
+                                    (section.contains("sitting") ? section.getBoolean("sitting") :
                                             (section.getBoolean("shaved", false)))
                     )
             );
