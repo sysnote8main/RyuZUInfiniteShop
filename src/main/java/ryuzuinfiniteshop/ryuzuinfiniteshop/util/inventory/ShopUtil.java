@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Ageable;
@@ -128,21 +129,19 @@ public class ShopUtil {
 
         Set<String> keys = new HashSet<>();
         for (String key : config.getKeys(false)) {
+            String base = key + ".";
             try {
                 if (key.equals("data-version")) continue;
                 EntityType type;
                 try {
                     type = EntityType.valueOf(config.getString(key + ".object.type", "VILLAGER").toUpperCase());
-                } catch (Exception e) {
+                } catch (IllegalArgumentException e) {
                     continue;
                 }
-                String base = key + ".";
                 if (!config.getString(base + "type", "none").equals("admin")) continue;
                 if (Bukkit.getWorld(config.getString(base + ".world")) == null) continue;
                 Location location = LocationUtil.toLocationFromString(config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z"));
-                Shop shop = createNewShop(location, type);
-                shop.setNpcMeta(config.getConfigurationSection(base + "object"));
-                shop.getNpc().setCustomName(config.getString(base + "name", "").isEmpty() ? "" : ChatColor.GREEN + config.getString(base + "name"));
+                Shop shop = createNewShop(location, type, config.getConfigurationSection(base));
                 List<ShopTrade> trades = new ArrayList<>();
                 for (String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
                     boolean hasItem2 = config.contains(base + "recipes." + recipe + ".item2");
@@ -157,7 +156,7 @@ public class ShopUtil {
                 shop.saveYaml();
                 keys.add(key);
             } catch (Exception e) {
-                throw new RuntimeException("ShopID: " + key + " のShopkeepersからのコンバート中にエラーが発生しました", e);
+                throw new RuntimeException("ShopkeepersID: " + key + "SISID: " + (config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z")) + " のShopkeepersからのコンバート中にエラーが発生しました", e);
             }
         }
 
@@ -205,6 +204,10 @@ public class ShopUtil {
 
     public static void addShop(String id, Shop shop) {
         shops.put(id, shop);
+    }
+
+    public static Shop createNewShop(Location location, EntityType type, ConfigurationSection configurationSection) {
+        return new ConvertingShop(location, type, configurationSection);
     }
 
     public static Shop createNewShop(Location location, String mmid) {

@@ -48,14 +48,10 @@ public class CommandChain {
                 "sis.reload",
                 data -> {
                     FileUtil.reloadAllWithMessage();
-                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのショップを更新しました");
                 },
                 "sis.op",
                 data -> true,
-                data -> {
-                    if(FileUtil.isSaveBlock(data)) return false;
-                    return data.getArgs().length != 1;
-                }
+                data -> !FileUtil.isSaveBlock(data)
         );
 
         CommandsGenerator.registerCommand(

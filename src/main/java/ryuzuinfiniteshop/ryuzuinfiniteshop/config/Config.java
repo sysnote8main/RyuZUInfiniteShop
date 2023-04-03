@@ -31,6 +31,17 @@ public class Config {
         runAutoSave();
     }
 
+    public static void save() {
+        File file = FileUtil.initializeFile("config.yml");
+        YamlConfiguration yaml = new YamlConfiguration();
+        yaml.set("AutoSaveInterval", autoSaveInterval);
+        try {
+            yaml.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void runAutoSave() {
         if(autoSaveInterval <= 0) return;
         autoSaveTask = Bukkit.getScheduler().runTaskTimer(RyuZUInfiniteShop.getPlugin(), FileUtil::reloadAllWithMessage, 20L * 60 * autoSaveInterval, 20L * 60 * autoSaveInterval);

@@ -41,7 +41,7 @@ public class Shop {
     @Getter
     protected Entity npc;
     @Getter
-    protected final EntityNBTBuilder NBTBuilder;
+    protected EntityNBTBuilder NBTBuilder;
     @Getter
     @Setter
     protected Location location;
@@ -72,7 +72,6 @@ public class Shop {
         initializeShop(location);
         this.entityType = entityType;
         loadYamlProcess(getFile());
-        this.NBTBuilder = new EntityNBTBuilder(npc);
         if (!exsited) {
             createEditorNewPage();
             saveYaml();
@@ -104,12 +103,12 @@ public class Shop {
     private Consumer<YamlConfiguration> getLoadYamlProcess() {
         return yaml -> {
             getAsyncLoadYamlProcess().accept(yaml);
-            getSyncLoadYamlProcess().accept(yaml);
+            Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> getSyncLoadYamlProcess().accept(yaml));
         };
     }
 
     protected Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
-        return yaml -> Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
+        return yaml -> {
             if (!mythicmob.isPresent()) this.mythicmob = Optional.ofNullable(yaml.getString("Npc.Options.MythicMob"));
             if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
                 if (npc != null) npc.remove();
@@ -117,6 +116,7 @@ public class Shop {
                 setNpcMeta();
             } else {
                 spawnNPC(entityType);
+                this.NBTBuilder = new EntityNBTBuilder(npc);
                 if (yaml.contains("Npc.Options.Equipments")) {
                     this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments"));
                     updateEquipments();
@@ -131,7 +131,7 @@ public class Shop {
             }
             this.location.setYaw(yaml.getInt("Npc.Status.Yaw", 0));
             npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
-        });
+        };
     }
 
     private Consumer<YamlConfiguration> getAsyncLoadYamlProcess() {
