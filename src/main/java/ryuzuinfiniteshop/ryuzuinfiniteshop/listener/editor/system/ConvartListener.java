@@ -139,7 +139,8 @@ public class ConvartListener implements Listener {
         if (ItemUtil.isAir(item) || NBTUtil.getNMSStringTag(item, "ShopData") == null) return;
 
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "の取引を宝石のショップにマージしました");
-        ShopUtil.mergeShop(NBTUtil.getNMSStringTag(item, "ShopData"), shop, p);
+        String data = ShopUtil.mergeShop(NBTUtil.getNMSStringTag(item, "ShopData"), shop, p);
+        p.getInventory().setItemInMainHand(NBTUtil.setNMSTag(item, "ShopData", data));
         //音を出し、メッセージを送信
         SoundUtil.playSuccessSound(p);
     }

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityInteractEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class LogUtil {
         logBuilder.add(type.name());
         logBuilder.add(player);
         logBuilder.add(id);
+        logBuilder.add(ShopUtil.getShop(id).getDisplayNameOrElseNone());
         logBuilder.add(String.join("+", Arrays.stream(trade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining(","))));
         logBuilder.add(String.join("+", Arrays.stream(trade.getGiveItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining(","))));
         logBuilder.add(String.valueOf(limit));
@@ -51,6 +53,7 @@ public class LogUtil {
         logBuilder.add(type.name());
         logBuilder.add(player);
         logBuilder.add(id);
+        logBuilder.add(ShopUtil.getShop(id).getDisplayNameOrElseNone());
         logBuilder.add(Arrays.stream(fromTrade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining(",")));
         logBuilder.add(Arrays.stream(toTrade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining(",")));
         logBuilder.add(String.valueOf(fromLimit));
@@ -71,6 +74,7 @@ public class LogUtil {
         logBuilder.add(type.name());
         logBuilder.add(player);
         logBuilder.add(id);
+        logBuilder.add(ShopUtil.getShop(id).getDisplayNameOrElseNone());
         String log = String.join("+", logBuilder);
 
         try (FileWriter fileWriter = new FileWriter(file)) {
