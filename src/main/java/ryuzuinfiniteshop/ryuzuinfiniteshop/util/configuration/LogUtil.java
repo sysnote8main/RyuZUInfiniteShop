@@ -22,7 +22,7 @@ public class LogUtil {
     }
 
     public static void log(LogType type, String player, String id, ShopTrade trade, int limit) {
-        File file = FileUtil.initializeFile("csv.yml");
+        File file = FileUtil.initializeFile("log.csv");
         List<String> logBuilder = new ArrayList<>();
         logBuilder.add(type.name());
         logBuilder.add(player);

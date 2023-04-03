@@ -155,6 +155,7 @@ public class EditTradePageListener implements Listener {
         ShopTrade trade = holder.getShop().getTrade(event.getClickedInventory(), slot);
         //トレードをアイテム化する
         if (event.isShiftClick()) return;
+        if (trade == null) return;
         if (!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
         if (!(trade.getLimit() == 0 && event.isLeftClick())) {
             event.setCurrentItem(trade.changeLimit(event.isLeftClick() ? -1 : 1));
