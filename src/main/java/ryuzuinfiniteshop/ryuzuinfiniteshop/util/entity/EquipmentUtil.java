@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

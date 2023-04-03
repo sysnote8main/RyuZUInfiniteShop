@@ -1,7 +1,11 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
 
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityInteractEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 

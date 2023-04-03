@@ -12,8 +12,8 @@ import java.util.function.Consumer;
 
 //狼、熱帯魚、羊などの染料と同じ色を付けられるもの
 public class DyeableShop extends Shop {
-    protected DyeColor color;
-    protected boolean optionalInfo;
+    protected DyeColor color = DyeColor.WHITE;
+    protected boolean optionalInfo = false;
 
     public DyeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
@@ -33,6 +33,8 @@ public class DyeableShop extends Shop {
             ((Wolf) npc).setTamed(!color.equals(DyeColor.WHITE));
             ((Wolf) npc).setCollarColor(color);
         }
+//        NBTBuilder.setColor(color.ordinal());
+//        NBTBuilder.setOptionalInfo(optionalInfo);
     }
 
     public void setOptionalInfo(boolean optionalInfo) {

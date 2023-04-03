@@ -4,7 +4,6 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import lombok.EqualsAndHashCode;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -16,10 +15,9 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
@@ -122,8 +120,8 @@ public class ShopTrade {
         Shop shop = ShopUtil.getShop(id);
         String page = String.valueOf(shop.getPage(this));
         TradeResult result = getResult(player, shop);
-        return PersistentUtil.setNMSTag(
-                PersistentUtil.setNMSTag(
+        return NBTUtil.setNMSTag(
+                NBTUtil.setNMSTag(
                         ItemUtil.getNamedItem(
                                 DisplayPanelConfig.getPanel(result).getItemStack(getLimit(), getTradeCount(player)),
                                 ShopUtil.getShop(id).getDisplayNameOrElseNone() + ChatColor.GREEN + "との取引",
@@ -141,11 +139,11 @@ public class ShopTrade {
     }
 
     private static ItemStack getSettingsFilter(int value) {
-        return PersistentUtil.setNMSTag(ItemUtil.getNamedItem(DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack(),
-                                                              ChatColor.GREEN + "取引上限設定と取引のアイテム化",
-                                                              false,
-                                                              ChatColor.GREEN + "クリック: 取引上限設定" + ChatColor.YELLOW + " 取引上限: " + value,
-                                                              ChatColor.GREEN + "シフトクリック: 取引のアイテム化"
+        return NBTUtil.setNMSTag(ItemUtil.getNamedItem(DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack(),
+                                                       ChatColor.GREEN + "取引上限設定と取引のアイテム化",
+                                                       false,
+                                                       ChatColor.GREEN + "クリック: 取引上限設定" + ChatColor.YELLOW + " 取引上限: " + value,
+                                                       ChatColor.GREEN + "シフトクリック: 取引のアイテム化"
         ), "TradeLimit", String.valueOf(value));
     }
 

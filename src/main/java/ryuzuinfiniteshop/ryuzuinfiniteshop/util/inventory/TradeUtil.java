@@ -76,10 +76,10 @@ public class TradeUtil {
     }
 
     public static ShopTrade getFirstTrade(ItemStack item) {
-        String tag = PersistentUtil.getNMSStringTag(item, "TradesSize");
+        String tag = NBTUtil.getNMSStringTag(item, "TradesSize");
         if (tag == null) return null;
-        Shop.ShopType shoptype = Shop.ShopType.valueOf(PersistentUtil.getNMSStringTag(item, "ShopType"));
-        return new ShopTrade(ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Give" + 0)), ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Take" + 0)));
+        Shop.ShopType shoptype = Shop.ShopType.valueOf(NBTUtil.getNMSStringTag(item, "ShopType"));
+        return new ShopTrade(ItemUtil.toItemStackArrayFromString(NBTUtil.getNMSStringTag(item, "Give" + 0)), ItemUtil.toItemStackArrayFromString(NBTUtil.getNMSStringTag(item, "Take" + 0)));
     }
 
     public static LinkedHashMap<ShopTrade, Shop> getTradesFromGive(ItemStack item) {

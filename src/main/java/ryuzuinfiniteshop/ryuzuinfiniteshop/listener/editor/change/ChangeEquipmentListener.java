@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.EquipmentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;

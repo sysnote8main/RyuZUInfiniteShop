@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Ageable;
@@ -165,7 +164,7 @@ public class ShopUtil {
     public static void removeAllNPC() {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntities()) {
-                String id = PersistentUtil.getNMSStringTag(entity, "Shop");
+                String id = NBTUtil.getNMSStringTag(entity, "Shop");
                 if (id != null) entity.remove();
             }
         }

@@ -8,7 +8,7 @@ import org.bukkit.entity.EntityType;
 import java.util.function.Consumer;
 
 public class AgeableShop extends Shop {
-    protected boolean adult;
+    protected boolean adult = true;
 
     public AgeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
@@ -25,6 +25,7 @@ public class AgeableShop extends Shop {
             ((Ageable) npc).setAdult();
         else
             ((Ageable) npc).setBaby();
+//        NBTBuilder.setIsBaby(!look);
     }
 
     @Override

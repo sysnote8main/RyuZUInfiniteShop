@@ -12,7 +12,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.EquipmentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 
@@ -199,7 +199,7 @@ public class ShopEditorGui extends ShopGui {
     private void setBiome(Inventory inv) {
         if (!(getShop() instanceof VillagerableShop)) return;
         int slot = 3 * 9 + 8 - SettingsMap.size();
-        inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getBiomeImageMaterial(), ChatColor.GREEN + "バイオームチェンジ"));
+        inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getBiomeMaterial(), ChatColor.GREEN + "バイオームチェンジ"));
         SettingsMap.put(slot, ShopSettings.Biome);
     }
 

@@ -20,7 +20,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
@@ -129,8 +129,8 @@ public class SearchTradeListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Inventory inv = event.getView().getTopInventory();
         int base = (event.getSlot() / 9) * 9;
-        ItemStack item = PersistentUtil.getNMSStringTag(inv.getItem(4 + base), "Shop") == null ? inv.getItem(6 + base) : inv.getItem(4 + base);
-        Shop shop = ShopUtil.getShop(PersistentUtil.getNMSStringTag(item, "Shop"));
+        ItemStack item = NBTUtil.getNMSStringTag(inv.getItem(4 + base), "Shop") == null ? inv.getItem(6 + base) : inv.getItem(4 + base);
+        Shop shop = ShopUtil.getShop(NBTUtil.getNMSStringTag(item, "Shop"));
         if (shop == null) {
             SoundUtil.playFailSound(p);
             return;
@@ -144,7 +144,7 @@ public class SearchTradeListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "にテレポートしました");
         } else {
             if (!shop.isAvailableShop(p)) return;
-            ShopTradeGui gui = shop.getPage(Integer.parseInt(PersistentUtil.getNMSStringTag(item, "Page")));
+            ShopTradeGui gui = shop.getPage(Integer.parseInt(NBTUtil.getNMSStringTag(item, "Page")));
             if (gui == null) {
                 SoundUtil.playFailSound(p);
                 return;

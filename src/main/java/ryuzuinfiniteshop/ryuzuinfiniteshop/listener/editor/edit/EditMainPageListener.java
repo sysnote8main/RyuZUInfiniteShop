@@ -8,14 +8,13 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 
@@ -28,7 +27,7 @@ public class EditMainPageListener implements Listener {
         if (!p.hasPermission("ris.op")) return;
         if (!p.isSneaking()) return;
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
-        String id = PersistentUtil.getNMSStringTag(entity, "Shop");
+        String id = NBTUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;
         Shop shop = ShopUtil.getShop(id);
         if (shop.isEditting()) return;

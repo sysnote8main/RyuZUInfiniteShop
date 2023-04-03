@@ -13,22 +13,24 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class HorseShop extends AgeableShop {
-    protected Horse.Color color;
-    protected Horse.Style style;
+    protected Horse.Color color = Horse.Color.WHITE;
+    protected Horse.Style style = Horse.Style.NONE;
 
     public HorseShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        ((Horse) npc).setColor(color);
-        ((Horse) npc).setStyle(style);
+        setColor(color);
+        setStyle(style);
     }
 
-    public Horse.Color setColor() {
-        return color;
+    public void setStyle(Horse.Style style) {
+        this.style = style;
+        ((Horse) npc).setStyle(style);
     }
 
     public void setColor(Horse.Color color) {
         this.color = color;
         ((Horse) npc).setColor(color);
+//        NBTBuilder.setVariant(color.name().toLowerCase(), style.name().toLowerCase());
     }
 
     public Horse.Style getNextStyle() {
@@ -36,11 +38,6 @@ public class HorseShop extends AgeableShop {
         return nextindex == Horse.Style.values().length ?
                 Horse.Style.values()[0] :
                 Horse.Style.values()[nextindex];
-    }
-
-    public void setStyle(Horse.Style style) {
-        this.style = style;
-        ((Horse) npc).setStyle(style);
     }
 
     public Horse.Color getNextColor() {

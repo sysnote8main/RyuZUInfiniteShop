@@ -24,8 +24,10 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopGui4to4;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopGui6to2;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EntityNBTBuilder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
@@ -41,6 +43,8 @@ public class Shop {
 
     @Getter
     protected Entity npc;
+    @Getter
+    protected final EntityNBTBuilder NBTBuilder;
     @Getter
     @Setter
     protected Location location;
@@ -66,6 +70,7 @@ public class Shop {
         initializeShop(location);
         spawnNPC(entitytype);
         loadYamlProcess(getFile());
+        this.NBTBuilder = new EntityNBTBuilder(npc);
         if (!exsited) {
             createEditorNewPage();
             saveYaml();
@@ -77,6 +82,7 @@ public class Shop {
         initializeShop(location);
         this.mythicmob = Optional.of(mmid);
         loadYamlProcess(getFile());
+        this.NBTBuilder = new EntityNBTBuilder(npc);
         if (!exsited) {
             createEditorNewPage();
             saveYaml();
@@ -175,7 +181,7 @@ public class Shop {
             ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(i);
             ShopTrade expectedTrade = TradeUtil.getTrade(inv, i, getShopType());
             boolean available = TradeUtil.isAvailableTrade(inv, i, getShopType());
-            String limitString = PersistentUtil.getNMSStringTag(inv.getItem(limitSlot), "TradeLimit");
+            String limitString = NBTUtil.getNMSStringTag(inv.getItem(limitSlot), "TradeLimit");
             int limit = limitString == null ? 0 : Integer.parseInt(limitString);
             limit = limit == 0 && expectedTrade != null && expectedTrade.getLimit() > 0 ? expectedTrade.getLimit() : limit;
             if (available && this.trades.contains(expectedTrade) && !expectedTrade.equals(trade)) duplication = true;
@@ -241,20 +247,20 @@ public class Shop {
         if (trade == null) return null;
 
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石", ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
-        item = PersistentUtil.setNMSTag(item, "ShopType", type.toString());
-        item = PersistentUtil.setNMSTag(item, "TradesSize", String.valueOf(1));
-        item = PersistentUtil.setNMSTag(item, "Give" + 0, ItemUtil.toStringFromItemStackArray(trade.getGiveItems()));
-        item = PersistentUtil.setNMSTag(item, "Take" + 0, ItemUtil.toStringFromItemStackArray(trade.getTakeItems()));
+        item = NBTUtil.setNMSTag(item, "ShopType", type.toString());
+        item = NBTUtil.setNMSTag(item, "TradesSize", String.valueOf(1));
+        item = NBTUtil.setNMSTag(item, "Give" + 0, ItemUtil.toStringFromItemStackArray(trade.getGiveItems()));
+        item = NBTUtil.setNMSTag(item, "Take" + 0, ItemUtil.toStringFromItemStackArray(trade.getTakeItems()));
         return item;
     }
 
     public ItemStack convertTrades() {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石", ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
-        item = PersistentUtil.setNMSTag(item, "ShopType", type.toString());
-        item = PersistentUtil.setNMSTag(item, "TradesSize", String.valueOf(trades.size()));
+        item = NBTUtil.setNMSTag(item, "ShopType", type.toString());
+        item = NBTUtil.setNMSTag(item, "TradesSize", String.valueOf(trades.size()));
         for (int i = 0; i < trades.size(); i++) {
-            item = PersistentUtil.setNMSTag(item, "Give" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).getGiveItems()));
-            item = PersistentUtil.setNMSTag(item, "Take" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).getTakeItems()));
+            item = NBTUtil.setNMSTag(item, "Give" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).getGiveItems()));
+            item = NBTUtil.setNMSTag(item, "Take" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).getTakeItems()));
         }
         return item;
     }
@@ -271,13 +277,13 @@ public class Shop {
     }
 
     public List<ShopTrade> getTrades(ItemStack item) {
-        String tag = PersistentUtil.getNMSStringTag(item, "TradesSize");
+        String tag = NBTUtil.getNMSStringTag(item, "TradesSize");
         if (tag == null) return null;
-        Shop.ShopType shoptype = Shop.ShopType.valueOf(PersistentUtil.getNMSStringTag(item, "ShopType"));
+        Shop.ShopType shoptype = Shop.ShopType.valueOf(NBTUtil.getNMSStringTag(item, "ShopType"));
         if (!(shoptype.equals(Shop.ShopType.TwotoOne) || shoptype.equals(type))) return null;
         List<ShopTrade> temp = new ArrayList<>();
         for (int i = 0; i < Integer.parseInt(tag); i++) {
-            temp.add(new ShopTrade(ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Give" + i)), ItemUtil.toItemStackArrayFromString(PersistentUtil.getNMSStringTag(item, "Take" + i))));
+            temp.add(new ShopTrade(ItemUtil.toItemStackArrayFromString(NBTUtil.getNMSStringTag(item, "Give" + i)), ItemUtil.toItemStackArrayFromString(NBTUtil.getNMSStringTag(item, "Take" + i))));
         }
         return temp;
     }
@@ -300,7 +306,7 @@ public class Shop {
                                                         ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay(),
                                                         ChatColor.YELLOW + "名前: " + JavaUtil.getOrDefault(npc.getCustomName(), "<none>")
         );
-        return PersistentUtil.setNMSTag(item, "ShopData", convertShopToString());
+        return NBTUtil.setNMSTag(item, "ShopData", convertShopToString());
     }
 
     public void removeShop() {
@@ -485,13 +491,13 @@ public class Shop {
     }
 
     public void setNpcMeta() {
-        npc.setSilent(true);
-        npc.setInvulnerable(true);
-        npc.setGravity(false);
-        PersistentUtil.setNMSTag(npc, "Shop", getID());
+        NBTBuilder.setSilent(true);
+        NBTBuilder.setInvulnerable(true);
+        NBTBuilder.setNoGravity(true);
+        NBTUtil.setNMSTag(npc, "Shop", getID());
         initializeLivingEntitiy();
         if (npc.getType().equals(EntityType.ENDER_CRYSTAL))
-            ((EnderCrystal) npc).setShowingBottom(false);
+            NBTBuilder.setShowBottom(true);
     }
 
     public void setNpcMeta(ConfigurationSection section) {
@@ -519,15 +525,13 @@ public class Shop {
 
     public void initializeLivingEntitiy() {
         if (!(npc instanceof LivingEntity)) return;
-        LivingEntity livnpc = (LivingEntity) npc;
-        livnpc.setAI(false);
-        livnpc.setRemoveWhenFarAway(false);
+        NBTBuilder.setNoAI(true);
+        NBTBuilder.setPersistenceRequired(true);
     }
 
     public void changeInvisible() {
         if (!(npc instanceof LivingEntity)) return;
-        LivingEntity livnpc = (LivingEntity) npc;
-        livnpc.setInvisible(!livnpc.isInvisible());
+        NBTBuilder.setInvisible(true);
     }
 
     public void changeNPCDirecation() {

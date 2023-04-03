@@ -5,14 +5,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.PageableGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopListHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
 import java.util.ArrayList;
@@ -52,7 +49,7 @@ public class ShopListGui extends PageableGui {
                         shop.getTrades().size() == 0 ? new ItemStack(Material.BARRIER) : shop.getTrades().get(0).getGiveItems()[0],
                         shop.getDisplayNameOrElseNone()
                 );
-            item = PersistentUtil.setNMSTag(item, "Shop", shop.getID());
+            item = NBTUtil.setNMSTag(item, "Shop", shop.getID());
             inv.setItem(i, item);
         }
 

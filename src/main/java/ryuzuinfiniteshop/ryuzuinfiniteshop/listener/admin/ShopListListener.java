@@ -7,18 +7,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.PageableHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopListHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 
@@ -77,7 +74,7 @@ public class ShopListListener implements Listener {
         if (ItemUtil.isAir(item)) return;
         Player p = (Player) event.getWhoClicked();
         ShopMode mode = holder.getMode();
-        Shop shop = ShopUtil.getShop(PersistentUtil.getNMSStringTag(item, "Shop"));
+        Shop shop = ShopUtil.getShop(NBTUtil.getNMSStringTag(item, "Shop"));
 
         if (holder.getMode().equals(ShopMode.Edit)) {
             if (event.isShiftClick()) {

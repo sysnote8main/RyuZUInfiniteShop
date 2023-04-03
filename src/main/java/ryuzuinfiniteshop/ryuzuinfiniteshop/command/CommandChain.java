@@ -29,7 +29,7 @@ public class CommandChain {
         CommandsGenerator.registerCommand(
                 "ris",
                 data -> {
-                    data.sendMessage("§a§l-------§e§l=====§b§lRyuZU Infinite Shop§e§l=====§a§l-------");
+                    data.sendMessage("§a§l-------§e§l=====§b§lSearchable Infinite Shop§e§l=====§a§l-------");
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " spawn <world,x,y,z/EntityType/MythicMobID> " + "§6§oショップの作成または更新をします");
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " open [world,x,y,z] <player>" + "§6§oショップの取引画面を開きます");
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " list " + "§6§oショップの一覧を表示します");

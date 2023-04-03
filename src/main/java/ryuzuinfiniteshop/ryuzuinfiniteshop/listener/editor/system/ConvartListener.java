@@ -15,11 +15,10 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.PersistentUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
 //ショップのNPCの装備を変更する
@@ -62,7 +61,7 @@ public class ConvartListener implements Listener {
         ClickType type = event.getClick();
         Shop shop = holder.getShop();
         ItemStack item = event.getCursor();
-        String tag = PersistentUtil.getNMSStringTag(item, "ShopType");
+        String tag = NBTUtil.getNMSStringTag(item, "ShopType");
         int slot = event.getSlot();
 
         if (slot != 5 * 9 + 8) return;
@@ -107,15 +106,15 @@ public class ConvartListener implements Listener {
 
         if (!p.hasPermission("ris.op")) return;
         if (!p.isSneaking()) return;
-        if (ItemUtil.isAir(item) || PersistentUtil.getNMSStringTag(item, "ShopData") == null) return;
+        if (ItemUtil.isAir(item) || NBTUtil.getNMSStringTag(item, "ShopData") == null) return;
         if (block == null) return;
 
         //ショップを読み込む
-        Shop shop = ShopUtil.reloadShop(block.getLocation().add(0, 1, 0), PersistentUtil.getNMSStringTag(item, "ShopData"));
+        Shop shop = ShopUtil.reloadShop(block.getLocation().add(0, 1, 0), NBTUtil.getNMSStringTag(item, "ShopData"));
 
         //音を出し、メッセージを送信
         SoundUtil.playSuccessSound(p);
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "を召喚しました");
-        LogUtil.log(LogUtil.LogType.CREATESHOP, p.getName(), PersistentUtil.getNMSStringTag(item, "ShopData"));
+        LogUtil.log(LogUtil.LogType.CREATESHOP, p.getName(), NBTUtil.getNMSStringTag(item, "ShopData"));
     }
 }

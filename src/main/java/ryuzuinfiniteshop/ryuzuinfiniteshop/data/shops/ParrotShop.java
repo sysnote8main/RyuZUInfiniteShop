@@ -13,16 +13,13 @@ public class ParrotShop extends Shop {
 
     public ParrotShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        ((Parrot) npc).setVariant(color);
-    }
-
-    public Parrot.Variant setColor() {
-        return color;
+        setColor(color);
     }
 
     public void setColor(Parrot.Variant color) {
         this.color = color;
         ((Parrot) npc).setVariant(color);
+//        NBTBuilder.setVariant(color.ordinal());
     }
 
     public Parrot.Variant getNextColor() {

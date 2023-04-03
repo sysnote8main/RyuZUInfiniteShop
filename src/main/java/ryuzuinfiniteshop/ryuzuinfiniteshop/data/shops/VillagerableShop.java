@@ -1,32 +1,28 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
+import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EntityNBTBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+@Getter
 public class VillagerableShop extends AgeableShop {
-    protected Villager.Profession profession;
-    protected Villager.Type biome;
+    protected Villager.Profession profession = Villager.Profession.FARMER;
+    protected Villager.Type biome = Villager.Type.PLAINS;
+    protected int level = 1;
 
     public VillagerableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
-        if(entitytype.equals(EntityType.VILLAGER)) ((Villager) npc).setRecipes(new ArrayList<>());
         setProfession(profession);
         setBiome(biome);
-    }
-
-    public Villager.Profession getProfession() {
-        return profession;
-    }
-
-    public Villager.Type getBiome() {
-        return biome;
+        setLevel(level);
     }
 
     public void setProfession(Villager.Profession profession) {
@@ -36,6 +32,7 @@ public class VillagerableShop extends AgeableShop {
         else
             ((ZombieVillager) npc).setVillagerProfession(profession);
         ((Villager) npc).setRecipes(new ArrayList<>());
+//        NBTBuilder.setVillagerData(profession, biome, level);
     }
 
     public void setBiome(Villager.Type villagertype) {
@@ -44,6 +41,14 @@ public class VillagerableShop extends AgeableShop {
             ((Villager) npc).setVillagerType(villagertype);
         else
             ((ZombieVillager) npc).setVillagerType(villagertype);
+//        NBTBuilder.setVillagerData(profession, biome, level);
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+        if (npc instanceof Villager)
+            ((Villager) npc).setVillagerLevel(level);
+//        NBTBuilder.setVillagerData(profession, biome, level);
     }
 
     public Villager.Profession getNextProfession() {
@@ -65,6 +70,7 @@ public class VillagerableShop extends AgeableShop {
         return super.getSaveYamlProcess().andThen(yaml -> {
             yaml.set("Npc.Options.Profession", JavaUtil.getOrDefault(profession, Villager.Profession.FARMER).toString());
             yaml.set("Npc.Options.Biome", JavaUtil.getOrDefault(biome, Villager.Type.PLAINS).toString());
+            yaml.set("Npc.Options.Level", level);
         });
     }
 
@@ -73,6 +79,7 @@ public class VillagerableShop extends AgeableShop {
         return super.getLoadYamlProcess().andThen(yaml -> {
             this.profession = Villager.Profession.valueOf(yaml.getString("Npc.Options.Profession" , "FARMER"));
             this.biome = Villager.Type.valueOf(yaml.getString("Npc.Options.Biome" , "PLAINS"));
+            this.level = yaml.getInt("Npc.Options.Level" , 1);
         });
     }
 
@@ -112,7 +119,7 @@ public class VillagerableShop extends AgeableShop {
         }
     }
 
-    public Material getBiomeImageMaterial() {
+    public Material getBiomeMaterial() {
         switch (biome) {
             case DESERT:
                 return Material.SAND;
@@ -129,6 +136,22 @@ public class VillagerableShop extends AgeableShop {
             case PLAINS:
             default:
                 return Material.GRASS_BLOCK;
+        }
+    }
+
+    public Material getLevelMaterial() {
+        switch (level) {
+            case 2:
+                return Material.IRON_INGOT;
+            case 3:
+                return Material.GOLD_INGOT;
+            case 4:
+                return Material.EMERALD;
+            case 5:
+                return Material.DIAMOND;
+            case 1:
+            default:
+                return Material.COBBLESTONE;
         }
     }
 }

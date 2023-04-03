@@ -1,17 +1,17 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 
 import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.NBTEntity;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtinjector.NBTInjector;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 
-public class PersistentUtil {
+public class NBTUtil {
     public static void setNMSTag(Entity ent, String key, String value) {
         if (RyuZUInfiniteShop.VERSION < 16) {
             ent = NBTInjector.patchEntity(ent);
@@ -24,6 +24,7 @@ public class PersistentUtil {
     }
 
     public static String getNMSStringTag(Entity ent, String key) {
+        if(ent instanceof Player) return null;
         if (RyuZUInfiniteShop.VERSION < 16) {
             ent = NBTInjector.patchEntity(ent);
             NBTCompound comp = NBTInjector.getNbtData(ent);

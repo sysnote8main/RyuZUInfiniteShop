@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>RyuZUInfiniteShop</groupId>
-    <artifactId>RyuZUInfiniteShop</artifactId>
+    <groupId>SearchableInfiniteShop</groupId>
+    <artifactId>SearchableInfiniteShop</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>RyuZUInfiniteShop</name>
+    <name>SearchableInfiniteShop</name>
 
     <description>無限にページを作成できるShopPluginです</description>
     <properties>
@@ -44,6 +44,14 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>de.tr7zw.changeme.nbtapi</pattern>
+                            <shadedPattern>YOUR PACKGE WHERE THE API SHOULD END UP</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
             </plugin>
         </plugins>
         <resources>
