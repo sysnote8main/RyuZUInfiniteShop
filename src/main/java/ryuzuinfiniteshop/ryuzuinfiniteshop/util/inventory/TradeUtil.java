@@ -145,8 +145,8 @@ public class TradeUtil {
         String tag = NBTUtil.getNMSStringTag(item, "TradesSize");
         if (tag == null) return null;
         HashMap<String, String> temp = new HashMap<>();
-        temp.put("TradesSize", tag);
         temp.put("ShopType", NBTUtil.getNMSStringTag(item, "ShopType"));
+        temp.put("TradesSize", String.valueOf(trades.size()));
         for (int i = 0; i < trades.size(); i++) {
             temp.put("Give" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).getGiveItems()));
             temp.put("Take" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).getTakeItems()));

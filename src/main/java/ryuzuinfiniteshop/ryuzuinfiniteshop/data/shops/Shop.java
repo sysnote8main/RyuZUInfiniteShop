@@ -316,10 +316,10 @@ public class Shop {
     }
 
     public ItemStack convertShopToItemStack() {
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石",
-                                                        "シフトして地面に使用",
-                                                        ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay(),
-                                                        ChatColor.YELLOW + "名前: " + getDisplayNameOrElseShop()
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石: " + getDisplayNameOrElseNone(),
+                                                        ChatColor.YELLOW + "ショップに向かって右クリック: ショップの取引の取り込み",
+                                                        ChatColor.YELLOW + "地面に向かってシフト右クリック: ショップの設置",
+                                                        ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay()
         );
         item = NBTUtil.setNMSTag(item , convertShopToMap());
         return item;
@@ -541,6 +541,11 @@ public class Shop {
         if (this instanceof HorseShop) {
             ((HorseShop) this).setColor(Horse.Color.valueOf(section.getString("color")));
             ((HorseShop) this).setStyle(Horse.Style.valueOf(section.getString("style")));
+        }
+        if(this instanceof VillagerableShop) {
+            ((VillagerableShop) this).setProfession(Villager.Profession.valueOf(section.getString("profession")));
+            ((VillagerableShop) this).setBiome(Villager.Type.valueOf(section.getString("villagerType")));
+            ((VillagerableShop) this).setLevel(section.getInt("villagerLevel"));
         }
         if (this instanceof ParrotShop)
             ((ParrotShop) this).setColor(Parrot.Variant.valueOf(section.getString("parrotVariant")));
