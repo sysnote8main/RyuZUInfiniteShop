@@ -333,10 +333,19 @@ public class ShopUtil {
     public static ShopHolder closeShopInventory(Player p) {
         if (p.getOpenInventory().getTopInventory().getHolder() instanceof ShopHolder) {
             ShopHolder holder = (ShopHolder) p.getOpenInventory().getTopInventory().getHolder();
+            holder.setBefore(null);
             p.closeInventory();
             return holder;
         }
         return null;
+    }
+
+    public static void forceClose(Player p) {
+        if (p.getOpenInventory().getTopInventory().getHolder() instanceof ShopHolder) {
+            ShopHolder holder = (ShopHolder) p.getOpenInventory().getTopInventory().getHolder();
+            holder.setBefore(null);
+        }
+        p.closeInventory();
     }
 
     public static HashMap<Player, ShopHolder> getAllShopInventoryViewer() {

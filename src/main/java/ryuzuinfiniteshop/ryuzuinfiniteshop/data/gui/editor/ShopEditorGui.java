@@ -75,7 +75,7 @@ public class ShopEditorGui extends ShopGui {
     }
 
     private void setTeleport(Inventory inv) {
-        inv.setItem(3 * 9 + 8, ItemUtil.getNamedItem(Material.COMPASS, ChatColor.GREEN + "NPCにテレポートする"));
+        inv.setItem(2 * 9 + 8, ItemUtil.getNamedItem(Material.COMPASS, ChatColor.GREEN + "NPCにテレポートする"));
     }
 
     private void setShopStatus(Inventory inv) {

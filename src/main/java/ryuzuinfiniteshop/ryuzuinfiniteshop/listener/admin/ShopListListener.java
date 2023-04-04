@@ -81,14 +81,14 @@ public class ShopListListener implements Listener {
 
         if (holder.getMode().equals(ShopMode.Edit)) {
             if (event.isShiftClick()) {
-                //取引画面を開く
-                p.openInventory(shop.getPage(1).getInventory(mode, p, holder));
-                SoundUtil.playClickShopSound(p);
-                shop.setEditting(true);
-            } else {
                 //編集画面を開く
                 ShopUtil.closeAllShopTradeInventory(shop);
                 p.openInventory(shop.getEditor(1).getInventory(mode, holder));
+                SoundUtil.playClickShopSound(p);
+                shop.setEditting(true);
+            } else {
+                //取引画面を開く
+                p.openInventory(shop.getPage(1).getInventory(mode, p, holder));
                 SoundUtil.playClickShopSound(p);
                 shop.setEditting(true);
             }

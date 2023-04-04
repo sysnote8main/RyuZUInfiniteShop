@@ -26,12 +26,9 @@ public class TeleportShopListener implements Listener {
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         int slot = event.getSlot();
-        if (slot != 3 * 9 + 8) return;
+        if (slot != 2 * 9 + 8) return;
 
-        //音を出す
-        SoundUtil.playCautionSound(p);
-
-        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
+        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> ShopUtil.forceClose(p), 1L);
         p.teleport(holder.getShop().getLocation());
         SoundUtil.playSuccessSound(p);
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + holder.getShop().getDisplayNameOrElseShop() + ChatColor.GREEN + "にテレポートしました");

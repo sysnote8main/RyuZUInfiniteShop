@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.command.CommandChain;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.MythicItem;
@@ -16,14 +17,9 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.canceller.CancelAffectNpc;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.canceller.CancelItemMoveListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.admin.ShopListListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.change.*;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.ConvartListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.ReloadShopListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.RemoveShopListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.EditMainPageListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.EditTradePageListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.SearchTradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.trades.OpenShopListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.SchedulerListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
@@ -79,6 +75,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         getPlugin().getServer().getPluginManager().registerEvents(new RemoveShopListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ReloadShopListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new SearchTradeListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new TeleportShopListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new SchedulerListener(), getPlugin());
 //        try {
 //            String listenerspath = RyuZUInfiniteShop.getPlugin().getClass().getResource("listeners").getFile()

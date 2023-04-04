@@ -50,8 +50,8 @@ public class SearchTradeListener implements Listener {
         if ((type.isRightClick() || type.isLeftClick())) {
             if (slot == 4) {
                 if (event.isShiftClick()) {
+                    // NPC名で検索
                     SchedulerListener.setSchedulers(p, "search", (message) -> {
-                        //成功時の処理
                         p.openInventory(new ShopListGui(1, message).getInventory(mode));
                         SoundUtil.playClickShopSound(p);
                     });
@@ -63,32 +63,35 @@ public class SearchTradeListener implements Listener {
                     event.setCurrentItem(ItemUtil.getOneItemStack(event.getCursor()));
                 SoundUtil.playClickShopSound(p);
             } else {
-                if (panel.equals(searchItem)) {
-                    if(event.isShiftClick()) {
+                if (event.isShiftClick()) {
+                        // 対価名、商品名で検索
                         SchedulerListener.setSchedulers(p, "search", (message) -> {
-                            //成功時の処理
                             LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTakeByDisplayName(message, mode) : TradeUtil.getTradesFromGiveByDisplayName(message, mode);
                             if (searchedTrades.size() == 0) {
                                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
                                 SoundUtil.playFailSound(p);
                                 return;
                             }
-                            p.openInventory(new ShopListGui(1, message).getInventory(mode));
+                            p.openInventory(new TradeSearchGui(1, p, searchedTrades).getInventory(mode));
                             SoundUtil.playClickShopSound(p);
                         });
                         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "検索するアイテムの名前をチャットに入力してください");
                         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
-                    } else
-                        SoundUtil.playFailSound(p);
                 } else {
-                    LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTake(searchItem, mode) : TradeUtil.getTradesFromGive(searchItem, mode);
-                    if (searchedTrades.size() == 0) {
-                        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
+                    if(panel.equals(searchItem))
+                        // アイテム未設定
                         SoundUtil.playFailSound(p);
-                        return;
+                    else {
+                        // アイテムで検索
+                        LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTake(searchItem, mode) : TradeUtil.getTradesFromGive(searchItem, mode);
+                        if (searchedTrades.size() == 0) {
+                            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
+                            SoundUtil.playFailSound(p);
+                            return;
+                        }
+                        p.openInventory(new TradeSearchGui(1, p, searchedTrades).getInventory(mode));
+                        SoundUtil.playClickShopSound(p);
                     }
-                    p.openInventory(new TradeSearchGui(1, p, searchedTrades).getInventory(mode));
-                    SoundUtil.playClickShopSound(p);
                 }
             }
         }
