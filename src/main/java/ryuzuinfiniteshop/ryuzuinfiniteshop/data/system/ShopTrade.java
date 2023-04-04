@@ -120,6 +120,7 @@ public class ShopTrade {
         Shop shop = ShopUtil.getShop(id);
         String page = String.valueOf(shop.getPage(this));
         TradeResult result = getResult(player, shop);
+        boolean isAdmin = player.hasPermission("sis.op");
         return NBTUtil.setNMSTag(
                 NBTUtil.setNMSTag(
                         ItemUtil.getNamedItem(
@@ -127,8 +128,10 @@ public class ShopTrade {
                                 ShopUtil.getShop(id).getDisplayNameOrElseNone() + ChatColor.GREEN + "との取引",
                                 false,
                                 ChatColor.GREEN + page + ChatColor.YELLOW + "ページ目",
-                                player.hasPermission("sis.op") ? ChatColor.GREEN + "クリック: 取引画面を開く" : null,
-                                player.hasPermission("sis.op") ? ChatColor.GREEN + "シフトクリック: 編集画面を開く" : null
+                                isAdmin ? (ChatColor.YELLOW + "検索可否: " + (shop.isSearchable() ? ChatColor.GREEN + "可" : ChatColor.RED + "不可")) : null,
+                                isAdmin ? (ChatColor.YELLOW + "ロック: " + (shop.isLock() ? ChatColor.RED + "ロック" : ChatColor.GREEN + "アンロック")) : null,
+                                isAdmin ? ChatColor.GREEN + "クリック: 取引画面を開く" : null,
+                                isAdmin ? ChatColor.GREEN + "シフトクリック: 編集画面を開く" : null
                         ),
                         "Shop", id
                 ), "Page", page
