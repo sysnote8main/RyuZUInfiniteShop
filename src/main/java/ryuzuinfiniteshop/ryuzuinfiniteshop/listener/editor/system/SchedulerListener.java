@@ -38,18 +38,19 @@ public class SchedulerListener implements Listener {
         Shop shop = ShopUtil.getShop(data.getId());
         schedulers.remove(p.getUniqueId());
         event.setCancelled(true);
-        if (shop == null) {
-            if(data.getId().equals("search"))
-                Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> data.getSuccessProcess().accept(event.getMessage()));
-            else {
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップが見つかりませんでした");
-                SoundUtil.playFailSound(p);
-            }
-        } else if (event.getMessage().equalsIgnoreCase("Cancel")) {
+        if (event.getMessage().equalsIgnoreCase("Cancel")) {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "キャンセルしました");
             SoundUtil.playClickShopSound(p);
         } else {
-            Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> data.getSuccessProcess().accept(event.getMessage()));
+            if (shop == null) {
+                if(data.getId().equals("search"))
+                    Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> data.getSuccessProcess().accept(event.getMessage()));
+                else {
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップが見つかりませんでした");
+                    SoundUtil.playFailSound(p);
+                }
+            } else
+                Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> data.getSuccessProcess().accept(event.getMessage()));
         }
     }
 }

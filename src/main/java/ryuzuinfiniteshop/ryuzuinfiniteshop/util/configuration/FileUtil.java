@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.UnderstandSystemConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
@@ -52,6 +53,8 @@ public class FileUtil {
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
             TradeUtil.saveTradeLimits();
             ShopUtil.saveAllShops();
+            UnderstandSystemConfig.save();
+            UnderstandSystemConfig.load();
             Config.load();
             DisplayPanelConfig.load();
             boolean converted = ShopUtil.loadAllShops();
@@ -75,6 +78,8 @@ public class FileUtil {
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
             TradeUtil.saveTradeLimits();
             ShopUtil.saveAllShops();
+            UnderstandSystemConfig.save();
+            UnderstandSystemConfig.load();
             Config.load();
             DisplayPanelConfig.load();
             boolean converted = ShopUtil.loadAllShops();
@@ -98,6 +103,7 @@ public class FileUtil {
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
             Config.load();
             DisplayPanelConfig.load();
+            UnderstandSystemConfig.load();
             boolean converted = ShopUtil.loadAllShops();
             TradeUtil.loadTradeLimits();
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
@@ -119,6 +125,7 @@ public class FileUtil {
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
             TradeUtil.saveTradeLimits();
             ShopUtil.saveAllShops();
+            UnderstandSystemConfig.save();
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
                 saveBlock = false;
                 Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのファイルを保存して、アンロードが完了しました"));
@@ -136,6 +143,7 @@ public class FileUtil {
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
             TradeUtil.saveTradeLimits();
             ShopUtil.saveAllShops();
+            UnderstandSystemConfig.save();
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
                 saveBlock = false;
                 Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのファイルの保存が完了しました"));

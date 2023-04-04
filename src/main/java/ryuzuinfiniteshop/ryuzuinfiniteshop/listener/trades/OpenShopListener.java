@@ -1,5 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.trades;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -13,6 +15,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.UnderstandSystemConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
@@ -41,7 +44,10 @@ public class OpenShopListener implements Listener {
         if (!(ItemUtil.isAir(item) || NBTUtil.getNMSStringTag(item, "ShopData") == null)) return;
 
         Inventory inv = shop.getPage(1).getInventory(ShopMode.Trade, p);
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "GUIの画面外を右クリック: 次のページに移動、左クリック: 前のページに移動");
+        TextComponent understand = new TextComponent(ChatColor.YELLOW + "[分かった！]");
+        understand.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sis understand"));
+        if(UnderstandSystemConfig.signedPlayers.contains(p.getUniqueId().toString())) understand = null;
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "GUIの画面外を右クリック: 次のページに移動、左クリック: 前のページに移動できます" + understand);
         p.openInventory(inv);
         event.setCancelled(true);
     }
