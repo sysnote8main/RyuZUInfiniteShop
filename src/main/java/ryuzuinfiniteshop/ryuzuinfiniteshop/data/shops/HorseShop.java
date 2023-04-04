@@ -2,6 +2,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Donkey;
 import org.bukkit.entity.EntityType;
@@ -18,6 +19,10 @@ public class HorseShop extends AgeableShop {
 
     public HorseShop(Location location, EntityType entitytype) {
         super(location, entitytype);
+    }
+
+    public HorseShop(Location location, EntityType entitytype, ConfigurationSection config) {
+        super(location, entitytype, config);
     }
 
     public void setStyle(Horse.Style style) {

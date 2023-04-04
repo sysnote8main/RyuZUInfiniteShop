@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -40,7 +41,19 @@ public class OpenShopListener implements Listener {
         if (!(ItemUtil.isAir(item) || NBTUtil.getNMSStringTag(item, "ShopData") == null)) return;
 
         Inventory inv = shop.getPage(1).getInventory(ShopMode.Trade, p);
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "GUIの画面外を右クリック: 次のページに移動、左クリック: 前のページに移動");
         p.openInventory(inv);
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void openShop(PlayerInteractEntityEvent event) {
+        Entity entity = event.getRightClicked();
+        Player p = event.getPlayer();
+        if (p.isSneaking()) return;
+        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
+        String id = NBTUtil.getNMSStringTag(entity, "Shop");
+        if (id == null) return;
         event.setCancelled(true);
     }
 

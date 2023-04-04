@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
@@ -20,6 +21,10 @@ public class VillagerableShop extends AgeableShop {
 
     public VillagerableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
+    }
+
+    public VillagerableShop(Location location, EntityType entitytype, ConfigurationSection config) {
+        super(location, entitytype, config);
     }
 
     public void setProfession(Villager.Profession profession) {
@@ -74,9 +79,9 @@ public class VillagerableShop extends AgeableShop {
     @Override
     public Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
         return super.getSyncLoadYamlProcess().andThen(yaml -> {
-            this.profession = Villager.Profession.valueOf(yaml.getString("Npc.Options.Profession" , "FARMER"));
-            this.biome = Villager.Type.valueOf(yaml.getString("Npc.Options.Biome" , "PLAINS"));
-            this.level = yaml.getInt("Npc.Options.Level" , 1);
+            this.profession = Villager.Profession.valueOf(yaml.getString("Npc.Options.Profession", "FARMER"));
+            this.biome = Villager.Type.valueOf(yaml.getString("Npc.Options.Biome", "PLAINS"));
+            this.level = yaml.getInt("Npc.Options.Level", 1);
             setProfession(profession);
             setBiome(biome);
             setLevel(level);

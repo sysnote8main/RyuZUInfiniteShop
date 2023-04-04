@@ -1,6 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.EntityType;
@@ -12,6 +13,10 @@ public class AgeableShop extends Shop {
 
     public AgeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
+    }
+
+    public AgeableShop(Location location, EntityType entitytype, ConfigurationSection config) {
+        super(location, entitytype, config);
     }
 
     public boolean isAdult() {

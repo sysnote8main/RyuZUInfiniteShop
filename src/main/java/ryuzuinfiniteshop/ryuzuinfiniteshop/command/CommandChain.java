@@ -8,12 +8,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SelectSearchItemGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
@@ -24,7 +20,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
-import java.util.HashMap;
 import java.util.function.Predicate;
 
 public class CommandChain {
@@ -48,6 +43,26 @@ public class CommandChain {
                 "sis.reload",
                 data -> {
                     FileUtil.reloadAllWithMessage();
+                },
+                "sis.op",
+                data -> true,
+                data -> !FileUtil.isSaveBlock(data)
+        );
+
+        CommandsGenerator.registerCommand(
+                "sis.unload",
+                data -> {
+                    FileUtil.unloadAll(() -> {});
+                },
+                "sis.op",
+                data -> true,
+                data -> !FileUtil.isSaveBlock(data)
+        );
+
+        CommandsGenerator.registerCommand(
+                "sis.load",
+                data -> {
+                    FileUtil.loadAll(() -> {});
                 },
                 "sis.op",
                 data -> true,
@@ -224,8 +239,7 @@ public class CommandChain {
                         data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
                         return false;
                     }
-                    if(FileUtil.isSaveBlock(data)) return false;
-                    return true;
+                    return !FileUtil.isSaveBlock(data);
                 }
         );
 

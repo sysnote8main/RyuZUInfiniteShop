@@ -88,16 +88,17 @@ public class ShopUtil {
         return ((ShopHolder) inv.getHolder()).getMode().equals(ShopMode.Search);
     }
 
-    public static void loadAllShops() {
+    public static boolean loadAllShops() {
         getShops().clear();
         File directory = FileUtil.initializeFolder("shops");
         File[] ItemFiles = directory.listFiles();
-        if (ItemFiles == null) return;
+        if (ItemFiles == null) return false;
+        boolean converted = false;
         for (File f : ItemFiles) {
             try {
                 if (!f.getName().endsWith(".yml")) continue;
                 if (f.getName().equals("save.yml")) {
-                    convertAllShopkeepers(f);
+                    converted = convertAllShopkeepers(f);
                     continue;
                 }
                 YamlConfiguration config = new YamlConfiguration();
@@ -115,9 +116,10 @@ public class ShopUtil {
                 throw new RuntimeException("ShopID: " + f.getName() + " の読み込み中にエラーが発生しました", e);
             }
         }
+        return converted;
     }
 
-    private static void convertAllShopkeepers(File file) {
+    private static boolean convertAllShopkeepers(File file) {
         YamlConfiguration config = new YamlConfiguration();
         try {
             config.load(file);
@@ -139,7 +141,7 @@ public class ShopUtil {
                 if (!config.getString(base + "type", "none").equals("admin")) continue;
                 if (Bukkit.getWorld(config.getString(base + ".world")) == null) continue;
                 Location location = LocationUtil.toLocationFromString(config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z"));
-                Shop shop = createNewShop(location, type, config.getConfigurationSection(base));
+                Shop shop = createNewShop(location, type, config.getConfigurationSection(key));
                 List<ShopTrade> trades = new ArrayList<>();
                 for (String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
                     boolean hasItem2 = config.contains(base + "recipes." + recipe + ".item2");
@@ -151,10 +153,9 @@ public class ShopUtil {
                     trades.add(new ShopTrade(results, items));
                 }
                 shop.setTrades(trades);
-                shop.saveYaml();
                 keys.add(key);
             } catch (Exception e) {
-                throw new RuntimeException("ShopkeepersID: " + key + "SISID: " + (config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z")) + " のShopkeepersからのコンバート中にエラーが発生しました", e);
+                throw new RuntimeException("ShopkeepersID: " + key + " SISID: " + (config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z")) + " のShopkeepersからのコンバート中にエラーが発生しました", e);
             }
         }
 
@@ -165,6 +166,7 @@ public class ShopUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return keys.size() > 0;
     }
 
     public static void removeAllNPC() {
@@ -204,34 +206,34 @@ public class ShopUtil {
         shops.put(id, shop);
     }
 
-    public static Shop createNewShop(Location location, EntityType type, ConfigurationSection configurationSection) {
-        return new ConvertingShop(location, type, configurationSection);
-    }
-
     public static Shop createNewShop(Location location, String mmid) {
         return new Shop(location, mmid);
     }
 
-    public static Shop createNewShop(Location location, EntityType type) {
+    public static Shop createNewShop(Location location, EntityType type, ConfigurationSection config) {
         if (type.equals(EntityType.VILLAGER) || type.equals(EntityType.ZOMBIE_VILLAGER)) {
-            return new VillagerableShop(location, type);
+            return new VillagerableShop(location, type, config);
         }
         if (type.equals(EntityType.CREEPER)) {
-            return new PoweredableShop(location, type);
+            return new PoweredableShop(location, type, config);
         }
         if (Colorable.class.isAssignableFrom(type.getEntityClass()) || type.equals(EntityType.WOLF) || type.equals(EntityType.TROPICAL_FISH)) {
-            return new DyeableShop(location, type);
+            return new DyeableShop(location, type, config);
         }
         if (type.equals(EntityType.PARROT)) {
-            return new ParrotShop(location, type);
+            return new ParrotShop(location, type, config);
         }
         if (type.equals(EntityType.HORSE)) {
-            return new HorseShop(location, type);
+            return new HorseShop(location, type, config);
         }
         if (Ageable.class.isAssignableFrom(type.getEntityClass())) {
-            return new AgeableShop(location, type);
+            return new AgeableShop(location, type, config);
         }
-        return new Shop(location, type);
+        return new Shop(location, type, config);
+    }
+
+    public static Shop createNewShop(Location location, EntityType type) {
+        return createNewShop(location, type, null);
     }
 
     public static void removeShop(String id) {

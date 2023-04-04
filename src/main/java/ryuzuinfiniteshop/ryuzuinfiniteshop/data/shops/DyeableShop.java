@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.material.Colorable;
@@ -17,6 +18,10 @@ public class DyeableShop extends Shop {
 
     public DyeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
+    }
+
+    public DyeableShop(Location location, EntityType entitytype, ConfigurationSection config) {
+        super(location, entitytype, config);
     }
 
     public DyeColor getColor() {

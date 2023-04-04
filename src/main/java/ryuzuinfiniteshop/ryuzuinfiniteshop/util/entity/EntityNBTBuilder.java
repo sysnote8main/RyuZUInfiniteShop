@@ -22,7 +22,7 @@ public class EntityNBTBuilder {
     }};
 
     public EntityNBTBuilder(Entity entity) {
-        if(RyuZUInfiniteShop.VERSION <= 15) {
+        if(RyuZUInfiniteShop.VERSION < 14) {
             this.entity = entity;
             this.compound = NBTInjector.getNbtData(entity);
         } else {

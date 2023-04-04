@@ -2,6 +2,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 
@@ -13,6 +14,10 @@ public class ParrotShop extends Shop {
 
     public ParrotShop(Location location, EntityType entitytype) {
         super(location, entitytype);
+    }
+
+    public ParrotShop(Location location, EntityType entitytype, ConfigurationSection config) {
+        super(location, entitytype, config);
     }
 
     public void setColor(Parrot.Variant color) {

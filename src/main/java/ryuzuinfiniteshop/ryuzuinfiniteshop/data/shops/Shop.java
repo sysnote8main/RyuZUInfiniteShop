@@ -51,6 +51,7 @@ public class Shop {
     protected EntityType entityType;
     protected ShopType type;
     protected List<ShopTrade> trades = new ArrayList<>();
+    protected ConfigurationSection shopkeepersConfig;
 
     @Setter
     @Getter
@@ -81,6 +82,18 @@ public class Shop {
         }
     }
 
+    public Shop(Location location, EntityType entityType, ConfigurationSection config) {
+        boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
+        initializeShop(location);
+        this.entityType = entityType;
+        this.shopkeepersConfig = config;
+        loadYamlProcess(getFile());
+        if (!exsited) {
+            createEditorNewPage();
+            if(config == null) saveYaml();
+        }
+    }
+
     public Shop(Location location, String mmid) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         initializeShop(location);
@@ -106,7 +119,10 @@ public class Shop {
     private Consumer<YamlConfiguration> getLoadYamlProcess() {
         return yaml -> {
             getAsyncLoadYamlProcess().accept(yaml);
-            Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> getSyncLoadYamlProcess().accept(yaml));
+            Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
+                getSyncLoadYamlProcess().accept(yaml);
+                getSyncLoadYamlShopkeepersConvertProcess();
+            });
         };
     }
 
@@ -135,6 +151,13 @@ public class Shop {
             this.location.setYaw(yaml.getInt("Npc.Status.Yaw", 0));
             npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
         };
+    }
+
+    public void getSyncLoadYamlShopkeepersConvertProcess() {
+        if(shopkeepersConfig == null) return;
+        setNpcMeta(shopkeepersConfig.getConfigurationSection("object"));
+        displayName = shopkeepersConfig.getString("name", "").isEmpty() ? "" : ChatColor.GREEN + shopkeepersConfig.getString("name");
+        npc.setCustomName(displayName);
     }
 
     private Consumer<YamlConfiguration> getAsyncLoadYamlProcess() {
@@ -535,7 +558,7 @@ public class Shop {
 
     public void setNpcMeta(ConfigurationSection section) {
         if (this instanceof AgeableShop)
-            ((AgeableShop) this).setAgeLook(section.getBoolean("baby", false));
+            ((AgeableShop) this).setAgeLook(!section.getBoolean("baby", false));
         if (this instanceof PoweredableShop)
             ((PoweredableShop) this).setPowered(section.getBoolean("powered", false));
         if (this instanceof HorseShop) {
