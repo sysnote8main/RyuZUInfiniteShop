@@ -35,8 +35,6 @@ public class EditMainPageListener implements Listener {
         Shop shop = ShopUtil.getShop(id);
         if (shop.isEditting()) return;
         if (FileUtil.isSaveBlock(p)) return;
-        ItemStack item = p.getInventory().getItemInMainHand();
-        if (!(ItemUtil.isAir(item) || NBTUtil.getNMSStringTag(item, "ShopData") == null)) return;
 
         ShopUtil.closeAllShopTradeInventory(shop);
         p.openInventory(shop.getEditor(1).getInventory(ShopMode.Edit));

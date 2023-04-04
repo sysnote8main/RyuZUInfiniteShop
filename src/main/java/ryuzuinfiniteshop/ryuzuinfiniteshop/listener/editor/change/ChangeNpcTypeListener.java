@@ -26,7 +26,7 @@ public class ChangeNpcTypeListener implements Listener {
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
-        if(ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, "").equals(event.getCurrentItem())) return;
+        if (ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, "").equals(event.getCurrentItem())) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
@@ -38,7 +38,7 @@ public class ChangeNpcTypeListener implements Listener {
             //成功時の処理
             //NPCを再構築する
             try {
-                ShopUtil.overwriteShop(shop.getLocation(), shop.convertShopToString(), EntityType.valueOf(message.toUpperCase()));
+                ShopUtil.overwriteShop(shop.getLocation(), shop.convertShopToString(), shop.convertTradesToMap(), EntityType.valueOf(message.toUpperCase()));
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティタイプを変更しました");
                 SoundUtil.playSuccessSound(p);
             } catch (IllegalArgumentException e) {

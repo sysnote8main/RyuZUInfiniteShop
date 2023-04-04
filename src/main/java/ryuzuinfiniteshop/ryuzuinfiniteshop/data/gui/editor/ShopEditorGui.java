@@ -31,7 +31,7 @@ public class ShopEditorGui extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, ChatColor.DARK_BLUE + JavaUtil.getOrDefault(getShop().getNpc().getCustomName(), "ショップ") + ChatColor.DARK_BLUE + " エディター ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, ChatColor.DARK_BLUE + getShop().getDisplayNameOrElseShop() + ChatColor.DARK_BLUE + " エディター ページ" + getPage());
 
         //アイテムを設置
         setDisplay(inv);
@@ -71,7 +71,7 @@ public class ShopEditorGui extends ShopGui {
     }
 
     public void setDisplayName(Inventory inv) {
-        inv.setItem(5 * 9 + 3, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + "名前を変更する" , ChatColor.YELLOW + "現在の名前: " + JavaUtil.getOrDefault(getShop().getNpc().getCustomName() , "<none>")));
+        inv.setItem(5 * 9 + 3, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + "名前を変更する" , ChatColor.YELLOW + "現在の名前: " + getShop().getDisplayNameOrElseNone()));
     }
 
     private void setShopStatus(Inventory inv) {

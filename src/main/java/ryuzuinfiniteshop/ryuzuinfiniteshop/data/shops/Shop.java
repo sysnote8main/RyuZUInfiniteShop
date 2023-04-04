@@ -43,12 +43,15 @@ public class Shop {
     @Getter
     protected EntityNBTBuilder NBTBuilder;
     @Getter
+    protected String displayName;
+    @Getter
     @Setter
     protected Location location;
     protected Optional<String> mythicmob = Optional.empty();
     protected EntityType entityType;
     protected ShopType type;
     protected List<ShopTrade> trades = new ArrayList<>();
+
     @Setter
     @Getter
     protected boolean lock = false;
@@ -121,8 +124,8 @@ public class Shop {
                     this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments"));
                     updateEquipments();
                 }
-                if (yaml.getString("Npc.Options.DisplayName") != null)
-                    npc.setCustomName(yaml.getString("Npc.Options.DisplayName"));
+                displayName = yaml.getString("Npc.Options.DisplayName");
+                npc.setCustomName(displayName);
                 if (npc instanceof LivingEntity) {
                     this.invisible = yaml.getBoolean("Npc.Options.Invisible", false);
                     NBTBuilder.setInvisible(invisible);
@@ -139,10 +142,8 @@ public class Shop {
             this.type = ShopType.valueOf(yaml.getString("Shop.Options.ShopType", "TwotoOne"));
             this.lock = yaml.getBoolean("Npc.Status.Lock", false);
             this.searchable = yaml.getBoolean("Npc.Status.Searchable", true);
-            if (yaml.contains("Trades")) {
-                this.trades = yaml.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, Object>) tradeconfig)).collect(Collectors.toList());
-                updateTradeContents();
-            }
+            this.trades = yaml.getList("Trades", new ArrayList<>()).stream().map(tradeconfig -> new ShopTrade((HashMap<String, Object>) tradeconfig)).collect(Collectors.toList());
+            updateTradeContents();
         };
     }
 
@@ -273,19 +274,25 @@ public class Shop {
         return item;
     }
 
-    public ItemStack convertTrades() {
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石", ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
-        item = NBTUtil.setNMSTag(item, "ShopType", type.toString());
-        item = NBTUtil.setNMSTag(item, "TradesSize", String.valueOf(trades.size()));
-        for (int i = 0; i < trades.size(); i++) {
-            item = NBTUtil.setNMSTag(item, "Give" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).getGiveItems()));
-            item = NBTUtil.setNMSTag(item, "Take" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).getTakeItems()));
+    public HashMap<String, String> convertTradesToMap() {
+        HashMap<String, String> trades = new HashMap<>();
+        trades.put("ShopType", type.toString());
+        trades.put("TradesSize", String.valueOf(this.trades.size()));
+        for (int i = 0; i < this.trades.size(); i++) {
+            trades.put("Give" + i, ItemUtil.toStringFromItemStackArray(this.trades.get(i).getGiveItems()));
+            trades.put("Take" + i, ItemUtil.toStringFromItemStackArray(this.trades.get(i).getTakeItems()));
         }
+        return trades;
+    }
+
+    public ItemStack convertTradesToItemStack() {
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石", ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
+        item = NBTUtil.setNMSTag(item , convertTradesToMap());
         return item;
     }
 
     public boolean loadTrades(ItemStack item, Player p) {
-        List<ShopTrade> temp = getTrades(item);
+        List<ShopTrade> temp = TradeUtil.convertTradesToList(item);
         if (temp == null) return false;
         boolean duplication = temp.stream().anyMatch(trade -> trades.contains(trade));
         trades.addAll(temp);
@@ -295,36 +302,27 @@ public class Shop {
         return duplication;
     }
 
-    public List<ShopTrade> getTrades(ItemStack item) {
-        String tag = NBTUtil.getNMSStringTag(item, "TradesSize");
-        if (tag == null) return null;
-        Shop.ShopType shoptype = Shop.ShopType.valueOf(NBTUtil.getNMSStringTag(item, "ShopType"));
-        if (!(shoptype.equals(Shop.ShopType.TwotoOne) || shoptype.equals(type))) return null;
-        List<ShopTrade> temp = new ArrayList<>();
-        for (int i = 0; i < Integer.parseInt(tag); i++) {
-            temp.add(new ShopTrade(ItemUtil.toItemStackArrayFromString(NBTUtil.getNMSStringTag(item, "Give" + i)), ItemUtil.toItemStackArrayFromString(NBTUtil.getNMSStringTag(item, "Take" + i))));
-        }
-        return temp;
+    public HashMap<String, String> convertShopToMap() {
+        HashMap<String, String> shop = new HashMap<>();
+        shop.put("ShopData", convertShopToString());
+        shop.putAll(convertTradesToMap());
+        return shop;
     }
 
     public String convertShopToString() {
-        File file = getFile();
-        YamlConfiguration config = new YamlConfiguration();
-        try {
-            config.load(file);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-        return config.saveToString();
+        YamlConfiguration yaml = saveYaml();
+        yaml.set("Trades", null);
+        return saveYaml().saveToString();
     }
 
     public ItemStack convertShopToItemStack() {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石",
                                                         "シフトして地面に使用",
                                                         ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay(),
-                                                        ChatColor.YELLOW + "名前: " + JavaUtil.getOrDefault(npc.getCustomName(), "<none>")
+                                                        ChatColor.YELLOW + "名前: " + getDisplayNameOrElseShop()
         );
-        return NBTUtil.setNMSTag(item, "ShopData", convertShopToString());
+        item = NBTUtil.setNMSTag(item , convertShopToMap());
+        return item;
     }
 
     public void removeShop() {
@@ -463,7 +461,7 @@ public class Shop {
             mythicmob.ifPresent(mythicmob -> yaml.set("Npc.Options.MythicMob", mythicmob));
             if (npc != null) {
                 yaml.set("Npc.Options.EntityType", npc.getType().toString());
-                yaml.set("Npc.Options.DisplayName", npc.getCustomName());
+                yaml.set("Npc.Options.DisplayName", displayName);
                 if (npc instanceof LivingEntity) yaml.set("Npc.Options.Invisible", invisible);
             }
             yaml.set("Shop.Options.ShopType", type.toString());
@@ -475,7 +473,7 @@ public class Shop {
         };
     }
 
-    public void saveYaml() {
+    public YamlConfiguration saveYaml() {
         File file = getFile();
         YamlConfiguration yaml = new YamlConfiguration();
         getSaveYamlProcess().accept(yaml);
@@ -484,24 +482,30 @@ public class Shop {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return yaml;
     }
 
     public File getFile() {
         return FileUtil.initializeFile("shops/" + getID() + ".yml");
     }
 
-    public String getDisplayName() {
-        return JavaUtil.getOrDefault(npc.getCustomName(), "ショップ");
+    public String getDisplayNameOrElseShop() {
+        return JavaUtil.getOrDefault(displayName, "ショップ");
+    }
+
+    public void setDisplayName(String name) {
+        this.displayName = name;
+        if (npc != null) npc.setCustomName(name);
     }
 
     public boolean containsDisplayName(String name) {
-        if (npc.getCustomName() == null || npc.getCustomName().isEmpty()) return false;
+        if (getDisplayName() == null || getDisplayName().isEmpty()) return false;
         if (name == null || name.isEmpty()) return false;
-        return ChatColor.stripColor(npc.getCustomName().toUpperCase()).contains(name.toUpperCase());
+        return ChatColor.stripColor(displayName.toUpperCase()).contains(name.toUpperCase());
     }
 
     public String getDisplayNameOrElseNone() {
-        return JavaUtil.getOrDefault(npc.getCustomName(), ChatColor.YELLOW + "<none>");
+        return JavaUtil.getOrDefault(displayName, ChatColor.YELLOW + "<none>");
     }
 
     private void spawnNPC(EntityType entitytype) {

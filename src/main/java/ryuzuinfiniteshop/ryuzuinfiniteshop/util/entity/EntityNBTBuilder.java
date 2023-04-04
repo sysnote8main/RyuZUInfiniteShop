@@ -22,8 +22,13 @@ public class EntityNBTBuilder {
     }};
 
     public EntityNBTBuilder(Entity entity) {
-        this.entity = entity;
-        this.compound = NBTInjector.getNbtData(entity);
+        if(RyuZUInfiniteShop.VERSION <= 15) {
+            this.entity = entity;
+            this.compound = NBTInjector.getNbtData(entity);
+        } else {
+            this.entity = entity;
+            this.compound = null;
+        }
     }
 
     public void setInvisible(boolean invisible) {

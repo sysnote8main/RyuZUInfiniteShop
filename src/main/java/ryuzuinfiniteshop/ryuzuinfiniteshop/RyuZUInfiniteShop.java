@@ -42,7 +42,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         new RyuZUCommandsGenerator(this);
         ConfigurationSerialization.registerClass(MythicItem.class);
         MythicInstanceProvider.setInstance();
-        if(VERSION < 16) NBTInjector.inject();
+        if(VERSION < 14) NBTInjector.inject();
         FileUtil.loadAll(() -> {});
         Config.runAutoSave();
     }

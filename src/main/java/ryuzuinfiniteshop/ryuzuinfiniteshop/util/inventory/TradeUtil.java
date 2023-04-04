@@ -107,4 +107,50 @@ public class TradeUtil {
         });
         return trades;
     }
+
+    public static List<ShopTrade> convertTradesToList(HashMap<String, String> trades) {
+        String tag = trades.get("TradesSize");
+        if (tag == null) return null;
+        List<ShopTrade> temp = new ArrayList<>();
+        for (int i = 0; i < Integer.parseInt(tag); i++) {
+            temp.add(new ShopTrade(ItemUtil.toItemStackArrayFromString(trades.get("Give" + i)), ItemUtil.toItemStackArrayFromString(trades.get("Take" + i))));
+        }
+        return temp;
+    }
+
+    public static List<ShopTrade> convertTradesToList(ItemStack item) {
+        String tag = NBTUtil.getNMSStringTag(item, "TradesSize");
+        if (tag == null) return null;
+        List<ShopTrade> temp = new ArrayList<>();
+        for (int i = 0; i < Integer.parseInt(tag); i++) {
+            temp.add(new ShopTrade(ItemUtil.toItemStackArrayFromString(NBTUtil.getNMSStringTag(item, "Give" + i)), ItemUtil.toItemStackArrayFromString(NBTUtil.getNMSStringTag(item, "Take" + i))));
+        }
+        return temp;
+    }
+
+    public static Map<String, String> convertTradesToMap(ItemStack item) {
+        String tag = NBTUtil.getNMSStringTag(item, "TradesSize");
+        if (tag == null) return null;
+        HashMap<String, String> temp = new HashMap<>();
+        temp.put("TradesSize", tag);
+        temp.put("ShopType", NBTUtil.getNMSStringTag(item, "ShopType"));
+        for (int i = 0; i < Integer.parseInt(tag); i++) {
+            temp.put("Give" + i, NBTUtil.getNMSStringTag(item, "Give" + i));
+            temp.put("Take" + i, NBTUtil.getNMSStringTag(item, "Take" + i));
+        }
+        return temp;
+    }
+
+    public static Map<String, String> convertTradesToMap(ItemStack item, List<ShopTrade> trades) {
+        String tag = NBTUtil.getNMSStringTag(item, "TradesSize");
+        if (tag == null) return null;
+        HashMap<String, String> temp = new HashMap<>();
+        temp.put("TradesSize", tag);
+        temp.put("ShopType", NBTUtil.getNMSStringTag(item, "ShopType"));
+        for (int i = 0; i < trades.size(); i++) {
+            temp.put("Give" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).getGiveItems()));
+            temp.put("Take" + i, ItemUtil.toStringFromItemStackArray(trades.get(i).getTakeItems()));
+        }
+        return temp;
+    }
 }

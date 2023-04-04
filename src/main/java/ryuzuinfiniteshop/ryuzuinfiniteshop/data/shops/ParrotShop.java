@@ -30,9 +30,7 @@ public class ParrotShop extends Shop {
 
     @Override
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
-        return super.getSaveYamlProcess().andThen(yaml -> {
-            yaml.set("Npc.Options.Color", color.toString());
-        });
+        return super.getSaveYamlProcess().andThen(yaml -> yaml.set("Npc.Options.Color", color.toString()));
     }
 
     @Override

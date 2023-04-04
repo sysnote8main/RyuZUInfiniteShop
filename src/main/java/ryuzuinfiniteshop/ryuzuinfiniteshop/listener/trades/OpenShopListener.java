@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
@@ -17,6 +18,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
@@ -34,6 +36,8 @@ public class OpenShopListener implements Listener {
         if(FileUtil.isSaveBlock(p)) return;
         Shop shop = ShopUtil.getShop(id);
         if (!shop.isAvailableShop(p)) return;
+        ItemStack item = p.getInventory().getItemInMainHand();
+        if (!(ItemUtil.isAir(item) || NBTUtil.getNMSStringTag(item, "ShopData") == null)) return;
 
         Inventory inv = shop.getPage(1).getInventory(ShopMode.Trade, p);
         p.openInventory(inv);

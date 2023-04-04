@@ -37,7 +37,7 @@ public class ChangeDisplayNameListener implements Listener {
         //チャット入力待機
         SchedulerListener.setSchedulers(p, holder.getShop().getID(), (message) -> {
             //成功時の処理
-            shop.getNpc().setCustomName(ColorUtil.color(message));
+            shop.setDisplayName(ColorUtil.color(message));
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "名前が設定されました");
             SoundUtil.playSuccessSound(p);
         });

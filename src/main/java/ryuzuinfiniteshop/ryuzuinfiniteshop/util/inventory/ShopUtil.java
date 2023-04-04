@@ -239,14 +239,14 @@ public class ShopUtil {
     }
 
     public static Shop reloadShop(Shop shop) {
-        return reloadShop(shop.getLocation(), shop.convertShopToString(), config -> {});
+        return reloadShop(shop.getLocation(), shop.convertShopToString(), TradeUtil.convertTradesToList(shop.convertTradesToMap()), config -> {});
     }
 
-    public static Shop reloadShop(Location location, String data) {
-        return reloadShop(location, data, config -> {});
+    public static Shop reloadShop(Location location, String data, List<ShopTrade> trades) {
+        return reloadShop(location, data, trades, config -> {});
     }
 
-    private static Shop reloadShop(Location location, String data, Consumer<YamlConfiguration> consumer) {
+    private static Shop reloadShop(Location location, String data, List<ShopTrade> trades, Consumer<YamlConfiguration> consumer) {
         File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
         YamlConfiguration config = new YamlConfiguration();
         try {
@@ -258,6 +258,7 @@ public class ShopUtil {
         consumer.accept(config);
         String stringlocation = LocationUtil.toStringFromLocation(location);
         if (shops.containsKey(stringlocation)) shops.get(stringlocation).removeShop();
+        config.set("Trades", trades.stream().map(ShopTrade::serialize).collect(Collectors.toList()));
 
         try {
             config.save(file);
@@ -273,32 +274,33 @@ public class ShopUtil {
             return createNewShop(location, type);
     }
 
-    public static String mergeShop(String data, Shop shop, Player p) {
+    public static HashMap<String, String> mergeShop(ItemStack item, Shop shop, Player p) {
         YamlConfiguration config = new YamlConfiguration();
+        String data = NBTUtil.getNMSStringTag(item, "ShopData");
         try {
             config.loadFromString(data);
         } catch (InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        Shop.ShopType type = Shop.ShopType.valueOf(config.getString("Shop.Options.ShopType", "TwotoOne"));
-        if(!shop.getShopType().equals(type)) return null;
-        List<ShopTrade> trades = config.getList("Trades").stream().map(tradeconfig -> new ShopTrade((HashMap<String, Object>) tradeconfig)).collect(Collectors.toList());
+        List<ShopTrade> trades = TradeUtil.convertTradesToList(item);
         trades.addAll(shop.getTrades());
         LogUtil.log(LogUtil.LogType.MERGESHOP, p.getName(), shop.getID());
         shop.removeShop();
-        config.set("Trades", trades.stream().distinct().collect(Collectors.toList()));
-        return config.saveToString();
+        HashMap<String, String> shopData = new HashMap<>();
+        shopData.put("ShopData", NBTUtil.getNMSStringTag(item, "ShopData"));
+        shopData.putAll(TradeUtil.convertTradesToMap(item, trades.stream().distinct().collect(Collectors.toList())));
+        return shopData;
     }
 
-    public static Shop overwriteShop(Location location, String data, EntityType type) {
-        return reloadShop(location, data, config -> {
+    public static Shop overwriteShop(Location location, String data, HashMap<String, String> trades, EntityType type) {
+        return reloadShop(location, data, TradeUtil.convertTradesToList(trades), config -> {
             config.set("Npc.Options.MythicMob", null);
             config.set("Npc.Options.EntityType", type.toString());
         });
     }
 
-    public static Shop overwriteShop(Location location, String data, String mmid) {
-        return reloadShop(location, data, config -> config.set("Npc.Options.MythicMob", mmid));
+    public static Shop overwriteShop(Location location, String data, HashMap<String, String> trades, String mmid) {
+        return reloadShop(location, data, TradeUtil.convertTradesToList(trades), config -> config.set("Npc.Options.MythicMob", mmid));
     }
 
     public static void closeShopTradeInventory(Player p, Shop shop) {
