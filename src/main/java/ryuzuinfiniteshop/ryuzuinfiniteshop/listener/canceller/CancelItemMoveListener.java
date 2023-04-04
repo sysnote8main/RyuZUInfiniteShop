@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.canceller;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
@@ -36,15 +37,24 @@ public class CancelItemMoveListener implements Listener {
     }
 
     @EventHandler
-    public void cancelDragToOtherInventory(InventoryDragEvent event) {
+    public void cancelDragToOtherInventory(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
-        ShopHolder holder = ShopUtil.getShopHolder(event.getInventory());
+        ModeHolder holder = ShopUtil.getModeHolder(event.getInventory());
         if (holder == null) return;
-        if (ShopUtil.isEditMode(event.getInventory()) && holder.getGui() instanceof ShopTradeGui) return;
-        if (event.getRawSlots().stream().noneMatch(i -> i < event.getInventory().getSize())) return;
+        if (!ShopUtil.isSearchMode(event.getInventory())) return;
 
         //キャンセルイベント
         event.setCancelled(true);
+    }
 
+    @EventHandler
+    public void cancelDragToOtherInventory(InventoryDragEvent event) {
+        //インベントリがショップなのかチェック
+        ModeHolder holder = ShopUtil.getModeHolder(event.getInventory());
+        if (holder == null) return;
+        if (!ShopUtil.isSearchMode(event.getInventory())) return;
+
+        //キャンセルイベント
+        event.setCancelled(true);
     }
 }

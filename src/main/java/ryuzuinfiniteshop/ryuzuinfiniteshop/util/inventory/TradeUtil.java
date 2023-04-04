@@ -1,12 +1,15 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -82,10 +85,10 @@ public class TradeUtil {
         return new ShopTrade(ItemUtil.toItemStackArrayFromString(NBTUtil.getNMSStringTag(item, "Give" + 0)), ItemUtil.toItemStackArrayFromString(NBTUtil.getNMSStringTag(item, "Take" + 0)));
     }
 
-    public static LinkedHashMap<ShopTrade, Shop> getTradesFromGive(ItemStack item) {
+    public static LinkedHashMap<ShopTrade, Shop> getTradesFromGive(ItemStack item, ShopMode mode) {
         LinkedHashMap<ShopTrade, Shop> trades = new LinkedHashMap<>();
         ShopUtil.getShops().values().forEach(shop -> {
-            if (shop.isSearchable())
+            if (shop.isSearchable() || mode.equals(ShopMode.Edit))
                 shop.getTrades().forEach(trade -> Arrays.stream(trade.getGiveItems()).forEach(take -> {
                                              if (take.isSimilar(item))
                                                  trades.put(trade, shop);
@@ -95,12 +98,38 @@ public class TradeUtil {
         return trades;
     }
 
-    public static LinkedHashMap<ShopTrade, Shop> getTradesFromTake(ItemStack item) {
+    public static LinkedHashMap<ShopTrade, Shop> getTradesFromTake(ItemStack item, ShopMode mode) {
         LinkedHashMap<ShopTrade, Shop> trades = new LinkedHashMap<>();
         ShopUtil.getShops().values().forEach(shop -> {
-            if (shop.isSearchable())
+            if (shop.isSearchable() || mode.equals(ShopMode.Edit))
                 shop.getTrades().forEach(trade -> Arrays.stream(trade.getTakeItems()).forEach(take -> {
                                              if (take.isSimilar(item))
+                                                 trades.put(trade, shop);
+                                         })
+                );
+        });
+        return trades;
+    }
+
+    public static LinkedHashMap<ShopTrade, Shop> getTradesFromGiveByDisplayName(String name, ShopMode mode) {
+        LinkedHashMap<ShopTrade, Shop> trades = new LinkedHashMap<>();
+        ShopUtil.getShops().values().forEach(shop -> {
+            if (shop.isSearchable() || mode.equals(ShopMode.Edit))
+                shop.getTrades().forEach(trade -> Arrays.stream(trade.getGiveItems()).forEach(take -> {
+                                             if (JavaUtil.containsIgnoreCase(take.getItemMeta().getDisplayName(), name))
+                                                 trades.put(trade, shop);
+                                         })
+                );
+        });
+        return trades;
+    }
+
+    public static LinkedHashMap<ShopTrade, Shop> getTradesFromTakeByDisplayName(String name, ShopMode mode) {
+        LinkedHashMap<ShopTrade, Shop> trades = new LinkedHashMap<>();
+        ShopUtil.getShops().values().forEach(shop -> {
+            if (shop.isSearchable() || mode.equals(ShopMode.Edit))
+                shop.getTrades().forEach(trade -> Arrays.stream(trade.getTakeItems()).forEach(take -> {
+                                             if (JavaUtil.containsIgnoreCase(take.getItemMeta().getDisplayName(), name))
                                                  trades.put(trade, shop);
                                          })
                 );

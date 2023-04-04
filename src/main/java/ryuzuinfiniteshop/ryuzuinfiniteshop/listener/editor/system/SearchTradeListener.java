@@ -45,12 +45,14 @@ public class SearchTradeListener implements Listener {
         ItemStack panel = ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.BLUE + "検索するアイテムを持ってクリック", ChatColor.GREEN + "シフトクリック: NPCの名前で検索");
         if (slot != 0 && slot != 4 && slot != 8) return;
 
+        ShopMode mode = p.hasPermission("sis.op") ? ShopMode.Edit : ShopMode.Search;
+
         if ((type.isRightClick() || type.isLeftClick())) {
             if (slot == 4) {
                 if (event.isShiftClick()) {
                     SchedulerListener.setSchedulers(p, "search", (message) -> {
                         //成功時の処理
-                        p.openInventory(new ShopListGui(1, message).getInventory(ShopMode.Trade));
+                        p.openInventory(new ShopListGui(1, message).getInventory(mode));
                         SoundUtil.playClickShopSound(p);
                     });
                     p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "検索するNPCの名前をチャットに入力してください");
@@ -62,15 +64,30 @@ public class SearchTradeListener implements Listener {
                 SoundUtil.playClickShopSound(p);
             } else {
                 if (panel.equals(searchItem)) {
-                    SoundUtil.playFailSound(p);
+                    if(event.isShiftClick()) {
+                        SchedulerListener.setSchedulers(p, "search", (message) -> {
+                            //成功時の処理
+                            LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTakeByDisplayName(message, mode) : TradeUtil.getTradesFromGiveByDisplayName(message, mode);
+                            if (searchedTrades.size() == 0) {
+                                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
+                                SoundUtil.playFailSound(p);
+                                return;
+                            }
+                            p.openInventory(new ShopListGui(1, message).getInventory(mode));
+                            SoundUtil.playClickShopSound(p);
+                        });
+                        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "検索するアイテムの名前をチャットに入力してください");
+                        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
+                    } else
+                        SoundUtil.playFailSound(p);
                 } else {
-                    LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTake(searchItem) : TradeUtil.getTradesFromGive(searchItem);
+                    LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTake(searchItem, mode) : TradeUtil.getTradesFromGive(searchItem, mode);
                     if (searchedTrades.size() == 0) {
                         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
                         SoundUtil.playFailSound(p);
                         return;
                     }
-                    p.openInventory(new TradeSearchGui(1, p, searchedTrades).getInventory(ShopMode.Search));
+                    p.openInventory(new TradeSearchGui(1, p, searchedTrades).getInventory(mode));
                     SoundUtil.playClickShopSound(p);
                 }
             }
@@ -137,11 +154,11 @@ public class SearchTradeListener implements Listener {
         }
 
         if (event.isShiftClick()) {
-            if (!p.hasPermission("sis.op")) return;
-            Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
-            p.teleport(shop.getLocation());
-            SoundUtil.playSuccessSound(p);
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "にテレポートしました");
+            //編集画面を開く
+            ShopUtil.closeAllShopTradeInventory(shop);
+            p.openInventory(shop.getEditor(1).getInventory(ShopMode.Edit, holder));
+            SoundUtil.playClickShopSound(p);
+            shop.setEditting(true);
         } else {
             if (!shop.isAvailableShop(p)) return;
             ShopTradeGui gui = shop.getPage(Integer.parseInt(NBTUtil.getNMSStringTag(item, "Page")));

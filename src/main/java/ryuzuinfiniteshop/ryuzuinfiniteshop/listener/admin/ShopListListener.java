@@ -29,6 +29,9 @@ public class ShopListListener implements Listener {
         if (!(holder.getGui() instanceof ShopListGui)) return;
         if (event.getClickedInventory() != null) return;
 
+        //イベントキャンセル
+        event.setCancelled(true);
+
         //必要なデータを取得
         ShopListHolder shopListHolder = (ShopListHolder) holder;
         Player p = (Player) event.getWhoClicked();
@@ -55,9 +58,6 @@ public class ShopListListener implements Listener {
         } else {
             SoundUtil.playClickShopSound(p);
         }
-
-        //イベントキャンセル
-        event.setCancelled(true);
     }
 
     //ショップのページ切り替え
@@ -69,6 +69,9 @@ public class ShopListListener implements Listener {
         if (!(holder.getGui() instanceof ShopListGui)) return;
         if (event.getClickedInventory() == null) return;
 
+        //イベントキャンセル
+        event.setCancelled(true);
+
         //必要なデータを取得
         ItemStack item = event.getCurrentItem();
         if (ItemUtil.isAir(item)) return;
@@ -78,13 +81,12 @@ public class ShopListListener implements Listener {
 
         if (holder.getMode().equals(ShopMode.Edit)) {
             if (event.isShiftClick()) {
-                //ショップにTPする
-                Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
-                p.teleport(shop.getLocation());
-                SoundUtil.playSuccessSound(p);
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + shop.getDisplayName() + ChatColor.GREEN + "にテレポートしました");
+                //取引画面を開く
+                p.openInventory(shop.getPage(1).getInventory(mode, p, holder));
+                SoundUtil.playClickShopSound(p);
+                shop.setEditting(true);
             } else {
-                //エディターを開く
+                //編集画面を開く
                 ShopUtil.closeAllShopTradeInventory(shop);
                 p.openInventory(shop.getEditor(1).getInventory(mode, holder));
                 SoundUtil.playClickShopSound(p);

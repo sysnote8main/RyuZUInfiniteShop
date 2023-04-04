@@ -37,6 +37,7 @@ public class ChangeIndividualSettingsListener implements Listener {
         changePowered(holder, event.getSlot());
         changeProfession(holder, event.getSlot());
         changeBiome(holder, event.getSlot());
+        changeLevel(holder, event.getSlot());
         changeVisible(holder, event.getSlot());
         changeParrotColor(holder, event.getSlot());
         changeDyeColor(holder, event.getSlot());
@@ -96,6 +97,19 @@ public class ChangeIndividualSettingsListener implements Listener {
 
         //バイオームを変更
         ((VillagerableShop) holder.getShop()).setBiome(((VillagerableShop) holder.getShop()).getNextBiome());
+    }
+
+    //村人のレベル
+    public void changeLevel(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        ShopEditorGui editor = (ShopEditorGui) holder.getGui();
+
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.Level)) return;
+        if (!(holder.getShop() instanceof VillagerableShop)) return;
+
+        //レベルを変更
+        int level = ((VillagerableShop) holder.getShop()).getLevel();
+        ((VillagerableShop) holder.getShop()).setLevel(level >= 5 ? 1 : level + 1);
     }
 
     //透明か変更

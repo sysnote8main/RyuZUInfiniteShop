@@ -1,7 +1,9 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -30,6 +32,18 @@ public class JavaUtil {
     }
 
     public static <T> T getOrDefault(@Nullable T obj, T defaultobj) {
-        return obj == null || (obj instanceof ItemStack && ((ItemStack)obj).getType().equals(Material.AIR)) ? defaultobj : obj;
+        return obj == null || (obj instanceof ItemStack && ((ItemStack)obj).getType().equals(Material.AIR)) || (obj instanceof String && ((String)obj).isEmpty()) ? defaultobj : obj;
+    }
+
+    public static boolean containsIgnoreCase(@Nullable ItemStack item,@Nullable String str2) {
+        if(ItemUtil.isAir(item)) return false;
+        if(!item.hasItemMeta()) return false;
+        return containsIgnoreCase(item.getItemMeta().getDisplayName(), str2);
+    }
+
+    public static boolean containsIgnoreCase(@Nullable String str1,@Nullable String str2) {
+        if (str1 == null || str1.isEmpty()) return false;
+        if (str2 == null || str2.isEmpty()) return false;
+        return ChatColor.stripColor(str1).toLowerCase().contains(ChatColor.stripColor(str2).toLowerCase());
     }
 }

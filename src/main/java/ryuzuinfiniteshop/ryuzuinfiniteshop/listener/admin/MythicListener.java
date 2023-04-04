@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class MythicListener implements Listener {
     public String getID(ItemStack item) {
         ItemStack copy = item.clone();
         copy.setAmount(1);
-        return items.get(copy);
+        return JavaUtil.getOrDefault(getMythicMobsInstance().getVolatileCodeHandler().getItemHandler().getNBTData(item).getString("MYTHIC_TYPE") , items.get(copy));
     }
 
     public MythicMob getMythicMob(String id) {

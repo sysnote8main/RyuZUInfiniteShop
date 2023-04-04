@@ -32,8 +32,12 @@ public class DisplayPanel {
 
     public ItemStack getItemStack(int limit, int count) {
         ItemStack item = ItemUtil.withCustomModelData(ItemUtil.getNamedItem(material, panels.get(result)), data);
-        if(result.equals(ShopTrade.TradeResult.Success) && limit != 0) {
-            ItemUtil.withLore(item, ChatColor.YELLOW + "残り取引回数: " + (limit - count) + "回");
+        if(result.equals(ShopTrade.TradeResult.Success)) {
+            ItemUtil.withLore(item, ChatColor.YELLOW + "クリック: 1回購入");
+            ItemUtil.withLore(item, ChatColor.YELLOW + "シフトクリック: 10回購入");
+            ItemUtil.withLore(item, ChatColor.YELLOW + "ミドルクリック: 64回購入");
+            if(limit != 0)
+                ItemUtil.withLore(item, ChatColor.YELLOW + "残り取引回数: " + (limit - count) + "回");
         }
         return item;
     }

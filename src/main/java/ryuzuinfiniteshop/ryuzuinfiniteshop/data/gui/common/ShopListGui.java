@@ -40,8 +40,10 @@ public class ShopListGui extends PageableGui {
                         shop.getTrades().size() == 0 ? new ItemStack(Material.BARRIER) : shop.getTrades().get(0).getGiveItems()[0],
                         shop.getDisplayNameOrElseNone(),
                         ChatColor.YELLOW + "座標: " + shop.getID(),
-                        ChatColor.GREEN + "クリック: ショップの編集画面を開く",
-                        ChatColor.GREEN + "シフトクリック: NPCの位置までテレポート"
+                        ChatColor.YELLOW + "検索可否: " + (shop.isSearchable() ? ChatColor.GREEN + "可" : ChatColor.RED + "不可"),
+                        ChatColor.YELLOW + "ロック: " + (shop.isLock() ? ChatColor.RED + "ロック" : ChatColor.GREEN + "アンロック"),
+                        ChatColor.GREEN + "クリック: 取引画面を開く",
+                        ChatColor.GREEN + "シフトクリック: 編集画面を開く"
                 );
             else
                 item = getDisplayItem(
@@ -55,7 +57,6 @@ public class ShopListGui extends PageableGui {
 
         return inv;
     }
-
 
     private ItemStack getDisplayItem(boolean lock, ItemStack item, String name, String... lore) {
         return ItemUtil.getNamedItem(item, name, lock, lore);

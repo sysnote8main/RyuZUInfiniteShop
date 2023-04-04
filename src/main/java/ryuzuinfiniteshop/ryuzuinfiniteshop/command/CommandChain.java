@@ -77,7 +77,6 @@ public class CommandChain {
                     if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(loc))) {
                         ShopUtil.reloadShop(ShopUtil.getShop(LocationUtil.toStringFromLocation(loc)));
                         p.sendMessage(RyuZUInfiniteShop.prefixCommand + RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップを更新しました");
-                        LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), data.getArgs()[1]);
                         return;
                     }
                     ShopUtil.createNewShop(loc, EntityType.VILLAGER);
@@ -105,7 +104,6 @@ public class CommandChain {
                         if (ShopUtil.getShops().containsKey(data.getArgs()[1])) {
                             ShopUtil.reloadShop(ShopUtil.getShop(data.getArgs()[1]));
                             data.sendMessage(RyuZUInfiniteShop.prefixCommand + RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップを更新しました");
-                            LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), data.getArgs()[1]);
                             return;
                         }
                     } else {

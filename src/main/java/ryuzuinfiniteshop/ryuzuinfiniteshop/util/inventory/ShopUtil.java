@@ -191,7 +191,7 @@ public class ShopUtil {
     public static HashMap<String, Shop> getSortedShops(ShopMode mode, String name) {
         HashMap<String, Shop> sorted = new HashMap<>();
         if (mode.equals(ShopMode.Edit))
-            shops.keySet().stream().sorted(Comparator.naturalOrder()).forEach(key -> sorted.put(key, shops.get(key)));
+            shops.keySet().stream().sorted(Comparator.naturalOrder()).filter(key -> shops.get(key).containsDisplayName(name) || name == null).forEach(key -> sorted.put(key, shops.get(key)));
         else
             shops.keySet().stream().sorted(Comparator.naturalOrder()).filter(key -> shops.get(key).isSearchable() && shops.get(key).containsDisplayName(name)).forEach(key -> sorted.put(key, shops.get(key)));
 

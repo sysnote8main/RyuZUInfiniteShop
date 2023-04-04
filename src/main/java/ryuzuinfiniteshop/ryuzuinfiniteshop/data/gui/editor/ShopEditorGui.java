@@ -21,7 +21,7 @@ import java.util.List;
 
 //ショップエディターのメインページ
 public class ShopEditorGui extends ShopGui {
-    public enum ShopSettings {Age, Power, Profession, Biome, Visible, ParrotColor, DyeColor, OptionalInfo, HorseColor, HorseStyle}
+    public enum ShopSettings {Age, Power, Profession, Biome,Level, Visible, ParrotColor, DyeColor, OptionalInfo, HorseColor, HorseStyle}
 
     private final HashMap<Integer, ShopSettings> SettingsMap = new HashMap<>();
 
@@ -74,6 +74,10 @@ public class ShopEditorGui extends ShopGui {
         inv.setItem(5 * 9 + 3, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + "名前を変更する" , ChatColor.YELLOW + "現在の名前: " + getShop().getDisplayNameOrElseNone()));
     }
 
+    private void setTeleport(Inventory inv) {
+        inv.setItem(3 * 9 + 8, ItemUtil.getNamedItem(Material.COMPASS, ChatColor.GREEN + "NPCにテレポートする"));
+    }
+
     private void setShopStatus(Inventory inv) {
         if(MythicInstanceProvider.isLoaded()) inv.setItem(4 * 9 + 3, ItemUtil.getNamedItem(Material.ENDER_EYE, ChatColor.GREEN + "MythicMobIDを設定する"));
         inv.setItem(4 * 9 + 4, ItemUtil.getNamedItem(Material.ENDER_PEARL, ChatColor.GREEN + "エンティティタイプを変更する"));
@@ -91,7 +95,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setShopOperation(Inventory inv) {
         inv.setItem(5 * 9 + 4, ItemUtil.getNamedItem(Material.BARRIER, ChatColor.RED + "ショップを削除する"));
-        inv.setItem(5 * 9 + 5, ItemUtil.getNamedItem(Material.COMPASS, ChatColor.YELLOW + "ショップを更新する"));
+        inv.setItem(5 * 9 + 5, ItemUtil.getNamedItem(Material.NETHER_STAR, ChatColor.YELLOW + "ショップを更新する"));
         inv.setItem(5 * 9 + 6, ItemUtil.getNamedItem(Material.EMERALD, ChatColor.GREEN + "トレード内容をアイテム化する"));
         inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.DIAMOND, ChatColor.GREEN + "ショップをアイテム化する"));
         inv.setItem(5 * 9 + 8, ItemUtil.getNamedEnchantedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.GREEN + "トレードを読み込む"));
@@ -101,6 +105,7 @@ public class ShopEditorGui extends ShopGui {
         setTradesPage(inv);
         setShopStatus(inv);
         setShopOperation(inv);
+        setTeleport(inv);
         if(!MythicInstanceProvider.isLoaded() || !MythicInstanceProvider.getInstance().isMythicMob(getShop().getNpc())) {
             setEquipment(inv);
             setDisplayName(inv);
@@ -201,6 +206,13 @@ public class ShopEditorGui extends ShopGui {
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getBiomeMaterial(), ChatColor.GREEN + "バイオームチェンジ"));
         SettingsMap.put(slot, ShopSettings.Biome);
+    }
+
+    private void setLevel(Inventory inv) {
+        if (!(getShop() instanceof VillagerableShop)) return;
+        int slot = 3 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getLevelMaterial(), ChatColor.GREEN + "レベルチェンジ"));
+        SettingsMap.put(slot, ShopSettings.Level);
     }
 
     private void setVisible(Inventory inv) {

@@ -522,9 +522,7 @@ public class Shop {
     }
 
     public boolean containsDisplayName(String name) {
-        if (getDisplayName() == null || getDisplayName().isEmpty()) return false;
-        if (name == null || name.isEmpty()) return false;
-        return ChatColor.stripColor(displayName.toUpperCase()).contains(name.toUpperCase());
+        return JavaUtil.containsIgnoreCase(displayName, name);
     }
 
     public String getDisplayNameOrElseNone() {
