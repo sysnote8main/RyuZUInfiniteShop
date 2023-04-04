@@ -1,6 +1,8 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.trades;
 
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -46,8 +48,9 @@ public class OpenShopListener implements Listener {
         Inventory inv = shop.getPage(1).getInventory(ShopMode.Trade, p);
         TextComponent understand = new TextComponent(ChatColor.YELLOW + "[分かった！]");
         understand.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sis understand"));
-        if(UnderstandSystemConfig.signedPlayers.contains(p.getUniqueId().toString())) understand = null;
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "GUIの画面外を右クリック: 次のページに移動、左クリック: 前のページに移動できます" + understand);
+        understand.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "これ以降メッセージを表示しない").create()));
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "GUIの画面外を右クリック: 次のページに移動、左クリック: 前のページに移動できます");
+        if(!UnderstandSystemConfig.signedPlayers.contains(p.getUniqueId().toString())) p.spigot().sendMessage(understand);
         p.openInventory(inv);
         event.setCancelled(true);
     }

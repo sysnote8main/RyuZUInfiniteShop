@@ -66,7 +66,11 @@ public class CommandChain {
 
         CommandsGenerator.registerCommand(
                 "sis.understand",
-                data -> UnderstandSystemConfig.signedPlayers.add(((Player) data.getSender()).getUniqueId().toString()),
+                data -> {
+                    Player p = (Player) data.getSender();
+                    UnderstandSystemConfig.signedPlayers.add(p.getUniqueId().toString());
+                    SoundUtil.playClickShopSound(p);
+                    },
                 "sis.player",
                 data -> {
                     if (!(data.getSender() instanceof Player)) {
