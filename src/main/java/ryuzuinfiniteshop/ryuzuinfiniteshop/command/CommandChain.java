@@ -221,7 +221,8 @@ public class CommandChain {
                 "sis.list",
                 data -> {
                     Player p = (Player) data.getSender();
-                    p.openInventory(new ShopListGui(1, null).getInventory(p.hasPermission("sis.op") ? ShopMode.Edit : ShopMode.Trade));
+                    ShopMode mode = p.hasPermission("sis.op") ? ShopMode.Edit : ShopMode.Trade;
+                    p.openInventory(new ShopListGui(1, ShopUtil.getSortedShops(mode, null)).getInventory(mode));
                     SoundUtil.playClickShopSound(p);
                 },
                 "sis.list",

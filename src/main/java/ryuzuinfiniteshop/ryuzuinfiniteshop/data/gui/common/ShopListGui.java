@@ -18,18 +18,17 @@ import java.util.List;
 
 //ショップエディターのメインページ
 public class ShopListGui extends PageableGui {
-    protected final String name;
+    protected final HashMap<String, Shop> shops;
 
-    public ShopListGui(int page, String name) {
+    public ShopListGui(int page, HashMap<String, Shop> shops) {
         super(page);
-        this.name = name;
+        this.shops = shops;
     }
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopListHolder(mode, this, name), 9 * 6, ChatColor.DARK_BLUE + "ショップ一覧 ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopListHolder(mode, this, shops), 9 * 6, ChatColor.DARK_BLUE + "ショップ一覧 ページ" + getPage());
 
-        HashMap<String, Shop> shops = ShopUtil.getSortedShops(mode, name);
         List<String> keys = new ArrayList<>(shops.keySet());
         for (int i = 0; i < Math.min(shops.size() - (getPage() - 1) * 54, 54); i++) {
             Shop shop = shops.get(keys.get(i + (getPage() - 1) * 54));

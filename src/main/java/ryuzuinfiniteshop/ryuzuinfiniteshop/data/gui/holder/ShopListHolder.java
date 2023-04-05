@@ -2,20 +2,23 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder;
 
 import lombok.Getter;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
+
+import java.util.HashMap;
 
 @Getter
 public class ShopListHolder extends PageableHolder {
-    protected final String name;
+    protected final HashMap<String, Shop> shops;
 
-    public ShopListHolder(ShopMode mode, ShopListGui gui, String name) {
+    public ShopListHolder(ShopMode mode, ShopListGui gui, HashMap<String, Shop> shops) {
         super(mode, gui);
-        this.name = name;
+        this.shops = shops;
     }
 
-    public ShopListHolder(ShopMode mode, ShopListGui gui, String name, ModeHolder before) {
+    public ShopListHolder(ShopMode mode, ShopListGui gui, HashMap<String, Shop> shops, ModeHolder before) {
         super(mode, gui, before);
-        this.name = name;
+        this.shops = shops;
     }
 
     @Override

@@ -45,13 +45,13 @@ public class ShopListListener implements Listener {
             if (page - 1 == 0)
                 fail = true;
             else
-                p.openInventory(new ShopListGui(page - 1, shopListHolder.getName()).getInventory(mode));
+                p.openInventory(new ShopListGui(page - 1, shopListHolder.getShops()).getInventory(mode));
         }
         if (type.isRightClick()) {
             if (page == shopListHolder.getMaxPage()) {
                 fail = true;
             } else
-                p.openInventory(new ShopListGui(page + 1, shopListHolder.getName()).getInventory(mode));
+                p.openInventory(new ShopListGui(page + 1, shopListHolder.getShops()).getInventory(mode));
         }
         if (fail) {
             SoundUtil.playFailSound(p);

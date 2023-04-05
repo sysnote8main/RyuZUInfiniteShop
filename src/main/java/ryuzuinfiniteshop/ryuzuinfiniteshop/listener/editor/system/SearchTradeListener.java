@@ -52,7 +52,7 @@ public class SearchTradeListener implements Listener {
                 if (event.isShiftClick()) {
                     // NPC名で検索
                     SchedulerListener.setSchedulers(p, "search", (message) -> {
-                        p.openInventory(new ShopListGui(1, message).getInventory(mode));
+                        p.openInventory(new ShopListGui(1, ShopUtil.getSortedShops(mode, message)).getInventory(mode));
                         SoundUtil.playClickShopSound(p);
                     });
                     p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "検索するNPCの名前をチャットに入力してください");
