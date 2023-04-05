@@ -1,10 +1,14 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item;
 
 import lombok.Value;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,6 +19,11 @@ public class MythicItem implements ConfigurationSerializable {
     int amount;
 
     public ItemStack convertItemStack() {
+        if(!MythicInstanceProvider.isLoaded())
+            return ItemUtil.clone(NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.REDSTONE_BLOCK, "§4§l[ERROR] MythicMobsがロードされていません。" + ChatColor.YELLOW + "ID: " + id) , "Error", id) , amount);
+        ItemStack item = MythicInstanceProvider.getInstance().getMythicMobsInstance().getItemManager().getItemStack(id);
+        if (item == null)
+            return ItemUtil.clone(NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.REDSTONE_BLOCK, "§4§l[ERROR] 存在しないMMIDです。" + ChatColor.YELLOW + "ID: " + id) , "Error", id) , amount);
         return MythicInstanceProvider.getInstance().getMythicItem(id, amount);
     }
 

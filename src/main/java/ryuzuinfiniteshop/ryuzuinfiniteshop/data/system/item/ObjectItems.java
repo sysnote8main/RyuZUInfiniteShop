@@ -6,11 +6,9 @@ import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode
@@ -30,7 +28,7 @@ public class ObjectItems {
     }
 
     public List<Object> getObjects() {
-        return objects.stream().map(ObjectItems::convert).collect(Collectors.toList());
+        return new ArrayList<>(reconvert().objects);
     }
 
     public ItemStack[] toItemStacks() {
@@ -48,10 +46,18 @@ public class ObjectItems {
         objects.set(index , convert(object));
     }
 
+    //return MythicItems or ItemStack
+    //from MythicItems or ItemStack
     private static Object convert(Object object) {
+        if(object instanceof ItemStack && NBTUtil.getNMSStringTag((ItemStack) object, "Error") != null)
+            return new MythicItem(NBTUtil.getNMSStringTag((ItemStack) object, "Error"), ((ItemStack) object).getAmount());
         if (object instanceof ItemStack && MythicInstanceProvider.isLoaded() && Config.saveByMMID && MythicInstanceProvider.getInstance().getID((ItemStack) object) != null)
             return new MythicItem(MythicInstanceProvider.getInstance().getID((ItemStack) object), ((ItemStack) object).getAmount());
         else
             return object;
+    }
+
+    public ObjectItems reconvert() {
+        return new ObjectItems(toItemStacks());
     }
 }

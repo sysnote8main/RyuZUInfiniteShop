@@ -74,6 +74,12 @@ public class ItemUtil {
         return item == null || item.getType().equals(Material.AIR);
     }
 
+    public static ItemStack clone(ItemStack item,int amount) {
+        ItemStack clone = item.clone();
+        clone.setAmount(amount);
+        return clone;
+    }
+
     //アイテムを含んでいるか調べる
     public static boolean contains(Inventory inventory, ItemStack item) {
         if (ItemUtil.isAir(item)) return true;

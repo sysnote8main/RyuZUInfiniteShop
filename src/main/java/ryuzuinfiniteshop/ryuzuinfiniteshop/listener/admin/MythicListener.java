@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
 import java.util.HashMap;
@@ -49,14 +50,8 @@ public class MythicListener implements Listener {
         return getMythicMobsInstance().getAPIHelper().getMythicMob(id);
     }
 
-    public ItemStack getMythicItem(String id) {
-        return getMythicItem(id, 1);
-    }
-
     public ItemStack getMythicItem(String id, int amount) {
         ItemStack item = getMythicMobsInstance().getItemManager().getItemStack(id);
-        if (item == null)
-            item = ItemUtil.getNamedItem(Material.REDSTONE_BLOCK, "§4§l[ERROR] 存在しないMMIDです。" + ChatColor.YELLOW + "ID: " + id);
         item.setAmount(amount);
         return item;
     }

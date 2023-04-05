@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtinjector.NBTInjector;
+import lombok.NonNull;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -39,8 +40,7 @@ public class NBTUtil {
         }
     }
 
-    public static ItemStack setNMSTag(ItemStack item, String key, String value) {
-        if(ItemUtil.isAir(item) || !item.hasItemMeta()) return null;
+    public static ItemStack setNMSTag(@NonNull ItemStack item, String key, String value) {
         if (RyuZUInfiniteShop.VERSION < 14) {
             NBTItem nbtItem = new NBTItem(item);
             nbtItem.setString(RyuZUInfiniteShop.prefixPersistent + key, value);
