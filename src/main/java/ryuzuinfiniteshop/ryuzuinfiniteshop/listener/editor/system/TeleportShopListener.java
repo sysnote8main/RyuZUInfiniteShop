@@ -28,7 +28,8 @@ public class TeleportShopListener implements Listener {
         int slot = event.getSlot();
         if (slot != 2 * 9 + 8) return;
 
-        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> ShopUtil.forceClose(p), 1L);
+        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
+        holder.setBefore(null);
         p.teleport(holder.getShop().getLocation());
         SoundUtil.playSuccessSound(p);
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + holder.getShop().getDisplayNameOrElseShop() + ChatColor.GREEN + "にテレポートしました");

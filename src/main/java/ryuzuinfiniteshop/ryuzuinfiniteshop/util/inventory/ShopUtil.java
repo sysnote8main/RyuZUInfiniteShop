@@ -130,11 +130,11 @@ public class ShopUtil {
         Set<String> keys = new HashSet<>();
         for (String key : config.getKeys(false)) {
             String base = key + ".";
+            if (key.equals("data-version")) continue;
             try {
-                if (key.equals("data-version")) continue;
                 EntityType type;
                 try {
-                    type = EntityType.valueOf(config.getString(key + ".object.type", "VILLAGER").toUpperCase());
+                    type = EntityType.valueOf(config.getString(key + ".object.type", "VILLAGER").replace("-", "_").toUpperCase());
                 } catch (IllegalArgumentException e) {
                     continue;
                 }
@@ -341,7 +341,7 @@ public class ShopUtil {
     }
 
     public static void forceClose(Player p) {
-        if (p.getOpenInventory().getTopInventory().getHolder() instanceof ShopHolder) {
+        if (p.getOpenInventory().getTopInventory().getHolder() instanceof ModeHolder) {
             ShopHolder holder = (ShopHolder) p.getOpenInventory().getTopInventory().getHolder();
             holder.setBefore(null);
         }

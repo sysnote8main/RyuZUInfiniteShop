@@ -91,7 +91,7 @@ public class Shop {
         loadYamlProcess(getFile());
         if (!exsited) {
             createEditorNewPage();
-            if(config == null) saveYaml();
+            if (config == null) saveYaml();
         }
     }
 
@@ -155,7 +155,7 @@ public class Shop {
     }
 
     public void getSyncLoadYamlShopkeepersConvertProcess() {
-        if(shopkeepersConfig == null) return;
+        if (shopkeepersConfig == null) return;
         setNpcMeta(shopkeepersConfig.getConfigurationSection("object"));
         displayName = shopkeepersConfig.getString("name", "").isEmpty() ? "" : ChatColor.GREEN + shopkeepersConfig.getString("name");
         npc.setCustomName(displayName);
@@ -313,7 +313,7 @@ public class Shop {
 
     public ItemStack convertTradesToItemStack() {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石", ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
-        item = NBTUtil.setNMSTag(item , convertTradesToMap());
+        item = NBTUtil.setNMSTag(item, convertTradesToMap());
         return item;
     }
 
@@ -347,7 +347,7 @@ public class Shop {
                                                         ChatColor.YELLOW + "地面に向かってシフト右クリック: ショップの設置",
                                                         ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay()
         );
-        item = NBTUtil.setNMSTag(item , convertShopToMap());
+        item = NBTUtil.setNMSTag(item, convertShopToMap());
         return item;
     }
 
@@ -562,7 +562,7 @@ public class Shop {
             ((HorseShop) this).setColor(Horse.Color.valueOf(section.getString("color")));
             ((HorseShop) this).setStyle(Horse.Style.valueOf(section.getString("style")));
         }
-        if(this instanceof VillagerableShop) {
+        if (this instanceof VillagerableShop) {
             ((VillagerableShop) this).setProfession(Villager.Profession.valueOf(section.getString("profession")));
             ((VillagerableShop) this).setBiome(Villager.Type.valueOf(section.getString("villagerType")));
             ((VillagerableShop) this).setLevel(section.getInt("villagerLevel"));
@@ -663,8 +663,9 @@ public class Shop {
     }
 
     public void respawnNPC() {
+        if (FileUtil.isSaveBlock()) return;
         if (npc != null && !npc.isDead()) return;
-        if (!location.getChunk().isLoaded()) return;
+//        if (!location.getChunk().isLoaded()) return;
         if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
             npc.remove();
             npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
