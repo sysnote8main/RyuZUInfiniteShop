@@ -18,6 +18,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
@@ -64,21 +65,21 @@ public class SearchTradeListener implements Listener {
                 SoundUtil.playClickShopSound(p);
             } else {
                 if (event.isShiftClick()) {
-                        // 対価名、商品名で検索
-                        SchedulerListener.setSchedulers(p, "search", (message) -> {
-                            LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTakeByDisplayName(message, mode) : TradeUtil.getTradesFromGiveByDisplayName(message, mode);
-                            if (searchedTrades.size() == 0) {
-                                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
-                                SoundUtil.playFailSound(p);
-                                return;
-                            }
-                            p.openInventory(new TradeSearchGui(1, p, searchedTrades).getInventory(mode));
-                            SoundUtil.playClickShopSound(p);
-                        });
-                        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "検索するアイテムの名前をチャットに入力してください");
-                        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
+                    // 対価名、商品名で検索
+                    SchedulerListener.setSchedulers(p, "search", (message) -> {
+                        LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTakeByDisplayName(message, mode) : TradeUtil.getTradesFromGiveByDisplayName(message, mode);
+                        if (searchedTrades.size() == 0) {
+                            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
+                            SoundUtil.playFailSound(p);
+                            return;
+                        }
+                        p.openInventory(new TradeSearchGui(1, p, searchedTrades).getInventory(mode));
+                        SoundUtil.playClickShopSound(p);
+                    });
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "検索するアイテムの名前をチャットに入力してください");
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
                 } else {
-                    if(panel.equals(searchItem))
+                    if (panel.equals(searchItem))
                         // アイテム未設定
                         SoundUtil.playFailSound(p);
                     else {
@@ -148,22 +149,39 @@ public class SearchTradeListener implements Listener {
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
         Inventory inv = event.getView().getTopInventory();
+        int slot = event.getSlot();
         int base = (event.getSlot() / 9) * 9;
-        ItemStack item = NBTUtil.getNMSStringTag(inv.getItem(4 + base), "Shop") == null ? inv.getItem(6 + base) : inv.getItem(4 + base);
+        int info = NBTUtil.getNMSStringTag(inv.getItem(4 + base), "Shop") == null ? 6 : 4;
+        ItemStack item = inv.getItem(info + base);
         Shop shop = ShopUtil.getShop(NBTUtil.getNMSStringTag(item, "Shop"));
-        if(shop == null) {
+        boolean isOpenShop = slot % 9 == info || !event.isShiftClick();
+        if (shop == null && isOpenShop) {
             p.sendMessage(ChatColor.RED + "ショップが見つかりませんでした。");
             SoundUtil.playFailSound(p);
             return;
         }
 
-        if (event.isShiftClick() && p.hasPermission("sis.op")) {
+        if (isOpenShop && p.hasPermission("sis.op")) {
             //編集画面を開く
             ShopUtil.closeAllShopTradeInventory(shop);
             p.openInventory(shop.getEditor(1).getInventory(ShopMode.Edit, holder));
             SoundUtil.playClickShopSound(p);
             shop.setEditting(true);
+        }
+        if (!isOpenShop) {
+            //アイテムを検索する
+            if(ItemUtil.isAir(event.getCurrentItem())) return;
+            if(!p.hasPermission("sis.search")) return;
+            if(slot % 9 == info) return;
+            LinkedHashMap<ShopTrade, Shop> searchedTrades = slot % 9 < info ? TradeUtil.getTradesFromGive(event.getCurrentItem(), holder.getMode()) : TradeUtil.getTradesFromTake(event.getCurrentItem(), holder.getMode());
+            if (searchedTrades.size() == 0) {
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
+                SoundUtil.playFailSound(p);
+                return;
+            }
+            p.openInventory(new TradeSearchGui(1, p, searchedTrades).getInventory(holder.getMode()));
         } else {
+            //取引画面を開く
             if (!shop.isAvailableShop(p)) return;
             ShopTradeGui gui = shop.getPage(Integer.parseInt(NBTUtil.getNMSStringTag(item, "Page")));
             if (gui == null) {
@@ -173,5 +191,51 @@ public class SearchTradeListener implements Listener {
             p.openInventory(gui.getInventory(ShopMode.Trade, p, holder));
             SoundUtil.playClickShopSound(p);
         }
+    }
+
+    //取引、対価で検索を行う
+    @EventHandler
+    public void onSearch(InventoryClickEvent event) {
+        //インベントリがショップなのかチェック
+        ShopHolder holder = ShopUtil.getShopHolder(event);
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof ShopTradeGui)) return;
+        if (!holder.getMode().equals(ShopMode.Trade)) return;
+
+        //必要なデータを取得
+        Player p = (Player) event.getWhoClicked();
+        Shop.ShopType type = holder.getShop().getShopType();
+        int slot = event.getSlot();
+        ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(slot);
+
+        if (trade == null) return;
+        if (trade.getResult(p).equals(ShopTrade.TradeResult.Success)) return;
+
+        int info = 0;
+        int base = (type.equals(Shop.ShopType.TwotoOne) && slot > 4) ? slot - 5 : slot;
+        switch (type) {
+            case TwotoOne:
+                info = 2;
+                break;
+            case FourtoFour:
+                info = 4;
+                break;
+            case SixtoTwo:
+                info = 6;
+                break;
+            default:
+                break;
+        }
+        if(ItemUtil.isAir(event.getCurrentItem())) return;
+        if(!p.hasPermission("sis.search")) return;
+        if(slot % 9 == info) return;
+
+        LinkedHashMap<ShopTrade, Shop> searchedTrades = base < info ? TradeUtil.getTradesFromGive(event.getCurrentItem(), ShopMode.Search) : TradeUtil.getTradesFromTake(event.getCurrentItem(), ShopMode.Search);
+        if (searchedTrades.size() == 0) {
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
+            SoundUtil.playFailSound(p);
+            return;
+        }
+        p.openInventory(new TradeSearchGui(1, p, searchedTrades).getInventory(ShopMode.Search));
     }
 }

@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.SchedulerListener;
@@ -24,7 +25,7 @@ public class ChangeMythicMobTypeListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
-        if (!ShopUtil.isEditMode(event)) return;
+        if (!holder.getMode().equals(ShopMode.Edit)) return;
         if (event.getClickedInventory() == null) return;
         if (ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, "").equals(event.getCurrentItem())) return;
 

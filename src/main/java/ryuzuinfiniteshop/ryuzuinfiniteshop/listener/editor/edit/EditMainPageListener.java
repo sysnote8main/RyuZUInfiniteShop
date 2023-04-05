@@ -61,7 +61,7 @@ public class EditMainPageListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(inv);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
-        if (!ShopUtil.isEditMode(inv)) return;
+        if (!holder.getMode().equals(ShopMode.Edit)) return;
 
         //必要なデータを取得
         ShopHolder shopholder = (ShopHolder) inv.getHolder();

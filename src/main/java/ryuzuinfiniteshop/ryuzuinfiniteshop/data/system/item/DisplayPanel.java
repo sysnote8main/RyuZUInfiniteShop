@@ -18,6 +18,7 @@ public class DisplayPanel {
         put(ShopTrade.TradeResult.NotAfford, ChatColor.RED + "アイテムが足りません");
         put(ShopTrade.TradeResult.Full, ChatColor.YELLOW + "インベントリに十分な空きがありません");
         put(ShopTrade.TradeResult.Limited, ChatColor.RED + "取引上限です");
+        put(ShopTrade.TradeResult.Normal, ChatColor.GREEN + "取引上限設定と取引のアイテム化");
     }};
 
     ShopTrade.TradeResult result;
@@ -38,6 +39,8 @@ public class DisplayPanel {
             ItemUtil.withLore(item, ChatColor.YELLOW + "ミドルクリック: 64回購入");
             if(limit != 0)
                 ItemUtil.withLore(item, ChatColor.YELLOW + "残り取引回数: " + (limit - count) + "回");
+        } else if(!result.equals(ShopTrade.TradeResult.Normal)) {
+            ItemUtil.withLore(item, ChatColor.GREEN + "対価、商品をシフトクリック: 対価、商品で検索");
         }
         return item;
     }

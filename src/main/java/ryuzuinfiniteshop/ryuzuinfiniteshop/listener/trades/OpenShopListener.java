@@ -96,7 +96,7 @@ public class OpenShopListener implements Listener {
         if (type.isRightClick()) {
             if (shop.getPage(page + 1) == null) {
                 fail = true;
-                if (ShopUtil.isEditMode(event) && shop.ableCreateNewPage()) {
+                if (holder.getMode().equals(ShopMode.Trade) && shop.ableCreateNewPage()) {
                     //取引を上書きし、取引として成立しないものは削除する
                     boolean warn = shop.checkTrades(inv);
                     if(warn) p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "重複している取引がありました");

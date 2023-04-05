@@ -13,7 +13,7 @@ public class ShopGui6to2 extends ShopTradeGui {
 
     static {
         for (int i = 0; i < 6; i++) {
-            convertSlot.add(i * 9 + 4);
+            convertSlot.add(i * 9 + 6);
         }
     }
 

@@ -131,11 +131,11 @@ public class ItemUtil {
         return item;
     }
 
-    public static ItemStack withLore(ItemStack item, String lore) {
+    public static ItemStack withLore(ItemStack item, String... lore) {
         ItemMeta meta = item.getItemMeta();
         List<String> lores = meta.getLore();
         if (lores == null) lores = new ArrayList<>();
-        lores.add(lore);
+        lores.addAll(Arrays.asList(lore));
         meta.setLore(lores);
         item.setItemMeta(meta);
         return item;

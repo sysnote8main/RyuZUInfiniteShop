@@ -144,9 +144,7 @@ public class ShopTrade {
     }
 
     private static ItemStack getSettingsFilter(int value) {
-        return NBTUtil.setNMSTag(ItemUtil.getNamedItem(DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack(),
-                                                       ChatColor.GREEN + "取引上限設定と取引のアイテム化",
-                                                       false,
+        return NBTUtil.setNMSTag(ItemUtil.withLore(DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack(),
                                                        ChatColor.GREEN + "クリック: 取引上限設定" + ChatColor.YELLOW + " 取引上限: " + value,
                                                        ChatColor.GREEN + "シフトクリック: 取引のアイテム化"
         ), "TradeLimit", String.valueOf(value));

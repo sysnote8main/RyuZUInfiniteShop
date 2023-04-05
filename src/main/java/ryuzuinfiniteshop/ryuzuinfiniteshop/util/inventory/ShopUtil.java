@@ -63,33 +63,6 @@ public class ShopUtil {
         return JavaUtil.getOrDefault(event.getClickedInventory(), event.getView().getTopInventory());
     }
 
-    public static boolean isEditMode(InventoryClickEvent event) {
-        return isEditMode(getSecureInventory(event));
-    }
-
-    public static boolean isTradeMode(InventoryClickEvent event) {
-        return isTradeMode(getSecureInventory(event));
-    }
-
-    public static boolean isSearchMode(InventoryClickEvent event) {
-        return isTradeMode(getSecureInventory(event));
-    }
-
-    public static boolean isEditMode(Inventory inv) {
-        if (getModeHolder(inv) == null) return false;
-        return ((ShopHolder) inv.getHolder()).getMode().equals(ShopMode.Edit);
-    }
-
-    public static boolean isTradeMode(Inventory inv) {
-        if (getModeHolder(inv) == null) return false;
-        return ((ShopHolder) inv.getHolder()).getMode().equals(ShopMode.Trade);
-    }
-
-    public static boolean isSearchMode(Inventory inv) {
-        if (getModeHolder(inv) == null) return false;
-        return ((ShopHolder) inv.getHolder()).getMode().equals(ShopMode.Search);
-    }
-
     public static boolean loadAllShops() {
         getShops().clear();
         File directory = FileUtil.initializeFolder("shops");

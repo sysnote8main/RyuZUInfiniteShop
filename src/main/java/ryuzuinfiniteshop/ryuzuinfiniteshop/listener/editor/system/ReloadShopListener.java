@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
@@ -17,7 +18,7 @@ public class ReloadShopListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
-        if (!ShopUtil.isEditMode(event)) return;
+        if (!holder.getMode().equals(ShopMode.Edit)) return;
         if (event.getClickedInventory() == null) return;
 
         //必要なデータを取得

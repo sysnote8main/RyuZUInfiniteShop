@@ -10,6 +10,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ConfirmRemoveGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
@@ -22,7 +23,7 @@ public class RemoveShopListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
-        if (!ShopUtil.isEditMode(event)) return;
+        if (!holder.getMode().equals(ShopMode.Edit)) return;
         if (event.getClickedInventory() == null) return;
 
         //必要なデータを取得
@@ -43,7 +44,7 @@ public class RemoveShopListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ConfirmRemoveGui)) return;
-        if (!ShopUtil.isEditMode(event)) return;
+        if (!holder.getMode().equals(ShopMode.Edit)) return;
         if (event.getClickedInventory() == null) return;
 
         event.setCancelled(true);

@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
@@ -21,6 +22,9 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
+
+import java.util.LinkedHashMap;
 
 public class EditTradePageListener implements Listener {
     //ショップのラインナップを変更
@@ -31,27 +35,27 @@ public class EditTradePageListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(inv);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopTradeGui)) return;
-        if (!ShopUtil.isEditMode(inv)) return;
+        if (!holder.getMode().equals(ShopMode.Edit)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getPlayer();
         Shop shop = holder.getShop();
 
-        if(FileUtil.isSaveBlock(p)) return;
+        if (FileUtil.isSaveBlock(p)) return;
 
         //取引を上書きし、取引として成立しないものは削除する
         boolean warn = shop.checkTrades(inv);
-        if(warn) p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "重複している取引がありました");
+        if (warn) p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "重複している取引がありました");
     }
 
-    //ディスプレイをクリックしたときイベントをキャンセルする
+    //トレードをアイテム化する
     @EventHandler
     public void cancelClickDisplay(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopTradeGui)) return;
-        if (!ShopUtil.isEditMode(event)) return;
+        if (!holder.getMode().equals(ShopMode.Edit)) return;
         if (event.getClickedInventory() == null) return;
         int slot = event.getSlot();
         if (!((ShopTradeGui) holder.getGui()).isDisplaySlot(slot)) return;
@@ -82,7 +86,7 @@ public class EditTradePageListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
-        if (!ShopUtil.isEditMode(event)) return;
+        if (!holder.getMode().equals(ShopMode.Edit)) return;
         if (event.getClickedInventory() == null) return;
 
         //必要なデータを取得
@@ -101,7 +105,7 @@ public class EditTradePageListener implements Listener {
         //取引編集ページを開く
         if (slot == newslot) {
             shop.createTradeNewPage();
-            p.openInventory(shop.getPage(page).getInventory(holder.getMode() , holder));
+            p.openInventory(shop.getPage(page).getInventory(holder.getMode(), holder));
         } else
             p.openInventory(shop.getPage(editormainpage.getTradePageNumber(slot)).getInventory(holder.getMode(), holder));
 
@@ -109,13 +113,14 @@ public class EditTradePageListener implements Listener {
         SoundUtil.playClickShopSound(p);
     }
 
+    //取引を行う
     @EventHandler
     public void onTrade(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopTradeGui)) return;
-        if (!ShopUtil.isTradeMode(event)) return;
+        if (!holder.getMode().equals(ShopMode.Trade)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
@@ -124,8 +129,9 @@ public class EditTradePageListener implements Listener {
         ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(slot);
 
         if (trade == null) return;
+        if (!trade.getResult(p).equals(ShopTrade.TradeResult.Success)) return;
 
-        //取引
+            //取引
         int times = 1;
         switch (type) {
             case SHIFT_RIGHT:
@@ -138,19 +144,16 @@ public class EditTradePageListener implements Listener {
         }
         int result = trade.trade(p, times);
         LogUtil.log(p.getUniqueId().toString(), holder.getShop().getID(), trade, result);
-
-        //イベントキャンセル
-        event.setCancelled(true);
     }
 
-    //ディスプレイをクリックしたときイベントをキャンセルする
+    //購入制限を設定する
     @EventHandler
     public void changeTradeLimit(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopTradeGui)) return;
-        if (!ShopUtil.isEditMode(event)) return;
+        if (!holder.getMode().equals(ShopMode.Edit)) return;
         if (event.getClickedInventory() == null) return;
         int slot = event.getSlot();
         if (!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
