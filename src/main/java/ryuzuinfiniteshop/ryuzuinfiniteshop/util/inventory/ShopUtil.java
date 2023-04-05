@@ -17,6 +17,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.Colorable;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
@@ -93,12 +94,12 @@ public class ShopUtil {
         File directory = FileUtil.initializeFolder("shops");
         File[] ItemFiles = directory.listFiles();
         if (ItemFiles == null) return false;
-        boolean converted = false;
+        File saveYaml = null;
         for (File f : ItemFiles) {
             try {
                 if (!f.getName().endsWith(".yml")) continue;
                 if (f.getName().equals("save.yml")) {
-                    converted = convertAllShopkeepers(f);
+                    saveYaml = f;
                     continue;
                 }
                 YamlConfiguration config = new YamlConfiguration();
@@ -116,7 +117,7 @@ public class ShopUtil {
                 throw new RuntimeException("ShopID: " + f.getName() + " の読み込み中にエラーが発生しました", e);
             }
         }
-        return converted;
+        return saveYaml != null && convertAllShopkeepers(saveYaml);
     }
 
     private static boolean convertAllShopkeepers(File file) {
@@ -141,19 +142,40 @@ public class ShopUtil {
                 if (!config.getString(base + "type", "none").equals("admin")) continue;
                 if (Bukkit.getWorld(config.getString(base + ".world")) == null) continue;
                 Location location = LocationUtil.toLocationFromString(config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z"));
-                Shop shop = createNewShop(location, type, config.getConfigurationSection(key));
-                List<ShopTrade> trades = new ArrayList<>();
-                for (String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
-                    boolean hasItem2 = config.contains(base + "recipes." + recipe + ".item2");
-                    ItemStack[] items = new ItemStack[hasItem2 ? 2 : 1];
-                    ItemStack[] results = new ItemStack[1];
-                    results[0] = config.getItemStack(base + "recipes." + recipe + ".resultItem");
-                    items[0] = config.getItemStack(base + "recipes." + recipe + ".item1");
-                    if (hasItem2) items[1] = config.getItemStack(base + "recipes." + recipe + ".item2");
-                    trades.add(new ShopTrade(results, items));
+                if(shops.containsKey(LocationUtil.toStringFromLocation(location))) {
+                    Shop shop = shops.get(LocationUtil.toStringFromLocation(location));
+                    List<ShopTrade> trades = new ArrayList<>();
+                    for (String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
+                        boolean hasItem2 = config.contains(base + "recipes." + recipe + ".item2");
+                        ItemStack[] items = new ItemStack[hasItem2 ? 2 : 1];
+                        ItemStack[] results = new ItemStack[1];
+                        results[0] = config.getItemStack(base + "recipes." + recipe + ".resultItem");
+                        items[0] = config.getItemStack(base + "recipes." + recipe + ".item1");
+                        if (hasItem2) items[1] = config.getItemStack(base + "recipes." + recipe + ".item2");
+                        trades.add(new ShopTrade(results, items));
+                    }
+                    Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
+                        shop.setNpcType(type);
+                        shop.setNpcMeta(config.getConfigurationSection(base + "object"));
+                        shop.setDisplayName(config.getConfigurationSection(key).getString("name", "").isEmpty() ? "" : ChatColor.GREEN + config.getConfigurationSection(key).getString("name"));
+                    });
+                    shop.addAllTrades(trades);
+                    keys.add(key);
+                } else {
+                    Shop shop = createNewShop(location, type, config.getConfigurationSection(key));
+                    List<ShopTrade> trades = new ArrayList<>();
+                    for (String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
+                        boolean hasItem2 = config.contains(base + "recipes." + recipe + ".item2");
+                        ItemStack[] items = new ItemStack[hasItem2 ? 2 : 1];
+                        ItemStack[] results = new ItemStack[1];
+                        results[0] = config.getItemStack(base + "recipes." + recipe + ".resultItem");
+                        items[0] = config.getItemStack(base + "recipes." + recipe + ".item1");
+                        if (hasItem2) items[1] = config.getItemStack(base + "recipes." + recipe + ".item2");
+                        trades.add(new ShopTrade(results, items));
+                    }
+                    shop.setTrades(trades);
+                    keys.add(key);
                 }
-                shop.setTrades(trades);
-                keys.add(key);
             } catch (Exception e) {
                 throw new RuntimeException("ShopkeepersID: " + key + " SISID: " + (config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z")) + " のShopkeepersからのコンバート中にエラーが発生しました", e);
             }

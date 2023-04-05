@@ -50,6 +50,8 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         ShopUtil.saveAllShops();
         UnderstandSystemConfig.save();
         ShopUtil.removeAllNPC();
+        DisplayPanelConfig.save();
+        Config.save();
     }
 
     public static RyuZUInfiniteShop getPlugin() {

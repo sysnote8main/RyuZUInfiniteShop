@@ -20,6 +20,7 @@ public class Config {
     public static int autoSaveInterval = 20;
     public static boolean editLog = true;
     public static boolean tradeLog = true;
+    public static boolean saveByMMID = true;
     public static BukkitTask respawnTask;
     private static BukkitTask autoSaveTask;
 
@@ -34,6 +35,7 @@ public class Config {
         autoSaveInterval = yaml.getInt("AutoSaveInterval", 20);
         editLog = yaml.getBoolean("EditLog", true);
         tradeLog = yaml.getBoolean("TradeLog", true);
+        saveByMMID = yaml.getBoolean("SaveByMMID", true);
         runAutoSave();
     }
 
@@ -45,9 +47,10 @@ public class Config {
         } catch (IOException | InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
-        if(yaml.contains("AutoSaveInterval")) yaml.set("AutoSaveInterval", autoSaveInterval);
-        if(yaml.contains("EditLog")) yaml.set("EditLog", true);
-        if(yaml.contains("TradeLog")) yaml.set("TradeLog", true);
+        if(!yaml.contains("AutoSaveInterval")) yaml.set("AutoSaveInterval", autoSaveInterval);
+        if(!yaml.contains("EditLog")) yaml.set("EditLog", editLog);
+        if(!yaml.contains("TradeLog")) yaml.set("TradeLog", tradeLog);
+        if(!yaml.contains("saveByMMID")) yaml.set("saveByMMID", saveByMMID);
         try {
             yaml.save(file);
         } catch (IOException e) {

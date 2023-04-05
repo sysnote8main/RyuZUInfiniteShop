@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
@@ -44,7 +45,7 @@ public class ObjectItem {
     }
 
     private static Object convert(Object object) {
-        if (object instanceof ItemStack && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getID((ItemStack) object) != null)
+        if (object instanceof ItemStack && MythicInstanceProvider.isLoaded() && Config.saveByMMID && MythicInstanceProvider.getInstance().getID((ItemStack) object) != null)
             return new MythicItem(MythicInstanceProvider.getInstance().getID((ItemStack) object), ((ItemStack) object).getAmount());
         else
             return object;

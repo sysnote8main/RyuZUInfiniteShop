@@ -157,8 +157,7 @@ public class Shop {
     public void getSyncLoadYamlShopkeepersConvertProcess() {
         if (shopkeepersConfig == null) return;
         setNpcMeta(shopkeepersConfig.getConfigurationSection("object"));
-        displayName = shopkeepersConfig.getString("name", "").isEmpty() ? "" : ChatColor.GREEN + shopkeepersConfig.getString("name");
-        npc.setCustomName(displayName);
+        setDisplayName(shopkeepersConfig.getString("name", "").isEmpty() ? "" : ChatColor.GREEN + shopkeepersConfig.getString("name"));
     }
 
     private Consumer<YamlConfiguration> getAsyncLoadYamlProcess() {
@@ -368,6 +367,12 @@ public class Shop {
 
     public void setTrades(List<ShopTrade> trades) {
         this.trades = trades;
+        updateTradeContents();
+    }
+
+    public void addAllTrades(List<ShopTrade> trades) {
+        this.trades.addAll(trades);
+        this.trades = this.trades.stream().distinct().collect(Collectors.toList());
         updateTradeContents();
     }
 
