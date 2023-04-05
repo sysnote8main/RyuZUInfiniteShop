@@ -127,6 +127,7 @@ public class ShopEditorGui extends ShopGui {
         setPower(inv);
         setProfession(inv);
         setBiome(inv);
+        setLevel(inv);
         setParrotColor(inv);
         setDyeColor(inv);
         setOptinalInfo(inv);

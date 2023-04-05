@@ -54,6 +54,8 @@ public class ObjectItem {
             return new MythicItem(NBTUtil.getNMSStringTag((ItemStack) object, "Error"), ((ItemStack) object).getAmount());
         if (object instanceof ItemStack && MythicInstanceProvider.isLoaded() && Config.saveByMMID && MythicInstanceProvider.getInstance().getID((ItemStack) object) != null)
             return new MythicItem(MythicInstanceProvider.getInstance().getID((ItemStack) object), ((ItemStack) object).getAmount());
+        if(object instanceof MythicItem && !Config.saveByMMID)
+            return ((MythicItem) object).convertItemStack();
         else
             return object;
     }

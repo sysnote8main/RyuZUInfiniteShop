@@ -120,10 +120,10 @@ public class Shop {
     private Consumer<YamlConfiguration> getLoadYamlProcess() {
         return yaml -> {
             getAsyncLoadYamlProcess().accept(yaml);
-            Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
-                getSyncLoadYamlProcess().accept(yaml);
-                getSyncLoadYamlShopkeepersConvertProcess();
-            });
+//            Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
+//            });
+            getSyncLoadYamlProcess().accept(yaml);
+            getSyncLoadYamlShopkeepersConvertProcess();
         };
     }
 
@@ -131,26 +131,26 @@ public class Shop {
         return yaml -> {
             if (!mythicmob.isPresent()) this.mythicmob = Optional.ofNullable(yaml.getString("Npc.Options.MythicMob"));
             if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
-                npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
-                setNpcMeta();
+//                npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
+//                setNpcMeta();
             } else {
-                spawnNPC(entityType);
-                this.NBTBuilder = new EntityNBTBuilder(npc);
+//                spawnNPC(entityType);
+//                this.NBTBuilder = new EntityNBTBuilder(npc);
                 if (yaml.contains("Npc.Options.Equipments")) {
                     this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments"));
-                    updateEquipments();
+//                    updateEquipments();
                 }
                 displayName = yaml.getString("Npc.Options.DisplayName");
-                npc.setCustomName(displayName);
+//                npc.setCustomName(displayName);
+                this.invisible = yaml.getBoolean("Npc.Options.Invisible", false);
                 if (npc instanceof LivingEntity) {
-                    this.invisible = yaml.getBoolean("Npc.Options.Invisible", false);
-                    NBTBuilder.setInvisible(invisible);
+//                    NBTBuilder.setInvisible(invisible);
                 }
 //                    ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Npc.Options.Invisible", true));
             }
             this.yaw = yaml.getInt("Npc.Status.Yaw", 0);
             this.location.setYaw(yaw);
-            npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
+//            npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
         };
     }
 
@@ -658,7 +658,7 @@ public class Shop {
     public void setNpcType(EntityType entityType) {
         if (npc != null) npc.remove();
         this.entityType = entityType;
-        respawnNPC();
+        if(npc == null) respawnNPC();
     }
 
     public void setMythicType(String mythicType) {
@@ -670,7 +670,7 @@ public class Shop {
     public void respawnNPC() {
         if (FileUtil.isSaveBlock()) return;
         if (npc != null && !npc.isDead()) return;
-//        if (!location.getChunk().isLoaded()) return;
+        if (!location.getChunk().isLoaded()) return;
         if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
             npc.remove();
             npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);

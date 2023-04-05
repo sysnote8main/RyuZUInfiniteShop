@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -40,6 +41,15 @@ public class EditMainPageListener implements Listener {
         p.openInventory(shop.getEditor(1).getInventory(ShopMode.Edit));
 
         shop.setEditting(true);
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void openShopEditor(PlayerInteractEntityEvent event) {
+        Entity entity = event.getRightClicked();
+        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
+        String id = NBTUtil.getNMSStringTag(entity, "Shop");
+        if (id == null) return;
         event.setCancelled(true);
     }
 

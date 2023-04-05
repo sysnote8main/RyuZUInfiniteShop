@@ -51,13 +51,13 @@ public class FileUtil {
         saveBlock = true;
         Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのファイルをリロード中です。しばらくお待ちください。"));
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
+            Config.load(false);
             TradeUtil.saveTradeLimits();
             ShopUtil.saveAllShops();
             UnderstandSystemConfig.save();
             Config.save();
             DisplayPanelConfig.save();
             UnderstandSystemConfig.load();
-            Config.load();
             DisplayPanelConfig.load();
             boolean converted = ShopUtil.loadAllShops();
             TradeUtil.loadTradeLimits();
@@ -79,13 +79,13 @@ public class FileUtil {
         Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのファイルをリロード中です。しばらくお待ちください。"));
         HashMap<Player, ShopHolder> viewer = ShopUtil.getAllShopInventoryViewer();
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
+            Config.load(false);
             TradeUtil.saveTradeLimits();
             ShopUtil.saveAllShops();
             UnderstandSystemConfig.save();
             Config.save();
             DisplayPanelConfig.save();
             UnderstandSystemConfig.load();
-            Config.load();
             DisplayPanelConfig.load();
             boolean converted = ShopUtil.loadAllShops();
             TradeUtil.loadTradeLimits();
@@ -106,7 +106,7 @@ public class FileUtil {
         saveBlock = true;
         Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのファイルをロード中です。しばらくお待ちください。"));
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
-            Config.load();
+            Config.load(false);
             DisplayPanelConfig.load();
             UnderstandSystemConfig.load();
             boolean converted = ShopUtil.loadAllShops();

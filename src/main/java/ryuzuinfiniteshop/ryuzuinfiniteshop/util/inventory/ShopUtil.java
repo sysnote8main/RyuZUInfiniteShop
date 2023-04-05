@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.Colorable;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
@@ -154,12 +155,13 @@ public class ShopUtil {
                         if (hasItem2) items[1] = config.getItemStack(base + "recipes." + recipe + ".item2");
                         trades.add(new ShopTrade(results, items));
                     }
-                    Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
+                    if(Config.overwriteConverting) {
                         shop.setNpcType(type);
-                        shop.setNpcMeta(config.getConfigurationSection(base + "object"));
                         shop.setDisplayName(config.getConfigurationSection(key).getString("name", "").isEmpty() ? "" : ChatColor.GREEN + config.getConfigurationSection(key).getString("name"));
-                    });
-                    shop.addAllTrades(trades);
+                        shop.setNpcMeta(config.getConfigurationSection(base + "object"));
+                        shop.setTrades(trades);
+                    } else
+                        shop.addAllTrades(trades);
                     keys.add(key);
                 } else {
                     Shop shop = createNewShop(location, type, config.getConfigurationSection(key));

@@ -18,13 +18,14 @@ import java.util.HashMap;
 
 public class Config {
     public static int autoSaveInterval = 20;
-    public static boolean editLog = true;
-    public static boolean tradeLog = true;
-    public static boolean saveByMMID = true;
+    public static boolean editLog;
+    public static boolean tradeLog;
+    public static boolean saveByMMID;
+    public static boolean overwriteConverting;
     public static BukkitTask respawnTask;
     private static BukkitTask autoSaveTask;
 
-    public static void load() {
+    public static void load(boolean disable) {
         File file = FileUtil.initializeFile("config.yml");
         YamlConfiguration yaml = new YamlConfiguration();
         try {
@@ -36,7 +37,8 @@ public class Config {
         editLog = yaml.getBoolean("EditLog", true);
         tradeLog = yaml.getBoolean("TradeLog", true);
         saveByMMID = yaml.getBoolean("SaveByMMID", true);
-        runAutoSave();
+        overwriteConverting = yaml.getBoolean("OverwriteConverting", false);
+        if(!disable) runAutoSave();
     }
 
     public static void save() {
@@ -50,7 +52,8 @@ public class Config {
         if(!yaml.contains("AutoSaveInterval")) yaml.set("AutoSaveInterval", autoSaveInterval);
         if(!yaml.contains("EditLog")) yaml.set("EditLog", editLog);
         if(!yaml.contains("TradeLog")) yaml.set("TradeLog", tradeLog);
-        if(!yaml.contains("saveByMMID")) yaml.set("saveByMMID", saveByMMID);
+        if(!yaml.contains("SaveByMMID")) yaml.set("SaveByMMID", saveByMMID);
+        if(!yaml.contains("OverwriteConverting")) yaml.set("OverwriteConverting", overwriteConverting);
         try {
             yaml.save(file);
         } catch (IOException e) {

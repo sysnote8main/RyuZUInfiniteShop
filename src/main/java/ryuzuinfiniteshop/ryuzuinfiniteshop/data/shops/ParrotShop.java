@@ -22,6 +22,7 @@ public class ParrotShop extends Shop {
 
     public void setColor(Parrot.Variant color) {
         this.color = color;
+        if(npc == null) return;
         ((Parrot) npc).setVariant(color);
 //        NBTBuilder.setVariant(color.ordinal());
     }
@@ -42,7 +43,6 @@ public class ParrotShop extends Shop {
     public Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
         return super.getSyncLoadYamlProcess().andThen(yaml -> {
             this.color = Parrot.Variant.valueOf(yaml.getString("Npc.Options.Color" , "RED"));
-            setColor(color);
         });
     }
 

@@ -15,8 +15,8 @@ import java.util.function.Consumer;
 
 @Getter
 public class VillagerableShop extends AgeableShop {
-    protected Villager.Profession profession = Villager.Profession.FARMER;
-    protected Villager.Type biome = Villager.Type.PLAINS;
+    protected Villager.Profession profession;
+    protected Villager.Type biome;
     protected int level = 1;
 
     public VillagerableShop(Location location, EntityType entitytype) {
@@ -29,16 +29,17 @@ public class VillagerableShop extends AgeableShop {
 
     public void setProfession(Villager.Profession profession) {
         this.profession = profession;
+        if(npc == null) return;
         if (npc instanceof Villager)
             ((Villager) npc).setProfession(profession);
         else
             ((ZombieVillager) npc).setVillagerProfession(profession);
-        ((Villager) npc).setRecipes(new ArrayList<>());
 //        NBTBuilder.setVillagerData(profession, biome, level);
     }
 
     public void setBiome(Villager.Type villagertype) {
         this.biome = villagertype;
+        if(npc == null) return;
         if (npc instanceof Villager)
             ((Villager) npc).setVillagerType(villagertype);
         else
@@ -48,6 +49,7 @@ public class VillagerableShop extends AgeableShop {
 
     public void setLevel(int level) {
         this.level = level;
+        if(npc == null) return;
         if (npc instanceof Villager)
             ((Villager) npc).setVillagerLevel(level);
 //        NBTBuilder.setVillagerData(profession, biome, level);
@@ -82,10 +84,6 @@ public class VillagerableShop extends AgeableShop {
             this.profession = Villager.Profession.valueOf(yaml.getString("Npc.Options.Profession", "FARMER"));
             this.biome = Villager.Type.valueOf(yaml.getString("Npc.Options.Biome", "PLAINS"));
             this.level = yaml.getInt("Npc.Options.Level", 1);
-            setProfession(profession);
-            setBiome(biome);
-            setLevel(level);
-            ((Villager) npc).setRecipes(new ArrayList<>());
         });
     }
 
@@ -95,7 +93,6 @@ public class VillagerableShop extends AgeableShop {
         setProfession(profession);
         setBiome(biome);
         setLevel(level);
-        ((Villager) npc).setRecipes(new ArrayList<>());
     }
 
     public Material getJobBlockMaterial() {

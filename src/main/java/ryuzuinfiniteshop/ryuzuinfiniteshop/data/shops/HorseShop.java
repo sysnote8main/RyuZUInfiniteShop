@@ -14,8 +14,8 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class HorseShop extends AgeableShop {
-    protected Horse.Color color = Horse.Color.WHITE;
-    protected Horse.Style style = Horse.Style.NONE;
+    protected Horse.Color color;
+    protected Horse.Style style;
 
     public HorseShop(Location location, EntityType entitytype) {
         super(location, entitytype);
@@ -27,11 +27,13 @@ public class HorseShop extends AgeableShop {
 
     public void setStyle(Horse.Style style) {
         this.style = style;
+        if(npc == null) return;
         ((Horse) npc).setStyle(style);
     }
 
     public void setColor(Horse.Color color) {
         this.color = color;
+        if(npc == null) return;
         ((Horse) npc).setColor(color);
 //        NBTBuilder.setVariant(color.name().toLowerCase(), style.name().toLowerCase());
     }
@@ -63,8 +65,6 @@ public class HorseShop extends AgeableShop {
         return super.getSyncLoadYamlProcess().andThen(yaml -> {
             this.color = Horse.Color.valueOf(yaml.getString("Npc.Options.Color" , "WHITE"));
             this.style = Horse.Style.valueOf(yaml.getString("Npc.Options.Style" , "NONE"));
-            setColor(color);
-            setStyle(style);
         });
     }
 

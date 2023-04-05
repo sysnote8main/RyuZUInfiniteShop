@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.function.Consumer;
 
 public class PoweredableShop extends Shop {
-    protected boolean powered = false;
+    protected boolean powered;
 
     public PoweredableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
@@ -26,6 +26,7 @@ public class PoweredableShop extends Shop {
 
     public void setPowered(boolean powered) {
         this.powered = powered;
+        if(npc == null) return;
         ((Creeper) npc).setPowered(powered);
 //        NBTBuilder.setPowered(powered);
     }

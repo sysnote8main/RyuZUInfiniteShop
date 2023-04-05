@@ -13,8 +13,8 @@ import java.util.function.Consumer;
 
 //狼、熱帯魚、羊などの染料と同じ色を付けられるもの
 public class DyeableShop extends Shop {
-    protected DyeColor color = DyeColor.WHITE;
-    protected boolean optionalInfo = false;
+    protected DyeColor color;
+    protected boolean optionalInfo;
 
     public DyeableShop(Location location, EntityType entitytype) {
         super(location, entitytype);
@@ -30,6 +30,7 @@ public class DyeableShop extends Shop {
 
     public void setColor(DyeColor color) {
         this.color = color;
+        if(npc == null) return;
         if (npc instanceof Colorable) ((Colorable) npc).setColor(color);
         if (npc instanceof TropicalFish) ((TropicalFish) npc).setBodyColor(color);
         if (npc instanceof Wolf) {
@@ -42,6 +43,7 @@ public class DyeableShop extends Shop {
 
     public void setOptionalInfo(boolean optionalInfo) {
         this.optionalInfo = optionalInfo;
+        if(npc == null) return;
         if(npc instanceof Wolf) {
             if(color.equals(DyeColor.WHITE))
                 ((Wolf) npc).setAngry(optionalInfo);
@@ -75,8 +77,6 @@ public class DyeableShop extends Shop {
         return super.getSyncLoadYamlProcess().andThen(yaml -> {
             this.color = DyeColor.valueOf(yaml.getString("Npc.Options.Color", "WHITE"));
             this.optionalInfo = yaml.getBoolean("Npc.Options.OptionalInfo", false);
-            setColor(color);
-            setOptionalInfo(optionalInfo);
         });
     }
 

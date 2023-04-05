@@ -16,11 +16,11 @@ public class ObjectItems {
     private final List<Object> objects;
 
     public ObjectItems(Object object) {
-        this.objects = (List<Object>) object;
+        this.objects = ((List<Object>) object).stream().map(ObjectItems::convert).collect(Collectors.toList());
     }
 
     public ObjectItems(List<Object> objects) {
-        this.objects = objects;
+        this.objects = objects.stream().map(ObjectItems::convert).collect(Collectors.toList());
     }
 
     public ObjectItems(ItemStack[] items) {
@@ -53,6 +53,8 @@ public class ObjectItems {
             return new MythicItem(NBTUtil.getNMSStringTag((ItemStack) object, "Error"), ((ItemStack) object).getAmount());
         if (object instanceof ItemStack && MythicInstanceProvider.isLoaded() && Config.saveByMMID && MythicInstanceProvider.getInstance().getID((ItemStack) object) != null)
             return new MythicItem(MythicInstanceProvider.getInstance().getID((ItemStack) object), ((ItemStack) object).getAmount());
+        if(object instanceof MythicItem && !Config.saveByMMID)
+            return ((MythicItem) object).convertItemStack();
         else
             return object;
     }
