@@ -4,11 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Donkey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
-import org.bukkit.entity.Parrot;
-import org.bukkit.material.Colorable;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -61,8 +58,8 @@ public class HorseShop extends AgeableShop {
     }
 
     @Override
-    public Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
-        return super.getSyncLoadYamlProcess().andThen(yaml -> {
+    public Consumer<YamlConfiguration> getLoadYamlProcess() {
+        return super.getLoadYamlProcess().andThen(yaml -> {
             this.color = Horse.Color.valueOf(yaml.getString("Npc.Options.Color" , "WHITE"));
             this.style = Horse.Style.valueOf(yaml.getString("Npc.Options.Style" , "NONE"));
         });

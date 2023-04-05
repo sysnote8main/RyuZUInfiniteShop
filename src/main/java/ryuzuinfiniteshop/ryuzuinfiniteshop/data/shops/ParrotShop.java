@@ -40,8 +40,8 @@ public class ParrotShop extends Shop {
     }
 
     @Override
-    public Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
-        return super.getSyncLoadYamlProcess().andThen(yaml -> {
+    public Consumer<YamlConfiguration> getLoadYamlProcess() {
+        return super.getLoadYamlProcess().andThen(yaml -> {
             this.color = Parrot.Variant.valueOf(yaml.getString("Npc.Options.Color" , "RED"));
         });
     }

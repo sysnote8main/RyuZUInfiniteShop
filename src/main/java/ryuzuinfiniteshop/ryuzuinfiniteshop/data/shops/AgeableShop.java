@@ -41,8 +41,8 @@ public class AgeableShop extends Shop {
     }
 
     @Override
-    public Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
-        return super.getSyncLoadYamlProcess().andThen(yaml -> {
+    public Consumer<YamlConfiguration> getLoadYamlProcess() {
+        return super.getLoadYamlProcess().andThen(yaml -> {
             this.adult = yaml.getBoolean("Npc.Options.Adult" , true);
         });
     }

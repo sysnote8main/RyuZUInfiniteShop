@@ -117,56 +117,23 @@ public class Shop {
         getLoadYamlProcess().accept(config);
     }
 
-    private Consumer<YamlConfiguration> getLoadYamlProcess() {
-        return yaml -> {
-            getAsyncLoadYamlProcess().accept(yaml);
-//            Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
-//            });
-            getSyncLoadYamlProcess().accept(yaml);
-            getSyncLoadYamlShopkeepersConvertProcess();
-        };
-    }
-
-    protected Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
+    protected Consumer<YamlConfiguration> getLoadYamlProcess() {
         return yaml -> {
             if (!mythicmob.isPresent()) this.mythicmob = Optional.ofNullable(yaml.getString("Npc.Options.MythicMob"));
-            if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
-//                npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
-//                setNpcMeta();
-            } else {
-//                spawnNPC(entityType);
-//                this.NBTBuilder = new EntityNBTBuilder(npc);
-                if (yaml.contains("Npc.Options.Equipments")) {
-                    this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments"));
-//                    updateEquipments();
-                }
-                displayName = yaml.getString("Npc.Options.DisplayName");
-//                npc.setCustomName(displayName);
-                this.invisible = yaml.getBoolean("Npc.Options.Invisible", false);
-                if (npc instanceof LivingEntity) {
-//                    NBTBuilder.setInvisible(invisible);
-                }
-//                    ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Npc.Options.Invisible", true));
-            }
+            displayName = yaml.getString("Npc.Options.DisplayName");
+            this.invisible = yaml.getBoolean("Npc.Options.Invisible", false);
             this.yaw = yaml.getInt("Npc.Status.Yaw", 0);
             this.location.setYaw(yaw);
-//            npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
-        };
-    }
-
-    public void getSyncLoadYamlShopkeepersConvertProcess() {
-        if (shopkeepersConfig == null) return;
-        setNpcMeta(shopkeepersConfig.getConfigurationSection("object"));
-        setDisplayName(shopkeepersConfig.getString("name", "").isEmpty() ? "" : ChatColor.GREEN + shopkeepersConfig.getString("name"));
-    }
-
-    private Consumer<YamlConfiguration> getAsyncLoadYamlProcess() {
-        return yaml -> {
             this.type = ShopType.valueOf(yaml.getString("Shop.Options.ShopType", "TwotoOne"));
             this.lock = yaml.getBoolean("Npc.Status.Lock", false);
             this.searchable = yaml.getBoolean("Npc.Status.Searchable", true);
+            this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments"));
             this.trades = yaml.getList("Trades", new ArrayList<>()).stream().map(tradeconfig -> new ShopTrade((HashMap<String, Object>) tradeconfig)).collect(Collectors.toList());
             updateTradeContents();
+
+            if (shopkeepersConfig == null) return;
+            setNpcMeta(shopkeepersConfig.getConfigurationSection("object"));
+            setDisplayName(shopkeepersConfig.getString("name", "").isEmpty() ? "" : ChatColor.GREEN + shopkeepersConfig.getString("name"));
         };
     }
 
@@ -678,10 +645,10 @@ public class Shop {
         } else {
             spawnNPC(entityType);
             this.NBTBuilder = new EntityNBTBuilder(npc);
-            updateEquipments();
             npc.setCustomName(displayName);
             if (npc instanceof LivingEntity) {
                 NBTBuilder.setInvisible(invisible);
+                updateEquipments();
             }
         }
         this.location.setYaw(yaw);

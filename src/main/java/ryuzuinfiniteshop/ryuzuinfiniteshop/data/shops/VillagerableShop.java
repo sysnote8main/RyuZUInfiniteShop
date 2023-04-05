@@ -7,9 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EntityNBTBuilder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
@@ -79,8 +77,8 @@ public class VillagerableShop extends AgeableShop {
     }
 
     @Override
-    public Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
-        return super.getSyncLoadYamlProcess().andThen(yaml -> {
+    public Consumer<YamlConfiguration> getLoadYamlProcess() {
+        return super.getLoadYamlProcess().andThen(yaml -> {
             this.profession = Villager.Profession.valueOf(yaml.getString("Npc.Options.Profession", "FARMER"));
             this.biome = Villager.Type.valueOf(yaml.getString("Npc.Options.Biome", "PLAINS"));
             this.level = yaml.getInt("Npc.Options.Level", 1);
