@@ -5,11 +5,15 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ShopGui6to2 extends ShopTradeGui {
+    private static List<Integer> convertSlot = new ArrayList<>();
 
     static {
         for (int i = 0; i < 6; i++) {
-            convertslot.add(i * 9 + 4);
+            convertSlot.add(i * 9 + 4);
         }
     }
 
@@ -28,6 +32,16 @@ public class ShopGui6to2 extends ShopTradeGui {
 
     @Override
     public ShopTrade getTradeFromSlot(int slot) {
-        return getTrade(slot / 9 + 1);
+        return getTrade(slot / 9);
+    }
+
+    @Override
+    public List<Integer> getDisplaySlot() {
+        return convertSlot;
+    }
+
+    @Override
+    public List<Integer> getConvertSlot() {
+        return convertSlot;
     }
 }

@@ -46,6 +46,25 @@ public class DisplayPanelConfig {
         }};
     }
 
+    public static void save() {
+        File file = FileUtil.initializeFile("panel.yml");
+        YamlConfiguration yaml = new YamlConfiguration();
+        try {
+            yaml.load(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+        for(ShopTrade.TradeResult result : defaultResultMaterial.keySet()) {
+            if(yaml.contains(getResultConfig(result) + ".Material")) yaml.set(getResultConfig(result) + ".Material", panels.get(result).getMaterial().name());
+            if(yaml.contains(getResultConfig(result) + ".CustomModelData")) yaml.set(getResultConfig(result) + ".CustomModelData", panels.get(result).getData());
+        }
+        try {
+            yaml.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static String getResultConfig(ShopTrade.TradeResult result) {
         return "Display.Panel." + result.name();
     }

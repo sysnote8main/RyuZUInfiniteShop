@@ -89,6 +89,15 @@ public class VillagerableShop extends AgeableShop {
         });
     }
 
+    @Override
+    public void respawnNPC() {
+        super.respawnNPC();
+        setProfession(profession);
+        setBiome(biome);
+        setLevel(level);
+        ((Villager) npc).setRecipes(new ArrayList<>());
+    }
+
     public Material getJobBlockMaterial() {
         switch (profession) {
             case NITWIT:

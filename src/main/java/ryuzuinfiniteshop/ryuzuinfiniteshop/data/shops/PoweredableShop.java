@@ -41,7 +41,13 @@ public class PoweredableShop extends Shop {
     public Consumer<YamlConfiguration> getSyncLoadYamlProcess() {
         return super.getSyncLoadYamlProcess().andThen(yaml -> {
             this.powered = yaml.getBoolean("Npc.Options.Powered" , false);
-            ((Creeper) npc).setPowered(powered);
+            setPowered(powered);
         });
+    }
+
+    @Override
+    public void respawnNPC() {
+        super.respawnNPC();
+        setPowered(powered);
     }
 }

@@ -29,7 +29,7 @@ public class ObjectItems {
     }
 
     public List<Object> getObjects() {
-        return objects;
+        return objects.stream().map(ObjectItems::convert).collect(Collectors.toList());
     }
 
     public ItemStack[] toItemStacks() {

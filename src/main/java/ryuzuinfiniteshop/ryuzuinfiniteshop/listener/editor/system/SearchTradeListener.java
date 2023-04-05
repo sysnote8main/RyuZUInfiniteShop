@@ -151,12 +151,13 @@ public class SearchTradeListener implements Listener {
         int base = (event.getSlot() / 9) * 9;
         ItemStack item = NBTUtil.getNMSStringTag(inv.getItem(4 + base), "Shop") == null ? inv.getItem(6 + base) : inv.getItem(4 + base);
         Shop shop = ShopUtil.getShop(NBTUtil.getNMSStringTag(item, "Shop"));
-        if (shop == null) {
+        if(shop == null) {
+            p.sendMessage(ChatColor.RED + "ショップが見つかりませんでした。");
             SoundUtil.playFailSound(p);
             return;
         }
 
-        if (event.isShiftClick()) {
+        if (event.isShiftClick() && p.hasPermission("sis.op")) {
             //編集画面を開く
             ShopUtil.closeAllShopTradeInventory(shop);
             p.openInventory(shop.getEditor(1).getInventory(ShopMode.Edit, holder));

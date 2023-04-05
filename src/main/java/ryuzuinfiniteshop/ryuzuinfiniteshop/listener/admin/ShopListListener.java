@@ -76,24 +76,28 @@ public class ShopListListener implements Listener {
         ItemStack item = event.getCurrentItem();
         if (ItemUtil.isAir(item)) return;
         Player p = (Player) event.getWhoClicked();
-        ShopMode mode = holder.getMode();
         Shop shop = ShopUtil.getShop(NBTUtil.getNMSStringTag(item, "Shop"));
+        if(shop == null) {
+            p.sendMessage(ChatColor.RED + "ショップが見つかりませんでした。");
+            SoundUtil.playFailSound(p);
+            return;
+        }
 
-        if (holder.getMode().equals(ShopMode.Edit)) {
-            if (event.isShiftClick()) {
-                //編集画面を開く
-                ShopUtil.closeAllShopTradeInventory(shop);
-                p.openInventory(shop.getEditor(1).getInventory(mode, holder));
-                SoundUtil.playClickShopSound(p);
-                shop.setEditting(true);
-            } else {
-                //取引画面を開く
-                p.openInventory(shop.getPage(1).getInventory(mode, p, holder));
-                SoundUtil.playClickShopSound(p);
-                shop.setEditting(true);
-            }
+        if (event.isShiftClick() && p.hasPermission("sis.op")) {
+            //編集画面を開く
+            ShopUtil.closeAllShopTradeInventory(shop);
+            p.openInventory(shop.getEditor(1).getInventory(ShopMode.Edit, holder));
+            SoundUtil.playClickShopSound(p);
+            shop.setEditting(true);
         } else {
-            p.openInventory(shop.getPage(1).getInventory(mode, p, holder));
+            //取引画面を開く
+            if (!shop.isAvailableShop(p)) return;
+            if(shop.getTrades().size() == 0) {
+                p.sendMessage(ChatColor.RED + "ショップに取引がありません。");
+                SoundUtil.playFailSound(p);
+                return;
+            }
+            p.openInventory(shop.getPage(1).getInventory(ShopMode.Trade, p, holder));
             SoundUtil.playClickShopSound(p);
         }
     }

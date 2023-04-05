@@ -16,6 +16,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
@@ -135,7 +136,8 @@ public class EditTradePageListener implements Listener {
                 times = 64;
                 break;
         }
-        trade.trade(p, times);
+        int result = trade.trade(p, times);
+        LogUtil.log(p.getUniqueId().toString(), holder.getShop().getID(), trade, result);
 
         //イベントキャンセル
         event.setCancelled(true);
@@ -151,7 +153,7 @@ public class EditTradePageListener implements Listener {
         if (!ShopUtil.isEditMode(event)) return;
         if (event.getClickedInventory() == null) return;
         int slot = event.getSlot();
-        if (!((ShopTradeGui) holder.getGui()).isDisplaySlot(slot)) return;
+        if (!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
         //イベントキャンセル
         event.setCancelled(true);
 

@@ -38,7 +38,8 @@ public class ChangeNpcTypeListener implements Listener {
             //成功時の処理
             //NPCを再構築する
             try {
-                ShopUtil.overwriteShop(shop.getLocation(), shop.convertShopToString(), shop.convertTradesToMap(), EntityType.valueOf(message.toUpperCase()));
+                shop.setNpcType(EntityType.valueOf(message.toUpperCase()));
+//                ShopUtil.overwriteShop(shop.getLocation(), shop.convertShopToString(), shop.convertTradesToMap(), EntityType.valueOf(message.toUpperCase()));
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティタイプを変更しました");
                 SoundUtil.playSuccessSound(p);
             } catch (IllegalArgumentException e) {

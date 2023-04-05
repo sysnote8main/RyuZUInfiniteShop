@@ -68,6 +68,13 @@ public class HorseShop extends AgeableShop {
         });
     }
 
+    @Override
+    public void respawnNPC() {
+        super.respawnNPC();
+        setColor(color);
+        setStyle(style);
+    }
+
     public Material getColorMaterial() {
         switch (color) {
             case CREAMY:

@@ -21,20 +21,20 @@ import java.util.function.Function;
 
 public abstract class ShopTradeGui extends ShopGui {
 
-    protected static final List<Integer> displayslot = new ArrayList<>();
-    protected static final List<Integer> convertslot = new ArrayList<>();
-
     public ShopTradeGui(Shop shop, int page) {
         super(shop, page);
         setTrades();
     }
 
+    protected abstract List<Integer> getDisplaySlot();
+    protected abstract List<Integer> getConvertSlot();
+
     public boolean isConvertSlot(int slot) {
-        return convertslot.contains(slot);
+        return getConvertSlot().contains(slot);
     }
 
     public boolean isDisplaySlot(int slot) {
-        return convertslot.contains(slot) || displayslot.contains(slot);
+        return getDisplaySlot().contains(slot);
     }
 
     public List<ShopTrade> getTrades() {
@@ -42,9 +42,9 @@ public abstract class ShopTradeGui extends ShopGui {
     }
 
     public ShopTrade getTrade(int number) {
-        if (getTrades().size() < number) return null;
-        if (number <= 0) return null;
-        return getTrades().get(number - 1);
+        if (getTrades().size() <= number) return null;
+        if (number < 0) return null;
+        return getTrades().get(number);
     }
 
     public void setTrades() {
@@ -82,7 +82,7 @@ public abstract class ShopTradeGui extends ShopGui {
     public Inventory getInventory(ShopMode mode, Player p, @Nullable ModeHolder before) {
         Inventory inv = getInventory(mode);
         ((ShopHolder) inv.getHolder()).setBefore(before);
-        if (mode.equals(ShopMode.Trade)) setTradeStatus(p, inv);
+        if (!mode.equals(ShopMode.Edit)) setTradeStatus(p, inv);
         return inv;
     }
 
@@ -93,25 +93,10 @@ public abstract class ShopTradeGui extends ShopGui {
     public abstract ShopTrade getTradeFromSlot(int slot);
 
     public void setTradeStatus(Player p, Inventory inventory) {
-        int addslot = 0;
-        switch (getShop().getShopType()) {
-            case TwotoOne:
-                addslot = 2;
-                break;
-            case FourtoFour:
-                addslot = 4;
-                break;
-            case SixtoTwo:
-                addslot = 6;
-                break;
-        }
         for (int i = 0; i < getTrades().size(); i++) {
-            int baseslot = getShop().getShopType().equals(Shop.ShopType.TwotoOne) ?
-                    (i / 2) * 9 + (i % 2 == 1 ? 5 : 0) :
-                    i * 9;
-            ShopTrade trade = getTradeFromSlot(baseslot);
+            ShopTrade trade = getTrade(i);
             ShopTrade.TradeResult result = trade.getResult(p);
-            inventory.setItem(baseslot + addslot, DisplayPanelConfig.getPanel(result).getItemStack(trade.getLimit(), trade.getTradeCount(p)));
+            inventory.setItem(getConvertSlot().get(i), DisplayPanelConfig.getPanel(result).getItemStack(trade.getLimit(), trade.getTradeCount(p)));
         }
     }
 }

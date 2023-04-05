@@ -15,6 +15,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
@@ -270,8 +271,9 @@ public class ShopTrade {
         return result;
     }
 
-    public TradeResult trade(Player p, int times) {
+    public int trade(Player p, int times) {
         TradeResult result = TradeResult.Success;
+        int resultTime = times;
         for (int time = 0; time < times; time++) {
             result = trade(p);
             if (!result.equals(TradeResult.Success)) {
@@ -279,12 +281,13 @@ public class ShopTrade {
                     result = TradeResult.Lack;
                 else
                     result = TradeResult.NotAfford;
+                resultTime = time;
                 break;
             }
         }
         //結果に対するエフェクトを表示
         playResultEffect(p, result);
-        return result;
+        return resultTime;
     }
 
     //アイテムを追加できるかチェックする

@@ -7,6 +7,7 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityInteractEvent;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
@@ -25,7 +26,8 @@ public class LogUtil {
         MERGESHOP,
         ADDTRADE,
         REMOVETRADE,
-        REPLACETRADE
+        REPLACETRADE,
+        TRADE
     }
 
     private static List<String> getLog() {
@@ -40,6 +42,7 @@ public class LogUtil {
     }
 
     public static void log(LogType type, String player, String id, ShopTrade trade, int limit) {
+        if(!Config.editLog) return;
         List<String> logBuilder = baseLog(type, player, id);
         logBuilder.add(Arrays.stream(trade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
         logBuilder.add(Arrays.stream(trade.getGiveItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
@@ -49,11 +52,22 @@ public class LogUtil {
     }
 
     public static void log(LogType type, String player, String id, ShopTrade fromTrade, ShopTrade toTrade, int fromLimit, int toLimit) {
+        if(!Config.editLog) return;
         List<String> logBuilder = baseLog(type, player, id);
         logBuilder.add(Arrays.stream(fromTrade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
         logBuilder.add(Arrays.stream(toTrade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
         logBuilder.add(String.valueOf(fromLimit));
         logBuilder.add(String.valueOf(toLimit));
+        String log = String.join(",", logBuilder);
+        log(log);
+    }
+
+    public static void log(String player, String id, ShopTrade trade, int times) {
+        if(!Config.tradeLog) return;
+        List<String> logBuilder = baseLog(LogType.TRADE, player, id);
+        logBuilder.add(Arrays.stream(trade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
+        logBuilder.add(Arrays.stream(trade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
+        logBuilder.add(String.valueOf(times));
         String log = String.join(",", logBuilder);
         log(log);
     }

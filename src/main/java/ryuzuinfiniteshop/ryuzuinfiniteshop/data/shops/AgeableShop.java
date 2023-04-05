@@ -46,4 +46,10 @@ public class AgeableShop extends Shop {
             setAgeLook(adult);
         });
     }
+
+    @Override
+    public void respawnNPC() {
+        super.respawnNPC();
+        setAgeLook(adult);
+    }
 }

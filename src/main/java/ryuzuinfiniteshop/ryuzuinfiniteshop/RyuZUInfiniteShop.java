@@ -41,7 +41,6 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         MythicInstanceProvider.setInstance();
         if(VERSION < 14) NBTInjector.inject();
         FileUtil.loadAll(() -> {});
-        Config.runAutoSave();
     }
 
     @Override

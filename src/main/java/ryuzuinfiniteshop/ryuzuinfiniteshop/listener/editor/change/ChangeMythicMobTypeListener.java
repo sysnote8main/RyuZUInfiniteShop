@@ -44,7 +44,8 @@ public class ChangeMythicMobTypeListener implements Listener {
             }
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "MythicMobIDを設定しました");
             SoundUtil.playSuccessSound(p);
-            ShopUtil.overwriteShop(shop.getLocation(), shop.convertShopToString(), shop.convertTradesToMap(), message);
+            shop.setMythicType(message);
+//            ShopUtil.overwriteShop(shop.getLocation(), shop.convertShopToString(), shop.convertTradesToMap(), message);
         });
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "MythicMobIDを入力してください");
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");

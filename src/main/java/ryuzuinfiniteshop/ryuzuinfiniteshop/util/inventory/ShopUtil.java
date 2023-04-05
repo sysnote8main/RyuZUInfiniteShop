@@ -173,7 +173,7 @@ public class ShopUtil {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntities()) {
                 String id = NBTUtil.getNMSStringTag(entity, "Shop");
-                if (id != null) entity.remove();
+                if (id != null) entity.getWorld().getNearbyEntities(entity.getLocation(), 0.1, 0.1, 0.1).forEach(Entity::remove);
             }
         }
     }
@@ -193,7 +193,7 @@ public class ShopUtil {
         if (mode.equals(ShopMode.Edit))
             shops.keySet().stream().sorted(Comparator.naturalOrder()).filter(key -> shops.get(key).containsDisplayName(name) || name == null).forEach(key -> sorted.put(key, shops.get(key)));
         else
-            shops.keySet().stream().sorted(Comparator.naturalOrder()).filter(key -> shops.get(key).isSearchable() && shops.get(key).containsDisplayName(name)).forEach(key -> sorted.put(key, shops.get(key)));
+            shops.keySet().stream().sorted(Comparator.naturalOrder()).filter(key -> shops.get(key).isSearchable() && (shops.get(key).containsDisplayName(name) || name == null)).forEach(key -> sorted.put(key, shops.get(key)));
 
         return sorted;
     }
@@ -294,16 +294,16 @@ public class ShopUtil {
         return shopData;
     }
 
-    public static Shop overwriteShop(Location location, String data, HashMap<String, String> trades, EntityType type) {
-        return reloadShop(location, data, TradeUtil.convertTradesToList(trades), config -> {
-            config.set("Npc.Options.MythicMob", null);
-            config.set("Npc.Options.EntityType", type.toString());
-        });
-    }
-
-    public static Shop overwriteShop(Location location, String data, HashMap<String, String> trades, String mmid) {
-        return reloadShop(location, data, TradeUtil.convertTradesToList(trades), config -> config.set("Npc.Options.MythicMob", mmid));
-    }
+//    public static Shop overwriteShop(Location location, String data, HashMap<String, String> trades, EntityType type) {
+//        return reloadShop(location, data, TradeUtil.convertTradesToList(trades), config -> {
+//            config.set("Npc.Options.MythicMob", null);
+//            config.set("Npc.Options.EntityType", type.toString());
+//        });
+//    }
+//
+//    public static Shop overwriteShop(Location location, String data, HashMap<String, String> trades, String mmid) {
+//        return reloadShop(location, data, TradeUtil.convertTradesToList(trades), config -> config.set("Npc.Options.MythicMob", mmid));
+//    }
 
     public static void closeShopTradeInventory(Player p, Shop shop) {
         if (p.getOpenInventory().getTopInventory().getHolder() instanceof ShopHolder) {

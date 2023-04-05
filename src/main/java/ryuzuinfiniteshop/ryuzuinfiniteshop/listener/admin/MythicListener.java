@@ -7,7 +7,9 @@ import io.lumine.xikage.mythicmobs.api.exceptions.InvalidMobTypeException;
 import io.lumine.xikage.mythicmobs.items.MythicItem;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,10 +39,10 @@ public class MythicListener implements Listener {
     }
 
     public String getID(ItemStack item) {
-        if(ItemUtil.isAir(item)) return null;
+        if (ItemUtil.isAir(item)) return null;
         ItemStack copy = item.clone();
         copy.setAmount(1);
-        return JavaUtil.getOrDefault(getMythicMobsInstance().getVolatileCodeHandler().getItemHandler().getNBTData(item).getString("MYTHIC_TYPE") , items.get(copy));
+        return JavaUtil.getOrDefault(getMythicMobsInstance().getVolatileCodeHandler().getItemHandler().getNBTData(copy).getString("MYTHIC_TYPE"), items.get(copy));
     }
 
     public MythicMob getMythicMob(String id) {
@@ -51,8 +53,10 @@ public class MythicListener implements Listener {
         return getMythicItem(id, 1);
     }
 
-    public ItemStack getMythicItem(String id , int amount) {
+    public ItemStack getMythicItem(String id, int amount) {
         ItemStack item = getMythicMobsInstance().getItemManager().getItemStack(id);
+        if (item == null)
+            item = ItemUtil.getNamedItem(Material.REDSTONE_BLOCK, "§4§l[ERROR] 存在しないMMIDです。" + ChatColor.YELLOW + "ID: " + id);
         item.setAmount(amount);
         return item;
     }

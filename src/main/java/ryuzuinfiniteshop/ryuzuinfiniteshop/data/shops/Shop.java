@@ -52,6 +52,7 @@ public class Shop {
     protected ShopType type;
     protected List<ShopTrade> trades = new ArrayList<>();
     protected ConfigurationSection shopkeepersConfig;
+    protected int yaw;
 
     @Setter
     @Getter
@@ -130,7 +131,6 @@ public class Shop {
         return yaml -> {
             if (!mythicmob.isPresent()) this.mythicmob = Optional.ofNullable(yaml.getString("Npc.Options.MythicMob"));
             if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
-                if (npc != null) npc.remove();
                 npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
                 setNpcMeta();
             } else {
@@ -148,7 +148,8 @@ public class Shop {
                 }
 //                    ((LivingEntity) npc).setInvisible(!yaml.getBoolean("Npc.Options.Invisible", true));
             }
-            this.location.setYaw(yaml.getInt("Npc.Status.Yaw", 0));
+            this.yaw = yaml.getInt("Npc.Status.Yaw", 0);
+            this.location.setYaw(yaw);
             npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
         };
     }
@@ -229,20 +230,22 @@ public class Shop {
             if (available && this.trades.contains(expectedTrade) && !expectedTrade.equals(trade)) duplication = true;
 
             // 編集画面上に重複した取引が存在するかチェックする
-            if (expectedTrade == null) continue;
-            if (onTrades.contains(expectedTrade)) duplication = true;
+            if (expectedTrade != null && onTrades.contains(expectedTrade)) duplication = true;
             onTrades.add(expectedTrade);
 
             // 取引を追加、上書き、削除する
             if (trade == null && available) {
+                // 取引を追加
                 addTrade(inv, i, limit);
                 LogUtil.log(LogUtil.LogType.ADDTRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), expectedTrade, expectedTrade.getLimit());
             } else if (available) {
+                // 取引を上書き
                 if (!trade.equals(expectedTrade))
                     LogUtil.log(LogUtil.LogType.REPLACETRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), trade, expectedTrade, trade.getLimit(), limit);
                 trade.setTrade(inv, i, getShopType());
                 trade.setTradeLimits(limit, true);
             } else if (trade != null) {
+                // 取引を削除する
                 emptyTrades.add(trade);
                 LogUtil.log(LogUtil.LogType.REMOVETRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), trade, trade.getLimit());
             }
@@ -482,11 +485,9 @@ public class Shop {
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return yaml -> {
             mythicmob.ifPresent(mythicmob -> yaml.set("Npc.Options.MythicMob", mythicmob));
-            if (npc != null) {
-                yaml.set("Npc.Options.EntityType", npc.getType().toString());
-                yaml.set("Npc.Options.DisplayName", displayName);
-                if (npc instanceof LivingEntity) yaml.set("Npc.Options.Invisible", invisible);
-            }
+            yaml.set("Npc.Options.DisplayName", displayName);
+            yaml.set("Npc.Options.EntityType", entityType.toString());
+            yaml.set("Npc.Options.Invisible", invisible);
             yaml.set("Shop.Options.ShopType", type.toString());
             yaml.set("Npc.Options.Equipments", equipments.getObjects());
             yaml.set("Npc.Status.Lock", lock);
@@ -531,9 +532,7 @@ public class Shop {
 
     private void spawnNPC(EntityType entitytype) {
         this.location.setPitch(0);
-        this.location.setYaw(0);
-        Entity npc = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entitytype);
-        this.npc = npc;
+        this.npc = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entitytype);
         setNpcMeta();
     }
 
@@ -543,7 +542,7 @@ public class Shop {
         npc.setGravity(false);
         NBTUtil.setNMSTag(npc, "Shop", getID());
         initializeLivingEntitiy();
-        if (npc.getType().equals(EntityType.ENDER_CRYSTAL))
+        if (entityType.equals(EntityType.ENDER_CRYSTAL))
             ((EnderCrystal) npc).setShowingBottom(false);
 //        NBTBuilder.setSilent(true);
 //        NBTBuilder.setInvulnerable(true);
@@ -586,7 +585,7 @@ public class Shop {
         if (!(npc instanceof LivingEntity)) return;
         LivingEntity livnpc = (LivingEntity) npc;
         livnpc.setAI(false);
-        livnpc.setRemoveWhenFarAway(false);
+        livnpc.setRemoveWhenFarAway(true);
 //        NBTBuilder.setNoAI(true);
 //        NBTBuilder.setPersistenceRequired(true);
     }
@@ -649,6 +648,38 @@ public class Shop {
             return false;
         }
         return true;
+    }
+
+    public void setNpcType(EntityType entityType) {
+        if (npc != null) npc.remove();
+        this.entityType = entityType;
+        respawnNPC();
+    }
+
+    public void setMythicType(String mythicType) {
+        if (npc != null) npc.remove();
+        this.mythicmob = Optional.of(mythicType);
+        respawnNPC();
+    }
+
+    public void respawnNPC() {
+        if (npc != null && !npc.isDead()) return;
+        if (!location.getChunk().isLoaded()) return;
+        if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
+            npc.remove();
+            npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
+            setNpcMeta();
+        } else {
+            spawnNPC(entityType);
+            this.NBTBuilder = new EntityNBTBuilder(npc);
+            updateEquipments();
+            npc.setCustomName(displayName);
+            if (npc instanceof LivingEntity) {
+                NBTBuilder.setInvisible(invisible);
+            }
+        }
+        this.location.setYaw(yaw);
+        npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
     }
 
     @Override

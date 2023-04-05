@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -9,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItem;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.admin.MythicListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 
@@ -31,7 +33,7 @@ public class ItemUtil {
         if (items == null) return true;
         if (items.length <= Arrays.stream(getContents(inventory)).filter(ItemUtil::isAir).count()) return true;
         HashMap<ItemStack, Integer> give = new HashMap<>();
-        Arrays.stream(items).forEach(item -> give.put(item, containsCount(items, new ObjectItem(item))));
+        Arrays.stream(items).forEach(item -> give.put(item, containsCount(items, item)));
         give.replaceAll((i, v) -> give.get(i) - capacityCount(getContents(inventory), i));
         int needslot = give.keySet().stream()
                 .filter(item -> give.get(item) > 0)
@@ -47,12 +49,9 @@ public class ItemUtil {
     //アイテムを含んでいるか調べる
     public static boolean contains(Inventory inventory, ItemStack... items) {
         if (items == null) return true;
-        HashMap<ObjectItem, Integer> need = new HashMap<>();
-        Arrays.stream(items).filter(Objects::nonNull).forEach(item -> {
-            ObjectItem objectItem = new ObjectItem(item);
-            need.put(objectItem, containsCount(items, objectItem));
-        });
-        HashMap<ObjectItem, Integer> has = new HashMap<>();
+        HashMap<ItemStack, Integer> need = new HashMap<>();
+        Arrays.stream(items).filter(Objects::nonNull).forEach(item -> need.put(item, containsCount(items, item)));
+        HashMap<ItemStack, Integer> has = new HashMap<>();
         if (need.keySet().stream().anyMatch(item -> Arrays.stream(getContents(inventory)).noneMatch(item::isSimilar)))
             return false;
         need.keySet().forEach(item -> has.put(item, containsCount(getContents(inventory), item)));
@@ -76,13 +75,13 @@ public class ItemUtil {
     }
 
     //アイテムを含んでいるか調べる
-    public static boolean contains(Inventory inventory, ObjectItem item) {
-        if (ItemUtil.isAir(item.toItemStack())) return true;
+    public static boolean contains(Inventory inventory, ItemStack item) {
+        if (ItemUtil.isAir(item)) return true;
         int sum = containsCount(getContents(inventory), item);
-        return item.toItemStack().getAmount() <= sum;
+        return item.getAmount() <= sum;
     }
 
-    public static int containsCount(ItemStack[] contents, ObjectItem item) {
+    public static int containsCount(ItemStack[] contents, ItemStack item) {
         return Arrays.stream(contents).filter(Objects::nonNull).filter(item::isSimilar).mapToInt(ItemStack::getAmount).sum();
     }
 
@@ -217,7 +216,7 @@ public class ItemUtil {
     public static String getString(ItemStack item) {
         if(isAir(item)) return "Air";
         if(MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getID(item) != null) return MythicInstanceProvider.getInstance().getID(item);
-        if(item.hasItemMeta() && item.getItemMeta().hasDisplayName()) return item.getItemMeta().getDisplayName();
+        if(item.hasItemMeta() && item.getItemMeta().hasDisplayName()) return ChatColor.stripColor(item.getItemMeta().getDisplayName());
         return item.getType().name();
     }
 }

@@ -80,6 +80,13 @@ public class DyeableShop extends Shop {
         });
     }
 
+    @Override
+    public void respawnNPC() {
+        super.respawnNPC();
+        setColor(color);
+        setOptionalInfo(optionalInfo);
+    }
+
     public Material getOptionalInfoMaterial() {
         return optionalInfo ? Material.LIME_WOOL : Material.RED_WOOL;
     }

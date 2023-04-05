@@ -6,6 +6,7 @@ import org.bukkit.event.inventory.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SelectSearchItemGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
@@ -19,7 +20,7 @@ public class CancelItemMoveListener implements Listener {
         if (holder == null) return;
         if (event.getClickedInventory() == null) return;
         if (!(event.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY) || event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR))) return;
-        if (ShopUtil.isEditMode(event.getView().getTopInventory()) && holder.getGui() instanceof ShopTradeGui) return;
+        if (holder.getMode().equals(ShopMode.Edit) && holder.getGui() instanceof ShopTradeGui) return;
 
         //キャンセルイベント
         event.setCancelled(true);
@@ -31,7 +32,7 @@ public class CancelItemMoveListener implements Listener {
         ModeHolder holder = ShopUtil.getModeHolder(event);
         if (holder == null) return;
         if (event.getAction().equals(InventoryAction.CLONE_STACK)) return;
-        if (ShopUtil.isEditMode(event.getView().getTopInventory()) && holder.getGui() instanceof ShopTradeGui) return;
+        if (holder.getMode().equals(ShopMode.Edit)  && holder.getGui() instanceof ShopTradeGui) return;
 
         //キャンセルイベント
         event.setCancelled(true);
@@ -42,7 +43,7 @@ public class CancelItemMoveListener implements Listener {
         //インベントリがショップなのかチェック
         ModeHolder holder = ShopUtil.getModeHolder(event.getInventory());
         if (holder == null) return;
-        if (ShopUtil.isEditMode(event.getInventory()) && holder.getGui() instanceof ShopTradeGui) return;
+        if (holder.getMode().equals(ShopMode.Edit) && holder.getGui() instanceof ShopTradeGui) return;
         if (event.getRawSlots().stream().noneMatch(i -> i < event.getInventory().getSize())) return;
 
         //キャンセルイベント

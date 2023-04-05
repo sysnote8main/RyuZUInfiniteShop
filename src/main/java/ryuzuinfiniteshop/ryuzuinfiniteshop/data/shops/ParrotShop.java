@@ -46,6 +46,12 @@ public class ParrotShop extends Shop {
         });
     }
 
+    @Override
+    public void respawnNPC() {
+        super.respawnNPC();
+        setColor(color);
+    }
+
     public Material getColorMaterial() {
         switch (color) {
             case BLUE:

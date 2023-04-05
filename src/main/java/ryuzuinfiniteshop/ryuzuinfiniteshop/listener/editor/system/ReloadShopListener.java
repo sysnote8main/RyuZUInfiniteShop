@@ -28,6 +28,6 @@ public class ReloadShopListener implements Listener {
         //音を出す
         SoundUtil.playCautionSound(p);
 
-        ShopUtil.reloadShop(holder.getShop());
+        holder.getShop().respawnNPC();
     }
 }
