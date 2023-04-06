@@ -22,6 +22,7 @@ public class Config {
     public static boolean tradeLog;
     public static boolean saveByMMID;
     public static boolean overwriteConverting;
+    public static boolean defaultSearchableInConverting;
     public static BukkitTask respawnTask;
     private static BukkitTask autoSaveTask;
 
@@ -38,6 +39,7 @@ public class Config {
         tradeLog = yaml.getBoolean("TradeLog", true);
         saveByMMID = yaml.getBoolean("SaveByMMID", true);
         overwriteConverting = yaml.getBoolean("OverwriteConverting", false);
+        defaultSearchableInConverting = yaml.getBoolean("DefaultSearchableInConverting", true);
     }
 
     public static void save() {
@@ -53,6 +55,7 @@ public class Config {
         if(!yaml.contains("TradeLog")) yaml.set("TradeLog", tradeLog);
         if(!yaml.contains("SaveByMMID")) yaml.set("SaveByMMID", saveByMMID);
         if(!yaml.contains("OverwriteConverting")) yaml.set("OverwriteConverting", overwriteConverting);
+        if(!yaml.contains("DefaultSearchableInConverting")) yaml.set("DefaultSearchableInConverting", overwriteConverting);
         try {
             yaml.save(file);
         } catch (IOException e) {

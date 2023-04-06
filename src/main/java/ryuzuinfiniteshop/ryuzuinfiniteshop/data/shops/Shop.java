@@ -639,11 +639,13 @@ public class Shop {
             spawnNPC(entityType);
             this.NBTBuilder = new EntityNBTBuilder(npc);
             npc.setCustomName(displayName);
-            if (npc instanceof LivingEntity) {
-                NBTBuilder.setInvisible(invisible);
+            npc.getPassengers().forEach(Entity::remove);
+            Optional.ofNullable(npc.getVehicle()).ifPresent(Entity::remove);
+            if (npc instanceof LivingEntity)
                 updateEquipments();
-            }
         }
+        if (npc instanceof LivingEntity)
+            NBTBuilder.setInvisible(invisible);
         this.location.setYaw(yaw);
         npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
     }

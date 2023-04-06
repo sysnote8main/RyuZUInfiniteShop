@@ -161,6 +161,7 @@ public class ShopUtil {
                         trades.add(new ShopTrade(results, items));
                     }
                     shop.setTrades(trades);
+                    shop.setSearchable(Config.defaultSearchableInConverting);
                     keys.add(key);
                 }
             } catch (Exception e) {
@@ -181,6 +182,7 @@ public class ShopUtil {
     public static void removeAllNPC() {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntities()) {
+                if(entity instanceof Player) return;
                 String id = NBTUtil.getNMSStringTag(entity, "Shop");
                 if (id != null) {
                     entity.getLocation().getChunk().load();
