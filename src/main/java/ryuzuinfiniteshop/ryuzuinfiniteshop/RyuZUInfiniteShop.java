@@ -46,7 +46,8 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        Config.load(true);
+        ShopUtil.getAllShopInventoryViewer();
+        Config.load();
         TradeUtil.saveTradeLimits();
         ShopUtil.saveAllShops();
         UnderstandSystemConfig.save();

@@ -130,8 +130,8 @@ public class EditTradePageListener implements Listener {
         ShopTrade trade = gui.getTradeFromSlot(slot);
 
         if (trade == null) return;
-        if (!trade.getResult(p).equals(ShopTrade.TradeResult.Success) && gui.getConvertSlot().contains(slot)) {
-            SoundUtil.playFailSound(p);
+        if(!trade.getResult(p).equals(ShopTrade.TradeResult.Success)){
+            if(gui.getConvertSlot().contains(slot))  SoundUtil.playFailSound(p);
             return;
         }
 

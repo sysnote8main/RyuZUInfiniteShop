@@ -8,6 +8,7 @@ import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -45,6 +46,7 @@ public class ShopUtil {
     }
 
     public static ModeHolder getModeHolder(InventoryClickEvent event) {
+        if(event.getAction().equals(InventoryAction.CLONE_STACK)) return null;
         return getModeHolder(getSecureInventory(event));
     }
 

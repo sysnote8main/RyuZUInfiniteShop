@@ -106,7 +106,7 @@ public class ShopEditorGui extends ShopGui {
         setShopStatus(inv);
         setShopOperation(inv);
         setTeleport(inv);
-        if(!MythicInstanceProvider.isLoaded() || !MythicInstanceProvider.getInstance().isMythicMob(getShop().getNpc())) {
+        if(!(MythicInstanceProvider.isLoaded() && getShop().getMythicmob().isPresent())) {
             setEquipment(inv);
             setDisplayName(inv);
             setSettings(inv);

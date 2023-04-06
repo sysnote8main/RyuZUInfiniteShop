@@ -25,7 +25,7 @@ public class Config {
     public static BukkitTask respawnTask;
     private static BukkitTask autoSaveTask;
 
-    public static void load(boolean disable) {
+    public static void load() {
         File file = FileUtil.initializeFile("config.yml");
         YamlConfiguration yaml = new YamlConfiguration();
         try {
@@ -38,7 +38,6 @@ public class Config {
         tradeLog = yaml.getBoolean("TradeLog", true);
         saveByMMID = yaml.getBoolean("SaveByMMID", true);
         overwriteConverting = yaml.getBoolean("OverwriteConverting", false);
-        if(!disable) runAutoSave();
     }
 
     public static void save() {
@@ -61,11 +60,11 @@ public class Config {
         }
     }
 
-    private static void runAutoSave() {
+    public static void runAutoSave() {
         if(autoSaveInterval <= 0) return;
         if(autoSaveTask != null) autoSaveTask.cancel();
         if(respawnTask != null) respawnTask.cancel();
         autoSaveTask = Bukkit.getScheduler().runTaskTimer(RyuZUInfiniteShop.getPlugin(), FileUtil::reloadAllWithMessage, 20L * 60 * autoSaveInterval, 20L * 60 * autoSaveInterval);
-        respawnTask = Bukkit.getScheduler().runTaskTimer(RyuZUInfiniteShop.getPlugin(), () -> ShopUtil.getShops().values().forEach(Shop::respawnNPC), 20L * 15, 20L * 15);
+        respawnTask = Bukkit.getScheduler().runTaskTimer(RyuZUInfiniteShop.getPlugin(), () -> ShopUtil.getShops().values().forEach(Shop::respawnNPC), 20L, 20L * 15);
     }
 }

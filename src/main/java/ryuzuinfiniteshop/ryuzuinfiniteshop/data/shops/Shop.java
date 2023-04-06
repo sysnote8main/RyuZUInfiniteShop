@@ -47,6 +47,7 @@ public class Shop {
     @Getter
     @Setter
     protected Location location;
+    @Getter
     protected Optional<String> mythicmob = Optional.empty();
     protected EntityType entityType;
     protected ShopType type;
@@ -297,9 +298,9 @@ public class Shop {
     }
 
     public ItemStack convertShopToItemStack() {
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石: " + getDisplayNameOrElseNone(),
-                                                        ChatColor.YELLOW + "ショップに向かって右クリック: ショップの取引の取り込み",
-                                                        ChatColor.YELLOW + "地面に向かってシフト右クリック: ショップの設置",
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石:" + ChatColor.GREEN + " " + getDisplayNameOrElseNone(),
+                                                        ChatColor.YELLOW + "ショップに向かって右クリック:" + ChatColor.GREEN + " ショップの取引の取り込み",
+                                                        ChatColor.YELLOW + "地面に向かってシフト右クリック:" + ChatColor.GREEN + " ショップの設置",
                                                         ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay()
         );
         item = NBTUtil.setNMSTag(item, convertShopToMap());
@@ -307,7 +308,7 @@ public class Shop {
     }
 
     public void removeShop() {
-        npc.remove();
+        if (npc != null) npc.remove();
         getFile().delete();
         ShopUtil.removeShop(getID());
     }
@@ -615,12 +616,14 @@ public class Shop {
     public void setNpcType(EntityType entityType) {
         if (npc != null) npc.remove();
         this.entityType = entityType;
-        if(npc == null) respawnNPC();
+        this.mythicmob = Optional.empty();
+        if (npc == null) respawnNPC();
     }
 
     public void setMythicType(String mythicType) {
         if (npc != null) npc.remove();
         this.mythicmob = Optional.of(mythicType);
+        this.entityType = null;
         respawnNPC();
     }
 
@@ -629,7 +632,7 @@ public class Shop {
         if (npc != null && !npc.isDead()) return;
         if (!location.getChunk().isLoaded()) return;
         if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
-            npc.remove();
+            if (npc != null) npc.remove();
             npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
             setNpcMeta();
         } else {

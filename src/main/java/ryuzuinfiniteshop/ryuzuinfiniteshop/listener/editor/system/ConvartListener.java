@@ -77,7 +77,7 @@ public class ConvartListener implements Listener {
             SoundUtil.playFailSound(p);
             return;
         }
-        if (!(Shop.ShopType.valueOf(tag).equals(Shop.ShopType.TwotoOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
+        if (!(shop.getShopType().equals(Shop.ShopType.TwotoOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
             SoundUtil.playFailSound(p);
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップタイプが違います");
             return;
@@ -121,6 +121,7 @@ public class ConvartListener implements Listener {
 
         //ショップを読み込む
         Shop shop = ShopUtil.reloadShop(block.getLocation().add(0, 1, 0), shopData, TradeUtil.convertTradesToList(item));
+        shop.respawnNPC();
 
         //音を出し、メッセージを送信
         SoundUtil.playSuccessSound(p);
@@ -146,7 +147,7 @@ public class ConvartListener implements Listener {
         if (ItemUtil.isAir(item) || shopData == null) return;
 
         String tag = NBTUtil.getNMSStringTag(item, "ShopType");
-        if (!(Shop.ShopType.valueOf(tag).equals(Shop.ShopType.TwotoOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
+        if (!(shop.getShopType().equals(Shop.ShopType.TwotoOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
             SoundUtil.playFailSound(p);
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップタイプが違います");
             return;
