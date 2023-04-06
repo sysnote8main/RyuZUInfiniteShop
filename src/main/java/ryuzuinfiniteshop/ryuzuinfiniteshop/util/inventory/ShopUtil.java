@@ -182,7 +182,7 @@ public class ShopUtil {
     public static void removeAllNPC() {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntities()) {
-                if(entity instanceof Player) return;
+                if(entity instanceof Player) continue;
                 String id = NBTUtil.getNMSStringTag(entity, "Shop");
                 if (id != null) {
                     entity.getLocation().getChunk().load();
