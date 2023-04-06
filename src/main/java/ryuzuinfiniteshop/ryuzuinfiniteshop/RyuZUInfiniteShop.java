@@ -16,7 +16,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProv
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.MythicItem;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.canceller.CancelAffectNpc;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.canceller.CancelItemMoveListener;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.admin.ShopListListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.ShopListListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.change.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.EditMainPageListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.EditTradePageListener;

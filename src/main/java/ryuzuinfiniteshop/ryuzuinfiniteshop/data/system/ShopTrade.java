@@ -131,7 +131,8 @@ public class ShopTrade {
                                 ChatColor.GREEN + page + ChatColor.YELLOW + "ページ目",
                                 isAdmin ? (ChatColor.YELLOW + "検索可否: " + (shop.isSearchable() ? ChatColor.GREEN + "可" : ChatColor.RED + "不可")) : null,
                                 isAdmin ? (ChatColor.YELLOW + "ロック: " + (shop.isLock() ? ChatColor.RED + "ロック" : ChatColor.GREEN + "アンロック")) : null,
-                                isAdmin ? ChatColor.GREEN + "クリック: 取引画面を開く" : null,
+                                ChatColor.GREEN + "クリック: 取引画面を開く",
+                                isAdmin ? null : ChatColor.GREEN + "対価、商品をクリック: 商品、対価で検索",
                                 isAdmin ? ChatColor.GREEN + "シフトクリック: 編集画面を開く" : null
                         ),
                         "Shop", id
@@ -144,15 +145,16 @@ public class ShopTrade {
     }
 
     private static ItemStack getSettingsFilter(int value) {
-        return NBTUtil.setNMSTag(ItemUtil.withLore(DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack(),
-                                                       ChatColor.GREEN + "クリック: 取引上限設定" + ChatColor.YELLOW + " 取引上限: " + value,
-                                                       ChatColor.GREEN + "シフトクリック: 取引のアイテム化"
+        return NBTUtil.setNMSTag(ItemUtil.withLore(
+                DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack(),
+                ChatColor.GREEN + "クリック: 取引上限設定" + ChatColor.YELLOW + " 取引上限: " + value,
+                ChatColor.GREEN + "シフトクリック: 取引のアイテム化"
         ), "TradeLimit", String.valueOf(value));
     }
 
     public ItemStack changeLimit(int variation) {
         int value = Math.max(getLimit() + variation, 0);
-        if(value == 0)
+        if (value == 0)
             tradeUUID.remove(this);
         else
             tradeUUID.put(this, UUID.randomUUID());

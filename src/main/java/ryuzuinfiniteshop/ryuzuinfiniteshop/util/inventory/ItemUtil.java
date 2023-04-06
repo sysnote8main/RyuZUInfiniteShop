@@ -9,9 +9,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItem;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.admin.MythicListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 
 import javax.annotation.Nullable;

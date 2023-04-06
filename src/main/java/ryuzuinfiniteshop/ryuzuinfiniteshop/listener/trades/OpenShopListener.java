@@ -39,14 +39,14 @@ public class OpenShopListener implements Listener {
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
         String id = NBTUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;
-        if(FileUtil.isSaveBlock(p)) return;
+        if (FileUtil.isSaveBlock(p)) return;
         Shop shop = ShopUtil.getShop(id);
         if (!shop.isAvailableShop(p)) return;
         ItemStack item = p.getInventory().getItemInMainHand();
         if (!(ItemUtil.isAir(item) || NBTUtil.getNMSStringTag(item, "ShopData") == null)) return;
 
         Inventory inv = shop.getPage(1).getInventory(ShopMode.Trade, p);
-        if(!UnderstandSystemConfig.signedPlayers.contains(p.getUniqueId().toString())) {
+        if (!UnderstandSystemConfig.signedPlayers.contains(p.getUniqueId().toString())) {
             TextComponent understand = new TextComponent(ChatColor.YELLOW + "[分かった！]");
             understand.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sis understand"));
             understand.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "これ以降メッセージを表示しない").create()));
@@ -99,7 +99,7 @@ public class OpenShopListener implements Listener {
                 if (holder.getMode().equals(ShopMode.Trade) && shop.ableCreateNewPage()) {
                     //取引を上書きし、取引として成立しないものは削除する
                     boolean warn = shop.checkTrades(inv);
-                    if(warn) p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "重複している取引がありました");
+                    if (warn) p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "重複している取引がありました");
                     if (shop.ableCreateNewPage()) {
                         shop.createNewPage();
                         p.openInventory(shop.getPage(page + 1).getInventory(mode, p, holder.getBefore()));
@@ -128,13 +128,17 @@ public class OpenShopListener implements Listener {
 
         //必要なデータを取得
         Player p = (Player) event.getPlayer();
-        if(FileUtil.isSaveBlock(p)) return;
+        if (FileUtil.isSaveBlock(p)) return;
 
         Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> {
-            if(p.getOpenInventory().getType().equals(InventoryType.CREATIVE) || p.getOpenInventory().getType().equals(InventoryType.CRAFTING)) SoundUtil.playCloseShopSound(p);
+            if (p.getOpenInventory().getType().equals(InventoryType.CREATIVE) || p.getOpenInventory().getType().equals(InventoryType.CRAFTING))
+                SoundUtil.playCloseShopSound(p);
             if (ShopUtil.getModeHolder(p.getOpenInventory().getTopInventory()) != null) return;
             if (holder.getBefore() == null) return;
-            p.openInventory(holder.getBefore().getGui().getInventory(holder.getMode(), holder.getBefore().getBefore()));
+            if (holder.getBefore().getGui() instanceof ShopTradeGui)
+                p.openInventory(((ShopTradeGui) holder.getBefore().getGui()).getInventory(holder.getBefore().getMode(), p, holder.getBefore().getBefore()));
+            else
+                p.openInventory(holder.getBefore().getGui().getInventory(holder.getBefore().getMode(), holder.getBefore().getBefore()));
         }, 1L);
     }
 

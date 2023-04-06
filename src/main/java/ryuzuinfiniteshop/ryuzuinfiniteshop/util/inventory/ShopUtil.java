@@ -1,9 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -34,6 +31,7 @@ import java.util.stream.Collectors;
 
 public class ShopUtil {
     private static HashMap<String, Shop> shops = new HashMap<>();
+    public static List<Chunk> shopChunks = new ArrayList<>();
 
     public static ShopHolder getShopHolder(InventoryClickEvent event) {
         return getShopHolder(getSecureInventory(event));
@@ -61,6 +59,18 @@ public class ShopUtil {
 
     public static Inventory getSecureInventory(InventoryClickEvent event) {
         return JavaUtil.getOrDefault(event.getClickedInventory(), event.getView().getTopInventory());
+    }
+
+    public static int getSubtractSlot(Shop.ShopType type) {
+        switch (type) {
+            case TwotoOne:
+                return 2;
+            case FourtoFour:
+                return 4;
+            case SixtoTwo:
+                return 6;
+        }
+        return 0;
     }
 
     public static boolean loadAllShops() {
@@ -170,7 +180,10 @@ public class ShopUtil {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntities()) {
                 String id = NBTUtil.getNMSStringTag(entity, "Shop");
-                if (id != null) entity.getWorld().getNearbyEntities(entity.getLocation(), 0.1, 0.1, 0.1).forEach(Entity::remove);
+                if (id != null) {
+                    entity.getLocation().getChunk().load();
+                    entity.getWorld().getNearbyEntities(entity.getLocation(), 0.1, 0.1, 0.1).forEach(Entity::remove);
+                }
             }
         }
     }
@@ -185,8 +198,8 @@ public class ShopUtil {
         return shops;
     }
 
-    public static HashMap<String, Shop> getSortedShops(ShopMode mode, String name) {
-        HashMap<String, Shop> sorted = new HashMap<>();
+    public static LinkedHashMap<String, Shop> getSortedShops(ShopMode mode, String name) {
+        LinkedHashMap<String, Shop> sorted = new LinkedHashMap<>();
         if (mode.equals(ShopMode.Edit))
             shops.keySet().stream().sorted(Comparator.naturalOrder()).filter(key -> shops.get(key).containsDisplayName(name) || name == null).forEach(key -> sorted.put(key, shops.get(key)));
         else

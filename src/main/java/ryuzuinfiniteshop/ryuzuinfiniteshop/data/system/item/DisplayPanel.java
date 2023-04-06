@@ -40,7 +40,7 @@ public class DisplayPanel {
             if(limit != 0)
                 ItemUtil.withLore(item, ChatColor.YELLOW + "残り取引回数: " + (limit - count) + "回");
         } else if(!result.equals(ShopTrade.TradeResult.Normal)) {
-            ItemUtil.withLore(item, ChatColor.GREEN + "対価、商品をシフトクリック: 対価、商品で検索");
+            ItemUtil.withLore(item, ChatColor.GREEN + "対価、商品をクリック: 商品、対価で検索");
         }
         return item;
     }

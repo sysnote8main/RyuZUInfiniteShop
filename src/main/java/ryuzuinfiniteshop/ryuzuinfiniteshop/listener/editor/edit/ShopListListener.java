@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.admin;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

@@ -6,17 +6,18 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 @Getter
 public class ShopListHolder extends PageableHolder {
-    protected final HashMap<String, Shop> shops;
+    protected final LinkedHashMap<String, Shop> shops;
 
-    public ShopListHolder(ShopMode mode, ShopListGui gui, HashMap<String, Shop> shops) {
+    public ShopListHolder(ShopMode mode, ShopListGui gui, LinkedHashMap<String, Shop> shops) {
         super(mode, gui);
         this.shops = shops;
     }
 
-    public ShopListHolder(ShopMode mode, ShopListGui gui, HashMap<String, Shop> shops, ModeHolder before) {
+    public ShopListHolder(ShopMode mode, ShopListGui gui, LinkedHashMap<String, Shop> shops, ModeHolder before) {
         super(mode, gui, before);
         this.shops = shops;
     }

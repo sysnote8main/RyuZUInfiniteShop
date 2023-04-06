@@ -126,10 +126,14 @@ public class EditTradePageListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         ClickType type = event.getClick();
         int slot = event.getSlot();
-        ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(slot);
+        ShopTradeGui gui = ((ShopTradeGui) holder.getGui());
+        ShopTrade trade = gui.getTradeFromSlot(slot);
 
         if (trade == null) return;
-        if (!trade.getResult(p).equals(ShopTrade.TradeResult.Success)) return;
+        if (!trade.getResult(p).equals(ShopTrade.TradeResult.Success) && gui.getConvertSlot().contains(slot)) {
+            SoundUtil.playFailSound(p);
+            return;
+        }
 
             //取引
         int times = 1;

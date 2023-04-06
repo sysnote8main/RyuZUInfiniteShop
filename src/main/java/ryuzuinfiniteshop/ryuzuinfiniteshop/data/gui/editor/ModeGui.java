@@ -19,8 +19,7 @@ public abstract class ModeGui {
 
     public Inventory getInventory(ShopMode mode, ModeHolder before) {
         Inventory inv = getInventory(mode);
-        ShopHolder holder = ShopUtil.getShopHolder(inv);
-        if (holder == null) return inv;
+        ModeHolder holder = ShopUtil.getModeHolder(inv);
         holder.setBefore(before);
         return inv;
     }

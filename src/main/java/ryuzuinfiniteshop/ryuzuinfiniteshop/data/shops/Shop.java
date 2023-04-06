@@ -114,6 +114,7 @@ public class Shop {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+        ShopUtil.shopChunks.add(location.getChunk());
         getLoadYamlProcess().accept(config);
     }
 
@@ -236,21 +237,9 @@ public class Shop {
         return "";
     }
 
-    public int getSubtractSlot() {
-        switch (type) {
-            case TwotoOne:
-                return 2;
-            case FourtoFour:
-                return 4;
-            case SixtoTwo:
-                return 6;
-        }
-        return 0;
-    }
-
     public ShopTrade getTrade(Inventory inv, int slot) {
         if (!((ShopTradeGui) ShopUtil.getShopHolder(inv).getGui()).isConvertSlot(slot)) return null;
-        return TradeUtil.getTrade(inv, slot - getSubtractSlot(), type);
+        return TradeUtil.getTrade(inv, slot - ShopUtil.getSubtractSlot(type), type);
     }
 
     //トレードをアイテム化する
@@ -325,6 +314,7 @@ public class Shop {
 
     public void removeShop(Player p) {
         LogUtil.log(LogUtil.LogType.REMOVESHOP, p.getName(), getID());
+        ShopUtil.shopChunks.remove(location.getChunk());
         removeShop();
     }
 

@@ -1,11 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
 
 import org.bukkit.Bukkit;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.admin.MythicListener;
-
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.MythicListener;
 
 public class MythicInstanceProvider {
     private static final String errorMessage = "MythicMobs is not loaded. If you want to use MythicMobs, please install MythicMobs.";

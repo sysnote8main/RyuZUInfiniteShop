@@ -5,7 +5,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.TradesGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.SeachTradeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
@@ -15,12 +14,12 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
 import java.util.*;
 
-public class TradeSearchGui extends TradesGui {
+public class SearchTradeGui extends TradesGui {
     protected final LinkedHashMap<ShopTrade, Shop> searchedTrade;
     protected final List<Shop> shops;
     protected final Player player;
 
-    public TradeSearchGui(int page, Player p, LinkedHashMap<ShopTrade, Shop> searchedTrade) {
+    public SearchTradeGui(int page, Player p, LinkedHashMap<ShopTrade, Shop> searchedTrade) {
         super(page);
         this.searchedTrade = searchedTrade;
         this.player = p;

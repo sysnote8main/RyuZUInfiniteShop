@@ -26,8 +26,8 @@ public abstract class ShopTradeGui extends ShopGui {
         setTrades();
     }
 
-    protected abstract List<Integer> getDisplaySlot();
-    protected abstract List<Integer> getConvertSlot();
+    public abstract List<Integer> getDisplaySlot();
+    public abstract List<Integer> getConvertSlot();
 
     public boolean isConvertSlot(int slot) {
         return getConvertSlot().contains(slot);

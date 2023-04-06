@@ -14,13 +14,14 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 //ショップエディターのメインページ
 public class ShopListGui extends PageableGui {
-    protected final HashMap<String, Shop> shops;
+    protected final LinkedHashMap<String, Shop> shops;
 
-    public ShopListGui(int page, HashMap<String, Shop> shops) {
+    public ShopListGui(int page, LinkedHashMap<String, Shop> shops) {
         super(page);
         this.shops = shops;
     }
