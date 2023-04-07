@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 
 import java.util.Arrays;
@@ -71,6 +72,7 @@ public class VillagerableShop extends AgeableShop {
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return super.getSaveYamlProcess().andThen(yaml -> {
             yaml.set("Npc.Options.Profession", JavaUtil.getOrDefault(profession, Villager.Profession.FARMER).toString());
+            if(RyuZUInfiniteShop.VERSION < 14) return;
             yaml.set("Npc.Options.Biome", JavaUtil.getOrDefault(biome, Villager.Type.PLAINS).toString());
             yaml.set("Npc.Options.Level", level);
         });
@@ -80,6 +82,7 @@ public class VillagerableShop extends AgeableShop {
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
             this.profession = Villager.Profession.valueOf(yaml.getString("Npc.Options.Profession", "FARMER"));
+            if(RyuZUInfiniteShop.VERSION < 14) return;
             this.biome = Villager.Type.valueOf(yaml.getString("Npc.Options.Biome", "PLAINS"));
             this.level = yaml.getInt("Npc.Options.Level", 1);
         });
@@ -89,6 +92,7 @@ public class VillagerableShop extends AgeableShop {
     public void respawnNPC() {
         super.respawnNPC();
         setProfession(profession);
+        if(RyuZUInfiniteShop.VERSION < 14) return;
         setBiome(biome);
         setLevel(level);
     }

@@ -4,10 +4,7 @@ import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Ageable;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -46,7 +43,7 @@ public class ShopUtil {
     }
 
     public static ModeHolder getModeHolder(InventoryClickEvent event) {
-        if(event.getAction().equals(InventoryAction.CLONE_STACK)) return null;
+        if (event.getAction().equals(InventoryAction.CLONE_STACK)) return null;
         return getModeHolder(getSecureInventory(event));
     }
 
@@ -128,7 +125,7 @@ public class ShopUtil {
                 if (!config.getString(base + "type", "none").equals("admin")) continue;
                 if (Bukkit.getWorld(config.getString(base + ".world")) == null) continue;
                 Location location = LocationUtil.toLocationFromString(config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z"));
-                if(shops.containsKey(LocationUtil.toStringFromLocation(location))) {
+                if (shops.containsKey(LocationUtil.toStringFromLocation(location))) {
                     Shop shop = shops.get(LocationUtil.toStringFromLocation(location));
                     List<ShopTrade> trades = new ArrayList<>();
                     for (String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
@@ -140,7 +137,7 @@ public class ShopUtil {
                         if (hasItem2) items[1] = config.getItemStack(base + "recipes." + recipe + ".item2");
                         trades.add(new ShopTrade(results, items));
                     }
-                    if(Config.overwriteConverting) {
+                    if (Config.overwriteConverting) {
                         shop.setNpcType(type);
                         shop.setDisplayName(config.getConfigurationSection(key).getString("name", "").isEmpty() ? "" : ChatColor.GREEN + config.getConfigurationSection(key).getString("name"));
                         shop.setNpcMeta(config.getConfigurationSection(base + "object"));
@@ -182,7 +179,7 @@ public class ShopUtil {
     public static void removeAllNPC() {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntities()) {
-                if(entity instanceof Player) continue;
+                if (entity instanceof Player) continue;
                 String id = NBTUtil.getNMSStringTag(entity, "Shop");
                 if (id != null) {
                     entity.getLocation().getChunk().load();
@@ -225,24 +222,22 @@ public class ShopUtil {
     }
 
     public static Shop createNewShop(Location location, EntityType type, ConfigurationSection config) {
-        if (type.equals(EntityType.VILLAGER) || type.equals(EntityType.ZOMBIE_VILLAGER)) {
+        if (type.equals(EntityType.VILLAGER) || type.equals(EntityType.ZOMBIE_VILLAGER))
             return new VillagerableShop(location, type, config);
-        }
-        if (type.equals(EntityType.CREEPER)) {
+        if (type.equals(EntityType.CREEPER))
             return new PoweredableShop(location, type, config);
-        }
-        if (Colorable.class.isAssignableFrom(type.getEntityClass()) || type.equals(EntityType.WOLF) || type.equals(EntityType.TROPICAL_FISH)) {
+        if (type.equals(EntityType.TROPICAL_FISH))
+            return new TropicalFishShop(location, type, config);
+        if (Slime.class.isAssignableFrom(type.getEntityClass()))
+            return new SlimeShop(location, type, config);
+        if (Colorable.class.isAssignableFrom(type.getEntityClass()) || type.equals(EntityType.WOLF))
             return new DyeableShop(location, type, config);
-        }
-        if (type.equals(EntityType.PARROT)) {
+        if (type.equals(EntityType.PARROT))
             return new ParrotShop(location, type, config);
-        }
-        if (type.equals(EntityType.HORSE)) {
+        if (type.equals(EntityType.HORSE))
             return new HorseShop(location, type, config);
-        }
-        if (Ageable.class.isAssignableFrom(type.getEntityClass())) {
+        if (Ageable.class.isAssignableFrom(type.getEntityClass()))
             return new AgeableShop(location, type, config);
-        }
         return new Shop(location, type, config);
     }
 
@@ -255,11 +250,13 @@ public class ShopUtil {
     }
 
     public static Shop reloadShop(Shop shop) {
-        return reloadShop(shop.getLocation(), shop.convertShopToString(), TradeUtil.convertTradesToList(shop.convertTradesToMap()), config -> {});
+        return reloadShop(shop.getLocation(), shop.convertShopToString(), TradeUtil.convertTradesToList(shop.convertTradesToMap()), config -> {
+        });
     }
 
     public static Shop reloadShop(Location location, String data, List<ShopTrade> trades) {
-        return reloadShop(location, data, trades, config -> {});
+        return reloadShop(location, data, trades, config -> {
+        });
     }
 
     private static Shop reloadShop(Location location, String data, List<ShopTrade> trades, Consumer<YamlConfiguration> consumer) {

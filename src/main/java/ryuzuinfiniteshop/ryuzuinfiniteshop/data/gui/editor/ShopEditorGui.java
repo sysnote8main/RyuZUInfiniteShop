@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
@@ -21,7 +22,22 @@ import java.util.List;
 
 //ショップエディターのメインページ
 public class ShopEditorGui extends ShopGui {
-    public enum ShopSettings {Age, Power, Profession, Biome,Level, Visible, ParrotColor, DyeColor, OptionalInfo, HorseColor, HorseStyle}
+    public enum ShopSettings {
+        Age,
+        Power,
+        Profession,
+        Biome, Level,
+        Visible,
+        ParrotColor,
+        DyeColor,
+        Size,
+        BodyColor,
+        PatternColor,
+        Pattern,
+        OptionalInfo,
+        HorseColor,
+        HorseStyle
+    }
 
     private final HashMap<Integer, ShopSettings> SettingsMap = new HashMap<>();
 
@@ -71,7 +87,7 @@ public class ShopEditorGui extends ShopGui {
     }
 
     public void setDisplayName(Inventory inv) {
-        inv.setItem(5 * 9 + 3, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + "名前を変更する" , ChatColor.YELLOW + "現在の名前: " + getShop().getDisplayNameOrElseNone()));
+        inv.setItem(5 * 9 + 3, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + "名前を変更する", ChatColor.YELLOW + "現在の名前: " + getShop().getDisplayNameOrElseNone()));
     }
 
     private void setTeleport(Inventory inv) {
@@ -79,10 +95,11 @@ public class ShopEditorGui extends ShopGui {
     }
 
     private void setShopStatus(Inventory inv) {
-        if(MythicInstanceProvider.isLoaded()) inv.setItem(4 * 9 + 3, ItemUtil.getNamedItem(Material.ENDER_EYE, ChatColor.GREEN + "MythicMobIDを設定する"));
+        if (MythicInstanceProvider.isLoaded())
+            inv.setItem(4 * 9 + 3, ItemUtil.getNamedItem(Material.ENDER_EYE, ChatColor.GREEN + "MythicMobIDを設定する"));
         inv.setItem(4 * 9 + 4, ItemUtil.getNamedItem(Material.ENDER_PEARL, ChatColor.GREEN + "エンティティタイプを変更する"));
         inv.setItem(4 * 9 + 5, getShop().isSearchable() ?
-                            ItemUtil.getNamedItem(Material.CLOCK, ChatColor.GREEN + "検索可能") :
+                ItemUtil.getNamedItem(Material.CLOCK, ChatColor.GREEN + "検索可能") :
                 ItemUtil.getNamedEnchantedItem(Material.CLOCK, ChatColor.RED + "検索不可")
         );
         inv.setItem(4 * 9 + 6, getShop().isLock() ?
@@ -106,7 +123,7 @@ public class ShopEditorGui extends ShopGui {
         setShopStatus(inv);
         setShopOperation(inv);
         setTeleport(inv);
-        if(!(MythicInstanceProvider.isLoaded() && getShop().getMythicmob().isPresent())) {
+        if (!(MythicInstanceProvider.isLoaded() && getShop().getMythicmob().isPresent())) {
             setEquipment(inv);
             setDisplayName(inv);
             setSettings(inv);
@@ -116,8 +133,8 @@ public class ShopEditorGui extends ShopGui {
 
     public void setCover(Inventory inv) {
         ItemStack item = ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, "");
-        for (int i = 2 * 9 ; i < 6 * 9 ; i++)
-            if(ItemUtil.isAir(inv.getItem(i))) inv.setItem(i, item);
+        for (int i = 2 * 9; i < 6 * 9; i++)
+            if (ItemUtil.isAir(inv.getItem(i))) inv.setItem(i, item);
     }
 
     public void setSettings(Inventory inv) {
@@ -126,13 +143,14 @@ public class ShopEditorGui extends ShopGui {
         setAge(inv);
         setPower(inv);
         setProfession(inv);
-        setBiome(inv);
-        setLevel(inv);
         setParrotColor(inv);
         setDyeColor(inv);
         setOptinalInfo(inv);
         setHorseColor(inv);
         setHorseStyle(inv);
+        if(RyuZUInfiniteShop.VERSION < 14) return;
+        setBiome(inv);
+        setLevel(inv);
     }
 
     private void setAge(Inventory inv) {

@@ -1,53 +1,47 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
-import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Ageable;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.*;
 
 import java.util.function.Consumer;
 
-public class AgeableShop extends Shop {
-    @Getter
-    protected boolean adult;
+public class SlimeShop extends Shop {
+    protected int size;
 
-    public AgeableShop(Location location, EntityType entitytype) {
+    public SlimeShop(Location location, EntityType entitytype) {
         super(location, entitytype);
     }
 
-    public AgeableShop(Location location, EntityType entitytype, ConfigurationSection config) {
+    public SlimeShop(Location location, EntityType entitytype, ConfigurationSection config) {
         super(location, entitytype, config);
     }
 
-    public void setAgeLook(boolean look) {
-        this.adult = look;
-        if(npc == null) return;
-        if (look)
-            ((Ageable) npc).setAdult();
-        else
-            ((Ageable) npc).setBaby();
+    public void setSize(int size) {
+        this.size = size;
+        if (npc == null) return;
+        ((Slime) npc).setSize(1);
 //        NBTBuilder.setIsBaby(!look);
     }
 
     @Override
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return super.getSaveYamlProcess().andThen(yaml -> {
-            yaml.set("Npc.Options.Adult", adult);
+            yaml.set("Npc.Options.Size", size);
         });
     }
 
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.adult = yaml.getBoolean("Npc.Options.Adult" , true);
+            this.size = yaml.getInt("Npc.Options.Size", 1);
         });
     }
 
     @Override
     public void respawnNPC() {
         super.respawnNPC();
-        setAgeLook(adult);
+        setSize(size);
     }
 }

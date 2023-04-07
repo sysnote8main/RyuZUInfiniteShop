@@ -32,7 +32,6 @@ public class DyeableShop extends Shop {
         this.color = color;
         if(npc == null) return;
         if (npc instanceof Colorable) ((Colorable) npc).setColor(color);
-        if (npc instanceof TropicalFish) ((TropicalFish) npc).setBodyColor(color);
         if (npc instanceof Wolf) {
             ((Wolf) npc).setTamed(!color.equals(DyeColor.WHITE));
             ((Wolf) npc).setCollarColor(color);

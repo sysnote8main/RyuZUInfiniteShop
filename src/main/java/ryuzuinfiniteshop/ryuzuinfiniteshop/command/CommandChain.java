@@ -43,7 +43,7 @@ public class CommandChain {
                         data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " search " + "§6§oショップや取引を検索します");
                     }
                     if (data.getSender().hasPermission("sis.op")) {
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " spawn <world,x,y,z/EntityType/MythicMobID> " + "§6§oショップの作成または更新をします");
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " spawn <world,x,y,z/Block/EntityType/MythicMobID> " + "§6§oショップの作成または更新をします");
                         data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " open [world,x,y,z] <player>" + "§6§oショップの取引画面を開きます");
                         data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " list " + "§6§oショップの一覧を表示します");
                         data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " reload " + "§6§o全てのデータをリロードします");

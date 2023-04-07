@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
@@ -37,14 +38,16 @@ public class ChangeIndividualSettingsListener implements Listener {
         changeAgeLook(holder, event.getSlot());
         changePowered(holder, event.getSlot());
         changeProfession(holder, event.getSlot());
-        changeBiome(holder, event.getSlot());
-        changeLevel(holder, event.getSlot());
         changeVisible(holder, event.getSlot());
         changeParrotColor(holder, event.getSlot());
         changeDyeColor(holder, event.getSlot());
         changeOptionalInfo(holder, event.getSlot());
         changeHorseColor(holder, event.getSlot());
         changeHorseStyle(holder, event.getSlot());
+        if(RyuZUInfiniteShop.VERSION >= 14) {
+            changeBiome(holder, event.getSlot());
+            changeLevel(holder, event.getSlot());
+        }
 
         //音を出す
         SoundUtil.playClickShopSound(p);

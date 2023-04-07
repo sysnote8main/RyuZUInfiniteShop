@@ -49,7 +49,7 @@ public class Shop {
     protected Location location;
     @Getter
     protected Optional<String> mythicmob = Optional.empty();
-    protected EntityType entityType;
+    protected Optional<EntityType> entityType;
     protected ShopType type;
     protected List<ShopTrade> trades = new ArrayList<>();
     protected ConfigurationSection shopkeepersConfig;
@@ -76,7 +76,7 @@ public class Shop {
     public Shop(Location location, EntityType entityType) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         initializeShop(location);
-        this.entityType = entityType;
+        this.entityType = Optional.of(entityType);
         loadYamlProcess(getFile());
         if (!exsited) {
             createEditorNewPage();
@@ -87,7 +87,7 @@ public class Shop {
     public Shop(Location location, EntityType entityType, ConfigurationSection config) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         initializeShop(location);
-        this.entityType = entityType;
+        this.entityType = Optional.of(entityType);
         this.shopkeepersConfig = config;
         loadYamlProcess(getFile());
         if (!exsited) {
@@ -299,9 +299,9 @@ public class Shop {
 
     public ItemStack convertShopToItemStack() {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石:" + ChatColor.GREEN + " " + getDisplayNameOrElseNone(),
-                                                        ChatColor.YELLOW + "ショップに向かって右クリック:" + ChatColor.GREEN + " ショップの取引の取り込み",
-                                                        ChatColor.YELLOW + "地面に向かってシフト右クリック:" + ChatColor.GREEN + " ショップの設置",
-                                                        ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay()
+                ChatColor.YELLOW + "ショップに向かって右クリック:" + ChatColor.GREEN + " ショップの取引の取り込み",
+                ChatColor.YELLOW + "地面に向かってシフト右クリック:" + ChatColor.GREEN + " ショップの設置",
+                ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay()
         );
         item = NBTUtil.setNMSTag(item, convertShopToMap());
         return item;
@@ -615,7 +615,7 @@ public class Shop {
 
     public void setNpcType(EntityType entityType) {
         if (npc != null) npc.remove();
-        this.entityType = entityType;
+        this.entityType = Optional.of(entityType);
         this.mythicmob = Optional.empty();
         if (npc == null) respawnNPC();
     }
@@ -631,12 +631,13 @@ public class Shop {
         if (FileUtil.isSaveBlock()) return;
         if (npc != null && !npc.isDead()) return;
         if (!location.getChunk().isLoaded()) return;
+        if (!entityType.isPresent()) return;
         if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
             if (npc != null) npc.remove();
             npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
             setNpcMeta();
         } else {
-            spawnNPC(entityType);
+            spawnNPC(entityType.get());
             this.NBTBuilder = new EntityNBTBuilder(npc);
             npc.setCustomName(displayName);
             npc.getPassengers().forEach(Entity::remove);
