@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 public class ShopUtil {
     private static HashMap<String, Shop> shops = new HashMap<>();
-    public static List<Chunk> shopChunks = new ArrayList<>();
 
     public static ShopHolder getShopHolder(InventoryClickEvent event) {
         return getShopHolder(getSecureInventory(event));

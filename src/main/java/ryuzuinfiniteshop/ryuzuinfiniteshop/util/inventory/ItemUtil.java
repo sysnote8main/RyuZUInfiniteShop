@@ -1,6 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -221,5 +222,9 @@ public class ItemUtil {
         if(MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getID(item) != null) return MythicInstanceProvider.getInstance().getID(item);
         if(item.hasItemMeta() && item.getItemMeta().hasDisplayName()) return ChatColor.stripColor(item.getItemMeta().getDisplayName());
         return item.getType().name();
+    }
+
+    public static Material getColorMaterial(DyeColor color) {
+        return Material.valueOf(color.name() + "_WOOL");
     }
 }

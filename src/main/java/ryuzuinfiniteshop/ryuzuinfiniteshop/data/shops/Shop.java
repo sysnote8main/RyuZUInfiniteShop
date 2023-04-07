@@ -115,7 +115,6 @@ public class Shop {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        ShopUtil.shopChunks.add(location.getChunk());
         getLoadYamlProcess().accept(config);
     }
 
@@ -315,7 +314,6 @@ public class Shop {
 
     public void removeShop(Player p) {
         LogUtil.log(LogUtil.LogType.REMOVESHOP, p.getName(), getID());
-        ShopUtil.shopChunks.remove(location.getChunk());
         removeShop();
     }
 

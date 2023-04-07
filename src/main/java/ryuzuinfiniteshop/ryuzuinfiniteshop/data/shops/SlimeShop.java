@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
+import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -8,6 +9,7 @@ import org.bukkit.entity.*;
 import java.util.function.Consumer;
 
 public class SlimeShop extends Shop {
+    @Getter
     protected int size;
 
     public SlimeShop(Location location, EntityType entitytype) {

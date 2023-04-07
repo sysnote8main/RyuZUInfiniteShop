@@ -30,7 +30,8 @@ public class ShopEditorGui extends ShopGui {
         Visible,
         ParrotColor,
         DyeColor,
-        Size,
+        SizeIncrease,
+        SizeDecrease,
         BodyColor,
         PatternColor,
         Pattern,
@@ -57,12 +58,6 @@ public class ShopEditorGui extends ShopGui {
 
     public List<ShopTrade> getTrades() {
         return this.trades;
-    }
-
-    public ShopTradeGui getTradeGui(int slot) {
-        if (slot < 0 || 17 < slot) return null;
-        if (getShop().getPageCount() > slot + 1) return null;
-        return getShop().getPage(slot + (getPage() - 1) * 18);
     }
 
     //エディターに装備を置く
@@ -144,11 +139,16 @@ public class ShopEditorGui extends ShopGui {
         setPower(inv);
         setProfession(inv);
         setParrotColor(inv);
+        setSizeIncrease(inv);
+        setSizeDecrease(inv);
         setDyeColor(inv);
         setOptinalInfo(inv);
         setHorseColor(inv);
         setHorseStyle(inv);
-        if(RyuZUInfiniteShop.VERSION < 14) return;
+        setBodyColor(inv);
+        setPatternColor(inv);
+        setPattern(inv);
+        if (RyuZUInfiniteShop.VERSION < 14) return;
         setBiome(inv);
         setLevel(inv);
     }
@@ -171,6 +171,46 @@ public class ShopEditorGui extends ShopGui {
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Power);
+    }
+
+    private void setSizeIncrease(Inventory inv) {
+        if (!(getShop() instanceof SlimeShop)) return;
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.GREEN_WOOL, ChatColor.GREEN + "サイズを大きくする");
+        int slot = 3 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.SizeIncrease);
+    }
+
+    private void setSizeDecrease(Inventory inv) {
+        if (!(getShop() instanceof SlimeShop)) return;
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.RED_WOOL, ChatColor.GREEN + "サイズを小さくする");
+        int slot = 3 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.SizeDecrease);
+    }
+
+    private void setBodyColor(Inventory inv) {
+        if (!(getShop() instanceof TropicalFishShop)) return;
+        ItemStack item = ItemUtil.getNamedEnchantedItem(ItemUtil.getColorMaterial(((TropicalFishShop) getShop()).getBodyColor()), ChatColor.GREEN + "体の色を変更する");
+        int slot = 3 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.BodyColor);
+    }
+
+    private void setPatternColor(Inventory inv) {
+        if (!(getShop() instanceof TropicalFishShop)) return;
+        ItemStack item = ItemUtil.getNamedEnchantedItem(ItemUtil.getColorMaterial(((TropicalFishShop) getShop()).getBodyColor()), ChatColor.GREEN + "模様の色を変更する");
+        int slot = 3 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.PatternColor);
+    }
+
+    private void setPattern(Inventory inv) {
+        if (!(getShop() instanceof TropicalFishShop)) return;
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.GREEN_GLAZED_TERRACOTTA, ChatColor.GREEN + "模様を変更する");
+        int slot = 3 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.Pattern);
     }
 
     private void setParrotColor(Inventory inv) {

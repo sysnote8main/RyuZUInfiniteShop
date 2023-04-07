@@ -1,14 +1,18 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
+import lombok.Getter;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.TropicalFish;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 
+@Getter
 public class TropicalFishShop extends Shop {
     protected DyeColor bodyColor;
     protected DyeColor patternColor;
@@ -38,6 +42,13 @@ public class TropicalFishShop extends Shop {
         this.pattern = pattern;
         if (npc == null) return;
         ((TropicalFish) npc).setPattern(pattern);
+    }
+
+    public TropicalFish.Pattern getNextPattern() {
+        int nextindex = Arrays.asList(TropicalFish.Pattern.values()).indexOf(pattern) + 1;
+        return nextindex == TropicalFish.Pattern.values().length ?
+                TropicalFish.Pattern.values()[0] :
+                TropicalFish.Pattern.values()[nextindex];
     }
 
     @Override

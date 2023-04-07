@@ -11,6 +11,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.EntityUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
@@ -44,6 +45,11 @@ public class ChangeIndividualSettingsListener implements Listener {
         changeOptionalInfo(holder, event.getSlot());
         changeHorseColor(holder, event.getSlot());
         changeHorseStyle(holder, event.getSlot());
+        changeSizeIncrease(holder, event.getSlot());
+        changeSizeDecrease(holder, event.getSlot());
+        changeBodyColor(holder, event.getSlot());
+        changePatternColor(holder, event.getSlot());
+        changePattern(holder, event.getSlot());
         if(RyuZUInfiniteShop.VERSION >= 14) {
             changeBiome(holder, event.getSlot());
             changeLevel(holder, event.getSlot());
@@ -77,6 +83,56 @@ public class ChangeIndividualSettingsListener implements Listener {
 
         //帯電させるか変更
         ((PoweredableShop) holder.getShop()).setPowered(!((PoweredableShop) holder.getShop()).isPowered());
+    }
+
+    public void changeSizeIncrease(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        if (!((ShopEditorGui) holder.getGui()).getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.SizeIncrease))
+            return;
+        if (!(holder.getShop() instanceof SlimeShop)) return;
+
+        //サイズを大きくする
+        ((SlimeShop) holder.getShop()).setSize(((SlimeShop) holder.getShop()).getSize() + 1);
+    }
+
+    public void changeSizeDecrease(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        if (!((ShopEditorGui) holder.getGui()).getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.SizeDecrease))
+            return;
+        if (!(holder.getShop() instanceof SlimeShop)) return;
+
+        //サイズを小さくする
+        ((SlimeShop) holder.getShop()).setSize(((SlimeShop) holder.getShop()).getSize() - 1);
+    }
+
+    public void changeBodyColor(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        if (!((ShopEditorGui) holder.getGui()).getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.BodyColor))
+            return;
+        if (!(holder.getShop() instanceof TropicalFishShop)) return;
+
+        //体の色の変更
+        ((TropicalFishShop) holder.getShop()).setBodyColor(EntityUtil.getNextColor(((TropicalFishShop) holder.getShop()).getBodyColor()));
+    }
+
+    public void changePatternColor(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        if (!((ShopEditorGui) holder.getGui()).getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.BodyColor))
+            return;
+        if (!(holder.getShop() instanceof TropicalFishShop)) return;
+
+        //模様の色の変更
+        ((TropicalFishShop) holder.getShop()).setPatternColor(EntityUtil.getNextColor(((TropicalFishShop) holder.getShop()).getPatternColor()));
+    }
+
+    public void changePattern(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        if (!((ShopEditorGui) holder.getGui()).getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.BodyColor))
+            return;
+        if (!(holder.getShop() instanceof TropicalFishShop)) return;
+
+        //模様の変更
+        ((TropicalFishShop) holder.getShop()).setPattern(((TropicalFishShop) holder.getShop()).getNextPattern());
     }
 
     //村人の職業を変更

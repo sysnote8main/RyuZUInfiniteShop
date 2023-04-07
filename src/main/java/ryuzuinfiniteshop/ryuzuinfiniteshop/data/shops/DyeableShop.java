@@ -7,6 +7,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.material.Colorable;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.EntityUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -53,10 +55,7 @@ public class DyeableShop extends Shop {
     }
 
     public DyeColor getNextColor() {
-        int nextindex = Arrays.asList(DyeColor.values()).indexOf(color) + 1;
-        return nextindex == DyeColor.values().length ?
-                DyeColor.values()[0] :
-                DyeColor.values()[nextindex];
+        return EntityUtil.getNextColor(color);
     }
 
     public boolean getOptionalInfo() {
@@ -91,38 +90,6 @@ public class DyeableShop extends Shop {
     }
 
     public Material getColorMaterial() {
-        switch (color) {
-            case ORANGE:
-                return Material.ORANGE_WOOL;
-            case MAGENTA:
-                return Material.MAGENTA_WOOL;
-            case YELLOW:
-                return Material.YELLOW_WOOL;
-            case LIME:
-                return Material.LIME_WOOL;
-            case PINK:
-                return Material.PINK_WOOL;
-            case GRAY:
-                return Material.GRAY_WOOL;
-            case LIGHT_GRAY:
-                return Material.LIGHT_GRAY_WOOL;
-            case CYAN:
-                return Material.CYAN_WOOL;
-            case PURPLE:
-                return Material.PURPLE_WOOL;
-            case BLUE:
-                return Material.BLUE_WOOL;
-            case BROWN:
-                return Material.BROWN_WOOL;
-            case GREEN:
-                return Material.GREEN_WOOL;
-            case RED:
-                return Material.RED_WOOL;
-            case BLACK:
-                return Material.BLACK_WOOL;
-            case WHITE:
-            default:
-                return Material.WHITE_WOOL;
-        }
+        return ItemUtil.getColorMaterial(color);
     }
 }
