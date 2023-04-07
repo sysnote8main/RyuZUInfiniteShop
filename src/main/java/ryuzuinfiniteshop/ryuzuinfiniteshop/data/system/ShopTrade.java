@@ -106,7 +106,7 @@ public class ShopTrade {
     }
 
     public static ItemStack getFilter() {
-        return ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, ChatColor.BLACK + "");
+        return ItemUtil.getNamedItem(ItemUtil.getColoredItem(Material.BLACK_STAINED_GLASS_PANE.name()), ChatColor.BLACK + "");
     }
 
     private ItemStack getFilter(ShopMode mode) {

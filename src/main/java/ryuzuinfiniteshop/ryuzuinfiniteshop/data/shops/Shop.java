@@ -49,7 +49,7 @@ public class Shop {
     protected Location location;
     @Getter
     protected Optional<String> mythicmob = Optional.empty();
-    protected Optional<EntityType> entityType;
+    protected EntityType entityType;
     protected ShopType type;
     protected List<ShopTrade> trades = new ArrayList<>();
     protected ConfigurationSection shopkeepersConfig;
@@ -75,8 +75,9 @@ public class Shop {
 
     public Shop(Location location, EntityType entityType) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
-        initializeShop(location);
-        this.entityType = Optional.of(entityType);
+        this.location = location;
+        this.entityType = entityType;
+        ShopUtil.addShop(getID(), this);
         loadYamlProcess(getFile());
         if (!exsited) {
             createEditorNewPage();
@@ -86,9 +87,10 @@ public class Shop {
 
     public Shop(Location location, EntityType entityType, ConfigurationSection config) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
-        initializeShop(location);
-        this.entityType = Optional.of(entityType);
+        this.location = location;
+        this.entityType = entityType;
         this.shopkeepersConfig = config;
+        ShopUtil.addShop(getID(), this);
         loadYamlProcess(getFile());
         if (!exsited) {
             createEditorNewPage();
@@ -98,8 +100,9 @@ public class Shop {
 
     public Shop(Location location, String mmid) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
-        initializeShop(location);
+        this.location = location;
         this.mythicmob = Optional.of(mmid);
+        ShopUtil.addShop(getID(), this);
         loadYamlProcess(getFile());
         this.NBTBuilder = new EntityNBTBuilder(npc);
         if (!exsited) {
@@ -128,7 +131,7 @@ public class Shop {
             this.type = ShopType.valueOf(yaml.getString("Shop.Options.ShopType", "TwotoOne"));
             this.lock = yaml.getBoolean("Npc.Status.Lock", false);
             this.searchable = yaml.getBoolean("Npc.Status.Searchable", true);
-            this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments"));
+            this.equipments = new ObjectItems(yaml.get("Npc.Options.Equipments", IntStream.range(0, 6).mapToObj(i -> new ItemStack(Material.AIR)).collect(Collectors.toList())));
             this.trades = yaml.getList("Trades", new ArrayList<>()).stream().map(tradeconfig -> new ShopTrade((HashMap<String, Object>) tradeconfig)).collect(Collectors.toList());
             updateTradeContents();
 
@@ -136,13 +139,6 @@ public class Shop {
             setNpcMeta(shopkeepersConfig.getConfigurationSection("object"));
             setDisplayName(shopkeepersConfig.getString("name", "").isEmpty() ? "" : ChatColor.GREEN + shopkeepersConfig.getString("name"));
         };
-    }
-
-    private void initializeShop(Location location) {
-        this.location = location;
-        this.type = ShopType.TwotoOne;
-        equipments = new ObjectItems(IntStream.range(0, 6).mapToObj(i -> new ItemStack(Material.AIR)).collect(Collectors.toList()));
-        ShopUtil.addShop(getID(), this);
     }
 
     public void updateTradeContents() {
@@ -613,7 +609,7 @@ public class Shop {
 
     public void setNpcType(EntityType entityType) {
         if (npc != null) npc.remove();
-        this.entityType = Optional.of(entityType);
+        this.entityType = entityType;
         this.mythicmob = Optional.empty();
         if (npc == null) respawnNPC();
     }
@@ -629,13 +625,13 @@ public class Shop {
         if (FileUtil.isSaveBlock()) return;
         if (npc != null && !npc.isDead()) return;
         if (!location.getChunk().isLoaded()) return;
-        if (!entityType.isPresent()) return;
+        if (entityType == null) return;
         if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
             if (npc != null) npc.remove();
             npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
             setNpcMeta();
         } else {
-            spawnNPC(entityType.get());
+            spawnNPC(entityType);
             this.NBTBuilder = new EntityNBTBuilder(npc);
             npc.setCustomName(displayName);
             npc.getPassengers().forEach(Entity::remove);

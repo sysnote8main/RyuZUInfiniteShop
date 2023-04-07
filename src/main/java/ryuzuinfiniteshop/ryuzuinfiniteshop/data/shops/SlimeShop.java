@@ -23,7 +23,7 @@ public class SlimeShop extends Shop {
     public void setSize(int size) {
         this.size = size;
         if (npc == null) return;
-        ((Slime) npc).setSize(1);
+        ((Slime) npc).setSize(size);
 //        NBTBuilder.setIsBaby(!look);
     }
 

@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.EntityUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
@@ -89,7 +90,7 @@ public class DyeableShop extends Shop {
         return optionalInfo ? Material.LIME_WOOL : Material.RED_WOOL;
     }
 
-    public Material getColorMaterial() {
-        return ItemUtil.getColorMaterial(color);
+    public ItemStack getColorMaterial() {
+        return ItemUtil.getColoredItem(color);
     }
 }

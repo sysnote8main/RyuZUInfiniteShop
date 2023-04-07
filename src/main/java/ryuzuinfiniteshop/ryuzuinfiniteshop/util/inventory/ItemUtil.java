@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 
 import javax.annotation.Nullable;
@@ -91,6 +92,25 @@ public class ItemUtil {
 
     public static int capacityCount(ItemStack[] contents, ItemStack item) {
         return Arrays.stream(contents).filter(Objects::nonNull).filter(i -> i.isSimilar(item)).mapToInt(i -> i.getType().getMaxStackSize() - i.getAmount()).sum();
+    }
+
+    public static ItemStack getNamedItem(ItemStack item, String name) {
+        return getNamedItem(item, name, false);
+    }
+
+    //名前付きアイテムを返す
+    public static ItemStack getNamedItem(ItemStack item, String name, String... lore) {
+        return getNamedItem(item, name, false, lore);
+    }
+
+    //名前付きエンチャント済みアイテムを返す
+    public static ItemStack getNamedEnchantedItem(ItemStack item, String name) {
+        return getNamedItem(item, name, true);
+    }
+
+    //名前付きエンチャント済みアイテムを返す
+    public static ItemStack getNamedEnchantedItem(ItemStack item, String name, String... lore) {
+        return getNamedItem(item, name, true, lore);
     }
 
     //名前付きアイテムを返す
@@ -197,14 +217,6 @@ public class ItemUtil {
         if (isEmptySlot(inventory, slot)) inventory.setItem(slot, item);
     }
 
-    public static void setItemIfEmpyty(Inventory inventory, int slot, ItemStack item, int amount) {
-        if (isEmptySlot(inventory, slot)) {
-            ItemStack copy = item.clone();
-            copy.setAmount(amount);
-            inventory.setItem(slot, copy);
-        }
-    }
-
     public static boolean hasCustomModelData(@Nullable ItemStack item) {
         if (ItemUtil.isAir(item)) return false;
         ItemMeta meta = item.getItemMeta();
@@ -224,7 +236,14 @@ public class ItemUtil {
         return item.getType().name();
     }
 
-    public static Material getColorMaterial(DyeColor color) {
-        return Material.valueOf(color.name() + "_WOOL");
+    public static ItemStack getColoredItem(DyeColor color) {
+        return getColoredItem(Material.valueOf(color.name() + "_WOOL").name());
+    }
+
+    public static ItemStack getColoredItem(String material) {
+        if(!(RyuZUInfiniteShop.VERSION >= 13 || material.contains("STAINED_GLASS_PANE") || material.contains("WOOL"))) return new ItemStack(Material.valueOf(material));
+        String color = material.split("_")[0];
+        String type = material.split("_")[1];
+        return new ItemStack(Material.valueOf(type), 1 , (short) DyeColor.valueOf(color).ordinal());
     }
 }

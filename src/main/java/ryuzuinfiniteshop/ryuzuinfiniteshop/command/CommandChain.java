@@ -22,6 +22,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -144,6 +145,7 @@ public class CommandChain {
                         ShopUtil.createNewShop(loc, data.getArgs()[1]);
                     else
                         ShopUtil.createNewShop(loc, EntityType.valueOf(data.getArgs()[1].toUpperCase()));
+                    ShopUtil.getShop(LocationUtil.toStringFromLocation(loc)).respawnNPC();
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ショップを設置しました");
                     LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(loc));
                 },
@@ -151,14 +153,6 @@ public class CommandChain {
                 data -> {
                     if (LocationUtil.isLocationString(data.getArgs()[1]))
                         return true;
-                    else {
-                        Player p = (Player) data.getSender();
-                        Location loc = p.getLocation();
-                        if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(loc))) {
-                            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "既にその場所にはショップが存在します");
-                            return false;
-                        }
-                    }
                     try {
                         EntityType.valueOf(data.getArgs()[1].toUpperCase());
                         return true;
@@ -171,7 +165,7 @@ public class CommandChain {
                     }
                 },
                 data -> {
-                    if (data.getArgs().length >= 2) return false;
+                    if (data.getArgs().length < 2) return false;
                     if (FileUtil.isSaveBlock(data)) return false;
                     return !FileUtil.isSaveBlock(data);
                 }
@@ -225,7 +219,7 @@ public class CommandChain {
                     p.openInventory(new ShopListGui(1, ShopUtil.getSortedShops(mode, null)).getInventory(mode));
                     SoundUtil.playClickShopSound(p);
                 },
-                "sis.list",
+                Arrays.asList("sis.list" , "sis.op"),
                 data -> true,
                 data -> {
                     if (data.getArgs().length != 1) return false;
@@ -244,7 +238,7 @@ public class CommandChain {
                     p.openInventory(new SelectSearchItemGui().getInventory(ShopMode.Search));
                     SoundUtil.playClickShopSound(p);
                 },
-                "sis.search",
+                Arrays.asList("sis.search" , "sis.op"),
                 data -> true,
                 data -> {
                     if (!(data.getSender() instanceof Player)) {

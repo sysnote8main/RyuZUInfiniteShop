@@ -34,7 +34,7 @@ public class SearchTradeGui extends TradesGui {
         for (int i = (getPage() - 1) * 6; i < getPage() * 6; i++) {
             if (i >= trades.size()) {
                 for (int j = 0; j < 9; j++) {
-                    inv.setItem((i % 6) * 9 + j, ItemUtil.getNamedItem(Material.BLACK_STAINED_GLASS_PANE, ""));
+                    inv.setItem((i % 6) * 9 + j, ItemUtil.getNamedItem(ItemUtil.getColoredItem(Material.BLACK_STAINED_GLASS_PANE.name()), ""));
                 }
             } else {
                 Shop shop = shops.get(i);

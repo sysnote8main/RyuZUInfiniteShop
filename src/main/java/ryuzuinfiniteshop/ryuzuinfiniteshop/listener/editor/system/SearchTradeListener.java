@@ -41,7 +41,7 @@ public class SearchTradeListener implements Listener {
         int slot = event.getSlot();
         ClickType type = event.getClick();
         ItemStack searchItem = event.getView().getTopInventory().getItem(4);
-        ItemStack panel = ItemUtil.getNamedItem(Material.WHITE_STAINED_GLASS_PANE, ChatColor.BLUE + "検索するアイテムを持ってクリック", ChatColor.GREEN + "シフトクリック: NPCの名前で検索");
+        ItemStack panel = ItemUtil.getNamedItem(ItemUtil.getColoredItem(Material.WHITE_STAINED_GLASS_PANE.name()), ChatColor.BLUE + "検索するアイテムを持ってクリック", ChatColor.GREEN + "シフトクリック: NPCの名前で検索");
         if (slot != 0 && slot != 4 && slot != 8) return;
 
         ShopMode mode = p.hasPermission("sis.op") ? ShopMode.Edit : ShopMode.Search;
