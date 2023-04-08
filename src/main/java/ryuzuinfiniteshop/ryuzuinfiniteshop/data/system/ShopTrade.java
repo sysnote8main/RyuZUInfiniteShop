@@ -22,6 +22,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class ShopTrade {
     public static final Table<UUID, UUID, Integer> tradeCounts = HashBasedTable.create();
     public static final HashMap<UUID, Integer> tradeLimits = new HashMap<>();
 
-    public enum TradeResult {NotAfford, Full, Success, Lack, Limited, Locked, Normal}
+    public enum TradeResult {NotAfford, Full, Success, Lack, Limited, Locked, Error, Normal}
 
     private ObjectItems giveData;
     private ObjectItems takeData;
@@ -246,6 +247,7 @@ public class ShopTrade {
         TradeResult result = TradeResult.Success;
 
         if (!affordTrade(p)) result = TradeResult.NotAfford;
+        else if (isError()) result = TradeResult.Error;
         else if (isLimited(p)) result = TradeResult.Limited;
         else if (!hasEnoughSpace(p)) result = TradeResult.Full;
         return result;
@@ -276,6 +278,7 @@ public class ShopTrade {
         int resultTime = times;
         for (int time = 0; time < times; time++) {
             result = trade(p);
+            if(result.equals(TradeResult.Error)) break;
             if (!result.equals(TradeResult.Success)) {
                 if (time != 0)
                     result = TradeResult.Lack;
@@ -300,6 +303,11 @@ public class ShopTrade {
         return ItemUtil.contains(p.getInventory(), getTakeItems());
     }
 
+    private boolean isError() {
+        return Arrays.stream(getGiveItems()).anyMatch(item -> NBTUtil.getNMSStringTag(item, "Error") != null) ||
+                Arrays.stream(getTakeItems()).anyMatch(item -> NBTUtil.getNMSStringTag(item, "Error") != null);
+    }
+
     private boolean isLimited(Player p) {
         if (!tradeUUID.containsKey(this)) return false;
         if (tradeLimits.getOrDefault(tradeUUID.get(this), 0) == 0) return false;
@@ -310,6 +318,10 @@ public class ShopTrade {
         switch (result) {
             case NotAfford:
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "アイテムが足りません");
+                SoundUtil.playFailSound(p);
+                break;
+            case Error:
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "エラーが発生しました。無効な取引です");
                 SoundUtil.playFailSound(p);
                 break;
             case Limited:

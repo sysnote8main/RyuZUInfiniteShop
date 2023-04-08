@@ -179,7 +179,7 @@ public class SearchTradeListener implements Listener {
             }
         } else {
             if(ItemUtil.isAir(event.getCurrentItem())) return;
-            if(!p.hasPermission("sis.search")) return;
+            if(!(p.hasPermission("sis.search") || p.hasPermission("sis.op"))) return;
             if(slot % 9 == info) return;
             LinkedHashMap<ShopTrade, Shop> searchedTrades = (slot % 9 < info) ? TradeUtil.getTradesFromGive(event.getCurrentItem(), holder.getMode()) : TradeUtil.getTradesFromTake(event.getCurrentItem(), holder.getMode());
             if (searchedTrades.size() == 0) {
@@ -214,7 +214,7 @@ public class SearchTradeListener implements Listener {
         int surplus = slot % 9;
         int base = (type.equals(Shop.ShopType.TwotoOne) && surplus > 4) ? surplus - 5 : surplus;
         if(ItemUtil.isAir(event.getCurrentItem())) return;
-        if(!p.hasPermission("sis.search")) return;
+        if(!(p.hasPermission("sis.search") || p.hasPermission("sis.op"))) return;
         if(base == info) return;
 
         LinkedHashMap<ShopTrade, Shop> searchedTrades = base < info ? TradeUtil.getTradesFromGive(event.getCurrentItem(), ShopMode.Search) : TradeUtil.getTradesFromTake(event.getCurrentItem(), ShopMode.Search);

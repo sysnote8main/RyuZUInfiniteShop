@@ -16,6 +16,7 @@ public class DisplayPanelConfig {
     private static final HashMap<ShopTrade.TradeResult, String> defaultResultMaterial = new HashMap<ShopTrade.TradeResult, String>() {{
         put(ShopTrade.TradeResult.Success, Material.GREEN_STAINED_GLASS_PANE.name());
         put(ShopTrade.TradeResult.NotAfford, Material.RED_STAINED_GLASS_PANE.name());
+        put(ShopTrade.TradeResult.Error, Material.RED_STAINED_GLASS_PANE.name());
         put(ShopTrade.TradeResult.Limited, Material.RED_STAINED_GLASS_PANE.name());
         put(ShopTrade.TradeResult.Full, Material.YELLOW_STAINED_GLASS_PANE.name());
         put(ShopTrade.TradeResult.Normal, Material.WHITE_STAINED_GLASS_PANE.name());

@@ -37,10 +37,10 @@ public class CommandChain {
                 "sis",
                 data -> {
                     data.sendMessage("§a§l-------§e§l=====§b§lSearchable Infinite Shop§e§l=====§a§l-------");
-                    if (data.getSender().hasPermission("sis.list")) {
+                    if (data.getSender().hasPermission("sis.list") || data.getSender().hasPermission("sis.op")) {
                         data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " list " + "§6§oショップの一覧を表示します");
                     }
-                    if (data.getSender().hasPermission("sis.search")) {
+                    if (data.getSender().hasPermission("sis.search") || data.getSender().hasPermission("sis.op")) {
                         data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " search " + "§6§oショップや取引を検索します");
                     }
                     if (data.getSender().hasPermission("sis.op")) {

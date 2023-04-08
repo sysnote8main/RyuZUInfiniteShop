@@ -10,6 +10,7 @@ public class LocationUtil {
     }
 
     public static String toStringFromLocation(Location loc) {
+        if(loc.getWorld() == null) throw new RuntimeException("ワールドが存在しません" + loc);
         return loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
     }
 

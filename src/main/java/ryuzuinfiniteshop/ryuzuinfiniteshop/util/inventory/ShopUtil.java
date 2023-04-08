@@ -190,7 +190,11 @@ public class ShopUtil {
 
     public static void saveAllShops() {
         for (Shop shop : getShops().values()) {
-            shop.saveYaml();
+            try{
+                shop.saveYaml();
+            } catch (Exception e) {
+                throw new RuntimeException("ShopID: " + shop.getID() + " の保存中にエラーが発生しました", e);
+            }
         }
     }
 

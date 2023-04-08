@@ -81,7 +81,7 @@ public class VillagerableShop extends AgeableShop {
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.profession = Villager.Profession.valueOf(yaml.getString("Npc.Options.Profession", "FARMER"));
+            this.profession = Villager.Profession.valueOf(yaml.getString("Npc.Options.Profession", "NONE"));
             if(RyuZUInfiniteShop.VERSION < 14) return;
             this.biome = Villager.Type.valueOf(yaml.getString("Npc.Options.Biome", "PLAINS"));
             this.level = yaml.getInt("Npc.Options.Level", 1);

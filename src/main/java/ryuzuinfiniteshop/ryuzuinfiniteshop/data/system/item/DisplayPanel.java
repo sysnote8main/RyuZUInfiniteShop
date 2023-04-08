@@ -19,6 +19,7 @@ public class DisplayPanel {
         put(ShopTrade.TradeResult.Full, ChatColor.YELLOW + "インベントリに十分な空きがありません");
         put(ShopTrade.TradeResult.Limited, ChatColor.RED + "取引上限です");
         put(ShopTrade.TradeResult.Normal, ChatColor.GREEN + "取引上限設定と取引のアイテム化");
+        put(ShopTrade.TradeResult.Error, ChatColor.GREEN + "エラー発生。無効な取引です");
     }};
 
     ShopTrade.TradeResult result;

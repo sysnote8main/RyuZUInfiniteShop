@@ -1,8 +1,11 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item;
 
+import com.mojang.authlib.properties.PropertyMap;
 import lombok.EqualsAndHashCode;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
@@ -39,23 +42,30 @@ public class ObjectItems {
                 return new ItemStack(Material.AIR);
             else
                 return (ItemStack) obj;
-        }).filter(Objects::nonNull).map(ItemStack::clone).toArray(ItemStack[]::new);
+        }).map(ItemStack::clone).toArray(ItemStack[]::new);
     }
 
     public void setObject(Object object, int index) {
-        objects.set(index , convert(object));
+        objects.set(index, convert(object));
     }
 
     //return MythicItems or ItemStack
     //from MythicItems or ItemStack
     private static Object convert(Object object) {
-        if(object instanceof ItemStack && NBTUtil.getNMSStringTag((ItemStack) object, "Error") != null)
+        if (object instanceof ItemStack && NBTUtil.getNMSStringTag((ItemStack) object, "Error") != null)
             return new MythicItem(NBTUtil.getNMSStringTag((ItemStack) object, "Error"), ((ItemStack) object).getAmount());
         if (object instanceof ItemStack && MythicInstanceProvider.isLoaded() && Config.saveByMMID && MythicInstanceProvider.getInstance().getID((ItemStack) object) != null)
             return new MythicItem(MythicInstanceProvider.getInstance().getID((ItemStack) object), ((ItemStack) object).getAmount());
-        if(object instanceof MythicItem && !Config.saveByMMID)
+        if (object instanceof MythicItem && !Config.saveByMMID)
             return ((MythicItem) object).convertItemStack();
-        else
+        if (object instanceof ItemStack && ((ItemStack) object).hasItemMeta() && ((ItemStack) object).getItemMeta() instanceof SkullMeta) {
+            SkullMeta meta = (SkullMeta) ((ItemStack) object).getItemMeta();
+            String data = NBTUtil.getSkullData(meta);
+            if (data == null)
+                return object;
+            else
+                return NBTUtil.withSkullData((ItemStack) object, NBTUtil.getSkullData(meta));
+        } else
             return object;
     }
 
