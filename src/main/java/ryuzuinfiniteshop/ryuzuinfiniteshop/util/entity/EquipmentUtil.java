@@ -39,6 +39,6 @@ public class EquipmentUtil {
     }
 
     public static ItemStack getEquipmentDisplayItem(EquipmentSlot slot) {
-        return ItemUtil.getNamedItem(ItemUtil.getColoredItem(Material.BLACK_STAINED_GLASS_PANE.name()), getEquipmentDisplayName(slot));
+        return ItemUtil.getNamedItem(ItemUtil.getColoredItem("BLACK_STAINED_GLASS_PANE"), getEquipmentDisplayName(slot));
     }
 }

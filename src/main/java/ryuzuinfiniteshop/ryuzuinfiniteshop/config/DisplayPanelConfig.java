@@ -14,13 +14,13 @@ import java.util.HashMap;
 
 public class DisplayPanelConfig {
     private static final HashMap<ShopTrade.TradeResult, String> defaultResultMaterial = new HashMap<ShopTrade.TradeResult, String>() {{
-        put(ShopTrade.TradeResult.Success, Material.GREEN_STAINED_GLASS_PANE.name());
-        put(ShopTrade.TradeResult.NotAfford, Material.RED_STAINED_GLASS_PANE.name());
-        put(ShopTrade.TradeResult.Error, Material.RED_STAINED_GLASS_PANE.name());
-        put(ShopTrade.TradeResult.Limited, Material.RED_STAINED_GLASS_PANE.name());
-        put(ShopTrade.TradeResult.Full, Material.YELLOW_STAINED_GLASS_PANE.name());
-        put(ShopTrade.TradeResult.Normal, Material.WHITE_STAINED_GLASS_PANE.name());
-        put(ShopTrade.TradeResult.Locked, Material.ORANGE_STAINED_GLASS_PANE.name());
+        put(ShopTrade.TradeResult.Success, "GREEN_STAINED_GLASS_PANE");
+        put(ShopTrade.TradeResult.NotAfford, "RED_STAINED_GLASS_PANE");
+        put(ShopTrade.TradeResult.Error, "RED_STAINED_GLASS_PANE");
+        put(ShopTrade.TradeResult.Limited, "RED_STAINED_GLASS_PANE");
+        put(ShopTrade.TradeResult.Full, "YELLOW_STAINED_GLASS_PANE");
+        put(ShopTrade.TradeResult.Normal, "WHITE_STAINED_GLASS_PANE");
+        put(ShopTrade.TradeResult.Locked, "ORANGE_STAINED_GLASS_PANE");
     }};
     private static HashMap<ShopTrade.TradeResult, DisplayPanel> panels = new HashMap<>();
 

@@ -5,15 +5,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopListHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -28,22 +27,22 @@ public class ShopListGui extends PageableGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopListHolder(mode, this, shops), 9 * 6, ChatColor.DARK_BLUE + "ショップ一覧 ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopListHolder(mode, this, shops), 9 * 6, ChatColor.DARK_BLUE + LanguageKey.PAGE_TITLE.getMessage() + getPage());
 
         List<String> keys = new ArrayList<>(shops.keySet());
         for (int i = 0; i < Math.min(shops.size() - (getPage() - 1) * 54, 54); i++) {
             Shop shop = shops.get(keys.get(i + (getPage() - 1) * 54));
             ItemStack item;
-            if (mode.equals(ShopMode.Edit))
+            if (mode.equals(ShopMode.EDIT))
                 item = getDisplayItem(
                         shop.isLock(),
                         shop.getTrades().size() == 0 ? new ItemStack(Material.BARRIER) : shop.getTrades().get(0).getGiveItems()[0],
                         shop.getDisplayNameOrElseNone(),
-                        ChatColor.YELLOW + "座標: " + shop.getID(),
-                        ChatColor.YELLOW + "検索可否: " + (shop.isSearchable() ? ChatColor.GREEN + "可" : ChatColor.RED + "不可"),
-                        ChatColor.YELLOW + "ロック: " + (shop.isLock() ? ChatColor.RED + "ロック" : ChatColor.GREEN + "アンロック"),
-                        ChatColor.GREEN + "クリック: 取引画面を開く",
-                        ChatColor.GREEN + "シフトクリック: 編集画面を開く"
+                        ChatColor.YELLOW + LanguageKey.POSITION.getMessage() + shop.getID(),
+                        ChatColor.YELLOW + LanguageKey.IS_SEARCHABLE.getMessage() + (shop.isSearchable() ? ChatColor.GREEN + LanguageKey.SEARCHABLE.getMessage() : ChatColor.RED + LanguageKey.UNSEARCHABLE.getMessage()),
+                        ChatColor.YELLOW + LanguageKey.IS_LOCKED.getMessage() + (shop.isLock() ? ChatColor.RED + LanguageKey.LOCKED.getMessage() : ChatColor.GREEN + LanguageKey.UNLOCKED.getMessage()),
+                        ChatColor.GREEN + LanguageKey.CLICK_TO_OPEN.getMessage(),
+                        ChatColor.GREEN + LanguageKey.SHIFT_CLICK_TO_EDIT.getMessage()
                 );
             else
                 item = getDisplayItem(
@@ -57,6 +56,7 @@ public class ShopListGui extends PageableGui {
 
         return inv;
     }
+
 
     private ItemStack getDisplayItem(boolean lock, ItemStack item, String name, String... lore) {
         return ItemUtil.getNamedItem(item, name, lock, lore);

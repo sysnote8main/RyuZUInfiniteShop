@@ -19,12 +19,8 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
-
-import java.util.LinkedHashMap;
 
 public class EditTradePageListener implements Listener {
     //ショップのラインナップを変更
@@ -35,7 +31,7 @@ public class EditTradePageListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(inv);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopTradeGui)) return;
-        if (!holder.getMode().equals(ShopMode.Edit)) return;
+        if (!holder.getMode().equals(ShopMode.EDIT)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getPlayer();
@@ -55,7 +51,7 @@ public class EditTradePageListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopTradeGui)) return;
-        if (!holder.getMode().equals(ShopMode.Edit)) return;
+        if (!holder.getMode().equals(ShopMode.EDIT)) return;
         if (event.getClickedInventory() == null) return;
         int slot = event.getSlot();
         if (!((ShopTradeGui) holder.getGui()).isDisplaySlot(slot)) return;
@@ -86,7 +82,7 @@ public class EditTradePageListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
-        if (!holder.getMode().equals(ShopMode.Edit)) return;
+        if (!holder.getMode().equals(ShopMode.EDIT)) return;
         if (event.getClickedInventory() == null) return;
 
         //必要なデータを取得
@@ -120,7 +116,7 @@ public class EditTradePageListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopTradeGui)) return;
-        if (!holder.getMode().equals(ShopMode.Trade)) return;
+        if (!holder.getMode().equals(ShopMode.TRADE)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
@@ -157,7 +153,7 @@ public class EditTradePageListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopTradeGui)) return;
-        if (!holder.getMode().equals(ShopMode.Edit)) return;
+        if (!holder.getMode().equals(ShopMode.EDIT)) return;
         if (event.getClickedInventory() == null) return;
         int slot = event.getSlot();
         if (!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;

@@ -37,11 +37,11 @@ public class CancelAffectNpc implements Listener {
         event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void bypassSpawnBlocking(EntitySpawnEvent e){
-        Entity entity = e.getEntity();
-        String id = NBTUtil.getNMSStringTag(entity, "Shop");
-        if (id == null) return;
-        e.setCancelled(false);
-    }
+//    @EventHandler(priority = EventPriority.HIGHEST)
+//    public void bypassSpawnBlocking(EntitySpawnEvent e){
+//        Entity entity = e.getEntity();
+//        String id = NBTUtil.getNMSStringTag(entity, "Shop");
+//        if (id == null) return;
+//        e.setCancelled(false);
+//    }
 }

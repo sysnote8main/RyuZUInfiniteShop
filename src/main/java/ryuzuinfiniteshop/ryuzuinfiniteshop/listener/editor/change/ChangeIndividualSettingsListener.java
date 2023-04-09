@@ -1,6 +1,5 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.change;
 
-import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,9 +25,9 @@ public class ChangeIndividualSettingsListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
-        if (!holder.getMode().equals(ShopMode.Edit)) return;
+        if (!holder.getMode().equals(ShopMode.EDIT)) return;
         if (event.getClickedInventory() == null) return;
-        if(ItemUtil.getNamedItem(ItemUtil.getColoredItem(Material.WHITE_STAINED_GLASS_PANE.name()), "").equals(event.getCurrentItem())) return;
+        if(ItemUtil.getNamedItem(ItemUtil.getColoredItem("WHITE_STAINED_GLASS_PANE"), "").equals(event.getCurrentItem())) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();

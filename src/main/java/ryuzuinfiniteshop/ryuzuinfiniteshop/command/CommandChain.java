@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.UnderstandSystemConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SelectSearchItemGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
@@ -26,38 +27,38 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class CommandChain {
     public static void registerCommand() {
-        Set<String> args1 = Sets.newHashSet("list", "search", "spawn", "open", "list", "reload", "load", "unload", "limit");
+        Set<String> args1 = Sets.newHashSet("list", "search", "spawn", "open", "list", "reload", "load", "save", "limit");
 
         CommandsGenerator.registerCommand(
                 "sis",
                 data -> {
-                    data.sendMessage("§a§l-------§e§l=====§b§lSearchable Infinite Shop§e§l=====§a§l-------");
+                    data.sendMessage(LanguageKey.SIS_COMMAND_WELCOME.getMessage());
                     if (data.getSender().hasPermission("sis.list") || data.getSender().hasPermission("sis.op")) {
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " list " + "§6§oショップの一覧を表示します");
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " list " + LanguageKey.SIS_COMMAND_LIST_DESCRIPTION.getMessage());
                     }
                     if (data.getSender().hasPermission("sis.search") || data.getSender().hasPermission("sis.op")) {
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " search " + "§6§oショップや取引を検索します");
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " search " + LanguageKey.SIS_COMMAND_SEARCH_DESCRIPTION.getMessage());
                     }
                     if (data.getSender().hasPermission("sis.op")) {
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " spawn <world,x,y,z/Block/EntityType/MythicMobID> " + "§6§oショップの作成または更新をします");
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " open [world,x,y,z] <player>" + "§6§oショップの取引画面を開きます");
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " list " + "§6§oショップの一覧を表示します");
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " reload " + "§6§o全てのデータをリロードします");
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " load " + "§6§o全てのデータをファイルから読み取り、ショップをロードします");
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " unload " + "§6§o全てのデータをファイルに保存し、ショップをアンロードします");
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " limit [increase/decrease/set] [player] [value] " + "§6§o取引回数を変更します");
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "[arg] " + "§6§o必須, " + ChatColor.BLUE + "<arg> " + "§6§o任意");
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " spawn <world,x,y,z/Block/EntityType/MythicMobID> " + LanguageKey.SIS_COMMAND_SPAWN_DESCRIPTION.getMessage());
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " open [world,x,y,z] <player>" + LanguageKey.SIS_COMMAND_OPEN_DESCRIPTION.getMessage());
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " list " + LanguageKey.SIS_COMMAND_LIST_DESCRIPTION.getMessage());
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " reload " + LanguageKey.SIS_COMMAND_RELOAD_DESCRIPTION.getMessage());
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " load " + LanguageKey.SIS_COMMAND_LOAD_DESCRIPTION.getMessage());
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " save " + LanguageKey.SIS_COMMAND_SAVE_DESCRIPTION.getMessage());
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " limit [increase/decrease/set] [player] [value] " + LanguageKey.SIS_COMMAND_LIMIT_DESCRIPTION.getMessage());
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + LanguageKey.SIS_COMMAND_ARGUMENTS_REQUIRED.getMessage() + " " + ChatColor.BLUE + LanguageKey.SIS_COMMAND_ARGUMENTS_OPTIONAL.getMessage());
                     }
-                    data.sendMessage("§a§l-------§e§l==============================§a§l-------");
+                    data.sendMessage(LanguageKey.SIS_COMMAND_DIVIDER.getMessage());
                 },
                 "sis.player",
                 data -> data.getArgs().length == 0 || (data.getArgs().length == 1 && !args1.contains(data.getArgs()[0]))
         );
+
 
         CommandsGenerator.registerCommand(
                 "sis.reload",
@@ -68,8 +69,8 @@ public class CommandChain {
         );
 
         CommandsGenerator.registerCommand(
-                "sis.unload",
-                data -> FileUtil.unloadAll(() -> {}),
+                "sis.save",
+                data -> FileUtil.saveAll(() -> {}),
                 "sis.op",
                 data -> true,
                 data -> !FileUtil.isSaveBlock(data)
@@ -103,28 +104,29 @@ public class CommandChain {
         CommandsGenerator.registerCommand(
                 "sis.spawn",
                 data -> {
-                    Player p = (Player) data.getSender();
-                    Location loc = p.getLocation();
-                    if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(loc))) {
-                        ShopUtil.reloadShop(ShopUtil.getShop(LocationUtil.toStringFromLocation(loc)));
-                        p.sendMessage(RyuZUInfiniteShop.prefixCommand + RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップを更新しました");
+                    Player player = (Player) data.getSender();
+                    Location location = player.getLocation();
+                    if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(location))) {
+                        ShopUtil.reloadShop(ShopUtil.getShop(LocationUtil.toStringFromLocation(location)));
+                        player.sendMessage(RyuZUInfiniteShop.prefixCommand + LanguageKey.SHOP_UPDATED.getMessage());
                         return;
                     }
-                    ShopUtil.createNewShop(loc, EntityType.VILLAGER);
-                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ショップを設置しました");
-                    LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(loc));
+                    ShopUtil.createNewShop(location, EntityType.VILLAGER);
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + LanguageKey.SHOP_CREATED.getMessage());
+                    LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(location));
                 },
                 "sis.op",
                 data -> true,
                 data -> {
                     if (data.getArgs().length != 1) return false;
                     if (!(data.getSender() instanceof Player)) {
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "このコマンドはプレイヤーのみ実行できます");
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + LanguageKey.COMMAND_PLAYER_ONLY.getMessage());
                         return false;
                     }
                     return !FileUtil.isSaveBlock(data);
                 }
         );
+
 
         CommandsGenerator.registerCommand(
                 "sis.spawn",
@@ -134,7 +136,7 @@ public class CommandChain {
                         loc = LocationUtil.toLocationFromString(data.getArgs()[1]);
                         if (ShopUtil.getShops().containsKey(data.getArgs()[1])) {
                             ShopUtil.reloadShop(ShopUtil.getShop(data.getArgs()[1]));
-                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップを更新しました");
+                            data.sendMessage(LanguageKey.SHOP_UPDATE.getMessage());
                             return;
                         }
                     } else {
@@ -146,7 +148,7 @@ public class CommandChain {
                     else
                         ShopUtil.createNewShop(loc, EntityType.valueOf(data.getArgs()[1].toUpperCase()));
                     ShopUtil.getShop(LocationUtil.toStringFromLocation(loc)).respawnNPC();
-                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "ショップを設置しました");
+                    data.sendMessage(LanguageKey.SHOP_CREATE.getMessage());
                     LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(loc));
                 },
                 "sis.op",
@@ -158,7 +160,7 @@ public class CommandChain {
                         return true;
                     } catch (IllegalArgumentException e) {
                         if (MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(data.getArgs()[1]) == null) {
-                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なエンティティタイプまたはMythicMobIDを入力して下さい");
+                            data.sendMessage(LanguageKey.ENTITY_INVALID.getMessage());
                             return false;
                         }
                         return true;
@@ -175,7 +177,7 @@ public class CommandChain {
                 "sis.open",
                 data -> {
                     Player p = data.getArgs().length == 2 ? (Player) data.getSender() : Bukkit.getServer().getPlayer(data.getArgs()[2]);
-                    p.openInventory(ShopUtil.getShop(data.getArgs()[1]).getPage(1).getInventory(ShopMode.Trade, p));
+                    p.openInventory(ShopUtil.getShop(data.getArgs()[1]).getPage(1).getInventory(ShopMode.TRADE, p));
                 },
                 "sis.op",
                 data -> {
@@ -215,7 +217,7 @@ public class CommandChain {
                 "sis.list",
                 data -> {
                     Player p = (Player) data.getSender();
-                    ShopMode mode = p.hasPermission("sis.op") ? ShopMode.Edit : ShopMode.Trade;
+                    ShopMode mode = p.hasPermission("sis.op") ? ShopMode.EDIT : ShopMode.TRADE;
                     p.openInventory(new ShopListGui(1, ShopUtil.getSortedShops(mode, null)).getInventory(mode));
                     SoundUtil.playClickShopSound(p);
                 },
@@ -235,7 +237,7 @@ public class CommandChain {
                 "sis.search",
                 data -> {
                     Player p = (Player) data.getSender();
-                    p.openInventory(new SelectSearchItemGui().getInventory(ShopMode.Search));
+                    p.openInventory(new SelectSearchItemGui().getInventory(ShopMode.SEARCH));
                     SoundUtil.playClickShopSound(p);
                 },
                 Arrays.asList("sis.search" , "sis.op"),

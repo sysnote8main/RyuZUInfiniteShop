@@ -59,7 +59,6 @@ public class FileUtil {
             UnderstandSystemConfig.save();
             Config.save();
             DisplayPanelConfig.save();
-            UnderstandSystemConfig.load();
             DisplayPanelConfig.load();
             boolean converted = ShopUtil.loadAllShops();
             TradeUtil.loadTradeLimits();
@@ -93,28 +92,6 @@ public class FileUtil {
                 Config.runAutoSave();
                 Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのファイルのロードが完了しました"));
                 ShopUtil.getShops().values().forEach(Shop::respawnNPC);
-                endTask.run();
-            });
-        });
-        return true;
-    }
-
-    public static boolean unloadAll(Runnable endTask) {
-        if(saveBlock) return false;
-
-        ShopUtil.removeAllNPC();
-        ShopUtil.getAllShopInventoryViewer();
-        saveBlock = true;
-        Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのファイルを保存して、アンロード中です。しばらくお待ちください。"));
-        Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
-            TradeUtil.saveTradeLimits();
-            ShopUtil.saveAllShops();
-            UnderstandSystemConfig.save();
-            Config.save();
-            DisplayPanelConfig.save();
-            Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
-                saveBlock = false;
-                Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのファイルを保存して、アンロードが完了しました"));
                 endTask.run();
             });
         });

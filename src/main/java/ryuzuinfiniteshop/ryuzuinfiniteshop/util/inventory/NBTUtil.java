@@ -110,30 +110,60 @@ public class NBTUtil {
 //        head = nbti.getItem();
 //        Material.matchMaterial()
 //    }
-    public static ItemStack withSkullData(ItemStack item, String base64) {
-        return SkullCreator.itemWithBase64(item, base64);
+
+
+    public static ItemStack itemWithBase64(ItemStack item, GameProfile profile) {
+        if(ItemUtil.isAir(item)) return null;
+        if (!(item.getItemMeta() instanceof SkullMeta))
+            return null;
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        setSkullData(meta, profile);
+        item.setItemMeta(meta);
+
+        return item;
     }
 
-    public static String getSkullData(SkullMeta meta) {
+    public static void setSkullData(SkullMeta meta, GameProfile profile) {
         try {
             if (metaSetProfileMethod == null) {
-                metaSetProfileMethod = meta.getClass().getDeclaredMethod("getProfile", GameProfile.class);
+                metaSetProfileMethod = meta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
                 metaSetProfileMethod.setAccessible(true);
             }
-            Optional<Property> property = ((GameProfile) metaSetProfileMethod.invoke(meta)).getProperties().get("textures").stream().findFirst();
-            return property.map(Property::getValue).orElse(null);
+            metaSetProfileMethod.invoke(meta, profile);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
-            // if in an older API where there is no setProfile method,
-            // we set the profile field directly.
             try {
                 if (metaProfileField == null) {
                     metaProfileField = meta.getClass().getDeclaredField("profile");
                     metaProfileField.setAccessible(true);
                 }
-                Optional<Property> property = ((GameProfile) metaProfileField.get(meta)).getProperties().get("textures").stream().findFirst();
-                return property.map(Property::getValue).orElse(null);
+                metaProfileField.set(meta, profile);
+
             } catch (NoSuchFieldException | IllegalAccessException ex2) {
                 ex2.printStackTrace();
+            }
+        }
+    }
+
+    public static GameProfile getSkullData(SkullMeta meta) {
+        try {
+            if (metaSetProfileMethod == null) {
+                metaSetProfileMethod = meta.getClass().getDeclaredMethod("getProfile", GameProfile.class);
+                metaSetProfileMethod.setAccessible(true);
+            }
+            return ((GameProfile) metaSetProfileMethod.invoke(meta));
+        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | NullPointerException | InvocationTargetException ex) {
+            try {
+                if (metaProfileField == null) {
+                    metaProfileField = meta.getClass().getDeclaredField("profile");
+                    metaProfileField.setAccessible(true);
+                }
+                return ((GameProfile) metaProfileField.get(meta));
+//                Optional<Property> property = ((GameProfile) metaProfileField.get(meta)).getProperties().get("textures").stream().findFirst();
+//                return property.map(Property::getValue).orElse(null);
+            } catch (NoSuchFieldException | IllegalAccessException ex2) {
+                ex2.printStackTrace();
+            } catch (NullPointerException ex2) {
+                return null;
             }
         }
         return null;

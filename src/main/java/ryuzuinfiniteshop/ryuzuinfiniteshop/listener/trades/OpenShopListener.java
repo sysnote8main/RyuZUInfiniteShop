@@ -17,6 +17,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.UnderstandSystemConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
@@ -45,12 +46,12 @@ public class OpenShopListener implements Listener {
         ItemStack item = p.getInventory().getItemInMainHand();
         if (!(ItemUtil.isAir(item) || NBTUtil.getNMSStringTag(item, "ShopData") == null)) return;
 
-        Inventory inv = shop.getPage(1).getInventory(ShopMode.Trade, p);
+        Inventory inv = shop.getPage(1).getInventory(ShopMode.TRADE, p);
         if (!UnderstandSystemConfig.signedPlayers.contains(p.getUniqueId().toString())) {
-            TextComponent understand = new TextComponent(ChatColor.YELLOW + "[分かった！]");
+            TextComponent understand = new TextComponent(ChatColor.YELLOW + LanguageKey.UNDERSTAND_BUTTON.getMessage());
             understand.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sis understand"));
-            understand.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "これ以降メッセージを表示しない").create()));
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "GUIの画面外を右クリック: 次のページに移動、左クリック: 前のページに移動できます");
+            understand.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + LanguageKey.UNDERSTAND_BUTTON_TOOLTIP.getMessage()).create()));
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.PAGE_NAVIGATION_MESSAGE.getMessage());
             p.spigot().sendMessage(understand);
         }
         p.openInventory(inv);
@@ -96,10 +97,10 @@ public class OpenShopListener implements Listener {
         if (type.isRightClick()) {
             if (shop.getPage(page + 1) == null) {
                 fail = true;
-                if (holder.getMode().equals(ShopMode.Trade) && shop.ableCreateNewPage()) {
+                if (holder.getMode().equals(ShopMode.TRADE) && shop.ableCreateNewPage()) {
                     //取引を上書きし、取引として成立しないものは削除する
                     boolean warn = shop.checkTrades(inv);
-                    if (warn) p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "重複している取引がありました");
+                    if (warn) p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.DUPLICATE_TRADE_WARNING.getMessage());
                     if (shop.ableCreateNewPage()) {
                         shop.createNewPage();
                         p.openInventory(shop.getPage(page + 1).getInventory(mode, p, holder.getBefore()));
@@ -156,7 +157,7 @@ public class OpenShopListener implements Listener {
     private void updateStatusProcess(InventoryInteractEvent event) {
         ShopHolder holder = ShopUtil.getShopHolder(event.getView().getTopInventory());
         if (holder == null) return;
-        if (!holder.getMode().equals(ShopMode.Trade)) return;
+        if (!holder.getMode().equals(ShopMode.TRADE)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();

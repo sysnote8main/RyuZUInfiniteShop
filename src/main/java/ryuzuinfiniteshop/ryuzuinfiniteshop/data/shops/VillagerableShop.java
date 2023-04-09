@@ -98,38 +98,59 @@ public class VillagerableShop extends AgeableShop {
     }
 
     public Material getJobBlockMaterial() {
-        switch (profession) {
-            case NITWIT:
-                return Material.GREEN_STAINED_GLASS;
-            case ARMORER:
-                return Material.BLAST_FURNACE;
-            case BUTCHER:
-                return Material.SMOKER;
-            case CARTOGRAPHER:
-                return Material.CARTOGRAPHY_TABLE;
-            case CLERIC:
-                return Material.BREWING_STAND;
-            case FARMER:
-                return Material.COMPOSTER;
-            case FISHERMAN:
-                return Material.BARREL;
-            case FLETCHER:
-                return Material.FLETCHING_TABLE;
-            case LEATHERWORKER:
-                return Material.CAULDRON;
-            case LIBRARIAN:
-                return Material.LECTERN;
-            case MASON:
-                return Material.STONECUTTER;
-            case SHEPHERD:
-                return Material.LOOM;
-            case TOOLSMITH:
-                return Material.SMITHING_TABLE;
-            case WEAPONSMITH:
-                return Material.GRINDSTONE;
-            case NONE:
-            default:
-                return Material.WHITE_STAINED_GLASS;
+        if(RyuZUInfiniteShop.VERSION >= 14) {
+            switch (profession) {
+                case NITWIT:
+                    return Material.GREEN_STAINED_GLASS;
+                case ARMORER:
+                    return Material.BLAST_FURNACE;
+                case BUTCHER:
+                    return Material.SMOKER;
+                case CARTOGRAPHER:
+                    return Material.CARTOGRAPHY_TABLE;
+                case CLERIC:
+                    return Material.BREWING_STAND;
+                case FARMER:
+                    return Material.COMPOSTER;
+                case FISHERMAN:
+                    return Material.BARREL;
+                case FLETCHER:
+                    return Material.FLETCHING_TABLE;
+                case LEATHERWORKER:
+                    return Material.CAULDRON;
+                case LIBRARIAN:
+                    return Material.LECTERN;
+                case MASON:
+                    return Material.STONECUTTER;
+                case SHEPHERD:
+                    return Material.LOOM;
+                case TOOLSMITH:
+                    return Material.SMITHING_TABLE;
+                case WEAPONSMITH:
+                    return Material.GRINDSTONE;
+                case NONE:
+                default:
+                    return Material.WHITE_STAINED_GLASS;
+            }
+        } else {
+            switch (profession.name()) {
+                case "NORMAL":
+                    return Material.DIRT;
+                case "FARMER":
+                    return Material.WHEAT;
+                case "LIBRARIAN":
+                    return Material.BOOKSHELF;
+                case "PRIEST":
+                    return Material.ROTTEN_FLESH;
+                case "BLACKSMITH":
+                    return Material.ANVIL;
+                case "BUTCHER":
+                    return Material.PORKCHOP;
+                case "NITWIT":
+                    return Material.SLIME_BALL;
+                default:
+                    return Material.STONE;
+            }
         }
     }
 

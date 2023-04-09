@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.TradesGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.SeachTradeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
@@ -29,12 +30,13 @@ public class SearchTradeGui extends TradesGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new SeachTradeHolder(mode, this, player, searchedTrade), 9 * 6, ChatColor.DARK_BLUE + "トレード サーチ ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new SeachTradeHolder(mode, this, player, searchedTrade), 9 * 6, LanguageKey.SEARCH_TRADE_PAGE_TITLE.getMessage(String.valueOf(getPage())));
+
 
         for (int i = (getPage() - 1) * 6; i < getPage() * 6; i++) {
             if (i >= trades.size()) {
                 for (int j = 0; j < 9; j++) {
-                    inv.setItem((i % 6) * 9 + j, ItemUtil.getNamedItem(ItemUtil.getColoredItem(Material.BLACK_STAINED_GLASS_PANE.name()), ""));
+                    inv.setItem((i % 6) * 9 + j, ItemUtil.getNamedItem(ItemUtil.getColoredItem("BLACK_STAINED_GLASS_PANE"), ""));
                 }
             } else {
                 Shop shop = shops.get(i);

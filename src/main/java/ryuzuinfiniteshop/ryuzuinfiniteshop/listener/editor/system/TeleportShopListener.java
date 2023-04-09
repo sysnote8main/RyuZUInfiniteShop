@@ -21,7 +21,7 @@ public class TeleportShopListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
-        if (!holder.getMode().equals(ShopMode.Edit)) return;
+        if (!holder.getMode().equals(ShopMode.EDIT)) return;
         if (event.getClickedInventory() == null) return;
 
         //必要なデータを取得

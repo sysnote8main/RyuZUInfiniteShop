@@ -27,7 +27,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
 import java.util.HashMap;
-import java.util.Map;
 
 //ショップのNPCの装備を変更する
 public class ConvartListener implements Listener {
@@ -37,7 +36,7 @@ public class ConvartListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
-        if (!holder.getMode().equals(ShopMode.Edit)) return;
+        if (!holder.getMode().equals(ShopMode.EDIT)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
@@ -61,7 +60,7 @@ public class ConvartListener implements Listener {
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
-        if (!holder.getMode().equals(ShopMode.Edit)) return;
+        if (!holder.getMode().equals(ShopMode.EDIT)) return;
         if (event.getClickedInventory() == null) return;
 
         //必要なデータを取得

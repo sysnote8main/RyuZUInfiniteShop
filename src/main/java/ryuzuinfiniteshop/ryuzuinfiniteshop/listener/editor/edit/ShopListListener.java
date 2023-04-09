@@ -1,6 +1,5 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,7 +7,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopListHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
@@ -86,7 +84,7 @@ public class ShopListListener implements Listener {
         if (event.isShiftClick() && p.hasPermission("sis.op")) {
             //編集画面を開く
             ShopUtil.closeAllShopTradeInventory(shop);
-            p.openInventory(shop.getEditor(1).getInventory(ShopMode.Edit, holder));
+            p.openInventory(shop.getEditor(1).getInventory(ShopMode.EDIT, holder));
             SoundUtil.playClickShopSound(p);
             shop.setEditting(true);
         } else {
@@ -97,7 +95,7 @@ public class ShopListListener implements Listener {
                 SoundUtil.playFailSound(p);
                 return;
             }
-            p.openInventory(shop.getPage(1).getInventory(ShopMode.Trade, p, holder));
+            p.openInventory(shop.getPage(1).getInventory(ShopMode.TRADE, p, holder));
             SoundUtil.playClickShopSound(p);
         }
     }

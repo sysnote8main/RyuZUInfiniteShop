@@ -15,7 +15,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -75,14 +74,14 @@ public abstract class ShopTradeGui extends ShopGui {
 
     public Inventory getInventory(ShopMode mode, Player p) {
         Inventory inv = getInventory(mode);
-        if (mode.equals(ShopMode.Trade)) setTradeStatus(p, inv);
+        if (mode.equals(ShopMode.TRADE)) setTradeStatus(p, inv);
         return inv;
     }
 
     public Inventory getInventory(ShopMode mode, Player p, @Nullable ModeHolder before) {
         Inventory inv = getInventory(mode);
         ((ShopHolder) inv.getHolder()).setBefore(before);
-        if (!mode.equals(ShopMode.Edit)) setTradeStatus(p, inv);
+        if (!mode.equals(ShopMode.EDIT)) setTradeStatus(p, inv);
         return inv;
     }
 

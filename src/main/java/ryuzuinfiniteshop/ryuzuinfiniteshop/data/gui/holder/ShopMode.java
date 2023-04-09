@@ -1,3 +1,3 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder;
 
-public enum ShopMode {Edit, Trade, Search}
+public enum ShopMode {EDIT, TRADE, SEARCH}

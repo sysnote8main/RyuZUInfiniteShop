@@ -12,8 +12,8 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.Colorable;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
@@ -96,7 +96,7 @@ public class ShopUtil {
                 else
                     createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER")));
             } catch (Exception e) {
-                throw new RuntimeException("ShopID: " + f.getName() + " の読み込み中にエラーが発生しました", e);
+                throw new RuntimeException(LanguageKey.ERROR_LOADING_FILE.getMessage(f.getName()), e);
             }
         }
         return saveYaml != null && convertAllShopkeepers(saveYaml);
@@ -161,7 +161,7 @@ public class ShopUtil {
                     keys.add(key);
                 }
             } catch (Exception e) {
-                throw new RuntimeException("ShopkeepersID: " + key + " SISID: " + (config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z")) + " のShopkeepersからのコンバート中にエラーが発生しました", e);
+                throw new RuntimeException(LanguageKey.ERROR_CONVERTING_SHOPKEEPERS.getMessage(key, config.getString(base + ".world"), config.getString(base + "x"), config.getString(base + "y"), config.getString(base + "z")), e);
             }
         }
 
@@ -193,7 +193,7 @@ public class ShopUtil {
             try{
                 shop.saveYaml();
             } catch (Exception e) {
-                throw new RuntimeException("ShopID: " + shop.getID() + " の保存中にエラーが発生しました", e);
+                throw new RuntimeException(LanguageKey.ERROR_SAVING_SHOP.getMessage(shop.getID()), e);
             }
         }
     }
@@ -204,7 +204,7 @@ public class ShopUtil {
 
     public static LinkedHashMap<String, Shop> getSortedShops(ShopMode mode, String name) {
         LinkedHashMap<String, Shop> sorted = new LinkedHashMap<>();
-        if (mode.equals(ShopMode.Edit))
+        if (mode.equals(ShopMode.EDIT))
             shops.keySet().stream().sorted(Comparator.naturalOrder()).filter(key -> shops.get(key).containsDisplayName(name) || name == null).forEach(key -> sorted.put(key, shops.get(key)));
         else
             shops.keySet().stream().sorted(Comparator.naturalOrder()).filter(key -> shops.get(key).isSearchable() && (shops.get(key).containsDisplayName(name) || name == null)).forEach(key -> sorted.put(key, shops.get(key)));
@@ -322,7 +322,7 @@ public class ShopUtil {
     public static void closeShopTradeInventory(Player p, Shop shop) {
         if (p.getOpenInventory().getTopInventory().getHolder() instanceof ShopHolder) {
             ShopHolder holder = (ShopHolder) p.getOpenInventory().getTopInventory().getHolder();
-            if (holder.getMode().equals(ShopMode.Trade) && holder.getShop().equals(shop))
+            if (holder.getMode().equals(ShopMode.TRADE) && holder.getShop().equals(shop))
                 p.closeInventory();
         }
     }
@@ -336,7 +336,7 @@ public class ShopUtil {
     public static ShopHolder closeShopTradeInventory(Player p) {
         if (p.getOpenInventory().getTopInventory().getHolder() instanceof ShopHolder) {
             ShopHolder holder = (ShopHolder) p.getOpenInventory().getTopInventory().getHolder();
-            if (holder.getMode().equals(ShopMode.Trade)) {
+            if (holder.getMode().equals(ShopMode.TRADE)) {
                 p.closeInventory();
                 return holder;
             }

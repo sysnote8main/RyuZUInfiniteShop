@@ -1,12 +1,15 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.PropertyMap;
 import lombok.EqualsAndHashCode;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
@@ -60,11 +63,15 @@ public class ObjectItems {
             return ((MythicItem) object).convertItemStack();
         if (object instanceof ItemStack && ((ItemStack) object).hasItemMeta() && ((ItemStack) object).getItemMeta() instanceof SkullMeta) {
             SkullMeta meta = (SkullMeta) ((ItemStack) object).getItemMeta();
-            String data = NBTUtil.getSkullData(meta);
-            if (data == null)
-                return object;
-            else
-                return NBTUtil.withSkullData((ItemStack) object, NBTUtil.getSkullData(meta));
+            if(meta.hasOwner()) return object;
+            GameProfile data = NBTUtil.getSkullData(meta);
+            if(data == null) return object;
+            PropertyMap map = data.getProperties();
+            GameProfile result = new GameProfile(data.getId(), JavaUtil.getOrDefault(data.getName(), ""));
+            result.getProperties().putAll(map);
+            NBTUtil.setSkullData(meta , result);
+            ((ItemStack) object).setItemMeta(meta);
+            return object;
         } else
             return object;
     }

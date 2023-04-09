@@ -4,7 +4,6 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import lombok.EqualsAndHashCode;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
@@ -15,7 +14,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
@@ -107,15 +105,15 @@ public class ShopTrade {
     }
 
     public static ItemStack getFilter() {
-        return ItemUtil.getNamedItem(ItemUtil.getColoredItem(Material.BLACK_STAINED_GLASS_PANE.name()), ChatColor.BLACK + "");
+        return ItemUtil.getNamedItem(ItemUtil.getColoredItem("BLACK_STAINED_GLASS_PANE"), ChatColor.BLACK + "");
     }
 
     private ItemStack getFilter(ShopMode mode) {
-        return mode.equals(ShopMode.Edit) ? getSettingsFilter() : getFilter();
+        return mode.equals(ShopMode.EDIT) ? getSettingsFilter() : getFilter();
     }
 
     public static ItemStack getFilter(ShopMode mode, int value) {
-        return mode.equals(ShopMode.Edit) ? getSettingsFilter(value) : getFilter();
+        return mode.equals(ShopMode.EDIT) ? getSettingsFilter(value) : getFilter();
     }
 
     public ItemStack getFilter(String id, Player player) {

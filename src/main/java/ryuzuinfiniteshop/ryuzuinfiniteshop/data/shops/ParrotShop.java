@@ -52,19 +52,19 @@ public class ParrotShop extends Shop {
         setColor(color);
     }
 
-    public Material getColorMaterial() {
+    public String getColorMaterial() {
         switch (color) {
             case BLUE:
-                return Material.BLUE_WOOL;
+                return "BLUE_WOOL";
             case GREEN:
-                return Material.GREEN_WOOL;
+                return "GREEN_WOOL";
             case CYAN:
-                return Material.CYAN_WOOL;
+                return "CYAN_WOOL";
             case GRAY:
-                return Material.GRAY_WOOL;
+                return "GRAY_WOOL";
             case RED:
             default:
-                return Material.RED_WOOL;
+                return "RED_WOOL";
         }
     }
 }

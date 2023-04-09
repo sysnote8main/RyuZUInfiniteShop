@@ -7,6 +7,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
@@ -48,7 +49,7 @@ public class ShopEditorGui extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, ChatColor.DARK_BLUE + getShop().getDisplayNameOrElseShop() + ChatColor.DARK_BLUE + " エディター ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, LanguageKey.EDITOR_PAGE_TITLE.getMessage() + getShop().getDisplayNameOrElseShop() + LanguageKey.EDITOR_PAGE_NUMBER.getMessage(String.valueOf(getPage())));
 
         //アイテムを設置
         setDisplay(inv);
@@ -78,7 +79,7 @@ public class ShopEditorGui extends ShopGui {
         if (newslot == 18)
             getShop().createEditorNewPage();
         else if (newslot != -1)
-            inv.setItem(newslot, ItemUtil.getNamedItem(ItemUtil.getColoredItem(Material.WHITE_STAINED_GLASS_PANE.name()), ChatColor.YELLOW + "新規ページ"));
+            inv.setItem(newslot, ItemUtil.getNamedItem(ItemUtil.getColoredItem("WHITE_STAINED_GLASS_PANE"), ChatColor.YELLOW + "新規ページ"));
     }
 
     public void setDisplayName(Inventory inv) {
@@ -110,7 +111,7 @@ public class ShopEditorGui extends ShopGui {
         inv.setItem(5 * 9 + 5, ItemUtil.getNamedItem(Material.NETHER_STAR, ChatColor.YELLOW + "ショップを更新する"));
         inv.setItem(5 * 9 + 6, ItemUtil.getNamedItem(Material.EMERALD, ChatColor.GREEN + "トレード内容をアイテム化する"));
         inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.DIAMOND, ChatColor.GREEN + "ショップをアイテム化する"));
-        inv.setItem(5 * 9 + 8, ItemUtil.getNamedEnchantedItem(ItemUtil.getColoredItem(Material.BLACK_STAINED_GLASS_PANE.name()), ChatColor.GREEN + "トレードを読み込む"));
+        inv.setItem(5 * 9 + 8, ItemUtil.getNamedEnchantedItem(ItemUtil.getColoredItem("BLACK_STAINED_GLASS_PANE"), ChatColor.GREEN + "トレードを読み込む"));
     }
 
     public void setDisplay(Inventory inv) {
@@ -127,7 +128,7 @@ public class ShopEditorGui extends ShopGui {
     }
 
     public void setCover(Inventory inv) {
-        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem(Material.WHITE_STAINED_GLASS_PANE.name()), "");
+        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem("WHITE_STAINED_GLASS_PANE"), "");
         for (int i = 2 * 9; i < 6 * 9; i++)
             if (ItemUtil.isAir(inv.getItem(i))) inv.setItem(i, item);
     }
@@ -175,7 +176,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setSizeIncrease(Inventory inv) {
         if (!(getShop() instanceof SlimeShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(Material.GREEN_WOOL, ChatColor.GREEN + "サイズを大きくする");
+        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem("GREEN_WOOL"), ChatColor.GREEN + "サイズを大きくする");
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.SizeIncrease);
@@ -183,7 +184,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setSizeDecrease(Inventory inv) {
         if (!(getShop() instanceof SlimeShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(Material.RED_WOOL, ChatColor.GREEN + "サイズを小さくする");
+        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem("RED_WOOL"), ChatColor.GREEN + "サイズを小さくする");
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.SizeDecrease);
@@ -215,7 +216,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setParrotColor(Inventory inv) {
         if (!(getShop() instanceof ParrotShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(((ParrotShop) getShop()).getColorMaterial(), ChatColor.GREEN + "色の変更");
+        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem(((ParrotShop) getShop()).getColorMaterial()), ChatColor.GREEN + "色の変更");
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.ParrotColor);

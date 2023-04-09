@@ -9,6 +9,11 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class LanguageConfig {
+    public static String getLanguage() {
+        return "English";
+    }
+
+
     private static final HashMap<String, String> defaultTexts = new HashMap<String, String>() {{
         put("Prefix", "&b[&fRyuzuInfiniteShop&b]&f");
         put("NoPermission", "&cYou don't have permission to use this command.");
