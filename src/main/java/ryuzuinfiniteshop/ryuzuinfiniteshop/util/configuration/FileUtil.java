@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.UnderstandSystemConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
@@ -50,7 +51,7 @@ public class FileUtil {
 
         ShopUtil.removeAllNPC();
         saveBlock = true;
-        Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのファイルをリロード中です。しばらくお待ちください。"));
+        Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_RELOADING_FILES.getMessage()));
         HashMap<Player, ShopHolder> viewer = ShopUtil.getAllShopInventoryViewer();
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
             Config.load();
@@ -66,7 +67,7 @@ public class FileUtil {
                 saveBlock = false;
                 if(converted) saveAll(() -> {});
                 Config.runAutoSave();
-                Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのファイルのリロードが完了しました"));
+                Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_RELOADING_COMPLETE.getMessage()));
                 ShopUtil.getShops().values().forEach(Shop::respawnNPC);
                 ShopUtil.openAllShopInventory(viewer);
             });
@@ -79,7 +80,7 @@ public class FileUtil {
 
         ShopUtil.removeAllNPC();
         saveBlock = true;
-        Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのファイルをロード中です。しばらくお待ちください。"));
+        Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_LOADING_FILES.getMessage()));
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
             Config.load();
             DisplayPanelConfig.load();
@@ -90,7 +91,7 @@ public class FileUtil {
                 saveBlock = false;
                 if(converted) saveAll(() -> {});
                 Config.runAutoSave();
-                Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "全てのファイルのロードが完了しました"));
+                Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_LOADING_COMPLETE.getMessage()));
                 ShopUtil.getShops().values().forEach(Shop::respawnNPC);
                 endTask.run();
             });
@@ -120,14 +121,15 @@ public class FileUtil {
 
     public static boolean isSaveBlock(Player p) {
         if(saveBlock) {
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "現在リロード処理中のため、すべての処理をブロックしています。");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_RELOADING_BLOCKED.getMessage());
             SoundUtil.playFailSound(p);
         }
         return saveBlock;
     }
 
     public static boolean isSaveBlock(CommandData data) {
-        if(saveBlock) data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "現在リロード処理中のため、すべての処理をブロックしています。");
+        if(saveBlock) data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_RELOADING_BLOCKED.getMessage());
+
         return saveBlock;
     }
 }

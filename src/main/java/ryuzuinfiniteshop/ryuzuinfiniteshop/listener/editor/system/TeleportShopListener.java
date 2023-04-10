@@ -33,6 +33,5 @@ public class TeleportShopListener implements Listener {
         holder.setBefore(null);
         p.teleport(holder.getShop().getLocation());
         SoundUtil.playSuccessSound(p);
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + holder.getShop().getDisplayNameOrElseShop() + ChatColor.GREEN + "にテレポートしました");
     }
 }

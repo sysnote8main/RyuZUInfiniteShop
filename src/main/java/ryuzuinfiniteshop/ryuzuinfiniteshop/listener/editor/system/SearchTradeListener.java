@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SelectSearchItemGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SearchTradeGui;
@@ -40,7 +41,7 @@ public class SearchTradeListener implements Listener {
         int slot = event.getSlot();
         ClickType type = event.getClick();
         ItemStack searchItem = event.getView().getTopInventory().getItem(4);
-        ItemStack panel = ItemUtil.getNamedItem(ItemUtil.getColoredItem("WHITE_STAINED_GLASS_PANE"), ChatColor.BLUE + "検索するアイテムを持ってクリック", ChatColor.GREEN + "シフトクリック: NPCの名前で検索");
+        ItemStack panel = ItemUtil.getNamedItem(ItemUtil.getColoredItem("WHITE_STAINED_GLASS_PANE"), ChatColor.BLUE + LanguageKey.ITEM_SEARCH_BY_ITEM_CLICK.getMessage(), ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_NPC_NAME.getMessage());
         if (slot != 0 && slot != 4 && slot != 8) return;
 
         ShopMode mode = p.hasPermission("sis.op") ? ShopMode.EDIT : ShopMode.SEARCH;
@@ -53,8 +54,9 @@ public class SearchTradeListener implements Listener {
                         p.openInventory(new ShopListGui(1, ShopUtil.getSortedShops(mode, message)).getInventory(mode, holder));
                         SoundUtil.playClickShopSound(p);
                     });
-                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "検索するNPCの名前をチャットに入力してください");
-                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SEARCH_NPC_NAME_INPUT.getMessage());
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_CANCEL_INPUT.getMessage());
+
                 } else if (ItemUtil.isAir(event.getCursor()))
                     event.setCurrentItem(panel);
                 else
@@ -66,15 +68,16 @@ public class SearchTradeListener implements Listener {
                     SchedulerListener.setSchedulers(p, "search", (message) -> {
                         LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTakeByDisplayName(message, mode) : TradeUtil.getTradesFromGiveByDisplayName(message, mode);
                         if (searchedTrades.size() == 0) {
-                            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
+                            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NO_RESULTS.getMessage());
                             SoundUtil.playFailSound(p);
                             return;
                         }
                         p.openInventory(new SearchTradeGui(1, p, searchedTrades).getInventory(mode, holder));
                         SoundUtil.playClickShopSound(p);
                     });
-                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "検索するアイテムの名前をチャットに入力してください");
-                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SEARCH_INPUT_PROMPT.getMessage());
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SEARCH_CANCEL_PROMPT.getMessage());
+
                 } else {
                     if (panel.equals(searchItem))
                         // アイテム未設定
@@ -83,7 +86,7 @@ public class SearchTradeListener implements Listener {
                         // アイテムで検索
                         LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTake(searchItem, mode) : TradeUtil.getTradesFromGive(searchItem, mode);
                         if (searchedTrades.size() == 0) {
-                            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
+                            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NO_RESULTS.getMessage());
                             SoundUtil.playFailSound(p);
                             return;
                         }
@@ -153,7 +156,7 @@ public class SearchTradeListener implements Listener {
         Shop shop = ShopUtil.getShop(NBTUtil.getNMSStringTag(item, "Shop"));
         boolean isOpenShop = slot % 9 == info;
         if (shop == null && isOpenShop) {
-            p.sendMessage(ChatColor.RED + "ショップが見つかりませんでした。");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_NOT_FOUND.getMessage());
             SoundUtil.playFailSound(p);
             return;
         }
@@ -182,7 +185,7 @@ public class SearchTradeListener implements Listener {
             if(slot % 9 == info) return;
             LinkedHashMap<ShopTrade, Shop> searchedTrades = (slot % 9 < info) ? TradeUtil.getTradesFromGive(event.getCurrentItem(), holder.getMode()) : TradeUtil.getTradesFromTake(event.getCurrentItem(), holder.getMode());
             if (searchedTrades.size() == 0) {
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NO_RESULTS.getMessage());
                 SoundUtil.playFailSound(p);
                 return;
             }
@@ -211,14 +214,14 @@ public class SearchTradeListener implements Listener {
 
         int info = ShopUtil.getSubtractSlot(type);
         int surplus = slot % 9;
-        int base = (type.equals(Shop.ShopType.TwotoOne) && surplus > 4) ? surplus - 5 : surplus;
+        int base = (type.equals(Shop.ShopType.TWOTOONE) && surplus > 4) ? surplus - 5 : surplus;
         if(ItemUtil.isAir(event.getCurrentItem())) return;
         if(!(p.hasPermission("sis.search") || p.hasPermission("sis.op"))) return;
         if(base == info) return;
 
         LinkedHashMap<ShopTrade, Shop> searchedTrades = base < info ? TradeUtil.getTradesFromGive(event.getCurrentItem(), ShopMode.SEARCH) : TradeUtil.getTradesFromTake(event.getCurrentItem(), ShopMode.SEARCH);
         if (searchedTrades.size() == 0) {
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "検索結果がありませんでした");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NO_RESULTS.getMessage());
             SoundUtil.playFailSound(p);
             return;
         }

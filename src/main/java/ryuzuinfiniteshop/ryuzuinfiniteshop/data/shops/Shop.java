@@ -10,8 +10,8 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Shop {
-    public enum ShopType {TwotoOne, FourtoFour, SixtoTwo}
+    public enum ShopType {TWOTOONE, FOURTOFOUR, SIXTOTWO}
 
     @Getter
     protected Entity npc;
@@ -153,21 +153,21 @@ public class Shop {
     }
 
     public void changeShopType() {
-        if (!type.equals(ShopType.TwotoOne)) trades.clear();
+        if (!type.equals(ShopType.TWOTOONE)) trades.clear();
         this.type = getNextShopType();
         updateTradeContents();
     }
 
     public ShopType getNextShopType() {
         switch (type) {
-            case TwotoOne:
-                return ShopType.FourtoFour;
-            case FourtoFour:
-                return ShopType.SixtoTwo;
-            case SixtoTwo:
-                return ShopType.TwotoOne;
+            case TWOTOONE:
+                return ShopType.FOURTOFOUR;
+            case FOURTOFOUR:
+                return ShopType.SIXTOTWO;
+            case SIXTOTWO:
+                return ShopType.TWOTOONE;
         }
-        return ShopType.TwotoOne;
+        return ShopType.TWOTOONE;
     }
 
     // 重複している取引があればtrueを返す
@@ -179,12 +179,12 @@ public class Shop {
         boolean duplication = false;
         HashSet<ShopTrade> emptyTrades = new HashSet<>();
         HashSet<ShopTrade> onTrades = new HashSet<>();
-        for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TwotoOne) ? 4 : 9) {
-            if (getShopType().equals(ShopType.TwotoOne) && i % 9 == 4) i++;
+        for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TWOTOONE) ? 4 : 9) {
+            if (getShopType().equals(ShopType.TWOTOONE) && i % 9 == 4) i++;
             int limitSlot = 0;
-            if (getShopType().equals(ShopType.TwotoOne)) limitSlot = i + 2;
-            else if (getShopType().equals(ShopType.FourtoFour)) limitSlot = i + 4;
-            else if (getShopType().equals(ShopType.SixtoTwo)) limitSlot = i + 6;
+            if (getShopType().equals(ShopType.TWOTOONE)) limitSlot = i + 2;
+            else if (getShopType().equals(ShopType.FOURTOFOUR)) limitSlot = i + 4;
+            else if (getShopType().equals(ShopType.SIXTOTWO)) limitSlot = i + 6;
             ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(i);
             ShopTrade expectedTrade = TradeUtil.getTrade(inv, i, getShopType());
             boolean available = TradeUtil.isAvailableTrade(inv, i, getShopType());
@@ -224,11 +224,11 @@ public class Shop {
 
     public String getShopTypeDisplay() {
         switch (type) {
-            case TwotoOne:
+            case TWOTOONE:
                 return ChatColor.GREEN + "2 -> 1";
-            case FourtoFour:
+            case FOURTOFOUR:
                 return ChatColor.GREEN + "4 -> 4";
-            case SixtoTwo:
+            case SIXTOTWO:
                 return ChatColor.GREEN + "6 -> 2";
         }
         return "";
@@ -244,13 +244,14 @@ public class Shop {
         ShopTrade trade = getTrade(inv, slot);
         if (trade == null) return null;
 
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石", ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + LanguageKey.ITEM_TRADE_COMPRESSION_GEM.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay());
         item = NBTUtil.setNMSTag(item, "ShopType", type.toString());
         item = NBTUtil.setNMSTag(item, "TradesSize", String.valueOf(1));
         item = NBTUtil.setNMSTag(item, "Give" + 0, ItemUtil.toStringFromItemStackArray(trade.getGiveItems()));
         item = NBTUtil.setNMSTag(item, "Take" + 0, ItemUtil.toStringFromItemStackArray(trade.getTakeItems()));
         return item;
     }
+
 
     public HashMap<String, String> convertTradesToMap() {
         HashMap<String, String> trades = new HashMap<>();
@@ -264,7 +265,7 @@ public class Shop {
     }
 
     public ItemStack convertTradesToItemStack() {
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + "トレード圧縮宝石", ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay());
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + LanguageKey.ITEM_TRADE_COMPRESSION_GEM.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay());
         item = NBTUtil.setNMSTag(item, convertTradesToMap());
         return item;
     }
@@ -294,10 +295,10 @@ public class Shop {
     }
 
     public ItemStack convertShopToItemStack() {
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + "ショップ圧縮宝石:" + ChatColor.GREEN + " " + getDisplayNameOrElseNone(),
-                ChatColor.YELLOW + "ショップに向かって右クリック:" + ChatColor.GREEN + " ショップの取引の取り込み",
-                ChatColor.YELLOW + "地面に向かってシフト右クリック:" + ChatColor.GREEN + " ショップの設置",
-                ChatColor.YELLOW + "ショップタイプ: " + getShopTypeDisplay()
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM.getMessage() + ChatColor.GREEN + " " + getDisplayNameOrElseNone(),
+                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + " " + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK_SUB.getMessage(),
+                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_SHIFT_CLICK.getMessage() + ChatColor.GREEN + " " + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_SHIFT_CLICK_SUB.getMessage(),
+                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
         );
         item = NBTUtil.setNMSTag(item, convertShopToMap());
         return item;
@@ -348,13 +349,13 @@ public class Shop {
         pages.clear();
         for (int i = 1; i <= getTradePageCountFromTradesCount(); i++) {
             switch (type) {
-                case TwotoOne:
+                case TWOTOONE:
                     pages.add(new ShopGui2to1(this, i));
                     break;
-                case FourtoFour:
+                case FOURTOFOUR:
                     pages.add(new ShopGui4to4(this, i));
                     break;
-                case SixtoTwo:
+                case SIXTOTWO:
                     pages.add(new ShopGui6to2(this, i));
                     break;
             }
@@ -379,7 +380,7 @@ public class Shop {
     }
 
     public int getLimitSize() {
-        return type.equals(ShopType.TwotoOne) ? 12 : 6;
+        return type.equals(ShopType.TWOTOONE) ? 12 : 6;
     }
 
     public boolean isLimitPage(int page) {
@@ -414,13 +415,13 @@ public class Shop {
     public void createTradeNewPage() {
         if (!ableCreateNewPage()) return;
         switch (type) {
-            case TwotoOne:
+            case TWOTOONE:
                 pages.add(new ShopGui2to1(this, getPageCount() + 1));
                 break;
-            case FourtoFour:
+            case FOURTOFOUR:
                 pages.add(new ShopGui4to4(this, getPageCount() + 1));
                 break;
-            case SixtoTwo:
+            case SIXTOTWO:
                 pages.add(new ShopGui6to2(this, getPageCount() + 1));
                 break;
         }
@@ -464,7 +465,7 @@ public class Shop {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
-            throw new RuntimeException("ShopID: " + file.getName() + " の保存中にエラーが発生しました", e);
+            throw new RuntimeException(LanguageKey.ERROR_SAVING_FILE.getMessage(file.getName()), e);
         }
         return yaml;
     }
@@ -593,17 +594,17 @@ public class Shop {
 
     public boolean isAvailableShop(Player p) {
         if (isLock() && !p.hasPermission("sis.op")) {
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "現在このショップはロックされています");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_LOCKED.getMessage());
             SoundUtil.playFailSound(p);
             return false;
         }
         if (isEditting()) {
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "現在このショップは編集中です");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_EDITING.getMessage());
             SoundUtil.playFailSound(p);
             return false;
         }
         if (pages.isEmpty()) {
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "現在このショップには取引が存在しません");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_NO_TRADES.getMessage());
             SoundUtil.playFailSound(p);
             return false;
         }

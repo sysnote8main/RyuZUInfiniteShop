@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
@@ -38,12 +39,12 @@ public class ChangeDisplayNameListener implements Listener {
         SchedulerListener.setSchedulers(p, holder.getShop().getID(), (message) -> {
             //成功時の処理
             shop.setDisplayName(ColorUtil.color(message));
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "名前が設定されました");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_SET_DISPLAY_NAME.getMessage());
             SoundUtil.playSuccessSound(p);
         });
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "NPCの名前をチャットに入力してください");
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "カラーコードを使う際は'&'を使用してください");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_NPC_NAME.getMessage());
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_NPC_NAME_CANCEL.getMessage());
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_NPC_NAME_COLOR_CODE.getMessage());
 
         SoundUtil.playClickShopSound(p);
         holder.getShop().setEditting(false);

@@ -2,6 +2,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 
 public class LocationUtil {
     public static Location toLocationFromString(String stloc) {
@@ -10,7 +11,7 @@ public class LocationUtil {
     }
 
     public static String toStringFromLocation(Location loc) {
-        if(loc.getWorld() == null) throw new RuntimeException("ワールドが存在しません" + loc);
+        if(loc.getWorld() == null) throw new RuntimeException(LanguageKey.ERROR_WORLD_NOT_FOUND.getMessage(loc));
         return loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
     }
 

@@ -11,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
@@ -125,14 +126,14 @@ public class ShopTrade {
                 NBTUtil.setNMSTag(
                         ItemUtil.getNamedItem(
                                 DisplayPanelConfig.getPanel(result).getItemStack(getLimit(), getTradeCount(player)),
-                                ShopUtil.getShop(id).getDisplayNameOrElseNone() + ChatColor.GREEN + "との取引",
+                                ShopUtil.getShop(id).getDisplayNameOrElseNone() + ChatColor.GREEN + " " + LanguageKey.ITEM_TRADE_WITH.getMessage(),
                                 false,
-                                ChatColor.GREEN + page + ChatColor.YELLOW + "ページ目",
-                                isAdmin ? (ChatColor.YELLOW + "検索可否: " + (shop.isSearchable() ? ChatColor.GREEN + "可" : ChatColor.RED + "不可")) : null,
-                                isAdmin ? (ChatColor.YELLOW + "ロック: " + (shop.isLock() ? ChatColor.RED + "ロック" : ChatColor.GREEN + "アンロック")) : null,
-                                ChatColor.GREEN + "クリック: 取引画面を開く",
-                                isAdmin ? null : ChatColor.GREEN + "対価、商品をクリック: 商品、対価で検索",
-                                isAdmin ? ChatColor.GREEN + "シフトクリック: 編集画面を開く" : null
+                                ChatColor.GREEN + page + ChatColor.YELLOW + " " + LanguageKey.INVENTORY_PAGE.getMessage(),
+                                isAdmin ? (ChatColor.YELLOW + LanguageKey.INVENTORY_SEARCH.getMessage() + ": " + (shop.isSearchable() ? ChatColor.GREEN + LanguageKey.INVENTORY_SEARCH_ENABLED.getMessage() : ChatColor.RED + LanguageKey.INVENTORY_SEARCH_DISABLED.getMessage())) : null,
+                                isAdmin ? (ChatColor.YELLOW + LanguageKey.INVENTORY_LOCK.getMessage() + ": " + (shop.isLock() ? ChatColor.RED + LanguageKey.INVENTORY_LOCKED.getMessage() : ChatColor.GREEN + LanguageKey.INVENTORY_UNLOCKED.getMessage())) : null,
+                                ChatColor.GREEN + LanguageKey.ITEM_TRADE_WINDOW_OPEN.getMessage(),
+                                isAdmin ? null : ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_VALUE_OR_ITEM.getMessage(),
+                                isAdmin ? ChatColor.GREEN + LanguageKey.ITEM_EDIT_WINDOW_OPEN.getMessage() : null
                         ),
                         "Shop", id
                 ), "Page", page
@@ -146,10 +147,11 @@ public class ShopTrade {
     private static ItemStack getSettingsFilter(int value) {
         return NBTUtil.setNMSTag(ItemUtil.withLore(
                 DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack(),
-                ChatColor.GREEN + "クリック: 取引上限設定" + ChatColor.YELLOW + " 取引上限: " + value,
-                ChatColor.GREEN + "シフトクリック: 取引のアイテム化"
+                ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_LIMIT_CLICK.getMessage() + ChatColor.YELLOW + " " + LanguageKey.ITEM_SETTINGS_TRADE_LIMIT_VALUE.getMessage() + ": " + value,
+                ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_TO_ITEM.getMessage()
         ), "TradeLimit", String.valueOf(value));
     }
+
 
     public ItemStack changeLimit(int variation) {
         int value = Math.max(getLimit() + variation, 0);
@@ -165,7 +167,7 @@ public class ShopTrade {
         ItemStack[] items;
         ItemStack filter = getFilter(mode);
         switch (type) {
-            case TwotoOne:
+            case TWOTOONE:
                 items = new ItemStack[4];
                 items[2] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -175,7 +177,7 @@ public class ShopTrade {
                     items[i + 3] = getGiveItems()[i];
                 }
                 break;
-            case FourtoFour:
+            case FOURTOFOUR:
                 items = new ItemStack[9];
                 items[4] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -185,7 +187,7 @@ public class ShopTrade {
                     items[i + 5] = getGiveItems()[i];
                 }
                 break;
-            case SixtoTwo:
+            case SIXTOTWO:
                 items = new ItemStack[9];
                 items[6] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -206,8 +208,8 @@ public class ShopTrade {
         ItemStack[] items;
         ItemStack filter = getFilter(id, player);
         switch (type) {
-            case TwotoOne:
-            case FourtoFour:
+            case TWOTOONE:
+            case FOURTOFOUR:
                 items = new ItemStack[9];
                 items[4] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -217,7 +219,7 @@ public class ShopTrade {
                     items[i + 5] = getGiveItems()[i];
                 }
                 break;
-            case SixtoTwo:
+            case SIXTOTWO:
                 items = new ItemStack[9];
                 items[6] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -276,7 +278,7 @@ public class ShopTrade {
         int resultTime = times;
         for (int time = 0; time < times; time++) {
             result = trade(p);
-            if(result.equals(TradeResult.Error)) break;
+            if (result.equals(TradeResult.Error)) break;
             if (!result.equals(TradeResult.Success)) {
                 if (time != 0)
                     result = TradeResult.Lack;
@@ -315,23 +317,23 @@ public class ShopTrade {
     private void playResultEffect(Player p, TradeResult result) {
         switch (result) {
             case NotAfford:
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "アイテムが足りません");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_NOT_ENOUGH_ITEMS.getMessage());
                 SoundUtil.playFailSound(p);
                 break;
             case Error:
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "エラーが発生しました。無効な取引です");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_INVALID_TRADE.getMessage());
                 SoundUtil.playFailSound(p);
                 break;
             case Limited:
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "取引上限です");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_TRADE_LIMITED.getMessage());
                 SoundUtil.playFailSound(p);
                 break;
             case Lack:
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "すべてを購入できませんでした");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_NOT_ENOUGH_SPACE.getMessage());
                 SoundUtil.playCautionSound(p);
                 break;
             case Full:
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "インベントリに十分な空きがありません");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_INVENTORY_FULL.getMessage());
                 SoundUtil.playCautionSound(p);
                 break;
             case Success:
@@ -339,4 +341,5 @@ public class ShopTrade {
                 break;
         }
     }
+
 }

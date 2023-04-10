@@ -9,14 +9,12 @@ import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +47,7 @@ public class ShopEditorGui extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, LanguageKey.EDITOR_PAGE_TITLE.getMessage() + getShop().getDisplayNameOrElseShop() + LanguageKey.EDITOR_PAGE_NUMBER.getMessage(String.valueOf(getPage())));
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, LanguageKey.INVENTORY_EDITOR_PAGE_TITLE.getMessage() + getShop().getDisplayNameOrElseShop() + LanguageKey.INVENTORY_PAGE_NUMBER.getMessage(String.valueOf(getPage())));
 
         //アイテムを設置
         setDisplay(inv);
@@ -83,35 +81,35 @@ public class ShopEditorGui extends ShopGui {
     }
 
     public void setDisplayName(Inventory inv) {
-        inv.setItem(5 * 9 + 3, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + "名前を変更する", ChatColor.YELLOW + "現在の名前: " + getShop().getDisplayNameOrElseNone()));
+        inv.setItem(5 * 9 + 3, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + LanguageKey.INVENTORY_SET_NAME.getMessage(), ChatColor.YELLOW + LanguageKey.INVENTORY_CURRENT_NAME.getMessage(getShop().getDisplayNameOrElseNone())));
     }
 
     private void setTeleport(Inventory inv) {
-        inv.setItem(2 * 9 + 8, ItemUtil.getNamedItem(Material.COMPASS, ChatColor.GREEN + "NPCにテレポートする"));
+        inv.setItem(2 * 9 + 8, ItemUtil.getNamedItem(Material.COMPASS, ChatColor.GREEN + LanguageKey.INVENTORY_TELEPORT_TO_NPC.getMessage()));
     }
 
     private void setShopStatus(Inventory inv) {
         if (MythicInstanceProvider.isLoaded())
-            inv.setItem(4 * 9 + 3, ItemUtil.getNamedItem(Material.ENDER_EYE, ChatColor.GREEN + "MythicMobIDを設定する"));
-        inv.setItem(4 * 9 + 4, ItemUtil.getNamedItem(Material.ENDER_PEARL, ChatColor.GREEN + "エンティティタイプを変更する"));
+            inv.setItem(4 * 9 + 3, ItemUtil.getNamedItem(Material.ENDER_EYE, ChatColor.GREEN + LanguageKey.INVENTORY_SET_MYTHIC_MOB_ID.getMessage()));
+        inv.setItem(4 * 9 + 4, ItemUtil.getNamedItem(Material.ENDER_PEARL, ChatColor.GREEN + LanguageKey.INVENTORY_CHANGE_ENTITY_TYPE.getMessage()));
         inv.setItem(4 * 9 + 5, getShop().isSearchable() ?
-                ItemUtil.getNamedItem(Material.CLOCK, ChatColor.GREEN + "検索可能") :
-                ItemUtil.getNamedEnchantedItem(Material.CLOCK, ChatColor.RED + "検索不可")
+                ItemUtil.getNamedItem(Material.CLOCK, ChatColor.GREEN + LanguageKey.INVENTORY_SEARCH_SELECT.getMessage()) :
+                ItemUtil.getNamedEnchantedItem(Material.CLOCK, ChatColor.RED + LanguageKey.INVENTORY_SEARCH_NOT_SELECTABLE.getMessage())
         );
         inv.setItem(4 * 9 + 6, getShop().isLock() ?
-                ItemUtil.getNamedEnchantedItem(Material.TRIPWIRE_HOOK, ChatColor.RED + "ロック") :
-                ItemUtil.getNamedItem(Material.TRIPWIRE_HOOK, ChatColor.GREEN + "アンロック")
+                ItemUtil.getNamedEnchantedItem(Material.TRIPWIRE_HOOK, ChatColor.RED + LanguageKey.INVENTORY_SHOP_LOCKED.getMessage()) :
+                ItemUtil.getNamedItem(Material.TRIPWIRE_HOOK, ChatColor.GREEN + LanguageKey.INVENTORY_SHOP_UNLOCKED.getMessage())
         );
-        inv.setItem(4 * 9 + 7, ItemUtil.getNamedItem(Material.ARROW, ChatColor.GREEN + "方向切り替え"));
+        inv.setItem(4 * 9 + 7, ItemUtil.getNamedItem(Material.ARROW, ChatColor.GREEN + LanguageKey.INVENTORY_SWITCH_DIRECTION.getMessage()));
         inv.setItem(4 * 9 + 8, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, getShop().getShopTypeDisplay()));
     }
 
     private void setShopOperation(Inventory inv) {
-        inv.setItem(5 * 9 + 4, ItemUtil.getNamedItem(Material.BARRIER, ChatColor.RED + "ショップを削除する"));
-        inv.setItem(5 * 9 + 5, ItemUtil.getNamedItem(Material.NETHER_STAR, ChatColor.YELLOW + "ショップを更新する"));
-        inv.setItem(5 * 9 + 6, ItemUtil.getNamedItem(Material.EMERALD, ChatColor.GREEN + "トレード内容をアイテム化する"));
-        inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.DIAMOND, ChatColor.GREEN + "ショップをアイテム化する"));
-        inv.setItem(5 * 9 + 8, ItemUtil.getNamedEnchantedItem(ItemUtil.getColoredItem("BLACK_STAINED_GLASS_PANE"), ChatColor.GREEN + "トレードを読み込む"));
+        inv.setItem(5 * 9 + 4, ItemUtil.getNamedItem(Material.BARRIER, ChatColor.RED + LanguageKey.INVENTORY_DELETE_SHOP.getMessage()));
+        inv.setItem(5 * 9 + 5, ItemUtil.getNamedItem(Material.NETHER_STAR, ChatColor.YELLOW + LanguageKey.INVENTORY_UPDATE_SHOP.getMessage()));
+        inv.setItem(5 * 9 + 6, ItemUtil.getNamedItem(Material.EMERALD, ChatColor.GREEN + LanguageKey.INVENTORY_CONVERT_TRADE_TO_ITEMS.getMessage()));
+        inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.DIAMOND, ChatColor.GREEN + LanguageKey.INVENTORY_CONVERT_SHOP_TO_ITEMS.getMessage()));
+        inv.setItem(5 * 9 + 8, ItemUtil.getNamedEnchantedItem(ItemUtil.getColoredItem("BLACK_STAINED_GLASS_PANE"), ChatColor.GREEN + LanguageKey.INVENTORY_LOAD_TRADES.getMessage()));
     }
 
     public void setDisplay(Inventory inv) {
@@ -167,8 +165,8 @@ public class ShopEditorGui extends ShopGui {
     private void setPower(Inventory inv) {
         if (!(getShop() instanceof PoweredableShop)) return;
         ItemStack item = ((PoweredableShop) getShop()).isPowered() ?
-                ItemUtil.getNamedEnchantedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + "帯電") :
-                ItemUtil.getNamedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + "通常");
+                ItemUtil.getNamedEnchantedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + LanguageKey.INVENTORY_SHOP_POWERED.getMessage()) :
+                ItemUtil.getNamedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + LanguageKey.INVENTORY_SHOP_NOT_POWERED.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Power);
@@ -176,7 +174,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setSizeIncrease(Inventory inv) {
         if (!(getShop() instanceof SlimeShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem("GREEN_WOOL"), ChatColor.GREEN + "サイズを大きくする");
+        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem("GREEN_WOOL"), ChatColor.GREEN + LanguageKey.INVENTORY_INCREASE_SLIME_SIZE.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.SizeIncrease);
@@ -184,7 +182,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setSizeDecrease(Inventory inv) {
         if (!(getShop() instanceof SlimeShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem("RED_WOOL"), ChatColor.GREEN + "サイズを小さくする");
+        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem("RED_WOOL"), ChatColor.GREEN + LanguageKey.INVENTORY_DECREASE_SLIME_SIZE.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.SizeDecrease);
@@ -192,7 +190,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setBodyColor(Inventory inv) {
         if (!(getShop() instanceof TropicalFishShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem(((TropicalFishShop) getShop()).getBodyColor()), ChatColor.GREEN + "体の色を変更する");
+        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem(((TropicalFishShop) getShop()).getBodyColor()), ChatColor.GREEN + LanguageKey.INVENTORY_CHANGE_BODY_COLOR.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.BodyColor);
@@ -200,7 +198,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setPatternColor(Inventory inv) {
         if (!(getShop() instanceof TropicalFishShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem(((TropicalFishShop) getShop()).getBodyColor()), ChatColor.GREEN + "模様の色を変更する");
+        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem(((TropicalFishShop) getShop()).getBodyColor()), ChatColor.GREEN + LanguageKey.INVENTORY_CHANGE_PATTERN_COLOR.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.PatternColor);
@@ -208,7 +206,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setPattern(Inventory inv) {
         if (!(getShop() instanceof TropicalFishShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(Material.GREEN_GLAZED_TERRACOTTA, ChatColor.GREEN + "模様を変更する");
+        ItemStack item = ItemUtil.getNamedItem(Material.GREEN_GLAZED_TERRACOTTA, ChatColor.GREEN + LanguageKey.INVENTORY_CHANGE_PATTERN.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Pattern);
@@ -216,7 +214,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setParrotColor(Inventory inv) {
         if (!(getShop() instanceof ParrotShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem(((ParrotShop) getShop()).getColorMaterial()), ChatColor.GREEN + "色の変更");
+        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem(((ParrotShop) getShop()).getColorMaterial()), ChatColor.GREEN + LanguageKey.INVENTORY_CHANGE_PARROT_COLOR.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.ParrotColor);
@@ -224,7 +222,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setDyeColor(Inventory inv) {
         if (!(getShop() instanceof DyeableShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(((DyeableShop) getShop()).getColorMaterial(), ChatColor.GREEN + "色の変更");
+        ItemStack item = ItemUtil.getNamedItem(((DyeableShop) getShop()).getColorMaterial(), ChatColor.GREEN + LanguageKey.INVENTORY_CHANGE_DYE_COLOR.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.DyeColor);
@@ -232,7 +230,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setOptinalInfo(Inventory inv) {
         if (!(getShop() instanceof DyeableShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(((DyeableShop) getShop()).getOptionalInfoMaterial(), ChatColor.GREEN + "追加情報の変更");
+        ItemStack item = ItemUtil.getNamedItem(((DyeableShop) getShop()).getOptionalInfoMaterial(), ChatColor.GREEN + LanguageKey.INVENTORY_CHANGE_OPTIONAL_INFO.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.OptionalInfo);
@@ -240,7 +238,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setHorseColor(Inventory inv) {
         if (!(getShop() instanceof HorseShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(((HorseShop) getShop()).getColorMaterial(), ChatColor.GREEN + "色の変更");
+        ItemStack item = ItemUtil.getNamedItem(((HorseShop) getShop()).getColorMaterial(), ChatColor.GREEN + LanguageKey.INVENTORY_CHANGE_HORSE_COLOR.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.HorseColor);
@@ -248,7 +246,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setHorseStyle(Inventory inv) {
         if (!(getShop() instanceof HorseShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(Material.TERRACOTTA, ChatColor.GREEN + "模様の変更");
+        ItemStack item = ItemUtil.getNamedItem(Material.TERRACOTTA, ChatColor.GREEN + LanguageKey.INVENTORY_CHANGE_HORSE_STYLE.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.HorseStyle);
@@ -257,29 +255,30 @@ public class ShopEditorGui extends ShopGui {
     private void setProfession(Inventory inv) {
         if (!(getShop() instanceof VillagerableShop)) return;
         int slot = 3 * 9 + 8 - SettingsMap.size();
-        inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getJobBlockMaterial(), ChatColor.GREEN + "ジョブチェンジ"));
+        inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getJobBlockMaterial(), ChatColor.GREEN + LanguageKey.SETTINGS_JOB_CHANGE.getMessage()));
         SettingsMap.put(slot, ShopSettings.Profession);
     }
 
     private void setBiome(Inventory inv) {
         if (!(getShop() instanceof VillagerableShop)) return;
         int slot = 3 * 9 + 8 - SettingsMap.size();
-        inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getBiomeMaterial(), ChatColor.GREEN + "バイオームチェンジ"));
+        inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getBiomeMaterial(), ChatColor.GREEN + LanguageKey.SETTINGS_BIOME_CHANGE.getMessage()));
         SettingsMap.put(slot, ShopSettings.Biome);
     }
 
     private void setLevel(Inventory inv) {
         if (!(getShop() instanceof VillagerableShop)) return;
         int slot = 3 * 9 + 8 - SettingsMap.size();
-        inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getLevelMaterial(), ChatColor.GREEN + "レベルチェンジ"));
+        inv.setItem(slot, ItemUtil.getNamedItem(((VillagerableShop) getShop()).getLevelMaterial(), ChatColor.GREEN + LanguageKey.SETTINGS_LEVEL_CHANGE.getMessage()));
         SettingsMap.put(slot, ShopSettings.Level);
     }
+
 
     private void setVisible(Inventory inv) {
         if (!(getShop().getNpc() instanceof LivingEntity)) return;
         ItemStack item = getShop().isInvisible() ?
-                ItemUtil.getNamedItem(Material.GLASS, ChatColor.GREEN + "透明") :
-                ItemUtil.getNamedItem(Material.POLISHED_ANDESITE, ChatColor.GREEN + "不透明");
+                ItemUtil.getNamedItem(Material.GLASS, ChatColor.GREEN + LanguageKey.SETTINGS_VISIBILITY_INVISIBLE.getMessage()) :
+                ItemUtil.getNamedItem(Material.POLISHED_ANDESITE, ChatColor.GREEN + LanguageKey.SETTINGS_VISIBILITY_VISIBLE.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Visible);

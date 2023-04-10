@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
@@ -76,26 +77,28 @@ public class ConvartListener implements Listener {
             SoundUtil.playFailSound(p);
             return;
         }
-        if (!(shop.getShopType().equals(Shop.ShopType.TwotoOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
+        if (!(shop.getShopType().equals(Shop.ShopType.TWOTOONE) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
             SoundUtil.playFailSound(p);
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップタイプが違います");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_SHOP_TYPE_MISMATCH.getMessage());
             return;
         }
 
-        //トレードを読み込む
+//トレードを読み込む
         if ((type.isRightClick() || type.isLeftClick()) && !type.isShiftClick()) {
             boolean duplication = shop.loadTrades(item, p);
 
             //音を出す
             if(duplication) {
                 SoundUtil.playCautionSound(p);
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "重複している取引がありました");
-            } else
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.WARNING_DUPLICATE_TRADE.getMessage());
+            } else {
                 SoundUtil.playSuccessSound(p);
+            }
 
             //インベントリを更新する
             holder.getGui().reloadInventory(event.getClickedInventory());
         }
+
     }
 
     //ショップを読み込む
@@ -124,7 +127,7 @@ public class ConvartListener implements Listener {
 
         //音を出し、メッセージを送信
         SoundUtil.playSuccessSound(p);
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "圧縮宝石を元に" + shop.getDisplayNameOrElseShop() + "を作成しました");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_CREATE_SHOP.getMessage(shop.getDisplayNameOrElseShop()));
         LogUtil.log(LogUtil.LogType.CREATESHOP, p.getName(), shop.getID());
     }
 
@@ -146,9 +149,9 @@ public class ConvartListener implements Listener {
         if (ItemUtil.isAir(item) || shopData == null) return;
 
         String tag = NBTUtil.getNMSStringTag(item, "ShopType");
-        if (!(shop.getShopType().equals(Shop.ShopType.TwotoOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
+        if (!(shop.getShopType().equals(Shop.ShopType.TWOTOONE) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
             SoundUtil.playFailSound(p);
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "ショップタイプが違います");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_SHOP_TYPE_MISMATCH.getMessage());
             return;
         }
 
@@ -156,7 +159,7 @@ public class ConvartListener implements Listener {
         String displayName = shop.getDisplayNameOrElseShop();
         item = NBTUtil.setNMSTag(item, data);
         p.getInventory().setItemInMainHand(item);
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + displayName + ChatColor.GREEN + "の取引を宝石のショップにマージしました");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_MERGE_SHOP.getMessage(displayName));
         SoundUtil.playSuccessSound(p);
     }
 }

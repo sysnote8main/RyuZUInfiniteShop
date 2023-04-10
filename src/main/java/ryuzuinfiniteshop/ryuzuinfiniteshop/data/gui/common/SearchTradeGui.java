@@ -1,8 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
@@ -30,7 +28,7 @@ public class SearchTradeGui extends TradesGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new SeachTradeHolder(mode, this, player, searchedTrade), 9 * 6, LanguageKey.SEARCH_TRADE_PAGE_TITLE.getMessage(String.valueOf(getPage())));
+        Inventory inv = Bukkit.createInventory(new SeachTradeHolder(mode, this, player, searchedTrade), 9 * 6, LanguageKey.INVENTORY_SEARCH_TRADE_PAGE_TITLE.getMessage(String.valueOf(getPage())) + LanguageKey.INVENTORY_PAGE_NUMBER.getMessage(String.valueOf(getPage())));
 
 
         for (int i = (getPage() - 1) * 6; i < getPage() * 6; i++) {

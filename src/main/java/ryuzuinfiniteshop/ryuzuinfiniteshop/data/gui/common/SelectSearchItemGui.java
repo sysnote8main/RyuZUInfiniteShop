@@ -13,7 +13,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 public class SelectSearchItemGui extends ModeGui {
 
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ModeHolder(ShopMode.SEARCH, this), 9, ChatColor.DARK_BLUE + LanguageKey.TRADE_SEARCH.getMessage());
+        Inventory inv = Bukkit.createInventory(new ModeHolder(ShopMode.SEARCH, this), 9, ChatColor.DARK_BLUE + LanguageKey.INVENTORY_TRADE_SEARCH.getMessage());
 
         for (int i = 1; i < 8; i++) inv.setItem(i, ShopTrade.getFilter());
         inv.setItem(0, ItemUtil.getNamedItem(ItemUtil.getColoredItem("RED_STAINED_GLASS_PANE"), ChatColor.RED + LanguageKey.ITEM_NAME_SEARCH_BY_VALUE.getMessage(), ChatColor.GREEN + LanguageKey.ITEM_LORE_SEARCH_BY_NAME.getMessage()));

@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopListHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
@@ -76,7 +77,7 @@ public class ShopListListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Shop shop = ShopUtil.getShop(NBTUtil.getNMSStringTag(item, "Shop"));
         if(shop == null) {
-            p.sendMessage(ChatColor.RED + "ショップが見つかりませんでした。");
+            p.sendMessage(ChatColor.RED + LanguageKey.MESSAGE_SHOP_NOT_FOUND.getMessage());
             SoundUtil.playFailSound(p);
             return;
         }
@@ -91,12 +92,13 @@ public class ShopListListener implements Listener {
             //取引画面を開く
             if (!shop.isAvailableShop(p)) return;
             if(shop.getTrades().size() == 0) {
-                p.sendMessage(ChatColor.RED + "ショップに取引がありません。");
+                p.sendMessage(ChatColor.RED + LanguageKey.MESSAGE_NO_TRADES_AVAILABLE.getMessage());
                 SoundUtil.playFailSound(p);
                 return;
             }
             p.openInventory(shop.getPage(1).getInventory(ShopMode.TRADE, p, holder));
             SoundUtil.playClickShopSound(p);
         }
+
     }
 }

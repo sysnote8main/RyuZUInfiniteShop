@@ -27,7 +27,7 @@ public class ShopListGui extends PageableGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopListHolder(mode, this, shops), 9 * 6, ChatColor.DARK_BLUE + LanguageKey.PAGE_TITLE.getMessage() + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopListHolder(mode, this, shops), 9 * 6, ChatColor.DARK_BLUE + LanguageKey.INVENTORY_SHOP_LIST_PAGE_TITLE.getMessage(getPage()) + LanguageKey.INVENTORY_PAGE_NUMBER.getMessage(String.valueOf(getPage())));
 
         List<String> keys = new ArrayList<>(shops.keySet());
         for (int i = 0; i < Math.min(shops.size() - (getPage() - 1) * 54, 54); i++) {
@@ -38,11 +38,11 @@ public class ShopListGui extends PageableGui {
                         shop.isLock(),
                         shop.getTrades().size() == 0 ? new ItemStack(Material.BARRIER) : shop.getTrades().get(0).getGiveItems()[0],
                         shop.getDisplayNameOrElseNone(),
-                        ChatColor.YELLOW + LanguageKey.POSITION.getMessage() + shop.getID(),
-                        ChatColor.YELLOW + LanguageKey.IS_SEARCHABLE.getMessage() + (shop.isSearchable() ? ChatColor.GREEN + LanguageKey.SEARCHABLE.getMessage() : ChatColor.RED + LanguageKey.UNSEARCHABLE.getMessage()),
-                        ChatColor.YELLOW + LanguageKey.IS_LOCKED.getMessage() + (shop.isLock() ? ChatColor.RED + LanguageKey.LOCKED.getMessage() : ChatColor.GREEN + LanguageKey.UNLOCKED.getMessage()),
-                        ChatColor.GREEN + LanguageKey.CLICK_TO_OPEN.getMessage(),
-                        ChatColor.GREEN + LanguageKey.SHIFT_CLICK_TO_EDIT.getMessage()
+                        ChatColor.YELLOW + LanguageKey.ITEM_POSITION.getMessage(shop.getID()),
+                        ChatColor.YELLOW + LanguageKey.ITEM_IS_SEARCHABLE.getMessage((shop.isSearchable() ? ChatColor.GREEN + LanguageKey.ITEM_SEARCHABLE.getMessage() : ChatColor.RED + LanguageKey.ITEM_UNSEARCHABLE.getMessage())),
+                        ChatColor.YELLOW + LanguageKey.ITEM_IS_LOCKED.getMessage((shop.isLock() ? ChatColor.RED + LanguageKey.ITEM_LOCKED.getMessage() : ChatColor.GREEN + LanguageKey.ITEM_UNLOCKED.getMessage())),
+                        ChatColor.GREEN + LanguageKey.ITEM_CLICK_TO_OPEN.getMessage(),
+                        ChatColor.GREEN + LanguageKey.ITEM_SHIFT_CLICK_TO_EDIT.getMessage()
                 );
             else
                 item = getDisplayItem(
