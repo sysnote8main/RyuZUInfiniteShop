@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
@@ -58,7 +59,7 @@ public abstract class ShopTradeGui extends ShopGui {
     }
 
     public Inventory getInventory(Function<Integer, Integer> function, ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, ChatColor.DARK_BLUE + getShop().getDisplayNameOrElseShop() + ChatColor.DARK_BLUE +  " ページ" + getPage());
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, ChatColor.GREEN + getShop().getDisplayNameOrElseShop() + " " + LanguageKey.INVENTORY_PAGE.getMessage(getPage()));
 
         for (int i = 0; i < getTrades().size(); i++) {
             ShopTrade trade = getTrades().get(i);

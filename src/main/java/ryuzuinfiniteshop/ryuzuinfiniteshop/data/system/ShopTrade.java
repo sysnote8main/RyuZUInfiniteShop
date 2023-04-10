@@ -126,13 +126,13 @@ public class ShopTrade {
                 NBTUtil.setNMSTag(
                         ItemUtil.getNamedItem(
                                 DisplayPanelConfig.getPanel(result).getItemStack(getLimit(), getTradeCount(player)),
-                                ShopUtil.getShop(id).getDisplayNameOrElseNone() + ChatColor.GREEN + " " + LanguageKey.ITEM_TRADE_WITH.getMessage(),
+                                 ChatColor.GREEN + " " + LanguageKey.ITEM_TRADE_WITH.getMessage(ShopUtil.getShop(id).getDisplayNameOrElseNone()),
                                 false,
-                                ChatColor.GREEN + page + ChatColor.YELLOW + " " + LanguageKey.INVENTORY_PAGE.getMessage(),
-                                isAdmin ? (ChatColor.YELLOW + LanguageKey.INVENTORY_SEARCH.getMessage() + ": " + (shop.isSearchable() ? ChatColor.GREEN + LanguageKey.INVENTORY_SEARCH_ENABLED.getMessage() : ChatColor.RED + LanguageKey.INVENTORY_SEARCH_DISABLED.getMessage())) : null,
-                                isAdmin ? (ChatColor.YELLOW + LanguageKey.INVENTORY_LOCK.getMessage() + ": " + (shop.isLock() ? ChatColor.RED + LanguageKey.INVENTORY_LOCKED.getMessage() : ChatColor.GREEN + LanguageKey.INVENTORY_UNLOCKED.getMessage())) : null,
+                                ChatColor.YELLOW + " " + LanguageKey.INVENTORY_PAGE.getMessage(page),
+                                isAdmin ? (ChatColor.YELLOW + LanguageKey.ITEM_EDITOR_IS_SEARCHABLE.getMessage(shop.isSearchable() ? ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SEARCH_ENABLED.getMessage() : ChatColor.RED + LanguageKey.ITEM_EDITOR_SEARCH_DISABLED.getMessage())) : null,
+                                isAdmin ? (ChatColor.YELLOW + LanguageKey.ITEM_IS_LOCKED.getMessage(shop.isLock() ? ChatColor.RED + LanguageKey.ITEM_EDITOR_LOCKED.getMessage() : ChatColor.GREEN + LanguageKey.ITEM_EDITOR_UNLOCKED.getMessage())) : null,
                                 ChatColor.GREEN + LanguageKey.ITEM_TRADE_WINDOW_OPEN.getMessage(),
-                                isAdmin ? null : ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_VALUE_OR_ITEM.getMessage(),
+                                isAdmin ? null : ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_VALUEORPRODUCT.getMessage(),
                                 isAdmin ? ChatColor.GREEN + LanguageKey.ITEM_EDIT_WINDOW_OPEN.getMessage() : null
                         ),
                         "Shop", id
@@ -147,7 +147,7 @@ public class ShopTrade {
     private static ItemStack getSettingsFilter(int value) {
         return NBTUtil.setNMSTag(ItemUtil.withLore(
                 DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack(),
-                ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_LIMIT_CLICK.getMessage() + ChatColor.YELLOW + " " + LanguageKey.ITEM_SETTINGS_TRADE_LIMIT_VALUE.getMessage() + ": " + value,
+                ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_LIMIT_CLICK.getMessage() + ChatColor.YELLOW + " " + LanguageKey.ITEM_SETTINGS_TRADE_LIMIT.getMessage() + ": " + value,
                 ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_TO_ITEM.getMessage()
         ), "TradeLimit", String.valueOf(value));
     }
@@ -167,7 +167,7 @@ public class ShopTrade {
         ItemStack[] items;
         ItemStack filter = getFilter(mode);
         switch (type) {
-            case TwoToOne:
+            case TwotoOne:
                 items = new ItemStack[4];
                 items[2] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -177,7 +177,7 @@ public class ShopTrade {
                     items[i + 3] = getGiveItems()[i];
                 }
                 break;
-            case FourToFour:
+            case FourtoFour:
                 items = new ItemStack[9];
                 items[4] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -187,7 +187,7 @@ public class ShopTrade {
                     items[i + 5] = getGiveItems()[i];
                 }
                 break;
-            case SixToTwo:
+            case SixtoTwo:
                 items = new ItemStack[9];
                 items[6] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -208,8 +208,8 @@ public class ShopTrade {
         ItemStack[] items;
         ItemStack filter = getFilter(id, player);
         switch (type) {
-            case TwoToOne:
-            case FourToFour:
+            case TwotoOne:
+            case FourtoFour:
                 items = new ItemStack[9];
                 items[4] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -219,7 +219,7 @@ public class ShopTrade {
                     items[i + 5] = getGiveItems()[i];
                 }
                 break;
-            case SixToTwo:
+            case SixtoTwo:
                 items = new ItemStack[9];
                 items[6] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -317,23 +317,23 @@ public class ShopTrade {
     private void playResultEffect(Player p, TradeResult result) {
         switch (result) {
             case NotAfford:
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_NOT_ENOUGH_ITEMS.getMessage());
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_ENOUGH_ITEMS.getMessage());
                 SoundUtil.playFailSound(p);
                 break;
             case Error:
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_INVALID_TRADE.getMessage());
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.COMMAND_INVALID_TRADE.getMessage());
                 SoundUtil.playFailSound(p);
                 break;
             case Limited:
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_TRADE_LIMITED.getMessage());
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_TRADE_LIMITED.getMessage());
                 SoundUtil.playFailSound(p);
                 break;
             case Lack:
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_NOT_ENOUGH_SPACE.getMessage());
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_ENOUGH_SPACE.getMessage());
                 SoundUtil.playCautionSound(p);
                 break;
             case Full:
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_INVENTORY_FULL.getMessage());
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_INVENTORY_FULL.getMessage());
                 SoundUtil.playCautionSound(p);
                 break;
             case Success:

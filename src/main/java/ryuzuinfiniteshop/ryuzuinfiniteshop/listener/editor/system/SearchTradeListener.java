@@ -54,8 +54,8 @@ public class SearchTradeListener implements Listener {
                         p.openInventory(new ShopListGui(1, ShopUtil.getSortedShops(mode, message)).getInventory(mode, holder));
                         SoundUtil.playClickShopSound(p);
                     });
-                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SEARCH_NPC_NAME_INPUT.getMessage());
-                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_CANCEL_INPUT.getMessage());
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SEARCH_NPC.getMessage());
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());
 
                 } else if (ItemUtil.isAir(event.getCursor()))
                     event.setCurrentItem(panel);
@@ -68,15 +68,15 @@ public class SearchTradeListener implements Listener {
                     SchedulerListener.setSchedulers(p, "search", (message) -> {
                         LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTakeByDisplayName(message, mode) : TradeUtil.getTradesFromGiveByDisplayName(message, mode);
                         if (searchedTrades.size() == 0) {
-                            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NO_RESULTS.getMessage());
+                            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NORESULTS.getMessage());
                             SoundUtil.playFailSound(p);
                             return;
                         }
                         p.openInventory(new SearchTradeGui(1, p, searchedTrades).getInventory(mode, holder));
                         SoundUtil.playClickShopSound(p);
                     });
-                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SEARCH_INPUT_PROMPT.getMessage());
-                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SEARCH_CANCEL_PROMPT.getMessage());
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_SEARCH_PROMPT.getMessage());
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());
 
                 } else {
                     if (panel.equals(searchItem))
@@ -86,7 +86,7 @@ public class SearchTradeListener implements Listener {
                         // アイテムで検索
                         LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTake(searchItem, mode) : TradeUtil.getTradesFromGive(searchItem, mode);
                         if (searchedTrades.size() == 0) {
-                            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NO_RESULTS.getMessage());
+                            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NORESULTS.getMessage());
                             SoundUtil.playFailSound(p);
                             return;
                         }
@@ -185,7 +185,7 @@ public class SearchTradeListener implements Listener {
             if(slot % 9 == info) return;
             LinkedHashMap<ShopTrade, Shop> searchedTrades = (slot % 9 < info) ? TradeUtil.getTradesFromGive(event.getCurrentItem(), holder.getMode()) : TradeUtil.getTradesFromTake(event.getCurrentItem(), holder.getMode());
             if (searchedTrades.size() == 0) {
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NO_RESULTS.getMessage());
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NORESULTS.getMessage());
                 SoundUtil.playFailSound(p);
                 return;
             }
@@ -214,14 +214,14 @@ public class SearchTradeListener implements Listener {
 
         int info = ShopUtil.getSubtractSlot(type);
         int surplus = slot % 9;
-        int base = (type.equals(Shop.ShopType.TwoToOne) && surplus > 4) ? surplus - 5 : surplus;
+        int base = (type.equals(Shop.ShopType.TwotoOne) && surplus > 4) ? surplus - 5 : surplus;
         if(ItemUtil.isAir(event.getCurrentItem())) return;
         if(!(p.hasPermission("sis.search") || p.hasPermission("sis.op"))) return;
         if(base == info) return;
 
         LinkedHashMap<ShopTrade, Shop> searchedTrades = base < info ? TradeUtil.getTradesFromGive(event.getCurrentItem(), ShopMode.SEARCH) : TradeUtil.getTradesFromTake(event.getCurrentItem(), ShopMode.SEARCH);
         if (searchedTrades.size() == 0) {
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NO_RESULTS.getMessage());
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NORESULTS.getMessage());
             SoundUtil.playFailSound(p);
             return;
         }

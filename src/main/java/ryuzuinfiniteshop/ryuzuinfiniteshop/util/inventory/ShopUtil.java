@@ -42,7 +42,7 @@ public class ShopUtil {
     }
 
     public static ModeHolder getModeHolder(InventoryClickEvent event) {
-        if (event.getAction().equals(InventoryAction.CLONE_STACK)) return null;
+        if (event.getAction().equals(InventoryAction.CLONE_STACK) || event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR)) return null;
         return getModeHolder(getSecureInventory(event));
     }
 
@@ -61,11 +61,11 @@ public class ShopUtil {
 
     public static int getSubtractSlot(Shop.ShopType type) {
         switch (type) {
-            case TwoToOne:
+            case TwotoOne:
                 return 2;
-            case FourToFour:
+            case FourtoFour:
                 return 4;
-            case SixToTwo:
+            case SixtoTwo:
                 return 6;
         }
         return 0;
@@ -96,7 +96,7 @@ public class ShopUtil {
                 else
                     createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER")));
             } catch (Exception e) {
-                throw new RuntimeException(LanguageKey.ERROR_LOADING_FILE.getMessage(f.getName()), e);
+                throw new RuntimeException(LanguageKey.ERROR_FILE_LOADING.getMessage(f.getName()), e);
             }
         }
         return saveYaml != null && convertAllShopkeepers(saveYaml);
@@ -161,7 +161,7 @@ public class ShopUtil {
                     keys.add(key);
                 }
             } catch (Exception e) {
-                throw new RuntimeException(LanguageKey.ERROR_CONVERTING_SHOPKEEPERS.getMessage(key, config.getString(base + ".world"), config.getString(base + "x"), config.getString(base + "y"), config.getString(base + "z")), e);
+                throw new RuntimeException(LanguageKey.ERROR_FILE_CONVERTING.getMessage(key, config.getString(base + ".world"), config.getString(base + "x"), config.getString(base + "y"), config.getString(base + "z")), e);
             }
         }
 
@@ -193,7 +193,7 @@ public class ShopUtil {
             try{
                 shop.saveYaml();
             } catch (Exception e) {
-                throw new RuntimeException(LanguageKey.ERROR_SAVING_SHOP.getMessage(shop.getID()), e);
+                throw new RuntimeException(LanguageKey.ERROR_FILE_SAVING.getMessage(shop.getID()), e);
             }
         }
     }

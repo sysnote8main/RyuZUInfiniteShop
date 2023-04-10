@@ -160,7 +160,7 @@ public class CommandChain {
                         return true;
                     } catch (IllegalArgumentException e) {
                         if (MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(data.getArgs()[1]) == null) {
-                            data.sendMessage(ChatColor.RED + LanguageKey.MESSAGE_ENTITY_INVALID.getMessage());
+                            data.sendMessage(ChatColor.RED + LanguageKey.MESSAGE_ERROR_ENTITY_INVALID.getMessage());
                             return false;
                         }
                         return true;
@@ -205,7 +205,7 @@ public class CommandChain {
                             return false;
                         }
                         if (Bukkit.getServer().getPlayer(data.getArgs()[2]) == null) {
-                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_PLAYER_NOT_EXIST.getMessage());
+                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_EXIST_PLAYER.getMessage());
                             return false;
                         }
                         return true;
@@ -260,7 +260,7 @@ public class CommandChain {
                 "sis.limit",
                 data -> {
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "/" + data.getLabel() + "limit [increase/decrease/set] [player] [limit]");
-                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_TRADE_COMPRESSION_GEM_REQUIRED.getMessage());
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_TRADE_REQUIRED_GEM.getMessage());
                 },
                 "sis.op",
                 data -> true,
@@ -276,20 +276,20 @@ public class CommandChain {
 
         Predicate<CommandData> limitCondition = data -> {
             if (Bukkit.getServer().getPlayer(data.getArgs()[2]) == null) {
-                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_PLAYER_NOT_EXIST.getMessage());
+                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_EXIST_PLAYER.getMessage());
                 return false;
             }
             Player p = (Player) data.getSender();
             ShopTrade trade = TradeUtil.getFirstTrade(p.getInventory().getItemInMainHand());
             if (trade == null) {
-                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_TRADE_COMPRESSION_GEM_REQUIRED.getMessage());
+                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_TRADE_REQUIRED_GEM.getMessage());
                 return false;
             }
             try {
                 Integer.parseInt(data.getArgs()[3]);
                 return true;
             } catch (IllegalArgumentException e) {
-                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_INVALID_INTEGER.getMessage());
+                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.COMMAND_INVALID_INTEGER.getMessage());
                 return false;
             }
         };
@@ -310,7 +310,7 @@ public class CommandChain {
                             Player target = Bukkit.getServer().getPlayer(data.getArgs()[2]);
                             ShopTrade trade = TradeUtil.getFirstTrade(p.getInventory().getItemInMainHand());
                             trade.setTradeCount(target, limitargs2.get(key).apply(trade.getCounts(target), Integer.parseInt(data.getArgs()[3])));
-                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_LIMIT_CHANGE.getMessage(target.getName()));
+                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_LIMIT_CHANGE.getMessage(target.getName()));
                             SoundUtil.playClickShopSound(p);
                         },
                         "sis.op", limitCondition, limitTabCondition

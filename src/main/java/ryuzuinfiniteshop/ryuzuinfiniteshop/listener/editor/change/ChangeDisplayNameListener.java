@@ -43,8 +43,8 @@ public class ChangeDisplayNameListener implements Listener {
             SoundUtil.playSuccessSound(p);
         });
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_NPC_NAME.getMessage());
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_NPC_NAME_CANCEL.getMessage());
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_NPC_NAME_COLOR_CODE.getMessage());
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_NPC_NAME_COLOR.getMessage());
 
         SoundUtil.playClickShopSound(p);
         holder.getShop().setEditting(false);

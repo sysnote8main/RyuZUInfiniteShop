@@ -48,7 +48,7 @@ public class OpenShopListener implements Listener {
 
         Inventory inv = shop.getPage(1).getInventory(ShopMode.TRADE, p);
         if (!UnderstandSystemConfig.signedPlayers.contains(p.getUniqueId().toString())) {
-            TextComponent understand = new TextComponent(ChatColor.YELLOW + LanguageKey.MESSAGE_UNDERSTAND_BUTTON.getMessage());
+            TextComponent understand = new TextComponent(ChatColor.YELLOW + "[" + LanguageKey.MESSAGE_UNDERSTAND_BUTTON_MESSAGE.getMessage() + ChatColor.YELLOW + "]");
             understand.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sis understand"));
             understand.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + LanguageKey.MESSAGE_UNDERSTAND_BUTTON_TOOLTIP.getMessage()).create()));
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_PAGE_NAVIGATION.getMessage());
@@ -100,7 +100,7 @@ public class OpenShopListener implements Listener {
                 if (holder.getMode().equals(ShopMode.TRADE) && shop.ableCreateNewPage()) {
                     //取引を上書きし、取引として成立しないものは削除する
                     boolean warn = shop.checkTrades(inv);
-                    if (warn) p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_DUPLICATE_TRADE_WARNING.getMessage());
+                    if (warn) p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_TRADE_DUPLICATE.getMessage());
                     if (shop.ableCreateNewPage()) {
                         shop.createNewPage();
                         p.openInventory(shop.getPage(page + 1).getInventory(mode, p, holder.getBefore()));

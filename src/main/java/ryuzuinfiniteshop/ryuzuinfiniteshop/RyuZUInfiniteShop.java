@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.command.CommandChain;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.UnderstandSystemConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
@@ -54,6 +55,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         UnderstandSystemConfig.save();
         DisplayPanelConfig.save();
         Config.save();
+        LanguageConfig.save();
     }
 
     public static RyuZUInfiniteShop getPlugin() {

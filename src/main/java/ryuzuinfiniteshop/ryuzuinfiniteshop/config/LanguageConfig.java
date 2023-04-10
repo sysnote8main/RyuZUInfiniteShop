@@ -33,7 +33,7 @@ public class LanguageConfig {
             throw new RuntimeException(e);
         }
 
-        Arrays.stream(LanguageKey.values()).forEach(key -> texts.put(key, yaml.getString(key.toString(), key.getLanguage(Config.language))));
+        Arrays.stream(LanguageKey.values()).forEach(key -> texts.put(key, yaml.getString(key.getConfigKey(), key.getLanguage(Config.language))));
     }
 
     public static void save() {
@@ -41,15 +41,16 @@ public class LanguageConfig {
         for (String language : languages) {
             File file = FileUtil.initializeFile(language + ".yml");
             YamlConfiguration yaml = new YamlConfiguration();
-            try {
-                yaml.load(file);
-            } catch (IOException | InvalidConfigurationException e) {
-                throw new RuntimeException(e);
-            }
 
             Arrays.stream(LanguageKey.values()).forEach(key -> {
-                if (!yaml.contains(key.toString())) yaml.set(key.toString(), key.getLanguage(language));
+                yaml.set(key.getConfigKey(), key.getLanguage(language));
             });
+
+            try {
+                yaml.save(file);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

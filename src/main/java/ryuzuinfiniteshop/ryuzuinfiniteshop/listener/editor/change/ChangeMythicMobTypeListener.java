@@ -39,7 +39,7 @@ public class ChangeMythicMobTypeListener implements Listener {
             //成功時の処理
             //NPCを再構築する
             if (MythicInstanceProvider.getInstance().getMythicMob(message) == null) {
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_INVALID_MYTHIC_MOB_ID.getMessage());
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.COMMAND_INVALID_MYTHIC_MOB_ID.getMessage());
                 SoundUtil.playFailSound(p);
                 return;
             }
@@ -48,8 +48,8 @@ public class ChangeMythicMobTypeListener implements Listener {
             shop.setMythicType(message);
 //            ShopUtil.overwriteShop(shop.getLocation(), shop.convertShopToString(), shop.convertTradesToMap(), message);
         });
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_MYTHIC_MOB_ID.getMessage());
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_MYTHIC_MOB_ID_CANCEL.getMessage());
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_MYTHICMOBID.getMessage());
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());
 
         SoundUtil.playClickShopSound(p);
         holder.getShop().setEditting(false);

@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Shop {
-    public enum ShopType {TwoToOne, FourToFour, SixToTwo}
+    public enum ShopType {TwotoOne, FourtoFour, SixtoTwo}
 
     @Getter
     protected Entity npc;
@@ -153,21 +153,21 @@ public class Shop {
     }
 
     public void changeShopType() {
-        if (!type.equals(ShopType.TwoToOne)) trades.clear();
+        if (!type.equals(ShopType.TwotoOne)) trades.clear();
         this.type = getNextShopType();
         updateTradeContents();
     }
 
     public ShopType getNextShopType() {
         switch (type) {
-            case TwoToOne:
-                return ShopType.FourToFour;
-            case FourToFour:
-                return ShopType.SixToTwo;
-            case SixToTwo:
-                return ShopType.TwoToOne;
+            case TwotoOne:
+                return ShopType.FourtoFour;
+            case FourtoFour:
+                return ShopType.SixtoTwo;
+            case SixtoTwo:
+                return ShopType.TwotoOne;
         }
-        return ShopType.TwoToOne;
+        return ShopType.TwotoOne;
     }
 
     // 重複している取引があればtrueを返す
@@ -179,12 +179,12 @@ public class Shop {
         boolean duplication = false;
         HashSet<ShopTrade> emptyTrades = new HashSet<>();
         HashSet<ShopTrade> onTrades = new HashSet<>();
-        for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TwoToOne) ? 4 : 9) {
-            if (getShopType().equals(ShopType.TwoToOne) && i % 9 == 4) i++;
+        for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TwotoOne) ? 4 : 9) {
+            if (getShopType().equals(ShopType.TwotoOne) && i % 9 == 4) i++;
             int limitSlot = 0;
-            if (getShopType().equals(ShopType.TwoToOne)) limitSlot = i + 2;
-            else if (getShopType().equals(ShopType.FourToFour)) limitSlot = i + 4;
-            else if (getShopType().equals(ShopType.SixToTwo)) limitSlot = i + 6;
+            if (getShopType().equals(ShopType.TwotoOne)) limitSlot = i + 2;
+            else if (getShopType().equals(ShopType.FourtoFour)) limitSlot = i + 4;
+            else if (getShopType().equals(ShopType.SixtoTwo)) limitSlot = i + 6;
             ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(i);
             ShopTrade expectedTrade = TradeUtil.getTrade(inv, i, getShopType());
             boolean available = TradeUtil.isAvailableTrade(inv, i, getShopType());
@@ -224,11 +224,11 @@ public class Shop {
 
     public String getShopTypeDisplay() {
         switch (type) {
-            case TwoToOne:
+            case TwotoOne:
                 return ChatColor.GREEN + "2 -> 1";
-            case FourToFour:
+            case FourtoFour:
                 return ChatColor.GREEN + "4 -> 4";
-            case SixToTwo:
+            case SixtoTwo:
                 return ChatColor.GREEN + "6 -> 2";
         }
         return "";
@@ -295,9 +295,9 @@ public class Shop {
     }
 
     public ItemStack convertShopToItemStack() {
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM.getMessage() + ChatColor.GREEN + " " + getDisplayNameOrElseNone(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + " " + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK_SUB.getMessage(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_SHIFT_CLICK.getMessage() + ChatColor.GREEN + " " + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_SHIFT_CLICK_SUB.getMessage(),
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM.getMessage() + ChatColor.GREEN +  getDisplayNameOrElseNone(),
+                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN +  LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK_SUB.getMessage(),
+                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_SHIFT_CLICK.getMessage() + ChatColor.GREEN +  LanguageKey.ITEM_SHOP_COMPRESSION_GEM_SHIFT_CLICK_SUB.getMessage(),
                 ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
         );
         item = NBTUtil.setNMSTag(item, convertShopToMap());
@@ -349,13 +349,13 @@ public class Shop {
         pages.clear();
         for (int i = 1; i <= getTradePageCountFromTradesCount(); i++) {
             switch (type) {
-                case TwoToOne:
+                case TwotoOne:
                     pages.add(new ShopGui2to1(this, i));
                     break;
-                case FourToFour:
+                case FourtoFour:
                     pages.add(new ShopGui4to4(this, i));
                     break;
-                case SixToTwo:
+                case SixtoTwo:
                     pages.add(new ShopGui6to2(this, i));
                     break;
             }
@@ -380,7 +380,7 @@ public class Shop {
     }
 
     public int getLimitSize() {
-        return type.equals(ShopType.TwoToOne) ? 12 : 6;
+        return type.equals(ShopType.TwotoOne) ? 12 : 6;
     }
 
     public boolean isLimitPage(int page) {
@@ -415,13 +415,13 @@ public class Shop {
     public void createTradeNewPage() {
         if (!ableCreateNewPage()) return;
         switch (type) {
-            case TwoToOne:
+            case TwotoOne:
                 pages.add(new ShopGui2to1(this, getPageCount() + 1));
                 break;
-            case FourToFour:
+            case FourtoFour:
                 pages.add(new ShopGui4to4(this, getPageCount() + 1));
                 break;
-            case SixToTwo:
+            case SixtoTwo:
                 pages.add(new ShopGui6to2(this, getPageCount() + 1));
                 break;
         }
@@ -465,7 +465,7 @@ public class Shop {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
-            throw new RuntimeException(LanguageKey.ERROR_SAVING_FILE.getMessage(file.getName()), e);
+            throw new RuntimeException(LanguageKey.ERROR_FILE_SAVING.getMessage(file.getName()), e);
         }
         return yaml;
     }
@@ -475,7 +475,7 @@ public class Shop {
     }
 
     public String getDisplayNameOrElseShop() {
-        return JavaUtil.getOrDefault(displayName, "ショップ");
+        return JavaUtil.getOrDefault(displayName, LanguageKey.INVENTORY_DEFAULT_SHOP.getMessage());
     }
 
     public void setDisplayName(String name) {

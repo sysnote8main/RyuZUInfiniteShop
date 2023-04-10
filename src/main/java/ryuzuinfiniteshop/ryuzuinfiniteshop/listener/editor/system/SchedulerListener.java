@@ -9,8 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ScheduleData;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
@@ -40,14 +38,14 @@ public class SchedulerListener implements Listener {
         schedulers.remove(p.getUniqueId());
         event.setCancelled(true);
         if (event.getMessage().equalsIgnoreCase("Cancel")) {
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_CANCELLED.getMessage());
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCELLED.getMessage());
             SoundUtil.playClickShopSound(p);
         } else {
             if (shop == null) {
                 if(data.getId().equals("search"))
                     Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> data.getSuccessProcess().accept(event.getMessage()));
                 else {
-                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_SHOP_NOT_FOUND.getMessage());
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_FOUND.getMessage());
                     SoundUtil.playFailSound(p);
                 }
             } else

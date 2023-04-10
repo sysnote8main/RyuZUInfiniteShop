@@ -77,9 +77,9 @@ public class ConvartListener implements Listener {
             SoundUtil.playFailSound(p);
             return;
         }
-        if (!(shop.getShopType().equals(Shop.ShopType.TwoToOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
+        if (!(shop.getShopType().equals(Shop.ShopType.TwotoOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
             SoundUtil.playFailSound(p);
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_SHOP_TYPE_MISMATCH.getMessage());
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_MATCH.getMessage());
             return;
         }
 
@@ -90,7 +90,7 @@ public class ConvartListener implements Listener {
             //音を出す
             if(duplication) {
                 SoundUtil.playCautionSound(p);
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.WARNING_DUPLICATE_TRADE.getMessage());
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_TRADE_DUPLICATE.getMessage());
             } else {
                 SoundUtil.playSuccessSound(p);
             }
@@ -127,7 +127,7 @@ public class ConvartListener implements Listener {
 
         //音を出し、メッセージを送信
         SoundUtil.playSuccessSound(p);
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_CREATE_SHOP.getMessage(shop.getDisplayNameOrElseShop()));
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_SHOP_CREATE.getMessage(shop.getDisplayNameOrElseShop()));
         LogUtil.log(LogUtil.LogType.CREATESHOP, p.getName(), shop.getID());
     }
 
@@ -149,9 +149,9 @@ public class ConvartListener implements Listener {
         if (ItemUtil.isAir(item) || shopData == null) return;
 
         String tag = NBTUtil.getNMSStringTag(item, "ShopType");
-        if (!(shop.getShopType().equals(Shop.ShopType.TwoToOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
+        if (!(shop.getShopType().equals(Shop.ShopType.TwotoOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
             SoundUtil.playFailSound(p);
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_SHOP_TYPE_MISMATCH.getMessage());
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_MATCH.getMessage());
             return;
         }
 
@@ -159,7 +159,7 @@ public class ConvartListener implements Listener {
         String displayName = shop.getDisplayNameOrElseShop();
         item = NBTUtil.setNMSTag(item, data);
         p.getInventory().setItemInMainHand(item);
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_MERGE_SHOP.getMessage(displayName));
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_SHOP_MERGE.getMessage(displayName));
         SoundUtil.playSuccessSound(p);
     }
 }

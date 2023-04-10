@@ -1,7 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
@@ -19,12 +18,12 @@ public class EquipmentUtil {
             put(3 * 9 + 2, EquipmentSlot.OFF_HAND);
     }};
     private static final HashMap<EquipmentSlot, String> equipmentDisplayName = new HashMap<EquipmentSlot, String>() {{
-        put(EquipmentSlot.HAND, ChatColor.GREEN + LanguageKey.ITEM_EQUIP_MAIN_HAND.getMessage());
+        put(EquipmentSlot.HAND, ChatColor.GREEN + LanguageKey.ITEM_EQUIP_HAND_MAIN.getMessage());
         put(EquipmentSlot.HEAD, ChatColor.GREEN + LanguageKey.ITEM_EQUIP_HELMET.getMessage());
         put(EquipmentSlot.CHEST, ChatColor.GREEN + LanguageKey.ITEM_EQUIP_CHESTPLATE.getMessage());
         put(EquipmentSlot.LEGS, ChatColor.GREEN + LanguageKey.ITEM_EQUIP_LEGGINGS.getMessage());
         put(EquipmentSlot.FEET, ChatColor.GREEN + LanguageKey.ITEM_EQUIP_BOOTS.getMessage());
-        put(EquipmentSlot.OFF_HAND, ChatColor.GREEN + LanguageKey.ITEM_EQUIP_OFF_HAND.getMessage());
+        put(EquipmentSlot.OFF_HAND, ChatColor.GREEN + LanguageKey.ITEM_EQUIP_HAND_OFF.getMessage());
     }};
 
     public static HashMap<Integer, EquipmentSlot> getEquipmentsSlot() {

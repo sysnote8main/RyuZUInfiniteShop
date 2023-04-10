@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
@@ -14,13 +15,14 @@ import java.util.HashMap;
 @Value
 public class DisplayPanel {
     private static final HashMap<ShopTrade.TradeResult, String> panels = new HashMap<ShopTrade.TradeResult, String>() {{
-        put(ShopTrade.TradeResult.Success, ChatColor.GREEN + "購入可能");
-        put(ShopTrade.TradeResult.NotAfford, ChatColor.RED + "アイテムが足りません");
-        put(ShopTrade.TradeResult.Full, ChatColor.YELLOW + "インベントリに十分な空きがありません");
-        put(ShopTrade.TradeResult.Limited, ChatColor.RED + "取引上限です");
-        put(ShopTrade.TradeResult.Normal, ChatColor.GREEN + "取引上限設定と取引のアイテム化");
-        put(ShopTrade.TradeResult.Error, ChatColor.GREEN + "エラー発生。無効な取引です");
+        put(ShopTrade.TradeResult.Success, ChatColor.GREEN + LanguageKey.ITEM_TRADE_SUCCESS.getMessage());
+        put(ShopTrade.TradeResult.NotAfford, ChatColor.RED + LanguageKey.ITEM_NOT_ENOUGH_ITEMS.getMessage());
+        put(ShopTrade.TradeResult.Full, ChatColor.YELLOW + LanguageKey.ITEM_NOT_ENOUGH_SPACE.getMessage());
+        put(ShopTrade.TradeResult.Limited, ChatColor.RED + LanguageKey.ITEM_TRADE_LIMITED.getMessage());
+        put(ShopTrade.TradeResult.Normal, ChatColor.GREEN + LanguageKey.ITEM_TRADE_NORMAL.getMessage());
+        put(ShopTrade.TradeResult.Error, ChatColor.RED + LanguageKey.ITEM_TRADE_INVALID.getMessage());
     }};
+
 
     ShopTrade.TradeResult result;
     Material material;
@@ -35,13 +37,13 @@ public class DisplayPanel {
     public ItemStack getItemStack(int limit, int count) {
         ItemStack item = ItemUtil.withCustomModelData(ItemUtil.getNamedItem(material, panels.get(result)), data);
         if(result.equals(ShopTrade.TradeResult.Success)) {
-            ItemUtil.withLore(item, ChatColor.YELLOW + "クリック: 1回購入");
-            ItemUtil.withLore(item, ChatColor.YELLOW + "シフトクリック: 10回購入");
-            ItemUtil.withLore(item, ChatColor.YELLOW + "ミドルクリック: 64回購入");
+            ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_ONCE.getMessage());
+            ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_TEN.getMessage());
+            ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_STACK.getMessage());
             if(limit != 0)
-                ItemUtil.withLore(item, ChatColor.YELLOW + "残り取引回数: " + (limit - count) + "回");
+                ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_REMAINING.getMessage(limit - count));
         } else if(!result.equals(ShopTrade.TradeResult.Normal)) {
-            ItemUtil.withLore(item, ChatColor.GREEN + "対価、商品をクリック: 商品、対価で検索");
+            ItemUtil.withLore(item, ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_VALUEORPRODUCT.getMessage());
         }
         return item;
     }

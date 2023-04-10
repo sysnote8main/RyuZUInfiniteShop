@@ -20,8 +20,8 @@ public class ConfirmRemoveGui extends ShopGui {
     public Inventory getInventory(ShopMode mode) {
         Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9, LanguageKey.INVENTORY_DELETE_SHOP_TITLE.getMessage() + getShop().getDisplayNameOrElseShop() + LanguageKey.INVENTORY_DELETE_SHOP_TITLE.getMessage());
 
-        inv.setItem(0, ItemUtil.getNamedItem(ItemUtil.getColoredItem("RED_STAINED_GLASS_PANE"), ChatColor.RED + LanguageKey.ITEM_CANCEL_BUTTON.getMessage()));
-        inv.setItem(8, ItemUtil.getNamedItem(ItemUtil.getColoredItem("GREEN_STAINED_GLASS_PANE"), ChatColor.GREEN + LanguageKey.ITEM_DELETE_BUTTON.getMessage()));
+        inv.setItem(0, ItemUtil.getNamedItem(ItemUtil.getColoredItem("RED_STAINED_GLASS_PANE"), ChatColor.RED + LanguageKey.ITEM_EDITOR_BUTTON_CANCEL.getMessage()));
+        inv.setItem(8, ItemUtil.getNamedItem(ItemUtil.getColoredItem("GREEN_STAINED_GLASS_PANE"), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_BUTTON_DELETE.getMessage()));
 
         return inv;
     }

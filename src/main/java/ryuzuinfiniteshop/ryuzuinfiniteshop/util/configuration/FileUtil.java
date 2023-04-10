@@ -48,7 +48,7 @@ public class FileUtil {
 
         ShopUtil.removeAllNPC();
         saveBlock = true;
-        Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_RELOADING_FILES.getMessage()));
+        Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_FILES_RELOADING_FILES.getMessage()));
         HashMap<Player, ShopHolder> viewer = ShopUtil.getAllShopInventoryViewer();
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
             Config.load();
@@ -66,7 +66,7 @@ public class FileUtil {
                 saveBlock = false;
                 if(converted) saveAll(() -> {});
                 Config.runAutoSave();
-                Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_RELOADING_COMPLETE.getMessage()));
+                Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_FILES_RELOADING_COMPLETE.getMessage()));
                 ShopUtil.getShops().values().forEach(Shop::respawnNPC);
                 ShopUtil.openAllShopInventory(viewer);
             });
@@ -90,7 +90,7 @@ public class FileUtil {
                 saveBlock = false;
                 if(converted) saveAll(() -> {});
                 Config.runAutoSave();
-                Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_LOADING_COMPLETE.getMessage()));
+                Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_FILES_LOADING_COMPLETE.getMessage()));
                 ShopUtil.getShops().values().forEach(Shop::respawnNPC);
                 endTask.run();
             });
@@ -111,7 +111,7 @@ public class FileUtil {
             DisplayPanelConfig.save();
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
                 saveBlock = false;
-                Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SAVING_COMPLETE.getMessage()));
+                Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_FILES_SAVING_COMPLETE.getMessage()));
                 endTask.run();
             });
         });
@@ -120,14 +120,14 @@ public class FileUtil {
 
     public static boolean isSaveBlock(Player p) {
         if(saveBlock) {
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_RELOADING_BLOCKED.getMessage());
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_FILES_RELOADING_BLOCKED.getMessage());
             SoundUtil.playFailSound(p);
         }
         return saveBlock;
     }
 
     public static boolean isSaveBlock(CommandData data) {
-        if(saveBlock) data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_RELOADING_BLOCKED.getMessage());
+        if(saveBlock) data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_FILES_RELOADING_BLOCKED.getMessage());
 
         return saveBlock;
     }
