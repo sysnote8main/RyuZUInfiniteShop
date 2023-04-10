@@ -26,10 +26,10 @@ public enum LanguageKey {
     COMMAND_CHANGE_TRADE_LIMIT("取引回数を変更します", "Change trade limits"),
     COMMAND_ARGUMENT_REQUIRED("[arg]", "Required argument"),
     COMMAND_ARGUMENT_OPTIONAL("<arg>", "Optional argument"),
-    COMMAND_PLAYER_ONLY("§c§lError! §4§lプレイヤーのみ実行可能です。", "§c§lError! §4§lOnly players can execute this command."),
-    MESSAGE_SHOP_CREATED(ChatColor.GREEN + "ショップを設置しました", ChatColor.GREEN + "Shop created!"),
-    MESSAGE_SHOP_UPDATED(ChatColor.RED + "ショップを更新しました", ChatColor.RED + "Shop updated!"),
-    MESSAGE_ENTITY_INVALID("§c§lError! §4§l有効なエンティティタイプまたはMythicMobIDを入力して下さい。", "§c§lError! §4§lPlease input a valid entity type or MythicMob ID."),
+    COMMAND_PLAYER_ONLY("プレイヤーのみ実行可能です。", "Only players can execute this command."),
+    MESSAGE_SHOP_CREATED("ショップを設置しました", "Shop created!"),
+    MESSAGE_SHOP_UPDATED( "ショップを更新しました", "Shop updated!"),
+    MESSAGE_ENTITY_INVALID("有効なエンティティタイプまたはMythicMobIDを入力して下さい。", "Please input a valid entity type or MythicMob ID."),
     INVENTORY_SEARCH_TRADE_PAGE_TITLE("トレード サーチ ", "Trade Search "),
     INVENTORY_SHOP_LIST_PAGE_TITLE("ショップ一覧", "Shop list"),
     ITEM_POSITION("座標: {0}", "Coordinates: {0}"),
@@ -42,8 +42,8 @@ public enum LanguageKey {
     ITEM_CLICK_TO_OPEN("クリック: 取引画面を開く", "Click: Open trade window"),
     ITEM_SHIFT_CLICK_TO_EDIT("シフトクリック: 編集画面を開く", "Shift-click: Open edit window"),
     INVENTORY_DELETE_SHOP_TITLE("ショップ削除確認：", "Shop Deletion Confirmation: "),
-    ITEM_CANCEL_BUTTON(ChatColor.RED + "キャンセル", ChatColor.RED + "Cancel"),
-    ITEM_DELETE_BUTTON(ChatColor.GREEN + "削除する", ChatColor.GREEN + "Delete"),
+    ITEM_CANCEL_BUTTON( "キャンセル", "Cancel"),
+    ITEM_DELETE_BUTTON("削除する", "Delete"),
     INVENTORY_EDITOR_PAGE_TITLE("ショップエディター", "Shop Editor"),
     INVENTORY_PAGE_NUMBER("ページ {0}", "Page {0}"),
     INVENTORY_SET_NAME("名前を変更する", "Set display name"),
@@ -135,9 +135,9 @@ public enum LanguageKey {
     MESSAGE_SEARCH_NO_RESULTS("検索結果がありませんでした", "No results found for search"),
     MESSAGE_SEARCH_INPUT_PROMPT("検索するアイテムの名前をチャットに入力してください", "Please enter the name of the item to search for in chat"),
     MESSAGE_SEARCH_CANCEL_PROMPT("20秒待つか'Cancel'と入力することでキャンセルことができます", "You can cancel the search by waiting 20 seconds or typing 'Cancel'"),
-    MESSAGE_LOADING_FILES("全てのファイルをロード中です。しばらくお待ちください。", "Loading all files. Please wait a moment."),
     MESSAGE_RELOADING_FILES("全てのファイルをリロード中です。しばらくお待ちください。", "Reloading all files. Please wait a moment."),
     MESSAGE_LOADING_COMPLETE("全てのファイルのロードが完了しました", "All files have been loaded successfully."),
+    MESSAGE_SAVING_COMPLETE("全てのファイルの保存が完了しました", "All files have been saved successfully."),
     MESSAGE_RELOADING_COMPLETE("全てのファイルのリロードが完了しました", "All files have been reloaded successfully."),
     MESSAGE_RELOADING_BLOCKED("現在リロード処理中のため、すべての処理をブロックしています。", "All processes are currently blocked due to reloading."),
     ERROR_WORLD_NOT_FOUND("ワールドが存在しません: {0}", "World not found: {0}"),
@@ -148,7 +148,6 @@ public enum LanguageKey {
     ITEM_EQUIP_LEGGINGS("レギンス", "Leggings"),
     ITEM_EQUIP_BOOTS("ブーツ", "Boots"),
     ITEM_EQUIP_OFF_HAND("オフハンド", "Off hand"),
-
     MESSAGE_SUCCESS_MERGE_SHOP("{0}の取引を宝石のショップにマージしました", "Successfully merged trades of {0} into gemstone shop");
 
 
@@ -177,10 +176,14 @@ public enum LanguageKey {
 //    }
 
     public String getMessage(Object... args) {
-        String message = LanguageConfig.getLanguage().equals("English") ? english : japanese;
+        String message = LanguageConfig.getText(this);
         for (int i = 0; i < args.length; i++) {
             message = message.replace("{" + i + "}", String.valueOf(args[i]));
         }
         return message;
+    }
+
+    public String getLanguage(String language) {
+        return language.equalsIgnoreCase("Japanese") ? japanese : english;
     }
 }

@@ -1,6 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
@@ -19,8 +20,8 @@ public class ConfirmRemoveGui extends ShopGui {
     public Inventory getInventory(ShopMode mode) {
         Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9, LanguageKey.INVENTORY_DELETE_SHOP_TITLE.getMessage() + getShop().getDisplayNameOrElseShop() + LanguageKey.INVENTORY_DELETE_SHOP_TITLE.getMessage());
 
-        inv.setItem(0, ItemUtil.getNamedItem(ItemUtil.getColoredItem("RED_STAINED_GLASS_PANE"), LanguageKey.ITEM_CANCEL_BUTTON.getMessage()));
-        inv.setItem(8, ItemUtil.getNamedItem(ItemUtil.getColoredItem("GREEN_STAINED_GLASS_PANE"), LanguageKey.ITEM_DELETE_BUTTON.getMessage()));
+        inv.setItem(0, ItemUtil.getNamedItem(ItemUtil.getColoredItem("RED_STAINED_GLASS_PANE"), ChatColor.RED + LanguageKey.ITEM_CANCEL_BUTTON.getMessage()));
+        inv.setItem(8, ItemUtil.getNamedItem(ItemUtil.getColoredItem("GREEN_STAINED_GLASS_PANE"), ChatColor.GREEN + LanguageKey.ITEM_DELETE_BUTTON.getMessage()));
 
         return inv;
     }

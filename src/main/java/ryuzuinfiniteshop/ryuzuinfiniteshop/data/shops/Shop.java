@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Shop {
-    public enum ShopType {TWOTOONE, FOURTOFOUR, SIXTOTWO}
+    public enum ShopType {TwoToOne, FourToFour, SixToTwo}
 
     @Getter
     protected Entity npc;
@@ -153,21 +153,21 @@ public class Shop {
     }
 
     public void changeShopType() {
-        if (!type.equals(ShopType.TWOTOONE)) trades.clear();
+        if (!type.equals(ShopType.TwoToOne)) trades.clear();
         this.type = getNextShopType();
         updateTradeContents();
     }
 
     public ShopType getNextShopType() {
         switch (type) {
-            case TWOTOONE:
-                return ShopType.FOURTOFOUR;
-            case FOURTOFOUR:
-                return ShopType.SIXTOTWO;
-            case SIXTOTWO:
-                return ShopType.TWOTOONE;
+            case TwoToOne:
+                return ShopType.FourToFour;
+            case FourToFour:
+                return ShopType.SixToTwo;
+            case SixToTwo:
+                return ShopType.TwoToOne;
         }
-        return ShopType.TWOTOONE;
+        return ShopType.TwoToOne;
     }
 
     // 重複している取引があればtrueを返す
@@ -179,12 +179,12 @@ public class Shop {
         boolean duplication = false;
         HashSet<ShopTrade> emptyTrades = new HashSet<>();
         HashSet<ShopTrade> onTrades = new HashSet<>();
-        for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TWOTOONE) ? 4 : 9) {
-            if (getShopType().equals(ShopType.TWOTOONE) && i % 9 == 4) i++;
+        for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TwoToOne) ? 4 : 9) {
+            if (getShopType().equals(ShopType.TwoToOne) && i % 9 == 4) i++;
             int limitSlot = 0;
-            if (getShopType().equals(ShopType.TWOTOONE)) limitSlot = i + 2;
-            else if (getShopType().equals(ShopType.FOURTOFOUR)) limitSlot = i + 4;
-            else if (getShopType().equals(ShopType.SIXTOTWO)) limitSlot = i + 6;
+            if (getShopType().equals(ShopType.TwoToOne)) limitSlot = i + 2;
+            else if (getShopType().equals(ShopType.FourToFour)) limitSlot = i + 4;
+            else if (getShopType().equals(ShopType.SixToTwo)) limitSlot = i + 6;
             ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(i);
             ShopTrade expectedTrade = TradeUtil.getTrade(inv, i, getShopType());
             boolean available = TradeUtil.isAvailableTrade(inv, i, getShopType());
@@ -224,11 +224,11 @@ public class Shop {
 
     public String getShopTypeDisplay() {
         switch (type) {
-            case TWOTOONE:
+            case TwoToOne:
                 return ChatColor.GREEN + "2 -> 1";
-            case FOURTOFOUR:
+            case FourToFour:
                 return ChatColor.GREEN + "4 -> 4";
-            case SIXTOTWO:
+            case SixToTwo:
                 return ChatColor.GREEN + "6 -> 2";
         }
         return "";
@@ -349,13 +349,13 @@ public class Shop {
         pages.clear();
         for (int i = 1; i <= getTradePageCountFromTradesCount(); i++) {
             switch (type) {
-                case TWOTOONE:
+                case TwoToOne:
                     pages.add(new ShopGui2to1(this, i));
                     break;
-                case FOURTOFOUR:
+                case FourToFour:
                     pages.add(new ShopGui4to4(this, i));
                     break;
-                case SIXTOTWO:
+                case SixToTwo:
                     pages.add(new ShopGui6to2(this, i));
                     break;
             }
@@ -380,7 +380,7 @@ public class Shop {
     }
 
     public int getLimitSize() {
-        return type.equals(ShopType.TWOTOONE) ? 12 : 6;
+        return type.equals(ShopType.TwoToOne) ? 12 : 6;
     }
 
     public boolean isLimitPage(int page) {
@@ -415,13 +415,13 @@ public class Shop {
     public void createTradeNewPage() {
         if (!ableCreateNewPage()) return;
         switch (type) {
-            case TWOTOONE:
+            case TwoToOne:
                 pages.add(new ShopGui2to1(this, getPageCount() + 1));
                 break;
-            case FOURTOFOUR:
+            case FourToFour:
                 pages.add(new ShopGui4to4(this, getPageCount() + 1));
                 break;
-            case SIXTOTWO:
+            case SixToTwo:
                 pages.add(new ShopGui6to2(this, getPageCount() + 1));
                 break;
         }

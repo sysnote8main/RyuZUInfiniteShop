@@ -77,7 +77,7 @@ public class ConvartListener implements Listener {
             SoundUtil.playFailSound(p);
             return;
         }
-        if (!(shop.getShopType().equals(Shop.ShopType.TWOTOONE) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
+        if (!(shop.getShopType().equals(Shop.ShopType.TwoToOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
             SoundUtil.playFailSound(p);
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_SHOP_TYPE_MISMATCH.getMessage());
             return;
@@ -149,7 +149,7 @@ public class ConvartListener implements Listener {
         if (ItemUtil.isAir(item) || shopData == null) return;
 
         String tag = NBTUtil.getNMSStringTag(item, "ShopType");
-        if (!(shop.getShopType().equals(Shop.ShopType.TWOTOONE) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
+        if (!(shop.getShopType().equals(Shop.ShopType.TwoToOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
             SoundUtil.playFailSound(p);
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ERROR_SHOP_TYPE_MISMATCH.getMessage());
             return;

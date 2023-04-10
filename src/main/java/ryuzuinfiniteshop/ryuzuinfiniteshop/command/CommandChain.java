@@ -108,11 +108,11 @@ public class CommandChain {
                     Location location = player.getLocation();
                     if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(location))) {
                         ShopUtil.reloadShop(ShopUtil.getShop(LocationUtil.toStringFromLocation(location)));
-                        player.sendMessage(RyuZUInfiniteShop.prefixCommand + LanguageKey.MESSAGE_SHOP_UPDATED.getMessage());
+                        player.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN +  LanguageKey.MESSAGE_SHOP_UPDATED.getMessage());
                         return;
                     }
                     ShopUtil.createNewShop(location, EntityType.VILLAGER);
-                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + LanguageKey.MESSAGE_SHOP_CREATED.getMessage());
+                    data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SHOP_CREATED.getMessage());
                     LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(location));
                 },
                 "sis.op",
@@ -120,7 +120,7 @@ public class CommandChain {
                 data -> {
                     if (data.getArgs().length != 1) return false;
                     if (!(data.getSender() instanceof Player)) {
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + LanguageKey.COMMAND_PLAYER_ONLY.getMessage());
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.COMMAND_PLAYER_ONLY.getMessage());
                         return false;
                     }
                     return !FileUtil.isSaveBlock(data);
@@ -136,7 +136,7 @@ public class CommandChain {
                         loc = LocationUtil.toLocationFromString(data.getArgs()[1]);
                         if (ShopUtil.getShops().containsKey(data.getArgs()[1])) {
                             ShopUtil.reloadShop(ShopUtil.getShop(data.getArgs()[1]));
-                            data.sendMessage(LanguageKey.MESSAGE_SHOP_UPDATED.getMessage());
+                            data.sendMessage(ChatColor.GREEN + LanguageKey.MESSAGE_SHOP_UPDATED.getMessage());
                             return;
                         }
                     } else {
@@ -148,7 +148,7 @@ public class CommandChain {
                     else
                         ShopUtil.createNewShop(loc, EntityType.valueOf(data.getArgs()[1].toUpperCase()));
                     ShopUtil.getShop(LocationUtil.toStringFromLocation(loc)).respawnNPC();
-                    data.sendMessage(LanguageKey.MESSAGE_SHOP_CREATED.getMessage());
+                    data.sendMessage(ChatColor.GREEN + LanguageKey.MESSAGE_SHOP_CREATED.getMessage());
                     LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(loc));
                 },
                 "sis.op",
@@ -160,7 +160,7 @@ public class CommandChain {
                         return true;
                     } catch (IllegalArgumentException e) {
                         if (MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(data.getArgs()[1]) == null) {
-                            data.sendMessage(LanguageKey.MESSAGE_ENTITY_INVALID.getMessage());
+                            data.sendMessage(ChatColor.RED + LanguageKey.MESSAGE_ENTITY_INVALID.getMessage());
                             return false;
                         }
                         return true;
@@ -183,7 +183,7 @@ public class CommandChain {
                 data -> {
                     if (data.getArgs().length == 2) {
                         if (!(data.getSender() instanceof Player)) {
-                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + LanguageKey.COMMAND_PLAYER_ONLY.getMessage());
+                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.COMMAND_PLAYER_ONLY.getMessage());
                             return false;
                         }
                         if (!ShopUtil.getShops().containsKey(data.getArgs()[1])) {
@@ -226,7 +226,7 @@ public class CommandChain {
                 data -> {
                     if (data.getArgs().length != 1) return false;
                     if (!(data.getSender() instanceof Player)) {
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + LanguageKey.COMMAND_PLAYER_ONLY.getMessage());
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.COMMAND_PLAYER_ONLY.getMessage());
                         return false;
                     }
                     return !FileUtil.isSaveBlock(data);
@@ -244,7 +244,7 @@ public class CommandChain {
                 data -> true,
                 data -> {
                     if (!(data.getSender() instanceof Player)) {
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + LanguageKey.COMMAND_PLAYER_ONLY.getMessage());
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.COMMAND_PLAYER_ONLY.getMessage());
                         return false;
                     }
                     return !FileUtil.isSaveBlock(data);
@@ -267,7 +267,7 @@ public class CommandChain {
                 data -> {
                     if (data.getArgs().length >= 4) return false;
                     if (!(data.getSender() instanceof Player)) {
-                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + LanguageKey.COMMAND_PLAYER_ONLY.getMessage());
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.COMMAND_PLAYER_ONLY.getMessage());
                         return false;
                     }
                     return !FileUtil.isSaveBlock(data);
@@ -296,7 +296,7 @@ public class CommandChain {
 
         Predicate<CommandData> limitTabCondition = data -> {
             if (!(data.getSender() instanceof Player)) {
-                data.sendMessage(RyuZUInfiniteShop.prefixCommand + LanguageKey.COMMAND_PLAYER_ONLY.getMessage());
+                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.COMMAND_PLAYER_ONLY.getMessage());
                 return false;
             }
             return !FileUtil.isSaveBlock(data);

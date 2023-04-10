@@ -214,7 +214,7 @@ public class SearchTradeListener implements Listener {
 
         int info = ShopUtil.getSubtractSlot(type);
         int surplus = slot % 9;
-        int base = (type.equals(Shop.ShopType.TWOTOONE) && surplus > 4) ? surplus - 5 : surplus;
+        int base = (type.equals(Shop.ShopType.TwoToOne) && surplus > 4) ? surplus - 5 : surplus;
         if(ItemUtil.isAir(event.getCurrentItem())) return;
         if(!(p.hasPermission("sis.search") || p.hasPermission("sis.op"))) return;
         if(base == info) return;

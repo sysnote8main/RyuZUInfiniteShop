@@ -61,11 +61,11 @@ public class ShopUtil {
 
     public static int getSubtractSlot(Shop.ShopType type) {
         switch (type) {
-            case TWOTOONE:
+            case TwoToOne:
                 return 2;
-            case FOURTOFOUR:
+            case FourToFour:
                 return 4;
-            case SIXTOTWO:
+            case SixToTwo:
                 return 6;
         }
         return 0;

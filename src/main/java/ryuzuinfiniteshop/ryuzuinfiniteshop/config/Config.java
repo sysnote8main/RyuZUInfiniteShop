@@ -23,6 +23,7 @@ public class Config {
     public static boolean saveByMMID;
     public static boolean overwriteConverting;
     public static boolean defaultSearchableInConverting;
+    public static String language;
     public static BukkitTask respawnTask;
     private static BukkitTask autoSaveTask;
 
@@ -40,6 +41,7 @@ public class Config {
         saveByMMID = yaml.getBoolean("SaveByMMID", true);
         overwriteConverting = yaml.getBoolean("OverwriteConverting", false);
         defaultSearchableInConverting = yaml.getBoolean("DefaultSearchableInConverting", true);
+        language = yaml.getString("Language", "english").toLowerCase();
     }
 
     public static void save() {
@@ -56,6 +58,7 @@ public class Config {
         if(!yaml.contains("SaveByMMID")) yaml.set("SaveByMMID", saveByMMID);
         if(!yaml.contains("OverwriteConverting")) yaml.set("OverwriteConverting", overwriteConverting);
         if(!yaml.contains("DefaultSearchableInConverting")) yaml.set("DefaultSearchableInConverting", overwriteConverting);
+        if(!yaml.contains("Language")) yaml.set("Language", language);
         try {
             yaml.save(file);
         } catch (IOException e) {

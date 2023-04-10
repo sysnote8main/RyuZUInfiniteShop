@@ -47,7 +47,7 @@ public class ShopEditorGui extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, LanguageKey.INVENTORY_EDITOR_PAGE_TITLE.getMessage() + getShop().getDisplayNameOrElseShop() + LanguageKey.INVENTORY_PAGE_NUMBER.getMessage(String.valueOf(getPage())));
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, LanguageKey.INVENTORY_EDITOR_PAGE_TITLE.getMessage() + getShop().getDisplayNameOrElseShop() + LanguageKey.INVENTORY_PAGE_NUMBER.getMessage(getPage()));
 
         //アイテムを設置
         setDisplay(inv);

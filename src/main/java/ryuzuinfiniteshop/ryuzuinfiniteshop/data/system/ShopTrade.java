@@ -167,7 +167,7 @@ public class ShopTrade {
         ItemStack[] items;
         ItemStack filter = getFilter(mode);
         switch (type) {
-            case TWOTOONE:
+            case TwoToOne:
                 items = new ItemStack[4];
                 items[2] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -177,7 +177,7 @@ public class ShopTrade {
                     items[i + 3] = getGiveItems()[i];
                 }
                 break;
-            case FOURTOFOUR:
+            case FourToFour:
                 items = new ItemStack[9];
                 items[4] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -187,7 +187,7 @@ public class ShopTrade {
                     items[i + 5] = getGiveItems()[i];
                 }
                 break;
-            case SIXTOTWO:
+            case SixToTwo:
                 items = new ItemStack[9];
                 items[6] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -208,8 +208,8 @@ public class ShopTrade {
         ItemStack[] items;
         ItemStack filter = getFilter(id, player);
         switch (type) {
-            case TWOTOONE:
-            case FOURTOFOUR:
+            case TwoToOne:
+            case FourToFour:
                 items = new ItemStack[9];
                 items[4] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {
@@ -219,7 +219,7 @@ public class ShopTrade {
                     items[i + 5] = getGiveItems()[i];
                 }
                 break;
-            case SIXTOTWO:
+            case SixToTwo:
                 items = new ItemStack[9];
                 items[6] = filter;
                 for (int i = 0; i < getTakeItems().length; i++) {

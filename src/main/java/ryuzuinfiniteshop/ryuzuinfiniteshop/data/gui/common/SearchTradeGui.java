@@ -28,7 +28,7 @@ public class SearchTradeGui extends TradesGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new SeachTradeHolder(mode, this, player, searchedTrade), 9 * 6, LanguageKey.INVENTORY_SEARCH_TRADE_PAGE_TITLE.getMessage(String.valueOf(getPage())) + LanguageKey.INVENTORY_PAGE_NUMBER.getMessage(String.valueOf(getPage())));
+        Inventory inv = Bukkit.createInventory(new SeachTradeHolder(mode, this, player, searchedTrade), 9 * 6, LanguageKey.INVENTORY_SEARCH_TRADE_PAGE_TITLE.getMessage(getPage()) + LanguageKey.INVENTORY_PAGE_NUMBER.getMessage(String.valueOf(getPage())));
 
 
         for (int i = (getPage() - 1) * 6; i < getPage() * 6; i++) {
