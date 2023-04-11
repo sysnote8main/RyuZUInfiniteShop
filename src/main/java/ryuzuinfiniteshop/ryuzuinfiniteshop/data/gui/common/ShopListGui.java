@@ -27,7 +27,7 @@ public class ShopListGui extends PageableGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopListHolder(mode, this, shops), 9 * 6, ChatColor.DARK_BLUE + LanguageKey.INVENTORY_SHOP_LIST.getMessage(getPage()) + " " + LanguageKey.INVENTORY_PAGE_NUMBER.getMessage(getPage()));
+        Inventory inv = Bukkit.createInventory(new ShopListHolder(mode, this, shops), 9 * 6, ChatColor.DARK_BLUE + LanguageKey.INVENTORY_SHOP_LIST.getMessage(getPage()) + " " + LanguageKey.INVENTORY_PAGE.getMessage(getPage()));
 
         List<String> keys = new ArrayList<>(shops.keySet());
         for (int i = 0; i < Math.min(shops.size() - (getPage() - 1) * 54, 54); i++) {

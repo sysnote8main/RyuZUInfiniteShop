@@ -47,7 +47,7 @@ public class ShopEditorGui extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, getShop().getDisplayNameOrElseShop() + " " + LanguageKey.INVENTORY_PAGE_NUMBER.getMessage(getPage()));
+        Inventory inv = Bukkit.createInventory(new ShopHolder(mode, getShop(), this), 9 * 6, getShop().getDisplayNameOrElseShop() + " " + LanguageKey.INVENTORY_PAGE.getMessage(getPage()));
 
         //アイテムを設置
         setDisplay(inv);
@@ -71,7 +71,7 @@ public class ShopEditorGui extends ShopGui {
     private void setTradesPage(Inventory inv) {
         int lastslot = getTradeLastSlotNumber();
         for (int i = 0; i <= lastslot; i++) {
-            inv.setItem(i, ItemUtil.getNamedItem(Material.LIME_STAINED_GLASS_PANE, ChatColor.GREEN + LanguageKey.INVENTORY_PAGE_NUMBER.getMessage(getTradePageNumber(i))));
+            inv.setItem(i, ItemUtil.getNamedItem(Material.LIME_STAINED_GLASS_PANE, ChatColor.GREEN + LanguageKey.INVENTORY_PAGE.getMessage(getTradePageNumber(i))));
         }
         int newslot = getTradeNewSlotNumber();
         if (newslot == 18)
@@ -117,7 +117,7 @@ public class ShopEditorGui extends ShopGui {
         setShopStatus(inv);
         setShopOperation(inv);
         setTeleport(inv);
-        if (!(MythicInstanceProvider.isLoaded() && getShop().getMythicmob().isPresent())) {
+        if (!(MythicInstanceProvider.isLoaded() && getShop().getMythicmob() != null)) {
             setEquipment(inv);
             setDisplayName(inv);
             setSettings(inv);

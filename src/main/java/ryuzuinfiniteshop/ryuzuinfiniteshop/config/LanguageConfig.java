@@ -41,9 +41,14 @@ public class LanguageConfig {
         for (String language : languages) {
             File file = FileUtil.initializeFile(language + ".yml");
             YamlConfiguration yaml = new YamlConfiguration();
+            try {
+                yaml.load(file);
+            } catch (IOException | InvalidConfigurationException e) {
+                throw new RuntimeException(e);
+            }
 
             Arrays.stream(LanguageKey.values()).forEach(key -> {
-                yaml.set(key.getConfigKey(), key.getLanguage(language));
+                if(!yaml.contains(key.getConfigKey())) yaml.set(key.getConfigKey(), key.getLanguage(language));
             });
 
             try {

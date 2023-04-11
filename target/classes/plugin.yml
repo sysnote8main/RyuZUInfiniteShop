@@ -5,6 +5,7 @@ api-version: 1.13
 description: 無限にページを作成し、検索機能も付けられたShopPluginです
 softdepend:
   - MythicMobs
+  - Citizens
 
 commands:
   sis:

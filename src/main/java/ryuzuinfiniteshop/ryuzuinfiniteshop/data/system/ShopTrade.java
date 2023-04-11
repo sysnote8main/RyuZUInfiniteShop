@@ -147,7 +147,7 @@ public class ShopTrade {
     private static ItemStack getSettingsFilter(int value) {
         return NBTUtil.setNMSTag(ItemUtil.withLore(
                 DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack(),
-                ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_LIMIT_CLICK.getMessage() + ChatColor.YELLOW + " " + LanguageKey.ITEM_SETTINGS_TRADE_LIMIT.getMessage() + ": " + value,
+                ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_SET_LIMIT.getMessage() + ChatColor.YELLOW + " " + LanguageKey.ITEM_SETTINGS_TRADE_LIMIT.getMessage() + ": " + value,
                 ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_TO_ITEM.getMessage()
         ), "TradeLimit", String.valueOf(value));
     }
@@ -342,4 +342,11 @@ public class ShopTrade {
         }
     }
 
+    @Override
+    public String toString() {
+        return "ShopTrade{" +
+                "takeData=" + takeData +
+                ", giveData=" + giveData +
+                '}';
+    }
 }

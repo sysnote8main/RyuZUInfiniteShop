@@ -85,6 +85,7 @@ public class Shop {
         this.entityType = entityType;
         this.shopkeepersConfig = config;
         ShopUtil.addShop(getID(), this);
+        loadYamlProcess(getFile());
         if (!exsited) {
             createEditorNewPage();
             if (config == null) saveYaml();
@@ -98,11 +99,11 @@ public class Shop {
         this.location = location;
         this.entityType = entityType;
         ShopUtil.addShop(getID(), this);
+        loadYamlProcess(getFile());
         if (!exsited) {
             createEditorNewPage();
             saveYaml();
-        } else
-            loadYamlProcess(getFile());
+        }
     }
 
     public Shop(Location location, String mmid) {
@@ -110,11 +111,11 @@ public class Shop {
         this.location = location;
         this.mythicmob = mmid;
         ShopUtil.addShop(getID(), this);
+        loadYamlProcess(getFile());
         if (!exsited) {
             createEditorNewPage();
             saveYaml();
-        } else
-            loadYamlProcess(getFile());
+        }
     }
 
     public void loadYamlProcess(File file) {
@@ -179,27 +180,29 @@ public class Shop {
     public boolean checkTrades(Inventory inv) {
         ShopHolder holder = ShopUtil.getShopHolder(inv);
         if (holder == null) return false;
+        ShopTradeGui gui = getPage(holder.getGui().getPage());
+        if (gui == null) return false;
 
         //取引を上書きし、取引として成立しないものと重複しているものは削除する
         boolean duplication = false;
         HashSet<ShopTrade> emptyTrades = new HashSet<>();
-        HashSet<ShopTrade> onTrades = new HashSet<>();
+        List<ShopTrade> onTrades = new ArrayList<>(getTrades());
+        gui.getTrades().forEach(onTrades::remove);
         for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TwotoOne) ? 4 : 9) {
             if (getShopType().equals(ShopType.TwotoOne) && i % 9 == 4) i++;
             int limitSlot = 0;
             if (getShopType().equals(ShopType.TwotoOne)) limitSlot = i + 2;
             else if (getShopType().equals(ShopType.FourtoFour)) limitSlot = i + 4;
             else if (getShopType().equals(ShopType.SixtoTwo)) limitSlot = i + 6;
-            ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(i);
+            ShopTrade trade = gui.getTradeFromSlot(i);
             ShopTrade expectedTrade = TradeUtil.getTrade(inv, i, getShopType());
             boolean available = TradeUtil.isAvailableTrade(inv, i, getShopType());
             String limitString = NBTUtil.getNMSStringTag(inv.getItem(limitSlot), "TradeLimit");
             int limit = limitString == null ? 0 : Integer.parseInt(limitString);
             limit = limit == 0 && expectedTrade != null && expectedTrade.getLimit() > 0 ? expectedTrade.getLimit() : limit;
-            if (available && this.trades.contains(expectedTrade) && !expectedTrade.equals(trade)) duplication = true;
 
             // 編集画面上に重複した取引が存在するかチェックする
-            if (expectedTrade != null && onTrades.contains(expectedTrade)) duplication = true;
+            if(available && onTrades.contains(expectedTrade)) duplication = true;
             onTrades.add(expectedTrade);
 
             // 取引を追加、上書き、削除する
@@ -220,6 +223,7 @@ public class Shop {
             }
         }
         this.trades.removeAll(emptyTrades);
+
         if (duplication) this.trades = trades.stream().distinct().collect(Collectors.toList());
 
         //ショップを更新する
@@ -301,9 +305,9 @@ public class Shop {
 
     public ItemStack convertShopToItemStack() {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM.getMessage() + ChatColor.GREEN + getDisplayNameOrElseNone(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK_SUB.getMessage(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_SHIFT_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_SHIFT_CLICK_SUB.getMessage(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
         );
         item = NBTUtil.setNMSTag(item, convertShopToMap());
         return item;
@@ -322,6 +326,12 @@ public class Shop {
 
     public List<ShopTrade> getTrades() {
         return trades;
+    }
+
+    public List<ShopTrade> getTrades(int page) {
+        List<ShopTrade>[] trades = JavaUtil.splitList(getTrades(), getLimitSize());
+        if (trades.length == page - 1) return new ArrayList<>();
+        return trades[page - 1];
     }
 
     public void setTrades(List<ShopTrade> trades) {

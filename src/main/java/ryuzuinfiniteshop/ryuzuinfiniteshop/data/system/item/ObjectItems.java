@@ -79,4 +79,9 @@ public class ObjectItems {
     public ObjectItems reconvert() {
         return new ObjectItems(toItemStacks());
     }
+
+    @Override
+    public String toString() {
+        return objects.toString();
+    }
 }

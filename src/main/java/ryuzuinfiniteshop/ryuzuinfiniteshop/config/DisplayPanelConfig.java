@@ -57,8 +57,8 @@ public class DisplayPanelConfig {
             throw new RuntimeException(e);
         }
         for(ShopTrade.TradeResult result : defaultResultMaterial.keySet()) {
-            if(yaml.contains(getResultConfig(result) + ".Material")) yaml.set(getResultConfig(result) + ".Material", panels.get(result).getMaterial().name());
-            if(yaml.contains(getResultConfig(result) + ".CustomModelData")) yaml.set(getResultConfig(result) + ".CustomModelData", panels.get(result).getData());
+            if(!yaml.contains(getResultConfig(result) + ".Material")) yaml.set(getResultConfig(result) + ".Material", panels.get(result).getMaterial().name());
+            if(!yaml.contains(getResultConfig(result) + ".CustomModelData")) yaml.set(getResultConfig(result) + ".CustomModelData", panels.get(result).getData());
         }
         try {
             yaml.save(file);

@@ -97,16 +97,18 @@ public class OpenShopListener implements Listener {
         if (type.isRightClick()) {
             if (shop.getPage(page + 1) == null) {
                 fail = true;
-                if (holder.getMode().equals(ShopMode.EDIT) && shop.ableCreateNewPage()) {
+                if (holder.getMode().equals(ShopMode.EDIT)) {
                     //取引を上書きし、取引として成立しないものは削除する
                     boolean warn = shop.checkTrades(inv);
                     if (warn) {
                         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_TRADE_DUPLICATE.getMessage());
                         p.openInventory(shop.getPage(page).getInventory(mode, p, holder.getBefore()));
-                    } else {
+                    } else if(shop.ableCreateNewPage()) {
                         shop.createNewPage();
-                        p.openInventory(shop.getPage(page + 1).getInventory(mode, p, holder.getBefore()));
-                        fail = false;
+                        if(shop.getPage(page + 1) != null) {
+                            p.openInventory(shop.getPage(page + 1).getInventory(mode, p, holder.getBefore()));
+                            fail = false;
+                        }
                     }
                 }
             } else

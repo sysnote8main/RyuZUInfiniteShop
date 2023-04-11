@@ -42,7 +42,7 @@ public class ShopUtil {
     }
 
     public static ModeHolder getModeHolder(InventoryClickEvent event) {
-        if (event.getAction().equals(InventoryAction.CLONE_STACK) || event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR)) return null;
+        if (event.getAction().equals(InventoryAction.CLONE_STACK)) return null;
         return getModeHolder(getSecureInventory(event));
     }
 

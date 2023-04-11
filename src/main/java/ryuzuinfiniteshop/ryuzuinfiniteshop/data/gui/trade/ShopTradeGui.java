@@ -23,7 +23,7 @@ public abstract class ShopTradeGui extends ShopGui {
 
     public ShopTradeGui(Shop shop, int page) {
         super(shop, page);
-        setTrades();
+        this.trades = shop.getTrades(page);
     }
 
     public abstract List<Integer> getDisplaySlot();
@@ -45,12 +45,6 @@ public abstract class ShopTradeGui extends ShopGui {
         if (getTrades().size() <= number) return null;
         if (number < 0) return null;
         return getTrades().get(number);
-    }
-
-    public void setTrades() {
-        List<ShopTrade>[] trades = JavaUtil.splitList(getShop().getTrades(), getShop().getLimitSize());
-        if (trades.length == getPage() - 1) return;
-        this.trades = trades[getPage() - 1];
     }
 
     @Override
