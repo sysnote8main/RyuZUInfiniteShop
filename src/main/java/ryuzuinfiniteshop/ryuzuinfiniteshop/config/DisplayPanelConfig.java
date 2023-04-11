@@ -62,7 +62,7 @@ public class DisplayPanelConfig {
         }
         try {
             yaml.save(file);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

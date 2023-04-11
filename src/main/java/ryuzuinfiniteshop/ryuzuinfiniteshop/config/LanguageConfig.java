@@ -53,8 +53,8 @@ public class LanguageConfig {
 
             try {
                 yaml.save(file);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

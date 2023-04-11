@@ -64,7 +64,7 @@ public class Config {
         if(!yaml.contains("Language")) yaml.set("Language", language);
         try {
             yaml.save(file);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
