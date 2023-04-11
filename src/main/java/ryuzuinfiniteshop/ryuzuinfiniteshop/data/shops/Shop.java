@@ -2,7 +2,11 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -49,7 +53,8 @@ public class Shop {
     @Setter
     protected Location location;
     @Getter
-    protected Optional<String> mythicmob = Optional.empty();
+    protected String mythicmob;
+    protected NPC citizen;
     protected EntityType entityType;
     protected ShopType type;
     protected List<ShopTrade> trades = new ArrayList<>();
@@ -74,42 +79,42 @@ public class Shop {
     protected List<ShopTradeGui> pages = new ArrayList<>();
     protected ObjectItems equipments;
 
-    public Shop(Location location, EntityType entityType) {
-        boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
-        this.location = location;
-        this.entityType = entityType;
-        ShopUtil.addShop(getID(), this);
-        loadYamlProcess(getFile());
-        if (!exsited) {
-            createEditorNewPage();
-            saveYaml();
-        }
-    }
-
     public Shop(Location location, EntityType entityType, ConfigurationSection config) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         this.location = location;
         this.entityType = entityType;
         this.shopkeepersConfig = config;
         ShopUtil.addShop(getID(), this);
-        loadYamlProcess(getFile());
         if (!exsited) {
             createEditorNewPage();
             if (config == null) saveYaml();
-        }
+        } else
+            loadYamlProcess(getFile());
+    }
+
+    public Shop(Location location, EntityType entityType, String name) {
+        boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
+        this.citizen = CitizensAPI.getNPCRegistry().createNPC(entityType, name);
+        this.location = location;
+        this.entityType = entityType;
+        ShopUtil.addShop(getID(), this);
+        if (!exsited) {
+            createEditorNewPage();
+            saveYaml();
+        } else
+            loadYamlProcess(getFile());
     }
 
     public Shop(Location location, String mmid) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         this.location = location;
-        this.mythicmob = Optional.of(mmid);
+        this.mythicmob = mmid;
         ShopUtil.addShop(getID(), this);
-        loadYamlProcess(getFile());
-        this.NBTBuilder = new EntityNBTBuilder(npc);
         if (!exsited) {
             createEditorNewPage();
             saveYaml();
-        }
+        } else
+            loadYamlProcess(getFile());
     }
 
     public void loadYamlProcess(File file) {
@@ -124,8 +129,8 @@ public class Shop {
 
     protected Consumer<YamlConfiguration> getLoadYamlProcess() {
         return yaml -> {
-            if (!mythicmob.isPresent()) this.mythicmob = Optional.ofNullable(yaml.getString("Npc.Options.MythicMob"));
-            displayName = yaml.getString("Npc.Options.DisplayName");
+            this.mythicmob = yaml.getString("Npc.Options.MythicMob");
+            this.displayName = yaml.getString("Npc.Options.DisplayName");
             this.invisible = yaml.getBoolean("Npc.Options.Invisible", false);
             this.yaw = yaml.getInt("Npc.Status.Yaw", 0);
             this.location.setYaw(yaw);
@@ -295,9 +300,9 @@ public class Shop {
     }
 
     public ItemStack convertShopToItemStack() {
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM.getMessage() + ChatColor.GREEN +  getDisplayNameOrElseNone(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN +  LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK_SUB.getMessage(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_SHIFT_CLICK.getMessage() + ChatColor.GREEN +  LanguageKey.ITEM_SHOP_COMPRESSION_GEM_SHIFT_CLICK_SUB.getMessage(),
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM.getMessage() + ChatColor.GREEN + getDisplayNameOrElseNone(),
+                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK_SUB.getMessage(),
+                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_SHIFT_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_SHIFT_CLICK_SUB.getMessage(),
                 ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
         );
         item = NBTUtil.setNMSTag(item, convertShopToMap());
@@ -443,7 +448,7 @@ public class Shop {
 
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return yaml -> {
-            mythicmob.ifPresent(mythicmob -> yaml.set("Npc.Options.MythicMob", mythicmob));
+            yaml.set("Npc.Options.MythicMob", mythicmob);
             yaml.set("Npc.Options.DisplayName", displayName);
             yaml.set("Npc.Options.EntityType", entityType.toString());
             yaml.set("Npc.Options.Invisible", invisible);
@@ -614,13 +619,13 @@ public class Shop {
     public void setNpcType(EntityType entityType) {
         if (npc != null) npc.remove();
         this.entityType = entityType;
-        this.mythicmob = Optional.empty();
+        this.mythicmob = null;
         if (npc == null) respawnNPC();
     }
 
     public void setMythicType(String mythicType) {
         if (npc != null) npc.remove();
-        this.mythicmob = Optional.of(mythicType);
+        this.mythicmob = mythicType;
         this.entityType = null;
         respawnNPC();
     }
@@ -630,19 +635,22 @@ public class Shop {
         if (npc != null && !npc.isDead()) return;
         if (!location.getChunk().isLoaded()) return;
         if (entityType == null) return;
-        if (mythicmob.isPresent() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob.get()) != null) {
+        if (mythicmob != null && MythicInstanceProvider.getInstance().getMythicMob(mythicmob) != null) {
             if (npc != null) npc.remove();
-            npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob.get(), location);
+            npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob, location);
             setNpcMeta();
         } else {
             spawnNPC(entityType);
-            this.NBTBuilder = new EntityNBTBuilder(npc);
             npc.setCustomName(displayName);
             npc.getPassengers().forEach(Entity::remove);
             Optional.ofNullable(npc.getVehicle()).ifPresent(Entity::remove);
             if (npc instanceof LivingEntity)
                 updateEquipments();
         }
+        this.NBTBuilder = new EntityNBTBuilder(npc);
+        Block block = location.clone().subtract(0, -1, 0).getBlock();
+        if (block.getBlockData() instanceof Slab && ((Slab) block.getBlockData()).getType().equals(Slab.Type.BOTTOM))
+            npc.teleport(location.clone().add(0, -0.5, 0));
         if (npc instanceof LivingEntity)
             NBTBuilder.setInvisible(invisible);
         this.location.setYaw(yaw);

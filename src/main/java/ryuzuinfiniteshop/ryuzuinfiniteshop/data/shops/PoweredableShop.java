@@ -11,10 +11,6 @@ import java.util.function.Consumer;
 public class PoweredableShop extends Shop {
     protected boolean powered;
 
-    public PoweredableShop(Location location, EntityType entitytype) {
-        super(location, entitytype);
-    }
-
     public PoweredableShop(Location location, EntityType entitytype, ConfigurationSection config) {
         super(location, entitytype, config);
     }

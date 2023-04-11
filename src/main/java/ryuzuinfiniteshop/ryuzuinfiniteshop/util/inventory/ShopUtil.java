@@ -125,6 +125,7 @@ public class ShopUtil {
                 if (Bukkit.getWorld(config.getString(base + ".world")) == null) continue;
                 Location location = LocationUtil.toLocationFromString(config.getString(base + ".world") + "," + config.getString(base + "x") + "," + config.getString(base + "y") + "," + config.getString(base + "z"));
                 if (shops.containsKey(LocationUtil.toStringFromLocation(location))) {
+                    //コンバート先の座標にすでにSISのSHOPがおかれている場合の処理
                     Shop shop = shops.get(LocationUtil.toStringFromLocation(location));
                     List<ShopTrade> trades = new ArrayList<>();
                     for (String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
@@ -145,6 +146,7 @@ public class ShopUtil {
                         shop.addAllTrades(trades);
                     keys.add(key);
                 } else {
+                    //コンバート先の座標に新期でSISのSHOPが置く場合の処理
                     Shop shop = createNewShop(location, type, config.getConfigurationSection(key));
                     List<ShopTrade> trades = new ArrayList<>();
                     for (String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {

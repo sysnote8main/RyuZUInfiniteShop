@@ -13,10 +13,6 @@ public class AgeableShop extends Shop {
     @Getter
     protected boolean adult;
 
-    public AgeableShop(Location location, EntityType entitytype) {
-        super(location, entitytype);
-    }
-
     public AgeableShop(Location location, EntityType entitytype, ConfigurationSection config) {
         super(location, entitytype, config);
     }

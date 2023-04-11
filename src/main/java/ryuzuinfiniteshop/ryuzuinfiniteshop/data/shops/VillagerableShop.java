@@ -18,10 +18,6 @@ public class VillagerableShop extends AgeableShop {
     protected Villager.Type biome;
     protected int level = 1;
 
-    public VillagerableShop(Location location, EntityType entitytype) {
-        super(location, entitytype);
-    }
-
     public VillagerableShop(Location location, EntityType entitytype, ConfigurationSection config) {
         super(location, entitytype, config);
     }

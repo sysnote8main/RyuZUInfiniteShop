@@ -3,7 +3,6 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 import lombok.Getter;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
@@ -17,10 +16,6 @@ public class TropicalFishShop extends Shop {
     protected DyeColor bodyColor;
     protected DyeColor patternColor;
     protected TropicalFish.Pattern pattern;
-
-    public TropicalFishShop(Location location, EntityType entitytype) {
-        super(location, entitytype);
-    }
 
     public TropicalFishShop(Location location, EntityType entitytype, ConfigurationSection config) {
         super(location, entitytype, config);

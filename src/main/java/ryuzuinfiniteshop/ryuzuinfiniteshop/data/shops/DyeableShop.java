@@ -11,17 +11,12 @@ import org.bukkit.material.Colorable;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.EntityUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
-import java.util.Arrays;
 import java.util.function.Consumer;
 
 //狼、熱帯魚、羊などの染料と同じ色を付けられるもの
 public class DyeableShop extends Shop {
     protected DyeColor color;
     protected boolean optionalInfo;
-
-    public DyeableShop(Location location, EntityType entitytype) {
-        super(location, entitytype);
-    }
 
     public DyeableShop(Location location, EntityType entitytype, ConfigurationSection config) {
         super(location, entitytype, config);
