@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.trait.Equipment;
+import net.citizensnpcs.trait.LookClose;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Slab;
@@ -15,6 +17,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
@@ -41,7 +44,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Shop {
-    public enum ShopType {TwotoOne, FourtoFour, SixtoTwo}
 
     @Getter
     protected Entity npc;
@@ -131,6 +133,8 @@ public class Shop {
     protected Consumer<YamlConfiguration> getLoadYamlProcess() {
         return yaml -> {
             this.mythicmob = yaml.getString("Npc.Options.MythicMob");
+            if(MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob) == null)
+                new RuntimeException(LanguageKey.ERROR_MYTHICMOBS_INVALID_ID.getMessage(mythicmob)).printStackTrace();
             this.displayName = yaml.getString("Npc.Options.DisplayName");
             this.invisible = yaml.getBoolean("Npc.Options.Invisible", false);
             this.yaw = yaml.getInt("Npc.Status.Yaw", 0);
@@ -202,7 +206,7 @@ public class Shop {
             limit = limit == 0 && expectedTrade != null && expectedTrade.getLimit() > 0 ? expectedTrade.getLimit() : limit;
 
             // 編集画面上に重複した取引が存在するかチェックする
-            if(available && onTrades.contains(expectedTrade)) duplication = true;
+            if (available && onTrades.contains(expectedTrade)) duplication = true;
             onTrades.add(expectedTrade);
 
             // 取引を追加、上書き、削除する
@@ -305,9 +309,9 @@ public class Shop {
 
     public ItemStack convertShopToItemStack() {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM.getMessage() + ChatColor.GREEN + getDisplayNameOrElseNone(),
-                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
-                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
-                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
+                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
+                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
+                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
         );
         item = NBTUtil.setNMSTag(item, convertShopToMap());
         return item;
@@ -478,9 +482,7 @@ public class Shop {
         try {
             yaml.save(file);
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            throw new RuntimeException(LanguageKey.ERROR_FILE_SAVING.getMessage(file.getName()), e);
+            if(!Config.readOnlyIgnoreException) throw new RuntimeException(LanguageKey.ERROR_FILE_SAVING.getMessage(file.getName()), e);
         }
         return yaml;
     }
@@ -561,6 +563,8 @@ public class Shop {
         if (!(npc instanceof LivingEntity)) return;
         LivingEntity livnpc = (LivingEntity) npc;
         livnpc.setAI(false);
+        if (!Config.followPlayer && citizen != null)
+            citizen.addTrait(LookClose.class);
         livnpc.setRemoveWhenFarAway(true);
 //        NBTBuilder.setNoAI(true);
 //        NBTBuilder.setPersistenceRequired(true);
@@ -594,11 +598,16 @@ public class Shop {
     }
 
     public void updateEquipments() {
-        if (npc instanceof LivingEntity) {
-            LivingEntity livnpc = ((LivingEntity) npc);
-            for (Integer i : EquipmentUtil.getEquipmentsSlot().keySet()) {
-                EquipmentSlot slot = EquipmentUtil.getEquipmentSlot(i);
-                livnpc.getEquipment().setItem(slot, equipments.toItemStacks()[slot.ordinal()]);
+        if (citizen == null) {
+            if (npc instanceof LivingEntity) {
+                LivingEntity livnpc = ((LivingEntity) npc);
+                for (EquipmentSlot slot : EquipmentUtil.getEquipmentsSlot().values()) {
+                    livnpc.getEquipment().setItem(slot, equipments.toItemStacks()[slot.ordinal()]);
+                }
+            }
+        } else {
+            for (EquipmentSlot slot : EquipmentUtil.getEquipmentsSlot().values()) {
+                citizen.getOrAddTrait(Equipment.class).set(slot.ordinal(), equipments.toItemStacks()[slot.ordinal()]);
             }
         }
     }
@@ -636,7 +645,6 @@ public class Shop {
     public void setMythicType(String mythicType) {
         if (npc != null) npc.remove();
         this.mythicmob = mythicType;
-        this.entityType = null;
         respawnNPC();
     }
 
@@ -648,6 +656,12 @@ public class Shop {
         if (mythicmob != null && MythicInstanceProvider.getInstance().getMythicMob(mythicmob) != null) {
             if (npc != null) npc.remove();
             npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob, location);
+            setNpcMeta();
+        } else if (citizen != null) {
+            if (npc != null) citizen.despawn();
+            citizen.spawn(location);
+            citizen.setName(displayName);
+            npc = citizen.getEntity();
             setNpcMeta();
         } else {
             spawnNPC(entityType);
@@ -664,7 +678,6 @@ public class Shop {
         if (npc instanceof LivingEntity)
             NBTBuilder.setInvisible(invisible);
         this.location.setYaw(yaw);
-        npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
     }
 
     @Override

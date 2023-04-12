@@ -64,7 +64,7 @@ public class FileUtil {
             TradeUtil.loadTradeLimits();
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
                 saveBlock = false;
-                if(converted) saveAll(() -> {});
+                if(converted) saveAll();
                 Config.runAutoSave();
                 Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_FILES_RELOADING_COMPLETE.getMessage()));
                 ShopUtil.getShops().values().forEach(Shop::respawnNPC);
@@ -74,7 +74,7 @@ public class FileUtil {
         return true;
     }
 
-    public static boolean loadAll(Runnable endTask) {
+    public static boolean loadAll() {
         if(saveBlock) return false;
 
         ShopUtil.removeAllNPC();
@@ -88,17 +88,16 @@ public class FileUtil {
             TradeUtil.loadTradeLimits();
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
                 saveBlock = false;
-                if(converted) saveAll(() -> {});
+                if(converted) saveAll();
                 Config.runAutoSave();
                 Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_FILES_LOADING_COMPLETE.getMessage()));
                 ShopUtil.getShops().values().forEach(Shop::respawnNPC);
-                endTask.run();
             });
         });
         return true;
     }
 
-    public static boolean saveAll(Runnable endTask) {
+    public static boolean saveAll() {
         if(saveBlock) return false;
 
         saveBlock = true;
@@ -112,10 +111,21 @@ public class FileUtil {
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
                 saveBlock = false;
                 Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_FILES_SAVING_COMPLETE.getMessage()));
-                endTask.run();
             });
         });
         return true;
+    }
+
+    public static void saveAllSync() {
+        ShopUtil.removeAllNPC();
+        ShopUtil.getAllShopInventoryViewer();
+        Config.load();
+        TradeUtil.saveTradeLimits();
+        ShopUtil.saveAllShops();
+        UnderstandSystemConfig.save();
+        DisplayPanelConfig.save();
+        Config.save();
+        LanguageConfig.save();
     }
 
     public static boolean isSaveBlock(Player p) {

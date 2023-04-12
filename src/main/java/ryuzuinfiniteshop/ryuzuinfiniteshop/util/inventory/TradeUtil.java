@@ -4,7 +4,9 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
@@ -15,7 +17,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class TradeUtil {
-    public static boolean isAvailableTrade(Inventory inv, int slot, Shop.ShopType type) {
+    public static boolean isAvailableTrade(Inventory inv, int slot, ShopType type) {
         switch (type) {
             case TwotoOne:
                 return ItemUtil.getItemSet(inv, slot, 2).length != 0 && inv.getItem(slot + 3) != null;
@@ -27,7 +29,7 @@ public class TradeUtil {
         return false;
     }
 
-    public static ShopTrade getTrade(Inventory inv, int slot, Shop.ShopType type) {
+    public static ShopTrade getTrade(Inventory inv, int slot, ShopType type) {
         if (!isAvailableTrade(inv, slot, type)) return null;
         switch (type) {
             case TwotoOne:
@@ -54,7 +56,7 @@ public class TradeUtil {
         try {
             config.save(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            if(!Config.readOnlyIgnoreException) e.printStackTrace();
         }
     }
 
@@ -80,7 +82,7 @@ public class TradeUtil {
     public static ShopTrade getFirstTrade(ItemStack item) {
         String tag = NBTUtil.getNMSStringTag(item, "TradesSize");
         if (tag == null) return null;
-        Shop.ShopType shoptype = Shop.ShopType.valueOf(NBTUtil.getNMSStringTag(item, "ShopType"));
+        ShopType shoptype = ShopType.valueOf(NBTUtil.getNMSStringTag(item, "ShopType"));
         return new ShopTrade(ItemUtil.toItemStackArrayFromString(NBTUtil.getNMSStringTag(item, "Give" + 0)), ItemUtil.toItemStackArrayFromString(NBTUtil.getNMSStringTag(item, "Take" + 0)));
     }
 

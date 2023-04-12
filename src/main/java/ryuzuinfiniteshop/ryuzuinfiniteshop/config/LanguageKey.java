@@ -21,14 +21,14 @@ public enum LanguageKey {
     COMMAND_LOAD_ALL_DATA("全てのデータをファイルから読み取り、ショップをロードします", "Load all data from files"),
     COMMAND_UNLOAD_ALL_DATA("全てのデータをファイルに保存し、ショップをアンロードします", "Unload all data to files"),
     COMMAND_CHANGE_TRADE_LIMIT("取引回数を変更します", "Change trade limits"),
-    COMMAND_ARGUMENT_REQUIRED("[arg]", "Required"),
-    COMMAND_ARGUMENT_OPTIONAL("<arg>", "Optional"),
-    COMMAND_PLAYER_ONLY("プレイヤーのみ実行可能です。", "Only players can execute this command."),
+    COMMAND_ARGUMENT_REQUIRED("必須", "Required"),
+    COMMAND_ARGUMENT_OPTIONAL("任意", "Optional"),
+    COMMAND_PLAYER_ONLY("プレイヤーのみ実行可能です", "Only players can execute this command."),
     MESSAGE_SHOP_CREATED("ショップを設置しました", "Shop created!"),
     MESSAGE_SHOP_UPDATED("ショップを更新しました", "Shop updated!"),
-    MESSAGE_ERROR_ENTITY_INVALID("有効なエンティティタイプまたはMythicMobIDを入力して下さい。", "Please input a valid entity type or MythicMob ID."),
+    MESSAGE_ERROR_ENTITY_INVALID("有効なエンティティタイプまたはMythicMobIDを入力して下さい", "Please input a valid entity type or MythicMob ID."),
     INVENTORY_SHOP_LIST("ショップ一覧", "Shop List"),
-    ITEM_TRADE_SUCCESS("購入可能", "Purchaseable"),
+    ITEM_TRADE_SUCCESS("購入可能", "Purchasable"),
     ITEM_NOT_ENOUGH_ITEMS("アイテムが足りません", "Not enough items"),
     ITEM_NOT_ENOUGH_SPACE("インベントリに十分な空きがありません", "Inventory is full"),
     ITEM_TRADE_LIMITED("取引上限です", "Trade is limited"),
@@ -87,8 +87,8 @@ public enum LanguageKey {
     MESSAGE_SHOP_EDITING("現在このショップは編集中です", "This shop is currently being edited"),
     MESSAGE_SHOP_NO_TRADES("現在このショップには取引が存在しません", "There are currently no trades available in this shop"),
     ERROR_FILE_SAVING("ShopID: {0} の保存中にエラーが発生しました", "An error occurred while saving ShopID: {0}"),
-    ERROR_MYTHICMOBS_INVALID_LOADED("MythicMobsがロードされていません", "MythicMobs is not loaded"),
-    ERROR_MYTHICMOBS_INVALID_ID("存在しないMMIDです", "Invalid MMID"),
+    ERROR_MYTHICMOBS_INVALID_LOADED("MythicMobsがロードされていません ID: {0}", "MythicMobs is not loaded ID: {0}"),
+    ERROR_MYTHICMOBS_INVALID_ID("存在しないMMIDです ID: {0}", "Invalid MMID ID: {0}"),
     MESSAGE_ERROR_NOT_EXIST_PLAYER("そのプレイヤーは存在しません", "That player does not exist"),
     MESSAGE_ERROR_TRADE_REQUIRED_GEM("トレード圧縮宝石を持った状態で実行してください", "Please execute while holding a Trade Compression Gem"),
     COMMAND_INVALID_INTEGER("0以上の整数を入力してください", "Please input a non-negative integer"),
@@ -149,7 +149,7 @@ public enum LanguageKey {
     ITEM_EQUIP_BOOTS("ブーツ", "Boots"),
     ITEM_EQUIP_HAND_OFF("オフハンド", "Off hand"),
     INVENTORY_DEFAULT_SHOP("ショップ", "Shop"),
-    MESSAGE_SUCCESS_SHOP_MERGE("{0}の取引を宝石のショップにマージしました", "Successfully merged trades of {0} into gemstone shop");
+    MESSAGE_SUCCESS_SHOP_MERGE("{0}の取引を宝石のショップにマージしました", "Successfully merged trades of {0} into the shop in gemstone");
 
 
     private final String japanese;

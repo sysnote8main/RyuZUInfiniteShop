@@ -34,8 +34,8 @@ public class UnderstandSystemConfig {
         yaml.set("signedPlayers", signedPlayers);
         try {
             yaml.save(file);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            if(!Config.readOnlyIgnoreException) e.printStackTrace();
         }
     }
 }

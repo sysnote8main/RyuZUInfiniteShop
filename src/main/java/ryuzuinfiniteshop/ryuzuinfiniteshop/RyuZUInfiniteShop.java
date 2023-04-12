@@ -2,6 +2,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop;
 
 import com.github.ryuzu.ryuzucommandsgenerator.RyuZUCommandsGenerator;
 import de.tr7zw.nbtinjector.NBTInjector;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -25,8 +26,13 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.trades.OpenShopListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
+import java.util.logging.Logger;
+
 public final class RyuZUInfiniteShop extends JavaPlugin {
+    @Getter
     private static RyuZUInfiniteShop plugin;
+    @Getter
+    private static Logger logger;
     public final static String prefixCommand = ChatColor.GOLD + "[SIS]";
     public final static String prefixPersistent = "RyuZU.Infinite.Shop.";
     public static int VERSION = Integer.parseInt((Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".").substring(3).substring(0, (Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".").substring(3).indexOf("_")));
@@ -35,31 +41,19 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         plugin = this;
+        logger = getLogger();
         registerEvents();
         CommandChain.registerCommand();
         new RyuZUCommandsGenerator(this);
         ConfigurationSerialization.registerClass(MythicItem.class);
         MythicInstanceProvider.setInstance();
         if(VERSION < 14) NBTInjector.inject();
-        FileUtil.loadAll(() -> {});
+        FileUtil.loadAll();
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
-        ShopUtil.removeAllNPC();
-        ShopUtil.getAllShopInventoryViewer();
-        Config.load();
-        TradeUtil.saveTradeLimits();
-        ShopUtil.saveAllShops();
-        UnderstandSystemConfig.save();
-        DisplayPanelConfig.save();
-        Config.save();
-        LanguageConfig.save();
-    }
-
-    public static RyuZUInfiniteShop getPlugin() {
-        return plugin;
+        FileUtil.saveAllSync();
     }
 
     public static void registerEvents() {

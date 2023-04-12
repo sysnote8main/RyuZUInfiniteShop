@@ -14,6 +14,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
@@ -57,7 +58,7 @@ public class ShopTrade {
         this.takeData = new ObjectItems(take);
     }
 
-    public ShopTrade(Inventory inv, int slot, Shop.ShopType type, int limit) {
+    public ShopTrade(Inventory inv, int slot, ShopType type, int limit) {
         setTrade(inv, slot, type);
         setTradeLimits(limit, false);
     }
@@ -163,7 +164,7 @@ public class ShopTrade {
         return getSettingsFilter(value);
     }
 
-    public ItemStack[] getTradeItems(Shop.ShopType type, ShopMode mode) {
+    public ItemStack[] getTradeItems(ShopType type, ShopMode mode) {
         ItemStack[] items;
         ItemStack filter = getFilter(mode);
         switch (type) {
@@ -204,7 +205,7 @@ public class ShopTrade {
         return items;
     }
 
-    public ItemStack[] getTradeItems(Shop.ShopType type, String id, Player player) {
+    public ItemStack[] getTradeItems(ShopType type, String id, Player player) {
         ItemStack[] items;
         ItemStack filter = getFilter(id, player);
         switch (type) {
@@ -236,7 +237,7 @@ public class ShopTrade {
         return items;
     }
 
-    public void setTrade(Inventory inv, int slot, Shop.ShopType type) {
+    public void setTrade(Inventory inv, int slot, ShopType type) {
         ShopTrade trade = TradeUtil.getTrade(inv, slot, type);
         if (trade == null) return;
         this.takeData = trade.takeData;

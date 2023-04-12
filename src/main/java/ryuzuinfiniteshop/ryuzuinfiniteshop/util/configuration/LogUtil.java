@@ -36,7 +36,7 @@ public class LogUtil {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             log = br.lines().collect(Collectors.toList());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            if(!Config.readOnlyIgnoreException) throw new RuntimeException(e);
         }
         return log;
     }
@@ -95,7 +95,7 @@ public class LogUtil {
                 fileWriter.write(l + System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            if(!Config.readOnlyIgnoreException) throw new RuntimeException(e);
         }
     }
 }

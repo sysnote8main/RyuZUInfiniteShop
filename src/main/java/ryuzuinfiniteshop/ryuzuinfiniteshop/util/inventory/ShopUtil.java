@@ -12,6 +12,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.Colorable;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
@@ -59,7 +60,7 @@ public class ShopUtil {
         return JavaUtil.getOrDefault(event.getClickedInventory(), event.getView().getTopInventory());
     }
 
-    public static int getSubtractSlot(Shop.ShopType type) {
+    public static int getSubtractSlot(ShopType type) {
         switch (type) {
             case TwotoOne:
                 return 2;
@@ -172,7 +173,7 @@ public class ShopUtil {
         try {
             config.save(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            if(!Config.readOnlyIgnoreException) e.printStackTrace();
         }
         return keys.size() > 0;
     }
@@ -182,10 +183,7 @@ public class ShopUtil {
             for (Entity entity : world.getEntities()) {
                 if (entity instanceof Player) continue;
                 String id = NBTUtil.getNMSStringTag(entity, "Shop");
-                if (id != null) {
-                    entity.getLocation().getChunk().load();
-                    entity.getWorld().getNearbyEntities(entity.getLocation(), 0.1, 0.1, 0.1).forEach(Entity::remove);
-                }
+                if (id != null) entity.getWorld().getNearbyEntities(entity.getLocation(), 0.1, 0.1, 0.1).forEach(Entity::remove);
             }
         }
     }
@@ -231,8 +229,6 @@ public class ShopUtil {
             return new VillagerableShop(location, type, config);
         if (type.equals(EntityType.CREEPER))
             return new PoweredableShop(location, type, config);
-        if (type.equals(EntityType.TROPICAL_FISH))
-            return new TropicalFishShop(location, type, config);
         if (Slime.class.isAssignableFrom(type.getEntityClass()))
             return new SlimeShop(location, type, config);
         if (Colorable.class.isAssignableFrom(type.getEntityClass()) || type.equals(EntityType.WOLF))
@@ -243,6 +239,8 @@ public class ShopUtil {
             return new HorseShop(location, type, config);
         if (Ageable.class.isAssignableFrom(type.getEntityClass()))
             return new AgeableShop(location, type, config);
+        if (RyuZUInfiniteShop.VERSION >= 13 && type.equals(EntityType.TROPICAL_FISH))
+            return new TropicalFishShop(location, type, config);
         return new Shop(location, type, config);
     }
 
@@ -274,14 +272,14 @@ public class ShopUtil {
         }
 
         consumer.accept(config);
-        String stringlocation = LocationUtil.toStringFromLocation(location);
-        if (shops.containsKey(stringlocation)) shops.get(stringlocation).removeShop();
+        String stringLocation = LocationUtil.toStringFromLocation(location);
+        if (shops.containsKey(stringLocation)) shops.get(stringLocation).removeShop();
         config.set("Trades", trades.stream().map(ShopTrade::serialize).collect(Collectors.toList()));
 
         try {
             config.save(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            if(!Config.readOnlyIgnoreException) e.printStackTrace();
         }
 
         EntityType type = EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER"));

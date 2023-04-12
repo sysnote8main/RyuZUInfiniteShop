@@ -70,7 +70,7 @@ public class CommandChain {
 
         CommandsGenerator.registerCommand(
                 "sis.save",
-                data -> FileUtil.saveAll(() -> {}),
+                data -> FileUtil.saveAll(),
                 "sis.op",
                 data -> true,
                 data -> !FileUtil.isSaveBlock(data)
@@ -78,7 +78,7 @@ public class CommandChain {
 
         CommandsGenerator.registerCommand(
                 "sis.load",
-                data -> FileUtil.loadAll(() -> {}),
+                data -> FileUtil.loadAll(),
                 "sis.op",
                 data -> true,
                 data -> !FileUtil.isSaveBlock(data)

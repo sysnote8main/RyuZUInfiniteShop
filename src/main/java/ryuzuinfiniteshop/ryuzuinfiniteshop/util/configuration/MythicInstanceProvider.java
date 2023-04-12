@@ -1,13 +1,13 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
 
 import org.bukkit.Bukkit;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.MythicListener;
 
 public class MythicInstanceProvider {
-    private static final String errorMessage = "MythicMobs is not loaded. If you want to use MythicMobs, please install MythicMobs.";
     private static MythicListener instance;
     public static MythicListener getInstance() {
-        if(instance == null) throw new NullPointerException(errorMessage);
+        if(instance == null) throw new NullPointerException(LanguageKey.ERROR_MYTHICMOBS_INVALID_LOADED.getMessage());
         return instance;
     }
 

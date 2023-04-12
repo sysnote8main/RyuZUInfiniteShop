@@ -16,6 +16,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SearchTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
@@ -205,7 +206,7 @@ public class SearchTradeListener implements Listener {
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
-        Shop.ShopType type = holder.getShop().getShopType();
+        ShopType type = holder.getShop().getShopType();
         int slot = event.getSlot();
         ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(slot);
 
@@ -214,7 +215,7 @@ public class SearchTradeListener implements Listener {
 
         int info = ShopUtil.getSubtractSlot(type);
         int surplus = slot % 9;
-        int base = (type.equals(Shop.ShopType.TwotoOne) && surplus > 4) ? surplus - 5 : surplus;
+        int base = (type.equals(ShopType.TwotoOne) && surplus > 4) ? surplus - 5 : surplus;
         if(ItemUtil.isAir(event.getCurrentItem())) return;
         if(!(p.hasPermission("sis.search") || p.hasPermission("sis.op"))) return;
         if(base == info) return;

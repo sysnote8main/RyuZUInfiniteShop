@@ -24,6 +24,7 @@ public class Config {
     public static boolean overwriteConverting;
     public static boolean defaultSearchableInConverting;
     public static boolean followPlayer;
+    public static boolean readOnlyIgnoreException;
     public static String language;
     public static BukkitTask respawnTask;
     private static BukkitTask autoSaveTask;
@@ -44,6 +45,7 @@ public class Config {
         defaultSearchableInConverting = yaml.getBoolean("DefaultSearchableInConverting", true);
         followPlayer = yaml.getBoolean("FollowPlayer", false);
         language = yaml.getString("Language", "english").toLowerCase();
+        readOnlyIgnoreException = yaml.getBoolean("ReadOnlyIgnoreException", false);
     }
 
     public static void save() {
@@ -62,10 +64,12 @@ public class Config {
         if(!yaml.contains("DefaultSearchableInConverting")) yaml.set("DefaultSearchableInConverting", overwriteConverting);
         if(!yaml.contains("FollowPlayer")) yaml.set("FollowPlayer" , followPlayer);
         if(!yaml.contains("Language")) yaml.set("Language", language);
+        if(!yaml.contains("ReadOnlyIgnoreException")) yaml.set("ReadOnlyIgnoreException", readOnlyIgnoreException);
+
         try {
             yaml.save(file);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            if(!readOnlyIgnoreException) e.printStackTrace();
         }
     }
 

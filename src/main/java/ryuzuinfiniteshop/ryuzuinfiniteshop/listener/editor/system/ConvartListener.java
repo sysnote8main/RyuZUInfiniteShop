@@ -19,6 +19,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
@@ -77,7 +78,7 @@ public class ConvartListener implements Listener {
             SoundUtil.playFailSound(p);
             return;
         }
-        if (!(shop.getShopType().equals(Shop.ShopType.TwotoOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
+        if (!(shop.getShopType().equals(ShopType.TwotoOne) || ShopType.valueOf(tag).equals(shop.getShopType()))) {
             SoundUtil.playFailSound(p);
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_MATCH.getMessage());
             return;
@@ -149,7 +150,7 @@ public class ConvartListener implements Listener {
         if (ItemUtil.isAir(item) || shopData == null) return;
 
         String tag = NBTUtil.getNMSStringTag(item, "ShopType");
-        if (!(shop.getShopType().equals(Shop.ShopType.TwotoOne) || Shop.ShopType.valueOf(tag).equals(shop.getShopType()))) {
+        if (!(shop.getShopType().equals(ShopType.TwotoOne) || ShopType.valueOf(tag).equals(shop.getShopType()))) {
             SoundUtil.playFailSound(p);
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_MATCH.getMessage());
             return;

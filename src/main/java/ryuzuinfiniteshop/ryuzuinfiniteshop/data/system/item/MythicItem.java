@@ -21,10 +21,10 @@ public class MythicItem implements ConfigurationSerializable {
 
     public ItemStack convertItemStack() {
         if(!MythicInstanceProvider.isLoaded())
-            return ItemUtil.clone(NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.REDSTONE_BLOCK, ChatColor.RED + LanguageKey.ERROR_MYTHICMOBS_INVALID_LOADED.getMessage() + ChatColor.YELLOW + " ID: " + id) , "Error", id) , amount);
+            return ItemUtil.clone(NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.REDSTONE_BLOCK, ChatColor.RED + LanguageKey.ERROR_MYTHICMOBS_INVALID_LOADED.getMessage(id)) , "Error", id) , amount);
         ItemStack item = MythicInstanceProvider.getInstance().getMythicMobsInstance().getItemManager().getItemStack(id);
         if (item == null)
-            return ItemUtil.clone(NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.REDSTONE_BLOCK, ChatColor.RED + LanguageKey.ERROR_MYTHICMOBS_INVALID_ID.getMessage() + ChatColor.YELLOW + " ID: " + id) , "Error", id) , amount);
+            return ItemUtil.clone(NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.REDSTONE_BLOCK, ChatColor.RED + LanguageKey.ERROR_MYTHICMOBS_INVALID_ID.getMessage(id)) , "Error", id) , amount);
         return MythicInstanceProvider.getInstance().getMythicItem(id, amount);
     }
 

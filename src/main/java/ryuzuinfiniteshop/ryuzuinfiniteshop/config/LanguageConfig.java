@@ -53,8 +53,8 @@ public class LanguageConfig {
 
             try {
                 yaml.save(file);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (IOException e) {
+                if(!Config.readOnlyIgnoreException) e.printStackTrace();
             }
         }
     }
