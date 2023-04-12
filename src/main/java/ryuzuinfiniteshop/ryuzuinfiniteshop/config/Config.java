@@ -3,18 +3,14 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.config;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 
 public class Config {
     public static int autoSaveInterval = 20;
@@ -24,7 +20,7 @@ public class Config {
     public static boolean overwriteConverting;
     public static boolean defaultSearchableInConverting;
     public static boolean followPlayer;
-    public static boolean readOnlyIgnoreException;
+    public static boolean readOnlyIgnoreIOException;
     public static String language;
     public static BukkitTask respawnTask;
     private static BukkitTask autoSaveTask;
@@ -45,7 +41,7 @@ public class Config {
         defaultSearchableInConverting = yaml.getBoolean("DefaultSearchableInConverting", true);
         followPlayer = yaml.getBoolean("FollowPlayer", false);
         language = yaml.getString("Language", "english").toLowerCase();
-        readOnlyIgnoreException = yaml.getBoolean("ReadOnlyIgnoreException", false);
+        readOnlyIgnoreIOException = yaml.getBoolean("ReadOnlyIgnoreIOException", false);
     }
 
     public static void save() {
@@ -64,12 +60,12 @@ public class Config {
         if(!yaml.contains("DefaultSearchableInConverting")) yaml.set("DefaultSearchableInConverting", overwriteConverting);
         if(!yaml.contains("FollowPlayer")) yaml.set("FollowPlayer" , followPlayer);
         if(!yaml.contains("Language")) yaml.set("Language", language);
-        if(!yaml.contains("ReadOnlyIgnoreException")) yaml.set("ReadOnlyIgnoreException", readOnlyIgnoreException);
+        if(!yaml.contains("ReadOnlyIgnoreIOException")) yaml.set("ReadOnlyIgnoreIOException", readOnlyIgnoreIOException);
 
         try {
             yaml.save(file);
         } catch (IOException e) {
-            if(!readOnlyIgnoreException) e.printStackTrace();
+            if(!readOnlyIgnoreIOException) e.printStackTrace();
         }
     }
 

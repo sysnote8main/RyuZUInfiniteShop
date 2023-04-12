@@ -1,18 +1,13 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.config;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.scheduler.BukkitTask;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class UnderstandSystemConfig {
     public static List<String> signedPlayers;
@@ -35,7 +30,7 @@ public class UnderstandSystemConfig {
         try {
             yaml.save(file);
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreException) e.printStackTrace();
+            if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
         }
     }
 }

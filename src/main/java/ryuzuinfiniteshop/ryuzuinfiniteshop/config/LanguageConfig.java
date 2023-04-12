@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 public class LanguageConfig {
@@ -54,7 +53,7 @@ public class LanguageConfig {
             try {
                 yaml.save(file);
             } catch (IOException e) {
-                if(!Config.readOnlyIgnoreException) e.printStackTrace();
+                if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
             }
         }
     }

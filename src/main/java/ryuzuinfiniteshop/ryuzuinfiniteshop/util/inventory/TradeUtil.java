@@ -56,7 +56,7 @@ public class TradeUtil {
         try {
             config.save(file);
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreException) e.printStackTrace();
+            if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
         }
     }
 

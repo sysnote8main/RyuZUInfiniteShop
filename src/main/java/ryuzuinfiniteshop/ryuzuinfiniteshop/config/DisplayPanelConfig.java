@@ -6,7 +6,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.DisplayPanel;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +62,7 @@ public class DisplayPanelConfig {
         try {
             yaml.save(file);
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreException) e.printStackTrace();
+            if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
         }
     }
 

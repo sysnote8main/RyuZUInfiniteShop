@@ -1,12 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
 
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityInteractEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
@@ -36,7 +31,7 @@ public class LogUtil {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             log = br.lines().collect(Collectors.toList());
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreException) throw new RuntimeException(e);
+            if(!Config.readOnlyIgnoreIOException) throw new RuntimeException(e);
         }
         return log;
     }
@@ -95,7 +90,7 @@ public class LogUtil {
                 fileWriter.write(l + System.lineSeparator());
             }
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreException) throw new RuntimeException(e);
+            if(!Config.readOnlyIgnoreIOException) throw new RuntimeException(e);
         }
     }
 }

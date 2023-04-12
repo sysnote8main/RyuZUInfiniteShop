@@ -173,7 +173,7 @@ public class ShopUtil {
         try {
             config.save(file);
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreException) e.printStackTrace();
+            if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
         }
         return keys.size() > 0;
     }
@@ -279,7 +279,7 @@ public class ShopUtil {
         try {
             config.save(file);
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreException) e.printStackTrace();
+            if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
         }
 
         EntityType type = EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER"));

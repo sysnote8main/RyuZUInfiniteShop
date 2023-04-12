@@ -31,7 +31,7 @@ public class FileUtil {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                e.printStackTrace();
+                if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
             }
         }
         return file;

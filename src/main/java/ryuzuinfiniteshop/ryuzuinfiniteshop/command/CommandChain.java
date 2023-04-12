@@ -13,6 +13,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.UnderstandSystemConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SelectSearchItemGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
@@ -107,11 +108,13 @@ public class CommandChain {
                     Player player = (Player) data.getSender();
                     Location location = player.getLocation();
                     if (ShopUtil.getShops().containsKey(LocationUtil.toStringFromLocation(location))) {
-                        ShopUtil.reloadShop(ShopUtil.getShop(LocationUtil.toStringFromLocation(location)));
+                        Shop shop = ShopUtil.reloadShop(ShopUtil.getShop(LocationUtil.toStringFromLocation(location)));
+                        shop.respawnNPC();
                         player.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN +  LanguageKey.MESSAGE_SHOP_UPDATED.getMessage());
                         return;
                     }
-                    ShopUtil.createNewShop(location, EntityType.VILLAGER);
+                    Shop shop = ShopUtil.createNewShop(location, EntityType.VILLAGER);
+                    shop.respawnNPC();
                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SHOP_CREATED.getMessage());
                     LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(location));
                 },
@@ -135,7 +138,8 @@ public class CommandChain {
                     if (LocationUtil.isLocationString(data.getArgs()[1])) {
                         loc = LocationUtil.toLocationFromString(data.getArgs()[1]);
                         if (ShopUtil.getShops().containsKey(data.getArgs()[1])) {
-                            ShopUtil.reloadShop(ShopUtil.getShop(data.getArgs()[1]));
+                            Shop shop = ShopUtil.reloadShop(ShopUtil.getShop(data.getArgs()[1]));
+                            shop.respawnNPC();
                             data.sendMessage(ChatColor.GREEN + LanguageKey.MESSAGE_SHOP_UPDATED.getMessage());
                             return;
                         }

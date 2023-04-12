@@ -127,9 +127,9 @@ public class ShopTrade {
                 NBTUtil.setNMSTag(
                         ItemUtil.getNamedItem(
                                 DisplayPanelConfig.getPanel(result).getItemStack(getLimit(), getTradeCount(player)),
-                                 ChatColor.GREEN + " " + LanguageKey.ITEM_TRADE_WITH.getMessage(ShopUtil.getShop(id).getDisplayNameOrElseNone()),
+                                 ChatColor.GREEN + LanguageKey.ITEM_TRADE_WITH.getMessage(ShopUtil.getShop(id).getDisplayNameOrElseNone()),
                                 false,
-                                ChatColor.YELLOW + " " + LanguageKey.INVENTORY_PAGE.getMessage(page),
+                                ChatColor.YELLOW + LanguageKey.INVENTORY_PAGE.getMessage(page),
                                 isAdmin ? (ChatColor.YELLOW + LanguageKey.ITEM_EDITOR_IS_SEARCHABLE.getMessage(shop.isSearchable() ? ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SEARCH_ENABLED.getMessage() : ChatColor.RED + LanguageKey.ITEM_EDITOR_SEARCH_DISABLED.getMessage())) : null,
                                 isAdmin ? (ChatColor.YELLOW + LanguageKey.ITEM_IS_LOCKED.getMessage(shop.isLock() ? ChatColor.RED + LanguageKey.ITEM_EDITOR_LOCKED.getMessage() : ChatColor.GREEN + LanguageKey.ITEM_EDITOR_UNLOCKED.getMessage())) : null,
                                 ChatColor.GREEN + LanguageKey.ITEM_TRADE_WINDOW_OPEN.getMessage(),

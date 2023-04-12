@@ -24,7 +24,7 @@ public class ShopListHolder extends PageableHolder {
 
     @Override
     public int getMaxPage() {
-        return (int) Math.ceil((double) ShopUtil.getShops().size() / 54);
+        return (int) Math.ceil((double) shops.size() / 54);
     }
 
     @Override

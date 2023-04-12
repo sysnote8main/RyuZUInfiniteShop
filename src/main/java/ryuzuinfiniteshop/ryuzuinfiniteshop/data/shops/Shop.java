@@ -482,7 +482,7 @@ public class Shop {
         try {
             yaml.save(file);
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreException) throw new RuntimeException(LanguageKey.ERROR_FILE_SAVING.getMessage(file.getName()), e);
+            if(!Config.readOnlyIgnoreIOException) throw new RuntimeException(LanguageKey.ERROR_FILE_SAVING.getMessage(file.getName()), e);
         }
         return yaml;
     }
@@ -518,6 +518,7 @@ public class Shop {
         npc.setSilent(true);
         npc.setInvulnerable(true);
         npc.setGravity(false);
+        npc.setPersistent(false);
         NBTUtil.setNMSTag(npc, "Shop", getID());
         initializeLivingEntitiy();
         if (entityType.equals(EntityType.ENDER_CRYSTAL))
@@ -650,8 +651,8 @@ public class Shop {
 
     public void respawnNPC() {
         if (FileUtil.isSaveBlock()) return;
-        if (npc != null && !npc.isDead()) return;
-        if (!location.getChunk().isLoaded()) return;
+        if (npc != null && npc.isValid()) return;
+        if (!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) return;
         if (entityType == null) return;
         if (mythicmob != null && MythicInstanceProvider.getInstance().getMythicMob(mythicmob) != null) {
             if (npc != null) npc.remove();
