@@ -27,7 +27,7 @@ public class LogUtil {
 
     private static List<String> getLog() {
         File file = FileUtil.initializeFile("log.csv");
-        List<String> log;
+        List<String> log = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             log = br.lines().collect(Collectors.toList());
         } catch (IOException e) {

@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 public final class RyuZUInfiniteShop extends JavaPlugin {
     @Getter
     private static RyuZUInfiniteShop plugin;
-    @Getter
     private static Logger logger;
     public final static String prefixCommand = ChatColor.GOLD + "[SIS]";
     public final static String prefixPersistent = "RyuZU.Infinite.Shop.";
