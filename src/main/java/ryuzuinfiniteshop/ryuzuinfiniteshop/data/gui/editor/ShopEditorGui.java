@@ -15,6 +15,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProv
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -109,7 +110,7 @@ public class ShopEditorGui extends ShopGui {
         inv.setItem(5 * 9 + 5, ItemUtil.getNamedItem(Material.NETHER_STAR, ChatColor.YELLOW + LanguageKey.ITEM_EDITOR_UPDATE_SHOP.getMessage()));
         inv.setItem(5 * 9 + 6, ItemUtil.getNamedItem(Material.EMERALD, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_CONVERT_TRADE_TO_ITEMS.getMessage()));
         inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.DIAMOND, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_CONVERT_SHOP_TO_ITEMS.getMessage()));
-        inv.setItem(5 * 9 + 8, ItemUtil.getNamedEnchantedItem(ItemUtil.getColoredItem("BLACK_STAINED_GLASS_PANE"), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_LOAD_TRADES.getMessage()));
+        inv.setItem(5 * 9 + 8, ItemUtil.getNamedEnchantedItem(ShopTrade.getFilter(), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_LOAD_TRADES.getMessage()));
     }
 
     public void setDisplay(Inventory inv) {
@@ -127,9 +128,8 @@ public class ShopEditorGui extends ShopGui {
 
     public void setCover(Inventory inv) {
         ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem("WHITE_STAINED_GLASS_PANE"), ChatColor.BLACK + "");
-        ItemStack item2 = ItemUtil.getNamedItem(ItemUtil.getColoredItem("BLACK_STAINED_GLASS_PANE"), ChatColor.BLACK + "");
         for (int i = 0; i < 2 * 9; i++)
-            if (ItemUtil.isAir(inv.getItem(i))) inv.setItem(i, item2);
+            if (ItemUtil.isAir(inv.getItem(i))) inv.setItem(i, ShopTrade.getFilter());
         for (int i = 2 * 9; i < 6 * 9; i++)
             if (ItemUtil.isAir(inv.getItem(i))) inv.setItem(i, item);
     }
