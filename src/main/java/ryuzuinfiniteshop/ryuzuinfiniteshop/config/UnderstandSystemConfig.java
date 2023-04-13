@@ -22,7 +22,7 @@ public class UnderstandSystemConfig {
         } catch (IOException | InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
-        signedPlayers = (Set<String>) yaml.getList("signedPlayers", new ArrayList<>());
+        signedPlayers =  new HashSet(yaml.getList("signedPlayers", new ArrayList<>()));
     }
 
     public static void save() {

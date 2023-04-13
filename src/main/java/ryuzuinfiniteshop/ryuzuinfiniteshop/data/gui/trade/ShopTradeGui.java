@@ -65,7 +65,7 @@ public abstract class ShopTradeGui extends ShopGui {
         }
 
         for (int i = function.apply(getTrades().size()); i < 9 * 6; i++) {
-            inv.setItem(i, ShopTrade.getFilter());
+            if(mode.equals(ShopMode.TRADE)) inv.setItem(i, ShopTrade.getFilter());
         }
 
         return inv;
