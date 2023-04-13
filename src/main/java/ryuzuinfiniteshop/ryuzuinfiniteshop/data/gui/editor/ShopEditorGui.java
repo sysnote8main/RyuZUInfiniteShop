@@ -177,7 +177,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setSizeIncrease(Inventory inv) {
         if (!(getShop() instanceof SlimeShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem("GREEN_WOOL"), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SIZE_INCREASE.getMessage());
+        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getBooleanItem(true), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SIZE_INCREASE.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.SizeIncrease);
@@ -185,7 +185,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setSizeDecrease(Inventory inv) {
         if (!(getShop() instanceof SlimeShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem("RED_WOOL"), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SIZE_DECREASE.getMessage());
+        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getBooleanItem(false), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SIZE_DECREASE.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.SizeDecrease);
@@ -217,7 +217,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setParrotColor(Inventory inv) {
         if (!(getShop() instanceof ParrotShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem(((ParrotShop) getShop()).getColorMaterial()), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_PARROT_COLOR.getMessage());
+        ItemStack item = ItemUtil.getNamedItem(((ParrotShop) getShop()).getColorItem(), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_PARROT_COLOR.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.ParrotColor);
@@ -233,7 +233,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setOptinalInfo(Inventory inv) {
         if (!(getShop() instanceof DyeableShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(((DyeableShop) getShop()).getOptionalInfoMaterial(), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_OPTIONAL_INFO.getMessage());
+        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getBooleanItem(((DyeableShop) getShop()).getOptionalInfo()), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_OPTIONAL_INFO.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.OptionalInfo);

@@ -240,6 +240,10 @@ public class ItemUtil {
         return getColoredItem(Material.valueOf(color.name() + "_WOOL").name());
     }
 
+    public static ItemStack getBooleanItem(boolean bool) {
+        return getColoredItem(bool ? "LIME_WOOL" : "RED_WOOL");
+    }
+
     public static ItemStack getColoredItem(String material) {
         if(!(RyuZUInfiniteShop.VERSION < 13 && (material.contains("STAINED_GLASS_PANE") || material.contains("WOOL")))) return new ItemStack(Material.valueOf(material));
         String color = material.split("_")[0];

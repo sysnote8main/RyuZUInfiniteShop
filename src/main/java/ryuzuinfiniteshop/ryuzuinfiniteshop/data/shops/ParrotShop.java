@@ -4,6 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -47,19 +49,7 @@ public class ParrotShop extends Shop {
         setColor(color);
     }
 
-    public String getColorMaterial() {
-        switch (color) {
-            case BLUE:
-                return "BLUE_WOOL";
-            case GREEN:
-                return "GREEN_WOOL";
-            case CYAN:
-                return "CYAN_WOOL";
-            case GRAY:
-                return "GRAY_WOOL";
-            case RED:
-            default:
-                return "RED_WOOL";
-        }
+    public ItemStack getColorItem() {
+        return ItemUtil.getColoredItem(color.name() + "_WOOL");
     }
 }

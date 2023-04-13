@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
+import lombok.Getter;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,16 +15,13 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import java.util.function.Consumer;
 
 //狼、熱帯魚、羊などの染料と同じ色を付けられるもの
+@Getter
 public class DyeableShop extends Shop {
     protected DyeColor color;
     protected boolean optionalInfo;
 
     public DyeableShop(Location location, EntityType entitytype, ConfigurationSection config) {
         super(location, entitytype, config);
-    }
-
-    public DyeColor getColor() {
-        return color;
     }
 
     public void setColor(DyeColor color) {
@@ -79,10 +77,6 @@ public class DyeableShop extends Shop {
         super.respawnNPC();
         setColor(color);
         setOptionalInfo(optionalInfo);
-    }
-
-    public Material getOptionalInfoMaterial() {
-        return optionalInfo ? Material.LIME_WOOL : Material.RED_WOOL;
     }
 
     public ItemStack getColorMaterial() {

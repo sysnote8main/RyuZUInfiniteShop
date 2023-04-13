@@ -6,6 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -71,18 +72,19 @@ public class HorseShop extends AgeableShop {
     public Material getColorMaterial() {
         switch (color) {
             case CREAMY:
-                return Material.BIRCH_PLANKS;
+                return  Material.WHITE_GLAZED_TERRACOTTA;
             case CHESTNUT:
-                return Material.OAK_PLANKS;
+                return Material.BROWN_GLAZED_TERRACOTTA;
             case DARK_BROWN:
-                return Material.DARK_OAK_PLANKS;
+                return Material.BLACK_GLAZED_TERRACOTTA;
             case GRAY:
-                return Material.GRAY_WOOL;
+                return Material.getMaterial(  "GRAY_WOOL");
             case BROWN:
-                return Material.BROWN_WOOL;
+                return Material.getMaterial("BROWN_WOOL");
             case WHITE:
             default:
-                return Material.WHITE_WOOL;
+                return Material.getMaterial("WHITE_WOOL");
         }
+
     }
 }
