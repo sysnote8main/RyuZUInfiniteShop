@@ -133,7 +133,7 @@ public class Shop {
     protected Consumer<YamlConfiguration> getLoadYamlProcess() {
         return yaml -> {
             this.mythicmob = yaml.getString("Npc.Options.MythicMob");
-            if(MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob) == null)
+            if(mythicmob != null && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob) == null)
                 new RuntimeException(LanguageKey.ERROR_MYTHICMOBS_INVALID_ID.getMessage(mythicmob)).printStackTrace();
             this.displayName = yaml.getString("Npc.Options.DisplayName");
             this.invisible = yaml.getBoolean("Npc.Options.Invisible", false);
