@@ -244,6 +244,10 @@ public class ItemUtil {
         return getColoredItem(bool ? "LIME_WOOL" : "RED_WOOL");
     }
 
+    public static ItemStack getWhitePanel() {
+        return getNamedItem(getColoredItem("WHITE_STAINED_GLASS_PANE") , ChatColor.WHITE + "");
+    }
+
     public static ItemStack getColoredItem(String material) {
         if(!(RyuZUInfiniteShop.VERSION < 13 && (material.contains("STAINED_GLASS_PANE") || material.contains("WOOL")))) return new ItemStack(Material.valueOf(material));
         String color = material.split("_")[0];

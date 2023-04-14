@@ -127,7 +127,7 @@ public class ShopEditorGui extends ShopGui {
     }
 
     public void setCover(Inventory inv) {
-        ItemStack item = ItemUtil.getNamedItem(ItemUtil.getColoredItem("WHITE_STAINED_GLASS_PANE"), ChatColor.BLACK + "");
+        ItemStack item = ItemUtil.getWhitePanel();
         for (int i = 0; i < 2 * 9; i++)
             if (ItemUtil.isAir(inv.getItem(i))) inv.setItem(i, ShopTrade.getFilter());
         for (int i = 2 * 9; i < 6 * 9; i++)
