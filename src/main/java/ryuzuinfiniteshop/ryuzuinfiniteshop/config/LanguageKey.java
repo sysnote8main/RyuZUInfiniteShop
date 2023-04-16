@@ -106,7 +106,7 @@ public enum LanguageKey {
     ITEM_EDITOR_AGE_ADULT("大人", "Adult"),
     ITEM_EDITOR_AGE_CHILD("子供", "Child"),
     ITEM_EDITOR_SITTING("座る", "Sitting"),
-    ITEM_EDITOR_STANDING("立つ", "Stamding"),
+    ITEM_EDITOR_STANDING("立つ", "Standing"),
     ITEM_EDITOR_SEARCH_ENABLED("可", "Enabled"),
     ITEM_EDITOR_SEARCH_DISABLED("不可", "Disabled"),
     ITEM_TRADE_WINDOW_OPEN("クリック: 取引画面を開く", "Click: Open trade window"),
