@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>SearchableInfiniteShop</groupId>
-    <artifactId>SearchableInfiniteShop</artifactId>
+    <groupId>com.github.ryuzu</groupId>
+    <artifactId>searchableinfiniteshop</artifactId>
     <version>1.0.0</version>
-    <packaging>jar</packaging>
 
-    <name>SearchableInfiniteShop</name>
+    <name>Searchable Infinite Shop Plugin</name>
+    <packaging>pom</packaging>
 
     <description>無限にページを作成できるShopPluginです</description>
     <properties>
@@ -17,153 +17,18 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <build>
-        <defaultGoal>clean package</defaultGoal>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <relocations>
-                        <relocation>
-                            <pattern>de.tr7zw.changeme.nbtapi</pattern>
-                            <shadedPattern>YOUR PACKGE WHERE THE API SHOULD END UP</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
-            </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>
+    <modules>
+        <module>api</module>
+        <module>v16newer</module>
+        <module>v16older</module>
+        <module>plugin</module>
+    </modules>
 
-    <repositories>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
-            <id>nexus</id>
-            <name>Lumine Releases</name>
-            <url>https://mvn.lumine.io/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>codemc-repo</id>
-            <url>https://repo.codemc.org/repository/maven-public/</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>shopkeepers-repo</id>
-            <url>https://nexus.lichtspiele.org/repository/releases/</url>
-        </repository>
-        <repository>
-            <id>skullcreator-repo</id>
-            <url>https://github.com/deanveloper/SkullCreator/raw/mvn-repo/</url>
-        </repository>
-        <repository>
-            <id>minecraft-repo</id>
-            <url>https://libraries.minecraft.net/</url>
-        </repository>
-        <repository>
-            <id>citizens-repo</id>
-            <url>https://maven.citizensnpcs.co/repo</url>
-        </repository>
-    </repositories>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.16.5-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.26</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.Y-RyuZU</groupId>
-            <artifactId>RyuZUCommandsGenerator</artifactId>
-            <version>2.0.3</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>de.tr7zw</groupId>
-            <artifactId>item-nbt-api-plugin</artifactId>
-            <version>2.11.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.dbassett</groupId>
-            <artifactId>skullcreator</artifactId>
-            <version>3.0.1</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.mojang</groupId>
-            <artifactId>authlib</artifactId>
-            <version>1.5.21</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.lumine.xikage</groupId>
-            <artifactId>MythicMobs</artifactId>
-            <version>4.12.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.citizensnpcs</groupId>
-            <artifactId>citizens-main</artifactId>
-            <version>2.0.30-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-    </dependencies>
+<!--    &lt;!&ndash; Define the repo here since multiple modules will be using it &ndash;&gt;-->
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>spigot-repo</id>-->
+<!--            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 </project>

@@ -6,16 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="RyuZUInfiniteShop" />
+        <module name="searchableinfiniteshop-api" />
+        <module name="searchableinfiniteshop-v16newer" />
+        <module name="searchableinfiniteshop-v16older" />
+      </profile>
+      <profile name="Annotation profile for Searchable Infinite Shop Plugin" enabled="true">
+        <sourceOutputDir name="../target/generated-sources/annotations" />
+        <sourceTestOutputDir name="../target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="searchableinfiniteshop-plugin" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="RyuZUInfiniteShop" target="1.8" />
-    </bytecodeTargetLevel>
-  </component>
-  <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="RyuZUInfiniteShop" options="" />
-    </option>
   </component>
 </project>
