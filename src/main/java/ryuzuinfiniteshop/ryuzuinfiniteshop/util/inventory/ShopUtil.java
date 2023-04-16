@@ -235,6 +235,10 @@ public class ShopUtil {
             return new DyeableShop(location, type, config);
         if (type.equals(EntityType.PARROT))
             return new ParrotShop(location, type, config);
+        if (type.equals(EntityType.CAT))
+            return new CatShop(location, type, config);
+        if (type.equals(EntityType.RABBIT))
+            return new RabbitShop(location, type, config);
         if (type.equals(EntityType.HORSE))
             return new HorseShop(location, type, config);
         if (Ageable.class.isAssignableFrom(type.getEntityClass()))

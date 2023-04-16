@@ -36,6 +36,7 @@ public class ChangeIndividualSettingsListener implements Listener {
 
         if (!editor.getSettingsMap().containsKey(slot)) return;
         changeAgeLook(holder, event.getSlot());
+        changeSitting(holder, event.getSlot());
         changePowered(holder, event.getSlot());
         changeProfession(holder, event.getSlot());
         changeVisible(holder, event.getSlot());
@@ -49,6 +50,8 @@ public class ChangeIndividualSettingsListener implements Listener {
         changeBodyColor(holder, event.getSlot());
         changePatternColor(holder, event.getSlot());
         changePattern(holder, event.getSlot());
+        changeCatType(holder, event.getSlot());
+        changeRabbitType(holder, event.getSlot());
         if(RyuZUInfiniteShop.VERSION >= 14) {
             changeBiome(holder, event.getSlot());
             changeLevel(holder, event.getSlot());
@@ -71,6 +74,17 @@ public class ChangeIndividualSettingsListener implements Listener {
 
         //年齢の変更
         ((AgeableShop) holder.getShop()).setAgeLook(!((AgeableShop) holder.getShop()).isAdult());
+    }
+
+    public void changeSitting(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        ShopEditorGui editor = (ShopEditorGui) holder.getGui();
+
+        if (!editor.getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.Sitting)) return;
+        if (!(holder.getShop() instanceof SittableShop)) return;
+
+        //年齢の変更
+        ((SittableShop) holder.getShop()).setSitting(!((SittableShop) holder.getShop()).isSitting());
     }
 
     //クリーパーを帯電させるか変更
@@ -132,6 +146,26 @@ public class ChangeIndividualSettingsListener implements Listener {
 
         //模様の変更
         ((TropicalFishShop) holder.getShop()).setPattern(((TropicalFishShop) holder.getShop()).getNextPattern());
+    }
+
+    public void changeCatType(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        if (!((ShopEditorGui) holder.getGui()).getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.CatType))
+            return;
+        if (!(holder.getShop() instanceof CatShop)) return;
+
+        //模様の変更
+        ((CatShop) holder.getShop()).setCatType(((CatShop) holder.getShop()).getNextType());
+    }
+
+    public void changeRabbitType(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        if (!((ShopEditorGui) holder.getGui()).getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.RabbitType))
+            return;
+        if (!(holder.getShop() instanceof RabbitShop)) return;
+
+        //模様の変更
+        ((RabbitShop) holder.getShop()).setRabbitType(((RabbitShop) holder.getShop()).getNextType());
     }
 
     //村人の職業を変更

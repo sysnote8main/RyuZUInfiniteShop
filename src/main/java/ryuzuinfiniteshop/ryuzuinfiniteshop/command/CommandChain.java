@@ -158,6 +158,7 @@ public class CommandChain {
                 .complete(1 , Arrays.stream(EntityType.values()).map(Enum::name).collect(Collectors.toList()))
                 .complete(1 , new ArrayList<>(MythicInstanceProvider.getInstance().getMythicMobs()));
 
+
         CommandsGenerator.registerCommand(
                         "sis.open",
                         data -> {

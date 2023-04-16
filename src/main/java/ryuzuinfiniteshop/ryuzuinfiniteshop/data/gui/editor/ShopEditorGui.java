@@ -15,7 +15,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProv
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,11 +23,13 @@ import java.util.List;
 public class ShopEditorGui extends ShopGui {
     public enum ShopSettings {
         Age,
+        Sitting,
         Power,
-        Profession,
-        Biome, Level,
+        Profession, Biome, Level,
         Visible,
         ParrotColor,
+        CatType,
+        RabbitType,
         DyeColor,
         SizeIncrease,
         SizeDecrease,
@@ -138,9 +139,12 @@ public class ShopEditorGui extends ShopGui {
         SettingsMap.clear();
         setVisible(inv);
         setAge(inv);
+        setSitting(inv);
         setPower(inv);
         setProfession(inv);
         setParrotColor(inv);
+        setCatType(inv);
+        setRabbitType(inv);
         setSizeIncrease(inv);
         setSizeDecrease(inv);
         setDyeColor(inv);
@@ -158,11 +162,21 @@ public class ShopEditorGui extends ShopGui {
     private void setAge(Inventory inv) {
         if (!(getShop() instanceof AgeableShop)) return;
         ItemStack item = ((AgeableShop) getShop()).isAdult() ?
-                ItemUtil.getNamedItem(Material.STONE, ChatColor.GREEN + LanguageKey.ITEM_AGE_ADULT.getMessage()) :
-                ItemUtil.getNamedItem(Material.STONE_BUTTON, ChatColor.GREEN + LanguageKey.ITEM_AGE_CHILD.getMessage());
+                ItemUtil.getNamedItem(Material.STONE, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_AGE_ADULT.getMessage()) :
+                ItemUtil.getNamedItem(Material.STONE_BUTTON, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_AGE_CHILD.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Age);
+    }
+
+    private void setSitting(Inventory inv) {
+        if (!(getShop() instanceof SittableShop)) return;
+        ItemStack item = ((SittableShop) getShop()).isSitting() ?
+                ItemUtil.getNamedItem(Material.STONE_PRESSURE_PLATE, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SITTING.getMessage()) :
+                ItemUtil.getNamedItem(Material.STONE, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_STANDING.getMessage());
+        int slot = 3 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.Sitting);
     }
 
     private void setPower(Inventory inv) {
@@ -221,6 +235,22 @@ public class ShopEditorGui extends ShopGui {
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.ParrotColor);
+    }
+
+    private void setCatType(Inventory inv) {
+        if (!(getShop() instanceof CatShop)) return;
+        ItemStack item = ItemUtil.getNamedItem(Material.BLACK_GLAZED_TERRACOTTA, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_CAT_TYPE.getMessage());
+        int slot = 3 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.CatType);
+    }
+
+    private void setRabbitType(Inventory inv) {
+        if (!(getShop() instanceof RabbitShop)) return;
+        ItemStack item = ItemUtil.getNamedItem(Material.BLACK_GLAZED_TERRACOTTA, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_RABBIT_TYPE.getMessage());
+        int slot = 3 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.RabbitType);
     }
 
     private void setDyeColor(Inventory inv) {

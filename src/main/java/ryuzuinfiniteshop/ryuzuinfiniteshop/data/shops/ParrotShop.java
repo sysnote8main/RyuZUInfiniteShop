@@ -10,7 +10,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-public class ParrotShop extends Shop {
+public class ParrotShop extends SittableShop {
     protected Parrot.Variant color;
 
     public ParrotShop(Location location, EntityType entitytype, ConfigurationSection config) {
