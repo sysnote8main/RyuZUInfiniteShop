@@ -24,7 +24,7 @@ public class LanguageConfig {
     }
 
     public static void load() {
-        File file = FileUtil.initializeFile(Config.language.toLowerCase() + ".yml");
+        File file = FileUtil.initializeFile("languages/" + Config.language.toLowerCase() + ".yml");
         YamlConfiguration yaml = new YamlConfiguration();
         try {
             yaml.load(file);
@@ -38,7 +38,7 @@ public class LanguageConfig {
     public static void save() {
         Set<String> languages = Sets.newHashSet("japanese", "english", Config.language);
         for (String language : languages) {
-            File file = FileUtil.initializeFile(language + ".yml");
+            File file = FileUtil.initializeFile("languages/" + language + ".yml");
             YamlConfiguration yaml = new YamlConfiguration();
             try {
                 yaml.load(file);

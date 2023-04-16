@@ -29,7 +29,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.md-5:bungeecord-chat:1.16-R0.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.yaml:snakeyaml:1.27" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.18.26" level="project" />
-    <orderEntry type="library" name="Maven: com.github.Y-RyuZU:RyuZUCommandsGenerator:1.7" level="project" />
+    <orderEntry type="library" name="Maven: com.github.Y-RyuZU:RyuZUCommandsGenerator:2.0.3" level="project" />
     <orderEntry type="library" name="Maven: de.tr7zw:item-nbt-api-plugin:2.11.2" level="project" />
     <orderEntry type="library" name="Maven: dev.dbassett:skullcreator:3.0.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.mojang:authlib:1.5.21" level="project" />

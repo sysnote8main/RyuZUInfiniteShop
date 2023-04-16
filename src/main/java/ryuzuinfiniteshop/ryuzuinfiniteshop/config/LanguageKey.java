@@ -62,7 +62,7 @@ public enum LanguageKey {
     ITEM_EDITOR_UNLOCKED("アンロック", "Unlocked"),
     ITEM_EDITOR_CHANGE_DIRECTION("方向切り替え", "Switch direction"),
     ITEM_EDITOR_SHOP_DELETE("ショップを削除する", "Delete shop"),
-    ITEM_EDITOR_UPDATE_SHOP("ショップを更新する", "Update shop"),
+    ITEM_EDITOR_UPDATE_SHOP("NPCをリスポーンする", "Respawn npc"),
     ITEM_EDITOR_CONVERT_TRADE_TO_ITEMS("トレード内容をアイテム化する", "Convert trades to item"),
     ITEM_EDITOR_CONVERT_SHOP_TO_ITEMS("ショップをアイテム化する", "Convert shop to item"),
     ITEM_EDITOR_LOAD_TRADES("トレードを読み込む", "Load trades"),

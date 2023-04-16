@@ -2,17 +2,17 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.config;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class UnderstandSystemConfig {
-    public static Set<String> signedPlayers;
+    private static Set<String> signedPlayers;
 
     public static void load() {
         File file = FileUtil.initializeFile("sign.yml");
@@ -34,5 +34,13 @@ public class UnderstandSystemConfig {
         } catch (IOException e) {
             if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
         }
+    }
+
+    public static void addPlayer(Player p) {
+        signedPlayers.add(p.getUniqueId().toString());
+    }
+
+    public static boolean contains(Player p) {
+        return signedPlayers.contains(p.getUniqueId().toString());
     }
 }

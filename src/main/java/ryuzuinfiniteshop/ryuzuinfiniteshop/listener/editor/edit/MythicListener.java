@@ -20,6 +20,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -50,8 +51,13 @@ public class MythicListener implements Listener {
         return getMythicMobsInstance().getAPIHelper().getMythicMob(id);
     }
 
+    public Collection<String> getMythicMobs() {
+        return getMythicMobsInstance().getMobManager().getMobNames();
+    }
+
     public ItemStack getMythicItem(String id, int amount) {
         ItemStack item = getMythicMobsInstance().getItemManager().getItemStack(id);
+        if(item == null) return null;
         item.setAmount(amount);
         return item;
     }
@@ -64,15 +70,15 @@ public class MythicListener implements Listener {
         }
     }
 
-    public boolean isMythicMob(Entity entity) {
-        return getMythicMobsInstance().getAPIHelper().isMythicMob(entity);
-    }
-
     public MythicMobs getMythicMobsInstance() {
         return MythicMobs.inst();
     }
 
     public MythicListener() {
         RyuZUInfiniteShop.getPlugin().getServer().getPluginManager().registerEvents(this, RyuZUInfiniteShop.getPlugin());
+    }
+
+    private boolean isMythicMob(Entity entity) {
+        return getMythicMobsInstance().getAPIHelper().isMythicMob(entity);
     }
 }

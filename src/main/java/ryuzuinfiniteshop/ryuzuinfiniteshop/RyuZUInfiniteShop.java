@@ -41,11 +41,11 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         // Plugin startup logic
         plugin = this;
         logger = getLogger();
-        registerEvents();
+        MythicInstanceProvider.setInstance();
         CommandChain.registerCommand();
+        registerEvents();
         new RyuZUCommandsGenerator(this);
         ConfigurationSerialization.registerClass(MythicItem.class);
-        MythicInstanceProvider.setInstance();
         if(VERSION < 14) NBTInjector.inject();
         FileUtil.loadAll();
     }

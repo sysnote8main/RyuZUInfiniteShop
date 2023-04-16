@@ -84,24 +84,23 @@ public class Shop {
     public Shop(Location location, EntityType entityType, ConfigurationSection config) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         this.location = location;
-        this.entityType = entityType;
         this.shopkeepersConfig = config;
         ShopUtil.addShop(getID(), this);
         loadYamlProcess(getFile());
+        this.entityType = entityType;
         if (!exsited) {
             createEditorNewPage();
             if (config == null) saveYaml();
-        } else
-            loadYamlProcess(getFile());
+        }
     }
 
     public Shop(Location location, EntityType entityType, String name) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
-        this.citizen = CitizensAPI.getNPCRegistry().createNPC(entityType, name);
         this.location = location;
-        this.entityType = entityType;
         ShopUtil.addShop(getID(), this);
         loadYamlProcess(getFile());
+        this.entityType = entityType;
+        this.citizen = CitizensAPI.getNPCRegistry().createNPC(entityType, name);
         if (!exsited) {
             createEditorNewPage();
             saveYaml();
@@ -111,9 +110,10 @@ public class Shop {
     public Shop(Location location, String mmid) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         this.location = location;
-        this.mythicmob = mmid;
         ShopUtil.addShop(getID(), this);
         loadYamlProcess(getFile());
+        this.mythicmob = mmid;
+        this.entityType = EntityType.VILLAGER;
         if (!exsited) {
             createEditorNewPage();
             saveYaml();
@@ -133,7 +133,7 @@ public class Shop {
     protected Consumer<YamlConfiguration> getLoadYamlProcess() {
         return yaml -> {
             this.mythicmob = yaml.getString("Npc.Options.MythicMob");
-            if(mythicmob != null && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob) == null)
+            if (mythicmob != null && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob) == null)
                 new RuntimeException(LanguageKey.ERROR_MYTHICMOBS_INVALID_ID.getMessage(mythicmob)).printStackTrace();
             this.displayName = yaml.getString("Npc.Options.DisplayName");
             this.invisible = yaml.getBoolean("Npc.Options.Invisible", false);
@@ -309,9 +309,9 @@ public class Shop {
 
     public ItemStack convertShopToItemStack() {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM.getMessage() + ChatColor.GREEN + getDisplayNameOrElseNone(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
         );
         item = NBTUtil.setNMSTag(item, convertShopToMap());
         return item;
@@ -482,7 +482,8 @@ public class Shop {
         try {
             yaml.save(file);
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreIOException) throw new RuntimeException(LanguageKey.ERROR_FILE_SAVING.getMessage(file.getName()), e);
+            if (!Config.readOnlyIgnoreIOException)
+                throw new RuntimeException(LanguageKey.ERROR_FILE_SAVING.getMessage(file.getName()), e);
         }
         return yaml;
     }
@@ -649,12 +650,17 @@ public class Shop {
         respawnNPC();
     }
 
+    public void removeNPC() {
+        if (npc != null) npc.remove();
+        npc = null;
+    }
+
     public void respawnNPC() {
         if (FileUtil.isSaveBlock()) return;
         if (npc != null && npc.isValid()) return;
         if (!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) return;
         if (entityType == null) return;
-        if (mythicmob != null && MythicInstanceProvider.getInstance().getMythicMob(mythicmob) != null) {
+        if (mythicmob != null && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getMythicMob(mythicmob) != null) {
             if (npc != null) npc.remove();
             npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob, location);
             setNpcMeta();
