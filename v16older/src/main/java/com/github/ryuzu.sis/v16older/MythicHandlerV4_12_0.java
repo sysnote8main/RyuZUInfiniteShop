@@ -1,67 +1,78 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit;
+package com.github.ryuzu.sis.v16older;
 
+import com.github.ryuzu.sis.api.IMythicHandler;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 import io.lumine.xikage.mythicmobs.api.exceptions.InvalidMobTypeException;
 import io.lumine.xikage.mythicmobs.items.MythicItem;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 
-public class MythicListener implements Listener {
+public class MythicHandlerV4_12_0 implements IMythicHandler, Listener {
     private static final HashMap<ItemStack, String> items = new HashMap<>();
+    private final Consumer<Runnable> reloadProcessor;
+
+    public MythicHandlerV4_12_0(JavaPlugin plugin, Consumer<Runnable> reloadProcessor) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.reloadProcessor = reloadProcessor;
+    }
 
     @EventHandler
     public void onReload(MythicReloadedEvent event) {
-        reload();
+        reload(reloadProcessor);
     }
 
-    public void reload() {
-        ShopUtil.reloadAllShopTradeInventory(() -> {
+    @Override
+    public void reload(Consumer<Runnable> consumer) {
+        consumer.accept(() -> {
             items.clear();
             items.putAll(getMythicMobsInstance().getItemManager().getItems().stream().collect(Collectors.toMap(item -> BukkitAdapter.adapt(item.generateItemStack(1)), MythicItem::getInternalName)));
         });
+//        ShopUtil.reloadAllShopTradeInventory(() -> {
+//            items.clear();
+//            items.putAll(getMythicMobsInstance().getItemManager().getItems().stream().collect(Collectors.toMap(item -> BukkitAdapter.adapt(item.generateItemStack(1)), MythicItem::getInternalName)));
+//        });
     }
 
+    @Override
     public String getID(ItemStack item) {
-        if (ItemUtil.isAir(item)) return null;
+        if (item == null || item.getType().isAir()) return null;
         ItemStack copy = item.clone();
         copy.setAmount(1);
-        return JavaUtil.getOrDefault(getMythicMobsInstance().getVolatileCodeHandler().getItemHandler().getNBTData(copy).getString("MYTHIC_TYPE"), items.get(copy));
+        String id = getMythicMobsInstance().getVolatileCodeHandler().getItemHandler().getNBTData(copy).getString("MYTHIC_TYPE");
+        return id == null || id.isEmpty() ? items.get(copy) : id;
     }
 
+    @Override
     public boolean exsistsMythicMob(String id) {
         return getMythicMobsInstance().getAPIHelper().getMythicMob(id) != null;
     }
 
+    @Override
     public Collection<String> getMythicMobs() {
         return getMythicMobsInstance().getMobManager().getMobNames();
     }
 
+    @Override
     public ItemStack getMythicItem(String id, int amount) {
         ItemStack item = getMythicMobsInstance().getItemManager().getItemStack(id);
-        if(item == null) return null;
+        if (item == null) return null;
         item.setAmount(amount);
         return item;
     }
 
+    @Override
     public Entity spawnMythicMob(String id, Location location) {
         try {
             return getMythicMobsInstance().getAPIHelper().spawnMythicMob(id, location);
@@ -70,15 +81,12 @@ public class MythicListener implements Listener {
         }
     }
 
-    public MythicListener() {
-        RyuZUInfiniteShop.getPlugin().getServer().getPluginManager().registerEvents(this, RyuZUInfiniteShop.getPlugin());
+    @Override
+    public boolean isMythicMob(Entity entity) {
+        return getMythicMobsInstance().getAPIHelper().isMythicMob(entity);
     }
 
     private MythicMobs getMythicMobsInstance() {
         return MythicMobs.inst();
-    }
-
-    private boolean isMythicMob(Entity entity) {
-        return getMythicMobsInstance().getAPIHelper().isMythicMob(entity);
     }
 }

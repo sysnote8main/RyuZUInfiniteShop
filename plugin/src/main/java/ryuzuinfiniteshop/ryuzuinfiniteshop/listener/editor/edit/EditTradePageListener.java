@@ -127,8 +127,9 @@ public class EditTradePageListener implements Listener {
         ShopTrade trade = gui.getTradeFromSlot(slot);
 
         if (trade == null) return;
-        if(!trade.getResult(p).equals(ShopTrade.TradeResult.Success)){
-            if(gui.getConvertSlot().contains(slot))  SoundUtil.playFailSound(p);
+        ShopTrade.TradeResult result = trade.getResult(p, gui.getShop());
+        if(!result.equals(ShopTrade.TradeResult.Success)){
+            if(gui.getConvertSlot().contains(slot)) ShopTrade.playResultEffect(p , result);
             return;
         }
 
@@ -143,8 +144,8 @@ public class EditTradePageListener implements Listener {
                 times = 64;
                 break;
         }
-        int result = trade.trade(p, times);
-        LogUtil.log(p.getUniqueId().toString(), holder.getShop().getID(), trade, result);
+        int resultTime = trade.trade(p, times);
+        LogUtil.log(p.getUniqueId().toString(), holder.getShop().getID(), trade, resultTime);
     }
 
     //購入制限を設定する

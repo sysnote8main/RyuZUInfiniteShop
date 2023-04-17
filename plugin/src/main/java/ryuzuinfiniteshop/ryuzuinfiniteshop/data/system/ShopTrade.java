@@ -127,7 +127,7 @@ public class ShopTrade {
                 NBTUtil.setNMSTag(
                         ItemUtil.getNamedItem(
                                 DisplayPanelConfig.getPanel(result).getItemStack(getLimit(), getTradeCount(player)),
-                                 ChatColor.GREEN + LanguageKey.ITEM_TRADE_WITH.getMessage(ShopUtil.getShop(id).getDisplayNameOrElseNone()),
+                                ChatColor.GREEN + LanguageKey.ITEM_TRADE_WITH.getMessage(ShopUtil.getShop(id).getDisplayNameOrElseNone()),
                                 false,
                                 ChatColor.YELLOW + LanguageKey.INVENTORY_PAGE.getMessage(page),
                                 isAdmin ? (ChatColor.YELLOW + LanguageKey.ITEM_EDITOR_IS_SEARCHABLE.getMessage(shop.isSearchable() ? ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SEARCH_ENABLED.getMessage() : ChatColor.RED + LanguageKey.ITEM_EDITOR_SEARCH_DISABLED.getMessage())) : null,
@@ -275,16 +275,13 @@ public class ShopTrade {
     }
 
     public int trade(Player p, int times) {
-        TradeResult result = TradeResult.Success;
+        TradeResult result = getResult(p);
         int resultTime = times;
         for (int time = 0; time < times; time++) {
             result = trade(p);
-            if (result.equals(TradeResult.Error)) break;
             if (!result.equals(TradeResult.Success)) {
                 if (time != 0)
                     result = TradeResult.Lack;
-                else
-                    result = TradeResult.NotAfford;
                 resultTime = time;
                 break;
             }
@@ -315,10 +312,14 @@ public class ShopTrade {
         return getCounts(p) >= tradeLimits.getOrDefault(tradeUUID.get(this), 0);
     }
 
-    private void playResultEffect(Player p, TradeResult result) {
+    public static void playResultEffect(Player p, TradeResult result) {
         switch (result) {
             case NotAfford:
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_ENOUGH_ITEMS.getMessage());
+                SoundUtil.playFailSound(p);
+                break;
+            case Locked:
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_LOCKED.getMessage());
                 SoundUtil.playFailSound(p);
                 break;
             case Error:

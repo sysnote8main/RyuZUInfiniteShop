@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.function.Consumer;
 
 
-public interface IMythicListener {
+public interface IMythicHandler {
     String getID(ItemStack item);
 
     void reload(Consumer<Runnable> consumer);

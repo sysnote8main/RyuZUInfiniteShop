@@ -614,27 +614,44 @@ public class Shop {
         }
     }
 
-    public boolean isAvailableShop() {
-        return !isLock() && !isEditting();
-    }
-
-    public boolean isAvailableShop(Player p) {
-        if (isLock() && !p.hasPermission("sis.op")) {
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_LOCKED.getMessage());
-            SoundUtil.playFailSound(p);
-            return false;
-        }
+    public boolean isEditting(Player p) {
         if (isEditting()) {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_EDITING.getMessage());
             SoundUtil.playFailSound(p);
-            return false;
+            return true;
         }
-        if (pages.isEmpty()) {
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_NO_TRADES.getMessage());
+        return false;
+    }
+
+    public boolean isLocked(Player p) {
+        if (isLock() && !p.hasPermission("sis.op")) {
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_LOCKED.getMessage());
+            SoundUtil.playFailSound(p);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isSearchable(Player p) {
+        if(!isSearchable()) {
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_UNSEARCHABLE.getMessage());
             SoundUtil.playFailSound(p);
             return false;
         }
         return true;
+    }
+
+    public boolean isEmpty(Player p) {
+        if (pages.isEmpty()) {
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_NO_TRADES.getMessage());
+            SoundUtil.playFailSound(p);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isAvailableShop(Player p) {
+        return !isSearchable(p) && !isEditting(p) && !isEmpty(p);
     }
 
     public void setNpcType(EntityType entityType) {

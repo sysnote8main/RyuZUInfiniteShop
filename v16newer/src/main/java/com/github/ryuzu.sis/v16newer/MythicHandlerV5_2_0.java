@@ -1,22 +1,18 @@
 package com.github.ryuzu.sis.v16newer;
 
-import com.github.ryuzu.sis.api.IMythicListener;
+import com.github.ryuzu.sis.api.IMythicHandler;
 import io.lumine.mythic.api.exceptions.InvalidMobTypeException;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 
-public class MythicListenerV5_2_0 implements IMythicListener {
+public class MythicHandlerV5_2_0 implements IMythicHandler {
     private static final HashMap<ItemStack, String> items = new HashMap<>();
 
 //    @EventHandler

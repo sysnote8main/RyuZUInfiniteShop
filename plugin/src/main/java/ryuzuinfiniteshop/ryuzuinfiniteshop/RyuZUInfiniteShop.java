@@ -32,9 +32,9 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
     @Getter
     private static RyuZUInfiniteShop plugin;
     private static Logger logger;
-    public final static String prefixCommand = ChatColor.GOLD + "[SIS]";
-    public final static String prefixPersistent = "RyuZU.Infinite.Shop.";
-    public static int VERSION = Integer.parseInt((Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".").substring(3).substring(0, (Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".").substring(3).indexOf("_")));
+    public static final String prefixCommand = ChatColor.GOLD + "[SIS]";
+    public static final String prefixPersistent = "RyuZU.Infinite.Shop.";
+    public static final int VERSION = Integer.parseInt((Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".").substring(3).substring(0, (Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".").substring(3).indexOf("_")));
 
     @Override
     public void onEnable() {
