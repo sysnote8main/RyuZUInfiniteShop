@@ -5,28 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="58b75d6a-5865-40b8-89ed-0b8c7f793fcd" name="変更" comment="超★実装">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/RyuZUInfiniteShop.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/RyuZUInfiniteShop.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/RyuZUInfiniteShop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/gui/holder/ModeHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/gui/holder/ModeHolder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/gui/holder/ShopHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/gui/holder/ShopHolder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/system/item/MythicItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/system/item/MythicItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/listener/editor/edit/EditTradePageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/listener/editor/edit/EditTradePageListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/listener/editor/system/SearchTradeListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/listener/trades/SearchTradeListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/util/configuration/MythicInstanceProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/util/configuration/MythicInstanceProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/util/inventory/NBTUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/util/inventory/NBTUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/plugin.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/v16newer/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/v16newer/src/main/java/com/github/ryuzu.sis/v16newer/MythicHandlerV5_2_0.java" beforeDir="false" afterPath="$PROJECT_DIR$/v16newer/src/main/java/com/github/ryuzu.sis/v16newer/MythicHandlerV5_2_1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/v16older/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/v16older/src/main/java/com/github/ryuzu.sis/v16older/MythicHandlerV4_12_0.java" beforeDir="false" afterPath="$PROJECT_DIR$/v16older/src/main/java/com/github/ryuzu.sis/v16older/MythicHandlerV4_12_0.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -223,7 +203,8 @@
       <workItem from="1681816500527" duration="439000" />
       <workItem from="1681816960994" duration="200000" />
       <workItem from="1681817192045" duration="173000" />
-      <workItem from="1681817374066" duration="514000" />
+      <workItem from="1681817374066" duration="965000" />
+      <workItem from="1681818386645" duration="505000" />
     </task>
     <task id="LOCAL-00001" summary="マルチバージョン対応、MMのAPIの場合分け、マルチモジュール">
       <created>1681678141462</created>
@@ -239,7 +220,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681678154973</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="超★実装">
+      <created>1681817971702</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1681817971702</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -247,6 +235,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="マルチバージョン対応、MMのAPIの場合分け、マルチモジュール" />
-    <option name="LAST_COMMIT_MESSAGE" value="マルチバージョン対応、MMのAPIの場合分け、マルチモジュール" />
+    <MESSAGE value="超★実装" />
+    <option name="LAST_COMMIT_MESSAGE" value="超★実装" />
   </component>
 </project>

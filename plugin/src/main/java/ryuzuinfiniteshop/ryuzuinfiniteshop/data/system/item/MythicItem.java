@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item;
 
+import com.sun.istack.internal.NotNull;
 import lombok.Value;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
