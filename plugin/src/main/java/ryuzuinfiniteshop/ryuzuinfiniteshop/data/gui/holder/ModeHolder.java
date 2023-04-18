@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.jetbrains.annotations.NotNull;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.PageableGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ModeGui;
 
 @EqualsAndHashCode
@@ -29,7 +27,7 @@ public class ModeHolder implements InventoryHolder {
     }
 
     @Override
-    public @NotNull Inventory getInventory() {
+    public Inventory getInventory() {
         return gui.getInventory(mode);
     }
 }

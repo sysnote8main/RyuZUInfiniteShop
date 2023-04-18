@@ -1,7 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
 
 import com.github.ryuzu.sis.api.IMythicHandler;
-import com.github.ryuzu.sis.v16newer.MythicHandlerV5_2_0;
+import com.github.ryuzu.sis.v16newer.MythicHandlerV5_2_1;
 import com.github.ryuzu.sis.v16older.MythicHandlerV4_12_0;
 import org.bukkit.Bukkit;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
@@ -25,7 +25,7 @@ public class MythicInstanceProvider {
             if (RyuZUInfiniteShop.VERSION < 16)
                 instance = new MythicHandlerV4_12_0(RyuZUInfiniteShop.getPlugin() , ShopUtil::reloadAllShopTradeInventory);
             else
-                instance = new MythicHandlerV5_2_0();
+                instance = new MythicHandlerV5_2_1();
         }
     }
 }

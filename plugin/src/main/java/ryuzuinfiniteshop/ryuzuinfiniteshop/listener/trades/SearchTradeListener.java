@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.trades;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,6 +18,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.SchedulerListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
@@ -196,8 +197,7 @@ public class SearchTradeListener implements Listener {
     }
 
     //取引、対価で検索を行う
-    @EventHandler
-    public void onSearch(InventoryClickEvent event) {
+    public static void search(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
@@ -211,7 +211,7 @@ public class SearchTradeListener implements Listener {
         ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(slot);
 
         if (trade == null) return;
-        if (trade.getResult(p).equals(ShopTrade.TradeResult.Success)) return;
+        if (trade.getResult(p, holder.getShop()).equals(ShopTrade.TradeResult.Success)) return;
 
         int info = ShopUtil.getSubtractSlot(type);
         int surplus = slot % 9;

@@ -17,6 +17,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.trades.SearchTradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
@@ -130,6 +131,7 @@ public class EditTradePageListener implements Listener {
         ShopTrade.TradeResult result = trade.getResult(p, gui.getShop());
         if(!result.equals(ShopTrade.TradeResult.Success)){
             if(gui.getConvertSlot().contains(slot)) ShopTrade.playResultEffect(p , result);
+            if(result.equals(ShopTrade.TradeResult.NotAfford)) SearchTradeListener.search(event);
             return;
         }
 

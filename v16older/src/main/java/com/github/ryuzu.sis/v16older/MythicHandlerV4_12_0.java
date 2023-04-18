@@ -39,10 +39,6 @@ public class MythicHandlerV4_12_0 implements IMythicHandler, Listener {
             items.clear();
             items.putAll(getMythicMobsInstance().getItemManager().getItems().stream().collect(Collectors.toMap(item -> BukkitAdapter.adapt(item.generateItemStack(1)), MythicItem::getInternalName)));
         });
-//        ShopUtil.reloadAllShopTradeInventory(() -> {
-//            items.clear();
-//            items.putAll(getMythicMobsInstance().getItemManager().getItems().stream().collect(Collectors.toMap(item -> BukkitAdapter.adapt(item.generateItemStack(1)), MythicItem::getInternalName)));
-//        });
     }
 
     @Override

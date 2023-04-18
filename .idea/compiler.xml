@@ -1,21 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="searchableinfiniteshop-api" />
-        <module name="searchableinfiniteshop-v16newer" />
-        <module name="searchableinfiniteshop-v16older" />
-      </profile>
-      <profile name="Annotation profile for Searchable Infinite Shop Plugin" enabled="true">
-        <sourceOutputDir name="../target/generated-sources/annotations" />
-        <sourceTestOutputDir name="../target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="searchableinfiniteshop-plugin" />
-      </profile>
-    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="searchableinfiniteshop" target="1.8" />
+      <module name="SearchableInfiniteShop" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

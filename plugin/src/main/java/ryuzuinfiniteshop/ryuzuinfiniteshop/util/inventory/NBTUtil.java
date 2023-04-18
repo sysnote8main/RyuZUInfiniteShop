@@ -1,15 +1,10 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.NBTCompoundList;
 import de.tr7zw.nbtapi.NBTItem;
-import de.tr7zw.nbtapi.NBTListCompound;
 import de.tr7zw.nbtinjector.NBTInjector;
-import dev.dbassett.skullcreator.SkullCreator;
 import lombok.NonNull;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -24,8 +19,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 
 public class NBTUtil {
     private static Method metaSetProfileMethod;

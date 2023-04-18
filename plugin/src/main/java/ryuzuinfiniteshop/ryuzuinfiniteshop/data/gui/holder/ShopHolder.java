@@ -3,7 +3,6 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.inventory.Inventory;
-import org.jetbrains.annotations.NotNull;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 
@@ -23,7 +22,7 @@ public class ShopHolder extends PageableHolder {
     }
 
     @Override
-    public @NotNull Inventory getInventory() {
+    public Inventory getInventory() {
         return gui.getInventory(mode);
     }
 

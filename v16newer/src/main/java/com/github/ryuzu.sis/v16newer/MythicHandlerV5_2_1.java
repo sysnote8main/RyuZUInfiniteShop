@@ -1,8 +1,10 @@
 package com.github.ryuzu.sis.v16newer;
 
 import com.github.ryuzu.sis.api.IMythicHandler;
-import io.lumine.mythic.api.exceptions.InvalidMobTypeException;
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -12,20 +14,10 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 
-public class MythicHandlerV5_2_0 implements IMythicHandler {
-    private static final HashMap<ItemStack, String> items = new HashMap<>();
-
-//    @EventHandler
-//    public void onReload(MythicReloadedEvent event) {
-//        reload();
-//    }
+public class MythicHandlerV5_2_1 implements IMythicHandler {
 
     @Override
     public void reload(Consumer<Runnable> consumer) {
-//        consumer.accept(() -> {
-//            items.clear();
-//            items.putAll(getMythicMobsInstance().getItemManager().getItems().stream().collect(Collectors.toMap(item -> BukkitAdapter.adapt(item.generateItemStack(1)), MythicItem::getInternalName)));
-//        });
     }
 
     @Override
@@ -49,18 +41,25 @@ public class MythicHandlerV5_2_0 implements IMythicHandler {
     @Override
     public ItemStack getMythicItem(String id, int amount) {
         ItemStack item = getMythicMobsInstance().getItemManager().getItemStack(id);
-        if(item == null) return null;
+        if (item == null) return null;
         item.setAmount(amount);
         return item;
     }
 
     @Override
     public Entity spawnMythicMob(String id, Location location) {
-        try {
-            return getMythicMobsInstance().getAPIHelper().spawnMythicMob(id, location);
-        } catch (InvalidMobTypeException e) {
-            throw new RuntimeException(e);
-        }
+        MythicMob mob = getMythicMobsInstance().getMobManager().getMythicMob("SkeletalKnight").orElse(null);
+        if (mob != null) {
+            ActiveMob knight = mob.spawn(BukkitAdapter.adapt(location), 1);
+            return knight.getEntity().getBukkitEntity();
+        } else
+            return null;
+
+//        try {
+//            return getMythicMobsInstance().getAPIHelper().spawnMythicMob(id, location);
+//        } catch (InvalidMobTypeException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     @Override

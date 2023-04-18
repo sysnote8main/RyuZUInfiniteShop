@@ -5,23 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="58b75d6a-5865-40b8-89ed-0b8c7f793fcd" name="変更" comment="超★実装">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/searchableinfiniteshop-api.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/src/main/java/com/github/ryuzu.sis/api/IMythicListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/src/main/java/com/github/ryuzu.sis/api/IMythicHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/searchableinfiniteshop-plugin.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin/RyuZUInfiniteShop.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin/pom.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/RyuZUInfiniteShop.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/RyuZUInfiniteShop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/config/LanguageKey.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/config/LanguageKey.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/shops/Shop.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/shops/Shop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/system/ShopTrade.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/system/ShopTrade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/gui/holder/ModeHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/gui/holder/ModeHolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/gui/holder/ShopHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/gui/holder/ShopHolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/system/item/MythicItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/data/system/item/MythicItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/listener/editor/edit/EditTradePageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/listener/editor/edit/EditTradePageListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/listener/editor/edit/MythicListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/listener/editor/system/SearchTradeListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/listener/trades/SearchTradeListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/util/configuration/MythicInstanceProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/util/configuration/MythicInstanceProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/v16newer/searchableinfiniteshop-v16newer.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/v16newer/src/main/java/com/github/ryuzu.sis/v16newer/MythicListenerV5_2_0.java" beforeDir="false" afterPath="$PROJECT_DIR$/v16newer/src/main/java/com/github/ryuzu.sis/v16newer/MythicHandlerV5_2_0.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/v16older/searchableinfiniteshop-v16older.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/v16older/src/main/java/com/github/ryuzu.sis/v16older/MythicListenerV4_12_0.java" beforeDir="false" afterPath="$PROJECT_DIR$/v16older/src/main/java/com/github/ryuzu.sis/v16older/MythicHandlerV4_12_0.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/util/inventory/NBTUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/ryuzuinfiniteshop/ryuzuinfiniteshop/util/inventory/NBTUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/plugin.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/v16newer/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/v16newer/src/main/java/com/github/ryuzu.sis/v16newer/MythicHandlerV5_2_0.java" beforeDir="false" afterPath="$PROJECT_DIR$/v16newer/src/main/java/com/github/ryuzu.sis/v16newer/MythicHandlerV5_2_1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v16older/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/v16older/src/main/java/com/github/ryuzu.sis/v16older/MythicHandlerV4_12_0.java" beforeDir="false" afterPath="$PROJECT_DIR$/v16older/src/main/java/com/github/ryuzu.sis/v16older/MythicHandlerV4_12_0.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,8 +36,39 @@
   <component name="ComposerSettings">
     <execution />
   </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/v16older">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="SearchableInfiniteShop" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.26/lombok-1.18.26-sources.jar!/lombok/Getter.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -56,22 +92,138 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/atsuk/Desktop/MinecraftServers/v1.16.5PaperServer/copyRyuZUInfiniteShop.sh&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;プロジェクト&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RunManager" selected="Gradle.RyuZUInfiniteShop [shadowJar]">
+    <configuration name="RyuZUInfiniteShop [shadowJar]" type="GradleRunConfiguration" factoryName="Gradle" nameIsGenerated="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="shadowJar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <EXTENSION ID="com.intellij.execution.ExternalSystemRunConfigurationJavaExtension">
+        <extension name="net.ashald.envfile">
+          <option name="IS_ENABLED" value="false" />
+          <option name="IS_SUBST" value="false" />
+          <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+          <option name="IS_IGNORE_MISSING_FILES" value="false" />
+          <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+          <ENTRIES>
+            <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+          </ENTRIES>
+        </extension>
+      </EXTENSION>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="searchableinfiniteshop [clean,package]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="clean" />
+                <option value="package" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </extension>
+      <method v="2" />
+    </configuration>
+    <configuration name="名前未設定" type="ShConfigurationType" nameIsGenerated="true">
+      <option name="SCRIPT_TEXT" value="" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="false" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/../../../MinecraftServers/v1.16.5PaperServer/copyRyuZUInfiniteShop.sh" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="false" />
+      <option name="INTERPRETER_PATH" value="$PROJECT_DIR$/../../../../../../Program Files/Git/git-bash.exe" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="false" />
+      <option name="EXECUTE_SCRIPT_FILE" value="true" />
+      <envs />
+      <method v="2">
+        <option name="RunConfigurationTask" enabled="true" run_configuration_name="$PROJECT_DIR$ [build]" run_configuration_type="GradleRunConfiguration" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Gradle.RyuZUInfiniteShop [shadowJar]" />
+      <item itemvalue="Maven.searchableinfiniteshop [clean,package]" />
+      <item itemvalue="Shell Script.名前未設定" />
+    </list>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="アプリケーションレベル" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="デフォルトタスク">
-      <changelist id="e811761d-ec11-4793-a6dc-0a8c93ce0d8e" name="変更" comment="" />
+      <changelist id="58b75d6a-5865-40b8-89ed-0b8c7f793fcd" name="変更" comment="超★実装" />
       <created>1681676201432</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1681676201432</updated>
       <workItem from="1681676202896" duration="2492000" />
+      <workItem from="1681727498539" duration="1553000" />
+      <workItem from="1681809279021" duration="372000" />
+      <workItem from="1681809679588" duration="1329000" />
+      <workItem from="1681811031074" duration="21000" />
+      <workItem from="1681811069091" duration="118000" />
+      <workItem from="1681811243741" duration="275000" />
+      <workItem from="1681811542846" duration="403000" />
+      <workItem from="1681811986524" duration="905000" />
+      <workItem from="1681813108285" duration="15000" />
+      <workItem from="1681813184209" duration="296000" />
+      <workItem from="1681813533006" duration="714000" />
+      <workItem from="1681814273851" duration="260000" />
+      <workItem from="1681814657520" duration="189000" />
+      <workItem from="1681814888229" duration="840000" />
+      <workItem from="1681815787586" duration="684000" />
+      <workItem from="1681816500527" duration="439000" />
+      <workItem from="1681816960994" duration="200000" />
+      <workItem from="1681817192045" duration="173000" />
+      <workItem from="1681817374066" duration="514000" />
     </task>
     <task id="LOCAL-00001" summary="マルチバージョン対応、MMのAPIの場合分け、マルチモジュール">
       <created>1681678141462</created>
