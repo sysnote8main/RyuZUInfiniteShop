@@ -17,6 +17,11 @@ repositories {
         name = "spigot"
         url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
     }
+
+    maven {
+        name = "Lumine Releases"
+        url = "https://mvn.lumine.io/repository/maven-public/"
+    }
 }
 
 dependencies {

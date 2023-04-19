@@ -1,6 +1,5 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item;
 
-import com.sun.istack.internal.NotNull;
 import lombok.Value;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,7 +28,7 @@ public class MythicItem implements ConfigurationSerializable {
     }
 
     @Override
-    public @NotNull Map<String, Object> serialize() {
+    public Map<String, Object> serialize() {
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("id", id);
         result.put("amount", amount);

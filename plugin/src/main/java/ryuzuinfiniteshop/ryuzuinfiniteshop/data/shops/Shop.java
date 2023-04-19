@@ -633,7 +633,7 @@ public class Shop {
     }
 
     public boolean isSearchable(Player p) {
-        if(!isSearchable()) {
+        if(!isSearchable() && !p.hasPermission("sis.op")) {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_UNSEARCHABLE.getMessage());
             SoundUtil.playFailSound(p);
             return false;
@@ -651,7 +651,7 @@ public class Shop {
     }
 
     public boolean isAvailableShop(Player p) {
-        return !isSearchable(p) && !isEditting(p) && !isEmpty(p);
+        return isSearchable(p) && !isEditting(p) && !isEmpty(p);
     }
 
     public void setNpcType(EntityType entityType) {

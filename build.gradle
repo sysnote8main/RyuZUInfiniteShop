@@ -6,6 +6,20 @@ plugins {
     id 'com.github.ryuzu.java-conventions'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url = uri('https://jitpack.io')
+    }
+    maven {
+        url = uri('https://repo.codemc.org/repository/maven-public/')
+    }
+    maven {
+        url = uri('https://repo.codemc.io/repository/maven-public/')
+    }
+}
+
 
 dependencies {
 //    api 'com.github.Y-RyuZU:RyuZUCommandsGenerator:2.0.3'

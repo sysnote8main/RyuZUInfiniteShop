@@ -1,8 +1,8 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
 
-import com.github.ryuzu.sis.api.IMythicHandler;
-import com.github.ryuzu.sis.v16newer.MythicHandlerV5_2_1;
-import com.github.ryuzu.sis.v16older.MythicHandlerV4_12_0;
+import com.github.ryuzu.searchableinfiniteshop.api.IMythicHandler;
+import com.github.ryuzu.searchableinfiniteshop.v16newer.MythicHandlerV5_2_1;
+import com.github.ryuzu.searchableinfiniteshop.v16older.MythicHandlerV4_12_0;
 import org.bukkit.Bukkit;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
