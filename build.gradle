@@ -3,7 +3,6 @@
  */
 
 plugins {
-    id 'java'
     id 'com.github.ryuzu.java-conventions'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
@@ -23,6 +22,7 @@ dependencies {
 //    }
 }
 
+java.sourceCompatibility = JavaVersion.VERSION_1_8
 description = 'Searchable Infinite Shop Plugin'
 
 processResources {
