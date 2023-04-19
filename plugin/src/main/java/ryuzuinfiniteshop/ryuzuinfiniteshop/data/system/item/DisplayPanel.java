@@ -25,17 +25,17 @@ public class DisplayPanel {
 
 
     ShopTrade.TradeResult result;
-    Material material;
+    ItemStack item;
     int data;
     public ConfigurationSection serialize() {
         ConfigurationSection result = new YamlConfiguration();
-        result.set("Material", material.name());
+        result.set("Material", item.getType().name());
         result.set("CustomModelData", data);
         return result;
     }
 
     public ItemStack getItemStack(int limit, int count) {
-        ItemStack item = ItemUtil.withCustomModelData(ItemUtil.getNamedItem(material, panels.get(result)), data);
+        ItemStack item = ItemUtil.withCustomModelData(ItemUtil.getNamedItem(this.item, panels.get(result)), data);
         if(result.equals(ShopTrade.TradeResult.Success)) {
             ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_ONCE.getMessage());
             ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_TEN.getMessage());

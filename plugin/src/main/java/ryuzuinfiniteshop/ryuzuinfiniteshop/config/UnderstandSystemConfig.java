@@ -9,10 +9,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class UnderstandSystemConfig {
-    private static Set<String> signedPlayers;
+    private static List<String> signedPlayers;
 
     public static void load() {
         File file = FileUtil.initializeFile("sign.yml");
@@ -22,7 +23,7 @@ public class UnderstandSystemConfig {
         } catch (IOException | InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
-        signedPlayers =  new HashSet(yaml.getList("signedPlayers", new ArrayList<>()));
+        signedPlayers = (List<String>) yaml.getList("signedPlayers", new ArrayList<>());
     }
 
     public static void save() {

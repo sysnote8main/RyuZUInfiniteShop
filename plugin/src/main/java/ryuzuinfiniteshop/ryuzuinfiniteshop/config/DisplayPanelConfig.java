@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.DisplayPanel;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class DisplayPanelConfig {
                 put(result,
                     new DisplayPanel(
                             result,
-                            Material.valueOf(yaml.getString(getResultConfig(result) + ".Material", defaultResultMaterial.get(result))),
+                            ItemUtil.getColoredItem(yaml.getString(getResultConfig(result) + ".Material", defaultResultMaterial.get(result))),
                             yaml.getInt(getResultConfig(result) + ".CustomModelData", -1)
                     )
                 );
@@ -56,7 +57,7 @@ public class DisplayPanelConfig {
             throw new RuntimeException(e);
         }
         for(ShopTrade.TradeResult result : defaultResultMaterial.keySet()) {
-            if(!yaml.contains(getResultConfig(result) + ".Material")) yaml.set(getResultConfig(result) + ".Material", panels.get(result).getMaterial().name());
+            if(!yaml.contains(getResultConfig(result) + ".Material")) yaml.set(getResultConfig(result) + ".Material", panels.get(result).getItem().getType().name());
             if(!yaml.contains(getResultConfig(result) + ".CustomModelData")) yaml.set(getResultConfig(result) + ".CustomModelData", panels.get(result).getData());
         }
         try {
