@@ -1,4 +1,4 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.trades;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.player;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -6,13 +6,15 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -24,11 +26,15 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
+
+import java.util.HashMap;
 
 public class OpenShopListener implements Listener {
     //ショップを開く
@@ -36,37 +42,68 @@ public class OpenShopListener implements Listener {
     public void openShop(PlayerInteractAtEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
-        if (p.isSneaking()) return;
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
         String id = NBTUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;
+        event.setCancelled(true);
+        openShop(id, p);
+    }
+
+    @EventHandler
+    public void openShop(PlayerInteractEvent event) {
+        Player p = event.getPlayer();
+        if (event.getHand() == null) return;
+        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+        Block block = event.getClickedBlock();
+        if (block == null) return;
+        String id = LocationUtil.toStringFromLocation(block.getLocation());
+        if(ShopUtil.getShop(id) == null) return;
+        event.setCancelled(true);
+        openShop(id, p);
+    }
+
+    public static void openShop(String id, Player p) {
         if (FileUtil.isSaveBlock(p)) return;
         Shop shop = ShopUtil.getShop(id);
         if (!shop.isAvailableShop(p)) return;
         ItemStack item = p.getInventory().getItemInMainHand();
-        if (!(ItemUtil.isAir(item) || NBTUtil.getNMSStringTag(item, "ShopData") == null)) return;
+        if (!(ItemUtil.isAir(item) || NBTUtil.getNMSStringTag(item, "ShopData") == null)) {
+            // ショップのマージ
+            if (!p.hasPermission("sis.op")) return;
+            String tag = NBTUtil.getNMSStringTag(item, "ShopType");
+            if (!(shop.getShopType().equals(ShopType.TwotoOne) || ShopType.valueOf(tag).equals(shop.getShopType()))) {
+                SoundUtil.playFailSound(p);
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_MATCH.getMessage());
+                return;
+            }
 
-        Inventory inv = shop.getPage(1).getInventory(ShopMode.TRADE, p);
-        if (!UnderstandSystemConfig.contains(p)) {
-            TextComponent understand = new TextComponent(ChatColor.YELLOW + "[" + LanguageKey.MESSAGE_UNDERSTAND_BUTTON_MESSAGE.getMessage() + ChatColor.YELLOW + "]");
-            understand.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sis understand"));
-            understand.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + LanguageKey.MESSAGE_UNDERSTAND_BUTTON_TOOLTIP.getMessage()).create()));
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_PAGE_NAVIGATION.getMessage());
-            p.spigot().sendMessage(understand);
+            HashMap<String, String> data = ShopUtil.mergeShop(item, shop, p);
+            String displayName = shop.getDisplayNameOrElseShop();
+            item = NBTUtil.setNMSTag(item, data);
+            p.getInventory().setItemInMainHand(item);
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_SHOP_MERGE.getMessage(displayName));
+            SoundUtil.playSuccessSound(p);
+        } else {
+            if(p.isSneaking()) {
+                //ショップの編集画面を開く
+                if (!p.hasPermission("sis.op")) return;
+                ShopUtil.closeAllShopTradeInventory(shop);
+                p.openInventory(shop.getEditor(1).getInventory(ShopMode.EDIT));
+
+                shop.setEditting(true);
+            } else {
+                //ショップの取引画面を開く
+                if (!UnderstandSystemConfig.contains(p)) {
+                    TextComponent understand = new TextComponent(ChatColor.YELLOW + "[" + LanguageKey.MESSAGE_UNDERSTAND_BUTTON_MESSAGE.getMessage() + ChatColor.YELLOW + "]");
+                    understand.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sis understand"));
+                    understand.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + LanguageKey.MESSAGE_UNDERSTAND_BUTTON_TOOLTIP.getMessage()).create()));
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_PAGE_NAVIGATION.getMessage());
+                    p.spigot().sendMessage(understand);
+                }
+                p.openInventory(shop.getPage(1).getInventory(ShopMode.TRADE, p));
+            }
         }
-        p.openInventory(inv);
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void openShop(PlayerInteractEntityEvent event) {
-        Entity entity = event.getRightClicked();
-        Player p = event.getPlayer();
-        if (p.isSneaking()) return;
-        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
-        String id = NBTUtil.getNMSStringTag(entity, "Shop");
-        if (id == null) return;
-        event.setCancelled(true);
     }
 
     //ショップのページ切り替え
@@ -118,7 +155,6 @@ public class OpenShopListener implements Listener {
             SoundUtil.playFailSound(p);
         else
             SoundUtil.playClickShopSound(p);
-
 
         //イベントキャンセル
         event.setCancelled(true);

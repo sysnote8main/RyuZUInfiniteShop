@@ -3,13 +3,12 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 import lombok.Getter;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.EntityUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EntityUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
 import java.util.function.Consumer;

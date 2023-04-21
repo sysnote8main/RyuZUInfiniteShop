@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
@@ -22,34 +23,25 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 
 public class EditMainPageListener implements Listener {
     //ショップの編集画面を開く
-    @EventHandler
-    public void openShopEditor(PlayerInteractAtEntityEvent event) {
-        Entity entity = event.getRightClicked();
-        Player p = event.getPlayer();
-        if (!p.hasPermission("sis.op")) return;
-        if (!p.isSneaking()) return;
-        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
-        String id = NBTUtil.getNMSStringTag(entity, "Shop");
-        if (id == null) return;
-        Shop shop = ShopUtil.getShop(id);
-        if (shop.isEditting()) return;
-        if (FileUtil.isSaveBlock(p)) return;
-
-        ShopUtil.closeAllShopTradeInventory(shop);
-        p.openInventory(shop.getEditor(1).getInventory(ShopMode.EDIT));
-
-        shop.setEditting(true);
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void openShopEditor(PlayerInteractEntityEvent event) {
-        Entity entity = event.getRightClicked();
-        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
-        String id = NBTUtil.getNMSStringTag(entity, "Shop");
-        if (id == null) return;
-        event.setCancelled(true);
-    }
+//    @EventHandler
+//    public void openShopEditor(PlayerInteractAtEntityEvent event) {
+//        Entity entity = event.getRightClicked();
+//        Player p = event.getPlayer();
+//        if (!p.hasPermission("sis.op")) return;
+//        if (!p.isSneaking()) return;
+//        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
+//        String id = NBTUtil.getNMSStringTag(entity, "Shop");
+//        if (id == null) return;
+//        Shop shop = ShopUtil.getShop(id);
+//        if (shop.isEditting()) return;
+//        if (FileUtil.isSaveBlock(p)) return;
+//
+//        ShopUtil.closeAllShopTradeInventory(shop);
+//        p.openInventory(shop.getEditor(1).getInventory(ShopMode.EDIT));
+//
+//        shop.setEditting(true);
+//        event.setCancelled(true);
+//    }
 
     //編集画面を閉じたとき、ロックを解除する
     @EventHandler
@@ -65,6 +57,7 @@ public class EditMainPageListener implements Listener {
         ShopHolder shopholder = (ShopHolder) inv.getHolder();
         Shop shop = shopholder.getShop();
 
+        if(Config.autoSaveInterval <= 0) shop.saveYaml();
         shop.setEditting(false);
     }
 

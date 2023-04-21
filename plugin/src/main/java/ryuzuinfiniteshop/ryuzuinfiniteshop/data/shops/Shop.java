@@ -13,6 +13,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +31,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopGui6to2;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EntityNBTBuilder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EntityUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
@@ -95,25 +97,30 @@ public class Shop {
     }
 
     public Shop(Location location, EntityType entityType, String name) {
-        boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
-        this.location = location;
-        ShopUtil.addShop(getID(), this);
-        loadYamlProcess(getFile());
-        this.entityType = entityType;
-        this.citizen = CitizensAPI.getNPCRegistry().createNPC(entityType, name);
-        if (!exsited) {
-            createEditorNewPage();
-            saveYaml();
-        }
+        initialize(location, () -> {
+            this.entityType = entityType;
+            this.citizen = CitizensAPI.getNPCRegistry().createNPC(entityType, name);
+        });
     }
 
     public Shop(Location location, String mmid) {
+        initialize(location, () -> {
+            this.mythicmob = mmid;
+            this.entityType = EntityType.VILLAGER;
+        });
+    }
+
+    public Shop(Location location) {
+        initialize(location, () -> {
+        });
+    }
+
+    private void initialize(Location location, Runnable initializer) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         this.location = location;
         ShopUtil.addShop(getID(), this);
         loadYamlProcess(getFile());
-        this.mythicmob = mmid;
-        this.entityType = EntityType.VILLAGER;
+        initializer.run();
         if (!exsited) {
             createEditorNewPage();
             saveYaml();
@@ -309,9 +316,9 @@ public class Shop {
 
     public ItemStack convertShopToItemStack() {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM.getMessage() + ChatColor.GREEN + getDisplayNameOrElseNone(),
-                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
-                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
-                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
+                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
+                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
+                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
         );
         item = NBTUtil.setNMSTag(item, convertShopToMap());
         return item;
@@ -633,7 +640,7 @@ public class Shop {
     }
 
     public boolean isSearchable(Player p) {
-        if(!isSearchable() && !p.hasPermission("sis.op")) {
+        if (!isSearchable() && !p.hasPermission("sis.op")) {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_UNSEARCHABLE.getMessage());
             SoundUtil.playFailSound(p);
             return false;
@@ -658,7 +665,7 @@ public class Shop {
         if (npc != null) npc.remove();
         this.entityType = entityType;
         this.mythicmob = null;
-        if (npc == null) respawnNPC();
+        respawnNPC();
     }
 
     public void setMythicType(String mythicType) {
@@ -667,12 +674,19 @@ public class Shop {
         respawnNPC();
     }
 
+    public void setBlock() {
+        if (npc != null) npc.remove();
+        this.entityType = null;
+        this.mythicmob = null;
+    }
+
     public void removeNPC() {
         if (npc != null) npc.remove();
         npc = null;
     }
 
     public void respawnNPC() {
+        if (entityType == null && JavaUtil.isEmptyString(displayName)) return;
         if (FileUtil.isSaveBlock()) return;
         if (npc != null && npc.isValid()) return;
         if (!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) return;
@@ -687,7 +701,9 @@ public class Shop {
             citizen.setName(displayName);
             npc = citizen.getEntity();
             setNpcMeta();
-        } else {
+        } if(entityType == null) {
+            EntityUtil.spawnHologram(location.clone().add(0 , 0.5 , 0), displayName);
+        }else {
             spawnNPC(entityType);
             npc.setCustomName(displayName);
             npc.getPassengers().forEach(Entity::remove);

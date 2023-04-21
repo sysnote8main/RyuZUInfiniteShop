@@ -39,16 +39,20 @@ public class ChangeNpcTypeListener implements Listener {
             //NPCを再構築する
             try {
                 shop.setNpcType(EntityType.valueOf(message.toUpperCase()));
-                shop.respawnNPC();
-//                ShopUtil.overwriteShop(shop.getLocation(), shop.convertShopToString(), shop.convertTradesToMap(), EntityType.valueOf(message.toUpperCase()));
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティタイプを変更しました");
-                SoundUtil.playSuccessSound(p);
             } catch (IllegalArgumentException e) {
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なエンティティタイプを入力して下さい");
-                SoundUtil.playFailSound(p);
+                if(message.equalsIgnoreCase("Block"))
+                    shop.setBlock();
+                else {
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なエンティティタイプを入力して下さい");
+                    SoundUtil.playFailSound(p);
+                    return;
+                }
             }
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティタイプを変更しました");
+            SoundUtil.playSuccessSound(p);
         });
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティIDを入力してください");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "NPCを設置せず、ブロックをショップとして扱う場合は'Block'と入力してください");
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
 
         SoundUtil.playClickShopSound(p);

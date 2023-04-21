@@ -133,34 +133,34 @@ public class ConvartListener implements Listener {
     }
 
     //ショップをマージする
-    @EventHandler
-    public void mergeShop(PlayerInteractAtEntityEvent event) {
-        Entity entity = event.getRightClicked();
-        Player p = event.getPlayer();
-        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
-        if (!p.hasPermission("sis.op")) return;
-        if (p.isSneaking()) return;
-        String id = NBTUtil.getNMSStringTag(entity, "Shop");
-        if (id == null) return;
-        Shop shop = ShopUtil.getShop(id);
-        if (shop.isEditting()) return;
-        if(FileUtil.isSaveBlock(p)) return;
-        ItemStack item = p.getInventory().getItemInMainHand();
-        String shopData = NBTUtil.getNMSStringTag(item, "ShopData");
-        if (ItemUtil.isAir(item) || shopData == null) return;
-
-        String tag = NBTUtil.getNMSStringTag(item, "ShopType");
-        if (!(shop.getShopType().equals(ShopType.TwotoOne) || ShopType.valueOf(tag).equals(shop.getShopType()))) {
-            SoundUtil.playFailSound(p);
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_MATCH.getMessage());
-            return;
-        }
-
-        HashMap<String, String> data = ShopUtil.mergeShop(item, shop, p);
-        String displayName = shop.getDisplayNameOrElseShop();
-        item = NBTUtil.setNMSTag(item, data);
-        p.getInventory().setItemInMainHand(item);
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_SHOP_MERGE.getMessage(displayName));
-        SoundUtil.playSuccessSound(p);
-    }
+//    @EventHandler
+//    public void mergeShop(PlayerInteractAtEntityEvent event) {
+//        Entity entity = event.getRightClicked();
+//        Player p = event.getPlayer();
+//        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
+//        if (!p.hasPermission("sis.op")) return;
+//        if (p.isSneaking()) return;
+//        String id = NBTUtil.getNMSStringTag(entity, "Shop");
+//        if (id == null) return;
+//        Shop shop = ShopUtil.getShop(id);
+//        if (shop.isEditting()) return;
+//        if(FileUtil.isSaveBlock(p)) return;
+//        ItemStack item = p.getInventory().getItemInMainHand();
+//        String shopData = NBTUtil.getNMSStringTag(item, "ShopData");
+//        if (ItemUtil.isAir(item) || shopData == null) return;
+//
+//        String tag = NBTUtil.getNMSStringTag(item, "ShopType");
+//        if (!(shop.getShopType().equals(ShopType.TwotoOne) || ShopType.valueOf(tag).equals(shop.getShopType()))) {
+//            SoundUtil.playFailSound(p);
+//            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_MATCH.getMessage());
+//            return;
+//        }
+//
+//        HashMap<String, String> data = ShopUtil.mergeShop(item, shop, p);
+//        String displayName = shop.getDisplayNameOrElseShop();
+//        item = NBTUtil.setNMSTag(item, data);
+//        p.getInventory().setItemInMainHand(item);
+//        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_SHOP_MERGE.getMessage(displayName));
+//        SoundUtil.playSuccessSound(p);
+//    }
 }

@@ -1,11 +1,13 @@
-package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
+package ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity;
 
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -17,6 +19,22 @@ public class EntityUtil {
         return nextindex == DyeColor.values().length ?
                 DyeColor.values()[0] :
                 DyeColor.values()[nextindex];
+    }
+
+    public static ArmorStand spawnHologram(Location location, String text) {
+        ArmorStand hologram = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
+        NBTUtil.setNMSTag(hologram, "Shop", "Hologram");
+        new EntityNBTBuilder(hologram).setInvisible(true);
+        hologram.setCustomName(text);
+        hologram.setInvulnerable(true);
+        hologram.setGravity(false);
+        hologram.setAI(false);
+        hologram.setMarker(true);
+        hologram.setVisible(false);
+        hologram.setRemoveWhenFarAway(true);
+        hologram.setCustomNameVisible(true);
+        hologram.setSmall(true);
+        return hologram;
     }
 
     public static org.bukkit.entity.Entity spawnEntity(Location location, EntityType entityType, CreatureSpawnEvent.SpawnReason spawnReason) {
@@ -63,5 +81,4 @@ public class EntityUtil {
         Class<?> enumSpawnType = Class.forName("net.minecraft.server." + getVersion() + ".EnumMobSpawnType");
         return enumSpawnType.getField(spawnReason.name()).get(null);
     }
-
 }

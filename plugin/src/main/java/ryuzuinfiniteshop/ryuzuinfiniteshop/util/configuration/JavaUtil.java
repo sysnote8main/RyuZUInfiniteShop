@@ -35,6 +35,10 @@ public class JavaUtil {
         return obj == null || (obj instanceof ItemStack && ((ItemStack)obj).getType().equals(Material.AIR)) || (obj instanceof String && ((String)obj).isEmpty()) ? defaultobj : obj;
     }
 
+    public static boolean isEmptyString(@Nullable String str) {
+        return str == null || ChatColor.stripColor(str).isEmpty() || ChatColor.stripColor(str).isBlank();
+    }
+
     public static boolean containsIgnoreCase(@Nullable ItemStack item,@Nullable String str2) {
         if(ItemUtil.isAir(item)) return false;
         if(!item.hasItemMeta()) return false;

@@ -1,44 +1,52 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.canceller;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreeperPowerEvent;
-import org.bukkit.event.entity.EntityCombustEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.MerchantInventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 
 public class CancelAffectNpc implements Listener {
-    //ダメージを無効化する
     @EventHandler(priority = EventPriority.HIGH)
-    public void cancelDamage(EntityDamageEvent event) {
-        Entity entity = event.getEntity();
-        String id = NBTUtil.getNMSStringTag(entity, "Shop");
-        if (id == null) return;
-
-        event.setCancelled(true);
+    public void cancelDamage(EntityDamageEvent e) {
+        cancel(e, e.getEntity());
+    }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void cancelBurn(EntityCombustEvent e) {
+        cancel(e, e.getEntity());
+    }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void cancelBurn(CreeperPowerEvent e) {
+        cancel(e, e.getEntity());
+    }
+    @EventHandler
+    public void cancelCut(PlayerShearEntityEvent e) {
+        cancel(e, e.getEntity());
+    }
+    @EventHandler
+    public void cancelDye(PlayerInteractEntityEvent e) {
+        cancel(e, e.getRightClicked());
+    }
+    @EventHandler
+    public void cancelChangePose(PlayerLeashEntityEvent e) {
+        cancel(e, e.getEntity());
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void cancelBurn(EntityCombustEvent event) {
-        Entity entity = event.getEntity();
-        String id = NBTUtil.getNMSStringTag(entity, "Shop");
-        if (id == null) return;
-        event.setCancelled(true);
-    }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void cancelBurn(CreeperPowerEvent event) {
-        Entity entity = event.getEntity();
+    private void cancel(Cancellable e, Entity entity) {
         String id = NBTUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;
-        event.setCancelled(true);
+        e.setCancelled(true);
     }
 
     @EventHandler
@@ -50,12 +58,4 @@ public class CancelAffectNpc implements Listener {
         if (id == null) return;
         event.setCancelled(true);
     }
-
-//    @EventHandler(priority = EventPriority.HIGHEST)
-//    public void bypassSpawnBlocking(EntitySpawnEvent e){
-//        Entity entity = e.getEntity();
-//        String id = NBTUtil.getNMSStringTag(entity, "Shop");
-//        if (id == null) return;
-//        e.setCancelled(false);
-//    }
 }

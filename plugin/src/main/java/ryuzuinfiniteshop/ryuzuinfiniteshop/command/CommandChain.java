@@ -156,7 +156,7 @@ public class CommandChain {
                 })
                 .tabCompleteConditon(data -> data.getArgs().length >= 2 && !FileUtil.isSaveBlock(data))
                 .complete(1 , Arrays.stream(EntityType.values()).map(Enum::name).collect(Collectors.toList()))
-                .complete(1 , new ArrayList<>(MythicInstanceProvider.getInstance().getMythicMobs()));
+                .complete(1 , MythicInstanceProvider.isLoaded() ? new ArrayList<>(MythicInstanceProvider.getInstance().getMythicMobs()) : new ArrayList<>());
 
 
         CommandsGenerator.registerCommand(

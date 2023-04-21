@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Config {
-    public static int autoSaveInterval = 20;
+    public static int autoSaveInterval;
     public static boolean editLog;
     public static boolean tradeLog;
     public static boolean saveByMMID;
@@ -33,7 +33,7 @@ public class Config {
         } catch (IOException | InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
-        autoSaveInterval = yaml.getInt("AutoSaveInterval", 20);
+        autoSaveInterval = yaml.getInt("AutoSaveInterval", 0);
         editLog = yaml.getBoolean("EditLog", true);
         tradeLog = yaml.getBoolean("TradeLog", true);
         saveByMMID = yaml.getBoolean("SaveByMMID", true);

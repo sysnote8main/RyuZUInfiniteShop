@@ -9,6 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
@@ -73,7 +74,7 @@ public class ItemUtil {
         return item == null || item.getType().equals(Material.AIR);
     }
 
-    public static ItemStack clone(ItemStack item,int amount) {
+    public static ItemStack clone(ItemStack item, int amount) {
         ItemStack clone = item.clone();
         clone.setAmount(amount);
         return clone;
@@ -161,7 +162,12 @@ public class ItemUtil {
 
     public static ItemStack withCustomModelData(ItemStack item, int data) {
         ItemMeta meta = item.getItemMeta();
-        if (data != -1) meta.setCustomModelData(data);
+        if (data != -1) {
+            if (RyuZUInfiniteShop.VERSION < 14)
+                item.setDurability((short) data);
+            else
+                meta.setCustomModelData(data);
+        }
         item.setItemMeta(meta);
         return item;
     }
@@ -230,9 +236,11 @@ public class ItemUtil {
     }
 
     public static String getString(ItemStack item) {
-        if(isAir(item)) return "Air";
-        if(MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getID(item) != null) return MythicInstanceProvider.getInstance().getID(item);
-        if(item.hasItemMeta() && item.getItemMeta().hasDisplayName()) return ChatColor.stripColor(item.getItemMeta().getDisplayName());
+        if (isAir(item)) return "Air";
+        if (MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getID(item) != null)
+            return MythicInstanceProvider.getInstance().getID(item);
+        if (item.hasItemMeta() && item.getItemMeta().hasDisplayName())
+            return ChatColor.stripColor(item.getItemMeta().getDisplayName());
         return item.getType().name();
     }
 
@@ -245,13 +253,14 @@ public class ItemUtil {
     }
 
     public static ItemStack getWhitePanel() {
-        return getNamedItem(getColoredItem("WHITE_STAINED_GLASS_PANE") , ChatColor.WHITE + "");
+        return getNamedItem(getColoredItem("WHITE_STAINED_GLASS_PANE"), ChatColor.WHITE + "");
     }
 
     public static ItemStack getColoredItem(String material) {
-        if(!(RyuZUInfiniteShop.VERSION < 13 && (material.contains("STAINED_GLASS_PANE") || material.contains("WOOL")))) return new ItemStack(Material.valueOf(material));
+        if (!(RyuZUInfiniteShop.VERSION < 13 && (material.contains("STAINED_GLASS_PANE") || material.contains("WOOL"))))
+            return new ItemStack(Material.valueOf(material));
         String color = material.split("_")[0];
         String type = material.split("_")[1];
-        return new ItemStack(Material.valueOf(type), 1 , (short) DyeColor.valueOf(color).ordinal());
+        return new ItemStack(Material.valueOf(type), 1, (short) DyeColor.valueOf(color).ordinal());
     }
 }
