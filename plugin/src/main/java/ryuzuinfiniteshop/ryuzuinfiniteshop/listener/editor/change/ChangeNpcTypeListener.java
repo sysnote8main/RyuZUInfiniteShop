@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
@@ -35,25 +36,25 @@ public class ChangeNpcTypeListener implements Listener {
         if (slot != 4 * 9 + 4) return;
         //チャット入力待機
         SchedulerListener.setSchedulers(p, shop.getID(), (message) -> {
-            //成功時の処理
-            //NPCを再構築する
+            // Successful process when completed
+            // Reconstruct NPC
             try {
                 shop.setNpcType(EntityType.valueOf(message.toUpperCase()));
             } catch (IllegalArgumentException e) {
                 if(message.equalsIgnoreCase("Block"))
                     shop.setBlock();
                 else {
-                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "有効なエンティティタイプを入力して下さい");
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_INVALID_ENTITY_TYPE.getMessage());
                     SoundUtil.playFailSound(p);
                     return;
                 }
             }
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティタイプを変更しました");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTITY_TYPE_CHANGE.getMessage());
             SoundUtil.playSuccessSound(p);
         });
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "エンティティIDを入力してください");
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "NPCを設置せず、ブロックをショップとして扱う場合は'Block'と入力してください");
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "20秒待つか'Cancel'と入力することでキャンセルことができます");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_INPUT_ENTITY_ID.getMessage());
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_BLOCK_SHOP.getMessage());
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_CANCEL_IN_20_SECONDS.getMessage());
 
         SoundUtil.playClickShopSound(p);
         holder.getShop().setEditting(false);

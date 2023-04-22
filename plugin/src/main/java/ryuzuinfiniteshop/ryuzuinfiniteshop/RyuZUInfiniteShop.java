@@ -6,8 +6,13 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.command.CommandChain;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageConfig;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.player.SearchTradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
@@ -21,7 +26,17 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.EditMainPageList
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.EditTradePageListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.player.OpenShopListener;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 public final class RyuZUInfiniteShop extends JavaPlugin {
     @Getter
@@ -38,11 +53,13 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         logger = getLogger();
         MythicInstanceProvider.setInstance();
         CommandChain.registerCommand();
-        registerEvents();
-        new RyuZUCommandsGenerator(this);
+        registerAllListeners();
+        LanguageConfig.load();
+        RyuZUCommandsGenerator.initialize(this, LanguageKey.COMMAND_ERROR_PERMISSION.getMessage());
         ConfigurationSerialization.registerClass(MythicItem.class);
         if(VERSION < 14) NBTInjector.inject();
         FileUtil.loadAll();
+
     }
 
     @Override
@@ -72,36 +89,43 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         getPlugin().getServer().getPluginManager().registerEvents(new SearchTradeListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new TeleportShopListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new SchedulerListener(), getPlugin());
-//        try {
-//            String listenerspath = RyuZUInfiniteShop.getPlugin().getClass().getResource("listeners").getFile()
-//                    .replaceFirst("file:/" , "")
-//                    .replace("\\" , "/")
-//                    .replace("/RyuZUInfiniteShop-1.0.0.jar!/ryuzuinfiniteshop/ryuzuinfiniteshop/listeners" , "");
-//            HashSet<Class<? extends Listener>> classes = Files.walk(Paths.get(listenerspath) , 5)
-//                    .filter(path -> path.toString().endsWith(".class"))
-//                    .map(path -> {
-//                        try {
-//                            return Class.forName(path.toString().replace(".class", ""));
-//                        } catch (ClassNotFoundException e) {
-//                            e.printStackTrace();
-//                        }
-//                        return null;
-//                    })
-//                    .filter(clazz -> clazz != null && Listener.class.isAssignableFrom(clazz))
-//                    .map(clazz -> (Class<? extends Listener>) clazz)
-//                    .collect(HashSet::new, HashSet::add, HashSet::addAll);
-//            for (Class<?> clazz : classes) {
-//                Object o;
-//                try {
-//                    o = clazz.newInstance();
-//                } catch (IllegalAccessException | InstantiationException e) {
-//                    return;
-//                }
-//                if (o instanceof Listener)
-//                    getPlugin().getServer().getPluginManager().registerEvents((Listener) o, getPlugin());
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+    }
+
+    public static void registerAllListeners() {
+        Plugin plugin = RyuZUInfiniteShop.getPlugin();
+        PluginManager pluginManager = plugin.getServer().getPluginManager();
+        URL listenersUrl = plugin.getClass().getResource("listeners");
+
+        try {
+            URI listenersUri = listenersUrl.toURI();
+            Path listenersPath = Paths.get(listenersUri);
+
+            try (Stream<Path> paths = Files.walk(listenersPath)) {
+                paths.filter(Files::isRegularFile)
+                        .filter(path -> path.toString().endsWith(".class"))
+                        .forEach(classFile -> {
+                            String className = extractClassName(listenersPath, classFile);
+                            try {
+                                Class<?> clazz = Class.forName(className);
+                                if (Listener.class.isAssignableFrom(clazz)) {
+                                    Listener listener = (Listener) clazz.getDeclaredConstructor().newInstance();
+                                    pluginManager.registerEvents(listener, plugin);
+                                }
+                            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                                e.printStackTrace();
+                            }
+                        });
+            }
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String extractClassName(Path basePath, Path classFile) {
+        String packageName = RyuZUInfiniteShop.getPlugin().getClass().getPackage().getName();
+        String relativePath = basePath.relativize(classFile).toString();
+        String className = relativePath.replace(File.separator, ".");
+        className = className.substring(0, className.length() - ".class".length());
+        return packageName + ".listeners." + className;
     }
 }

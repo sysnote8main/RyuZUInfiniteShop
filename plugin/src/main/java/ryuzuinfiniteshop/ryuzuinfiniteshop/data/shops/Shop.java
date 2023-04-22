@@ -581,9 +581,7 @@ public class Shop {
 
     public void changeInvisible() {
         if (!(npc instanceof LivingEntity)) return;
-        LivingEntity livnpc = (LivingEntity) npc;
-//        livnpc.setInvisible(!invisible);
-        NBTBuilder.setInvisible(invisible);
+        NBTBuilder.setInvisible(!invisible);
     }
 
     public void changeNPCDirecation() {

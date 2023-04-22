@@ -146,6 +146,11 @@ public enum LanguageKey {
     MESSAGE_FILES_RELOADING_COMPLETE("全てのファイルのリロードが完了しました", "All files have been reloaded successfully."),
     MESSAGE_FILES_RELOADING_BLOCKED("現在リロード処理中のため、すべての処理をブロックしています。", "All processes are currently blocked due to reloading."),
     ERROR_WORLD_NOT_FOUND("ワールドが存在しません: {0}", "World not found: {0}"),
+    MESSAGE_ERROR_INVALID_ENTITY_TYPE("有効なエンティティタイプを入力して下さい", "Please input a valid entity type."),
+    MESSAGE_ENTITY_TYPE_CHANGE("エンティティタイプを変更しました", "Entity type has been changed."),
+    MESSAGE_INPUT_ENTITY_ID("エンティティIDを入力してください", "Please input the entity ID."),
+    MESSAGE_BLOCK_SHOP("NPCを設置せず、ブロックをショップとして扱う場合は'Block'と入力してください", "If you want to use a block as a shop without placing an NPC, input 'Block'."),
+    MESSAGE_CANCEL_IN_20_SECONDS("20秒待つか'Cancel'と入力することでキャンセルことができます", "You can cancel by waiting for 20 seconds or inputting 'Cancel'."),
     MESSAGE_SHOP_NOT_EXIST("そのショップは存在しません", "That shop does not exist"),
     ITEM_EQUIP_HAND_MAIN("メインハンド", "Main hand"),
     ITEM_EQUIP_HELMET("ヘルメット", "Helmet"),
@@ -154,6 +159,7 @@ public enum LanguageKey {
     ITEM_EQUIP_BOOTS("ブーツ", "Boots"),
     ITEM_EQUIP_HAND_OFF("オフハンド", "Off hand"),
     INVENTORY_DEFAULT_SHOP("ショップ", "Shop"),
+    COMMAND_ERROR_PERMISSION("権限がありません", "You do not have permission"),
     MESSAGE_SUCCESS_SHOP_MERGE("{0}の取引を宝石のショップにマージしました", "Successfully merged trades of {0} into the shop in gemstone");
 
 

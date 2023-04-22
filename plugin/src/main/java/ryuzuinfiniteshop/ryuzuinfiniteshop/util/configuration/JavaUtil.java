@@ -36,7 +36,7 @@ public class JavaUtil {
     }
 
     public static boolean isEmptyString(@Nullable String str) {
-        return str == null || ChatColor.stripColor(str).isEmpty() || ChatColor.stripColor(str).isBlank();
+        return str == null || ChatColor.stripColor(str).isEmpty();
     }
 
     public static boolean containsIgnoreCase(@Nullable ItemStack item,@Nullable String str2) {

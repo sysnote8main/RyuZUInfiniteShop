@@ -46,7 +46,7 @@ repositories {
 }
 
 dependencies {
-    api ("com.github.Y-RyuZU:RyuZUCommandsGenerator:2.0.3")
+    api ("com.github.Y-RyuZU:RyuZUCommandsGenerator:2.3")
     api ( "de.tr7zw:item-nbt-api-plugin:2.11.2")
     api (project(":searchableinfiniteshop-v16newer"))
     api (project(":searchableinfiniteshop-v16older"))

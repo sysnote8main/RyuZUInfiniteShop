@@ -29,33 +29,18 @@ public class CancelAffectNpc implements Listener {
     public void cancelBurn(CreeperPowerEvent e) {
         cancel(e, e.getEntity());
     }
-    @EventHandler
-    public void cancelCut(PlayerShearEntityEvent e) {
-        cancel(e, e.getEntity());
-    }
-    @EventHandler
-    public void cancelDye(PlayerInteractEntityEvent e) {
-        cancel(e, e.getRightClicked());
-    }
-    @EventHandler
-    public void cancelChangePose(PlayerLeashEntityEvent e) {
-        cancel(e, e.getEntity());
-    }
-
-
-    private void cancel(Cancellable e, Entity entity) {
-        String id = NBTUtil.getNMSStringTag(entity, "Shop");
-        if (id == null) return;
-        e.setCancelled(true);
-    }
 
     @EventHandler
     public void cancelOpenVillagerInventory(InventoryOpenEvent event) {
         if (!event.getInventory().getType().equals(InventoryType.MERCHANT)) return;
         Villager villager = (Villager) event.getInventory().getHolder();
         if(villager == null) return;
-        String id = NBTUtil.getNMSStringTag(villager, "Shop");
+        cancel(event, villager);
+    }
+
+    private void cancel(Cancellable e, Entity entity) {
+        String id = NBTUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;
-        event.setCancelled(true);
+        e.setCancelled(true);
     }
 }
