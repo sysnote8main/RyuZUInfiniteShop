@@ -17,8 +17,8 @@ public class TropicalFishShop extends Shop {
     protected DyeColor patternColor;
     protected TropicalFish.Pattern pattern;
 
-    public TropicalFishShop(Location location, EntityType entitytype, ConfigurationSection config) {
-        super(location, entitytype, config);
+    public TropicalFishShop(Location location, String entityType, ConfigurationSection config) {
+        super(location, entityType, config);
     }
 
     public void setBodyColor(DyeColor bodyColor) {

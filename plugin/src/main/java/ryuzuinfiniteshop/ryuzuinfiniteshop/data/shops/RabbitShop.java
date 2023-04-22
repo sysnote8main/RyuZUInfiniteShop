@@ -14,8 +14,8 @@ import java.util.function.Consumer;
 public class RabbitShop extends Shop {
     protected Rabbit.Type type;
 
-    public RabbitShop(Location location, EntityType entitytype, ConfigurationSection config) {
-        super(location, entitytype, config);
+    public RabbitShop(Location location, String entityType, ConfigurationSection config) {
+        super(location, entityType, config);
     }
 
     public void setRabbitType(Rabbit.Type type) {

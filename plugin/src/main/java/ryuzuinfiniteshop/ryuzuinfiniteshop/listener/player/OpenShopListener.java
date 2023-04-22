@@ -66,11 +66,11 @@ public class OpenShopListener implements Listener {
     public static void openShop(String id, Player p) {
         if (FileUtil.isSaveBlock(p)) return;
         Shop shop = ShopUtil.getShop(id);
-        if (!shop.isAvailableShop(p)) return;
         ItemStack item = p.getInventory().getItemInMainHand();
         if (!(ItemUtil.isAir(item) || NBTUtil.getNMSStringTag(item, "ShopData") == null)) {
             // ショップのマージ
             if (!p.hasPermission("sis.op")) return;
+            if (shop.isEditting(p)) return;
             String tag = NBTUtil.getNMSStringTag(item, "ShopType");
             if (!(shop.getShopType().equals(ShopType.TwotoOne) || ShopType.valueOf(tag).equals(shop.getShopType()))) {
                 SoundUtil.playFailSound(p);
@@ -85,15 +85,15 @@ public class OpenShopListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_SHOP_MERGE.getMessage(displayName));
             SoundUtil.playSuccessSound(p);
         } else {
-            if(p.isSneaking()) {
+            if(p.isSneaking() && p.hasPermission("sis.op")) {
                 //ショップの編集画面を開く
-                if (!p.hasPermission("sis.op")) return;
+                if (shop.isEditting(p)) return;
                 ShopUtil.closeAllShopTradeInventory(shop);
                 p.openInventory(shop.getEditor(1).getInventory(ShopMode.EDIT));
-
                 shop.setEditting(true);
             } else {
                 //ショップの取引画面を開く
+                if (!shop.isAvailableShop(p)) return;
                 if (!UnderstandSystemConfig.contains(p)) {
                     TextComponent understand = new TextComponent(ChatColor.YELLOW + "[" + LanguageKey.MESSAGE_UNDERSTAND_BUTTON_MESSAGE.getMessage() + ChatColor.YELLOW + "]");
                     understand.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sis understand"));

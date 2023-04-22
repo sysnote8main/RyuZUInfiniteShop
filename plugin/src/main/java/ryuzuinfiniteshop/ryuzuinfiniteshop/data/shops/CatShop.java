@@ -15,8 +15,8 @@ import java.util.function.Consumer;
 public class CatShop extends SittableShop {
     protected Cat.Type type;
 
-    public CatShop(Location location, EntityType entitytype, ConfigurationSection config) {
-        super(location, entitytype, config);
+    public CatShop(Location location, String entityType, ConfigurationSection config) {
+        super(location, entityType, config);
     }
 
     public void setCatType(Cat.Type type) {

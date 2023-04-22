@@ -59,7 +59,7 @@ public class Shop {
     @Getter
     protected String mythicmob;
     protected NPC citizen;
-    protected EntityType entityType;
+    protected String entityType;
     protected ShopType type;
     protected List<ShopTrade> trades = new ArrayList<>();
     protected ConfigurationSection shopkeepersConfig;
@@ -83,7 +83,7 @@ public class Shop {
     protected List<ShopTradeGui> pages = new ArrayList<>();
     protected ObjectItems equipments;
 
-    public Shop(Location location, EntityType entityType, ConfigurationSection config) {
+    public Shop(Location location, String entityType, ConfigurationSection config) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         this.location = location;
         this.shopkeepersConfig = config;
@@ -96,23 +96,22 @@ public class Shop {
         }
     }
 
-    public Shop(Location location, EntityType entityType, String name) {
+    public Shop(Location location, String entityType, String name) {
         initialize(location, () -> {
             this.entityType = entityType;
-            this.citizen = CitizensAPI.getNPCRegistry().createNPC(entityType, name);
+            this.citizen = CitizensAPI.getNPCRegistry().createNPC(EntityType.valueOf(entityType.toUpperCase()), name);
         });
     }
 
     public Shop(Location location, String mmid) {
         initialize(location, () -> {
             this.mythicmob = mmid;
-            this.entityType = EntityType.VILLAGER;
+            this.entityType = EntityType.VILLAGER.name();
         });
     }
 
     public Shop(Location location) {
-        initialize(location, () -> {
-        });
+        initialize(location, () -> {});
     }
 
     private void initialize(Location location, Runnable initializer) {
@@ -316,9 +315,9 @@ public class Shop {
 
     public ItemStack convertShopToItemStack() {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM.getMessage() + ChatColor.GREEN + getDisplayNameOrElseNone(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
         );
         item = NBTUtil.setNMSTag(item, convertShopToMap());
         return item;
@@ -471,7 +470,7 @@ public class Shop {
         return yaml -> {
             yaml.set("Npc.Options.MythicMob", mythicmob);
             yaml.set("Npc.Options.DisplayName", displayName);
-            yaml.set("Npc.Options.EntityType", entityType.toString());
+            yaml.set("Npc.Options.EntityType", entityType);
             yaml.set("Npc.Options.Invisible", invisible);
             yaml.set("Shop.Options.ShopType", type.toString());
             yaml.set("Npc.Options.Equipments", equipments.getObjects());
@@ -516,9 +515,9 @@ public class Shop {
         return JavaUtil.getOrDefault(displayName, ChatColor.YELLOW + "<none>");
     }
 
-    private void spawnNPC(EntityType entitytype) {
+    private void spawnNPC(EntityType entityType) {
         this.location.setPitch(0);
-        this.npc = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entitytype);
+        this.npc = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entityType);
         setNpcMeta();
     }
 
@@ -659,7 +658,7 @@ public class Shop {
         return isSearchable(p) && !isEditting(p) && !isEmpty(p);
     }
 
-    public void setNpcType(EntityType entityType) {
+    public void setNpcType(String entityType) {
         if (npc != null) npc.remove();
         this.entityType = entityType;
         this.mythicmob = null;
@@ -699,10 +698,10 @@ public class Shop {
             citizen.setName(displayName);
             npc = citizen.getEntity();
             setNpcMeta();
-        } if(entityType == null) {
-            EntityUtil.spawnHologram(location.clone().add(0 , 0.5 , 0), displayName);
-        }else {
-            spawnNPC(entityType);
+        } else if (entityType.equalsIgnoreCase("BLOCK")) {
+            EntityUtil.spawnHologram(location.clone().add(0, 0.5, 0), displayName);
+        } else {
+            spawnNPC(EntityType.valueOf(entityType));
             npc.setCustomName(displayName);
             npc.getPassengers().forEach(Entity::remove);
             Optional.ofNullable(npc.getVehicle()).ifPresent(Entity::remove);

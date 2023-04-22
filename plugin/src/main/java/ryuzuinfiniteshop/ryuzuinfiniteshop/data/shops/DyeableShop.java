@@ -19,8 +19,8 @@ public class DyeableShop extends Shop {
     protected DyeColor color;
     protected boolean optionalInfo;
 
-    public DyeableShop(Location location, EntityType entitytype, ConfigurationSection config) {
-        super(location, entitytype, config);
+    public DyeableShop(Location location, String entityType, ConfigurationSection config) {
+        super(location, entityType, config);
     }
 
     public void setColor(DyeColor color) {

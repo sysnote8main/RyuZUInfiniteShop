@@ -13,8 +13,8 @@ import java.util.function.Consumer;
 public class ParrotShop extends SittableShop {
     protected Parrot.Variant color;
 
-    public ParrotShop(Location location, EntityType entitytype, ConfigurationSection config) {
-        super(location, entitytype, config);
+    public ParrotShop(Location location, String entityType, ConfigurationSection config) {
+        super(location, entityType, config);
     }
 
     public void setColor(Parrot.Variant color) {

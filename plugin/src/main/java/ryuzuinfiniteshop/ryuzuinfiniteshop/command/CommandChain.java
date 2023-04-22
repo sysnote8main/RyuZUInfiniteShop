@@ -102,7 +102,7 @@ public class CommandChain {
                                 player.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SHOP_UPDATED.getMessage());
                                 return;
                             }
-                            Shop shop = ShopUtil.createNewShop(location, EntityType.VILLAGER);
+                            Shop shop = ShopUtil.createNewShop(location, EntityType.VILLAGER.name(), null);
                             shop.respawnNPC();
                             data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SHOP_CREATED.getMessage());
                             LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(location));
@@ -131,7 +131,7 @@ public class CommandChain {
                             if (MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().exsistsMythicMob(data.getArgs()[1]))
                                 ShopUtil.createNewShop(loc, data.getArgs()[1]);
                             else
-                                ShopUtil.createNewShop(loc, EntityType.valueOf(data.getArgs()[1].toUpperCase()));
+                                ShopUtil.createNewShop(loc, data.getArgs()[1], null);
                             ShopUtil.getShop(LocationUtil.toStringFromLocation(loc)).respawnNPC();
                             data.sendMessage(ChatColor.GREEN + LanguageKey.MESSAGE_SHOP_CREATED.getMessage());
                             LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(loc));
@@ -140,6 +140,8 @@ public class CommandChain {
                 .permissions("sis.op")
                 .condition(data -> {
                     if (LocationUtil.isLocationString(data.getArgs()[1]))
+                        return true;
+                    if (data.getArgs()[1].equalsIgnoreCase("BLOCK"))
                         return true;
                     if (!isPlayer(data.getSender()))
                         return false;
@@ -155,6 +157,7 @@ public class CommandChain {
                     }
                 })
                 .tabCompleteConditon(data -> data.getArgs().length >= 2 && !FileUtil.isSaveBlock(data))
+                .complete(1 , "BLOCK")
                 .complete(1 , Arrays.stream(EntityType.values()).map(Enum::name).collect(Collectors.toList()))
                 .complete(1 , MythicInstanceProvider.isLoaded() ? new ArrayList<>(MythicInstanceProvider.getInstance().getMythicMobs()) : new ArrayList<>());
 

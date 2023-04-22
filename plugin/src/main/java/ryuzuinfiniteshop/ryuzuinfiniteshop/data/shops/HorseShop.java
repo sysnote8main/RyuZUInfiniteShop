@@ -15,8 +15,8 @@ public class HorseShop extends AgeableShop {
     protected Horse.Color color;
     protected Horse.Style style;
 
-    public HorseShop(Location location, EntityType entitytype, ConfigurationSection config) {
-        super(location, entitytype, config);
+    public HorseShop(Location location, String entityType, ConfigurationSection config) {
+        super(location, entityType, config);
     }
 
     public void setStyle(Horse.Style style) {

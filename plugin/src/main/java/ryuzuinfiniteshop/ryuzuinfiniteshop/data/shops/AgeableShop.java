@@ -13,8 +13,8 @@ public class AgeableShop extends Shop {
     @Getter
     protected boolean adult;
 
-    public AgeableShop(Location location, EntityType entitytype, ConfigurationSection config) {
-        super(location, entitytype, config);
+    public AgeableShop(Location location, String entityType, ConfigurationSection config) {
+        super(location, entityType, config);
     }
 
     public void setAgeLook(boolean look) {

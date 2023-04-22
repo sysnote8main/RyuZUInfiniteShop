@@ -12,8 +12,8 @@ public class SlimeShop extends Shop {
     @Getter
     protected int size;
 
-    public SlimeShop(Location location, EntityType entitytype, ConfigurationSection config) {
-        super(location, entitytype, config);
+    public SlimeShop(Location location, String entityType, ConfigurationSection config) {
+        super(location, entityType, config);
     }
 
     public void setSize(int size) {

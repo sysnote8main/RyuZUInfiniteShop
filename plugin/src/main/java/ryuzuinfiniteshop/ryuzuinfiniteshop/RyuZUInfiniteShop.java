@@ -11,6 +11,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.command.CommandChain;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.*;
@@ -32,9 +33,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -53,13 +58,11 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         logger = getLogger();
         MythicInstanceProvider.setInstance();
         CommandChain.registerCommand();
-        registerAllListeners();
-        LanguageConfig.load();
-        RyuZUCommandsGenerator.initialize(this, LanguageKey.COMMAND_ERROR_PERMISSION.getMessage());
+        registerEvents();
         ConfigurationSerialization.registerClass(MythicItem.class);
         if(VERSION < 14) NBTInjector.inject();
         FileUtil.loadAll();
-
+        RyuZUCommandsGenerator.initialize(this, LanguageKey.COMMAND_ERROR_PERMISSION.getMessage());
     }
 
     @Override
@@ -94,29 +97,33 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
     public static void registerAllListeners() {
         Plugin plugin = RyuZUInfiniteShop.getPlugin();
         PluginManager pluginManager = plugin.getServer().getPluginManager();
-        URL listenersUrl = plugin.getClass().getResource("listeners");
+        String listenersPackageName = plugin.getClass().getPackage().getName() + ".listener";
 
         try {
-            URI listenersUri = listenersUrl.toURI();
-            Path listenersPath = Paths.get(listenersUri);
+            URL pluginUrl = plugin.getClass().getProtectionDomain().getCodeSource().getLocation();
+            File pluginFile = new File(pluginUrl.toURI());
+            if (pluginFile.isFile()) {
+                JarFile jarFile = new JarFile(pluginFile);
+                Enumeration<JarEntry> entries = jarFile.entries();
+                URL[] urls = {pluginUrl};
+                URLClassLoader classLoader = new URLClassLoader(urls);
 
-            try (Stream<Path> paths = Files.walk(listenersPath)) {
-                paths.filter(Files::isRegularFile)
-                        .filter(path -> path.toString().endsWith(".class"))
-                        .forEach(classFile -> {
-                            String className = extractClassName(listenersPath, classFile);
-                            try {
-                                Class<?> clazz = Class.forName(className);
-                                if (Listener.class.isAssignableFrom(clazz)) {
-                                    Listener listener = (Listener) clazz.getDeclaredConstructor().newInstance();
-                                    pluginManager.registerEvents(listener, plugin);
-                                }
-                            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                                e.printStackTrace();
-                            }
-                        });
+                while (entries.hasMoreElements()) {
+                    JarEntry entry = entries.nextElement();
+                    String entryName = entry.getName();
+                    if (entryName.startsWith(listenersPackageName.replace('.', '/')) && entryName.endsWith(".class")) {
+                        String className = entryName.replace('/', '.').substring(0, entryName.length() - ".class".length());
+                        Class<?> clazz = classLoader.loadClass(className);
+                        if (Listener.class.isAssignableFrom(clazz)) {
+                            Listener listener = (Listener) clazz.getDeclaredConstructor().newInstance();
+                            pluginManager.registerEvents(listener, plugin);
+                        }
+                    }
+                }
+                jarFile.close();
+                classLoader.close();
             }
-        } catch (IOException | URISyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

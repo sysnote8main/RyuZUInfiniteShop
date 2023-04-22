@@ -14,8 +14,8 @@ public class SittableShop extends Shop {
     @Getter
     protected boolean sitting;
 
-    public SittableShop(Location location, EntityType entitytype, ConfigurationSection config) {
-        super(location, entitytype, config);
+    public SittableShop(Location location, String entityType, ConfigurationSection config) {
+        super(location, entityType, config);
     }
 
     public void setSitting(boolean sitting) {

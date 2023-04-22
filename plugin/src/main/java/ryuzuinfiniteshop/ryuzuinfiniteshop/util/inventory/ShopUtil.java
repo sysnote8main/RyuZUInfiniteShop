@@ -95,7 +95,7 @@ public class ShopUtil {
                 if (mmid.isPresent() && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().exsistsMythicMob(mmid.get()))
                     createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), mmid.get());
                 else
-                    createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER")));
+                    createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), config.getString("Npc.Options.EntityType", "VILLAGER"), null);
             } catch (Exception e) {
                 throw new RuntimeException(LanguageKey.ERROR_FILE_LOADING.getMessage(f.getName()), e);
             }
@@ -139,7 +139,7 @@ public class ShopUtil {
                         trades.add(new ShopTrade(results, items));
                     }
                     if (Config.overwriteConverting) {
-                        shop.setNpcType(type);
+                        shop.setNpcType(type.name());
                         shop.setDisplayName(config.getConfigurationSection(key).getString("name", "").isEmpty() ? "" : ChatColor.GREEN + config.getConfigurationSection(key).getString("name"));
                         shop.setNpcMeta(config.getConfigurationSection(base + "object"));
                         shop.setTrades(trades);
@@ -148,7 +148,7 @@ public class ShopUtil {
                     keys.add(key);
                 } else {
                     //コンバート先の座標に新期でSISのSHOPが置く場合の処理
-                    Shop shop = createNewShop(location, type, config.getConfigurationSection(key));
+                    Shop shop = createNewShop(location, type.name(), config.getConfigurationSection(key));
                     List<ShopTrade> trades = new ArrayList<>();
                     for (String recipe : config.getConfigurationSection(base + "recipes").getKeys(false)) {
                         boolean hasItem2 = config.contains(base + "recipes." + recipe + ".item2");
@@ -224,32 +224,31 @@ public class ShopUtil {
         return new Shop(location, mmid);
     }
 
-    public static Shop createNewShop(Location location, EntityType type, ConfigurationSection config) {
-        if (type.equals(EntityType.VILLAGER) || type.equals(EntityType.ZOMBIE_VILLAGER))
+    public static Shop createNewShop(Location location, String type, ConfigurationSection config) {
+        if(type.equalsIgnoreCase("BLOCK"))
+            return new Shop(location, type, config);
+        EntityType entityType = EntityType.valueOf(type);
+        if (entityType.equals(EntityType.VILLAGER) || entityType.equals(EntityType.ZOMBIE_VILLAGER))
             return new VillagerableShop(location, type, config);
-        if (type.equals(EntityType.CREEPER))
+        if (entityType.equals(EntityType.CREEPER))
             return new PoweredableShop(location, type, config);
-        if (Slime.class.isAssignableFrom(type.getEntityClass()))
+        if (Slime.class.isAssignableFrom(entityType.getEntityClass()))
             return new SlimeShop(location, type, config);
-        if (Colorable.class.isAssignableFrom(type.getEntityClass()) || type.equals(EntityType.WOLF))
+        if (Colorable.class.isAssignableFrom(entityType.getEntityClass()) || entityType.equals(EntityType.WOLF))
             return new DyeableShop(location, type, config);
-        if (type.equals(EntityType.PARROT))
+        if (entityType.equals(EntityType.PARROT))
             return new ParrotShop(location, type, config);
-        if (type.equals(EntityType.CAT))
+        if (entityType.equals(EntityType.CAT))
             return new CatShop(location, type, config);
-        if (type.equals(EntityType.RABBIT))
+        if (entityType.equals(EntityType.RABBIT))
             return new RabbitShop(location, type, config);
-        if (type.equals(EntityType.HORSE))
+        if (entityType.equals(EntityType.HORSE))
             return new HorseShop(location, type, config);
-        if (Ageable.class.isAssignableFrom(type.getEntityClass()))
+        if (Ageable.class.isAssignableFrom(entityType.getEntityClass()))
             return new AgeableShop(location, type, config);
-        if (RyuZUInfiniteShop.VERSION >= 13 && type.equals(EntityType.TROPICAL_FISH))
+        if (RyuZUInfiniteShop.VERSION >= 13 && entityType.equals(EntityType.TROPICAL_FISH))
             return new TropicalFishShop(location, type, config);
         return new Shop(location, type, config);
-    }
-
-    public static Shop createNewShop(Location location, EntityType type) {
-        return createNewShop(location, type, null);
     }
 
     public static void removeShop(String id) {
@@ -257,16 +256,10 @@ public class ShopUtil {
     }
 
     public static Shop reloadShop(Shop shop) {
-        return reloadShop(shop.getLocation(), shop.convertShopToString(), TradeUtil.convertTradesToList(shop.convertTradesToMap()), config -> {
-        });
+        return reloadShop(shop.getLocation(), shop.convertShopToString(), TradeUtil.convertTradesToList(shop.convertTradesToMap()));
     }
 
     public static Shop reloadShop(Location location, String data, List<ShopTrade> trades) {
-        return reloadShop(location, data, trades, config -> {
-        });
-    }
-
-    private static Shop reloadShop(Location location, String data, List<ShopTrade> trades, Consumer<YamlConfiguration> consumer) {
         File file = FileUtil.initializeFile("shops/" + LocationUtil.toStringFromLocation(location) + ".yml");
         YamlConfiguration config = new YamlConfiguration();
         try {
@@ -275,7 +268,6 @@ public class ShopUtil {
             e.printStackTrace();
         }
 
-        consumer.accept(config);
         String stringLocation = LocationUtil.toStringFromLocation(location);
         if (shops.containsKey(stringLocation)) shops.get(stringLocation).removeShop();
         config.set("Trades", trades.stream().map(ShopTrade::serialize).collect(Collectors.toList()));
@@ -286,7 +278,7 @@ public class ShopUtil {
             if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
         }
 
-        EntityType type = EntityType.valueOf(config.getString("Npc.Options.EntityType", "VILLAGER"));
+        String type = config.getString("Npc.Options.EntityType", "VILLAGER");
         String mythicmob = config.getString("Npc.Options.MythicMob");
         if (mythicmob != null && MythicInstanceProvider.getInstance().exsistsMythicMob(mythicmob))
             return createNewShop(location, mythicmob);

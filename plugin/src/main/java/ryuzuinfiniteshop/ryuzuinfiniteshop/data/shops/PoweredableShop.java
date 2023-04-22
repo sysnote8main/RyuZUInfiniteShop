@@ -11,8 +11,8 @@ import java.util.function.Consumer;
 public class PoweredableShop extends Shop {
     protected boolean powered;
 
-    public PoweredableShop(Location location, EntityType entitytype, ConfigurationSection config) {
-        super(location, entitytype, config);
+    public PoweredableShop(Location location, String entityType, ConfigurationSection config) {
+        super(location, entityType, config);
     }
 
     public boolean isPowered() {

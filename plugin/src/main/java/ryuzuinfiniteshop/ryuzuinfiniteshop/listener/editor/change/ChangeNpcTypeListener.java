@@ -39,7 +39,7 @@ public class ChangeNpcTypeListener implements Listener {
             // Successful process when completed
             // Reconstruct NPC
             try {
-                shop.setNpcType(EntityType.valueOf(message.toUpperCase()));
+                shop.setNpcType(EntityType.valueOf(message.toUpperCase()).name());
             } catch (IllegalArgumentException e) {
                 if(message.equalsIgnoreCase("Block"))
                     shop.setBlock();
