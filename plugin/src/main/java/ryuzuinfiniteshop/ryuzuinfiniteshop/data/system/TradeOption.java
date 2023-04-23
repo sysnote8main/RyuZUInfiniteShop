@@ -11,32 +11,33 @@ import java.util.Map;
 @Accessors(chain = true)
 public class TradeOption implements ConfigurationSerializable {
     boolean give;
-    double value;
+    double money;
     int limit;
     int rate;
 
     public TradeOption() {
         this.give = false;
-        this.value = 0;
+        this.money = 0;
         this.limit = 0;
+        this.rate = 100;
     }
 
-    public TradeOption(boolean give, double value, int limit, int rate) {
+    public TradeOption(boolean give, double money, int limit, int rate) {
         this.give = give;
-        this.value = value;
+        this.money = money;
         this.limit = limit;
         this.rate = rate;
     }
 
     public boolean isNoData() {
-        return value == 0 && limit == 0;
+        return money == 0 && limit == 0 && rate == 100;
     }
 
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("give", give);
-        result.put("value", value);
+        result.put("value", money);
         result.put("limit", limit);
         result.put("rate", rate);
         return result;

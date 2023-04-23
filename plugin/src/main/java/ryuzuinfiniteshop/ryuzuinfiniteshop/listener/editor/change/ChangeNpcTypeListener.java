@@ -35,7 +35,7 @@ public class ChangeNpcTypeListener implements Listener {
         int slot = event.getSlot();
         if (slot != 4 * 9 + 4) return;
         //チャット入力待機
-        SchedulerListener.setSchedulers(p, shop.getID(), (message) -> {
+        SchedulerListener.setSchedulers(p, shop.getID(), event.getClickedInventory(), (message) -> {
             // Successful process when completed
             // Reconstruct NPC
             try {

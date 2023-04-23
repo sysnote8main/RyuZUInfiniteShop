@@ -35,7 +35,7 @@ public class ChangeMythicMobTypeListener implements Listener {
         int slot = event.getSlot();
         if (slot != 4 * 9 + 3) return;
         //チャット入力待機
-        SchedulerListener.setSchedulers(p, shop.getID(), (message) -> {
+        SchedulerListener.setSchedulers(p, shop.getID(), event.getClickedInventory(), (message) -> {
             //成功時の処理
             //NPCを再構築する
             if (!MythicInstanceProvider.getInstance().exsistsMythicMob(message)) {

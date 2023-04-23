@@ -52,7 +52,7 @@ public class SearchTradeListener implements Listener {
             if (slot == 4) {
                 if (event.isShiftClick()) {
                     // NPC名で検索
-                    SchedulerListener.setSchedulers(p, "search", (message) -> {
+                    SchedulerListener.setSchedulers(p, "ignore", event.getClickedInventory(), (message) -> {
                         p.openInventory(new ShopListGui(1, ShopUtil.getSortedShops(mode, message)).getInventory(mode, holder));
                         SoundUtil.playClickShopSound(p);
                     });
@@ -67,7 +67,7 @@ public class SearchTradeListener implements Listener {
             } else {
                 if (event.isShiftClick()) {
                     // 対価名、商品名で検索
-                    SchedulerListener.setSchedulers(p, "search", (message) -> {
+                    SchedulerListener.setSchedulers(p, "ignore", event.getClickedInventory(), (message) -> {
                         LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTakeByDisplayName(message, mode) : TradeUtil.getTradesFromGiveByDisplayName(message, mode);
                         if (searchedTrades.size() == 0) {
                             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NORESULTS.getMessage());

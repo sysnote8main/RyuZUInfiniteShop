@@ -43,6 +43,17 @@ public class TradeUtil {
         return null;
     }
 
+    public static int getTradeSlot(int slot, ShopType type) {
+        switch (type) {
+            case TwotoOne:
+                return (slot / 9) * 9 + (slot % 9 <= 3 ? 0 : 5);
+            case FourtoFour:
+            case SixtoTwo:
+                return (slot / 9) * 9;
+        }
+        return -1;
+    }
+
     public static void saveTradeLimits() {
         File file = FileUtil.initializeFile("limits.yml");
         YamlConfiguration config = new YamlConfiguration();

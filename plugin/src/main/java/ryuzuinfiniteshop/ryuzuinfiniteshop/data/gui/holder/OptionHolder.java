@@ -9,14 +9,14 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
 
 @EqualsAndHashCode(callSuper = true)
 @Getter
-public class OptionalDataHolder extends ShopHolder {
+public class OptionHolder extends ShopHolder {
     private final TradeOption data;
 
-    public OptionalDataHolder(ShopMode mode, Shop shop, TradeOption data, ShopGui gui) {
+    public OptionHolder(ShopMode mode, Shop shop, TradeOption data, ShopGui gui) {
         this(mode, shop, data, gui, null);
     }
 
-    public OptionalDataHolder(ShopMode mode, Shop shop, TradeOption data, ShopGui gui, ModeHolder before) {
+    public OptionHolder(ShopMode mode, Shop shop, TradeOption data, ShopGui gui, ModeHolder before) {
         super(mode, shop, gui, before);
         this.data = data;
     }

@@ -11,19 +11,24 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.EditOptionGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.OptionType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.SchedulerListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.player.SearchTradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.ColorUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
 public class EditTradePageListener implements Listener {
     //ショップのラインナップを変更
@@ -44,7 +49,8 @@ public class EditTradePageListener implements Listener {
 
         //取引を上書きし、取引として成立しないものは削除する
         boolean warn = shop.checkTrades(inv);
-        if (warn) p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_TRADE_DUPLICATE.getMessage());
+        if (warn)
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_TRADE_DUPLICATE.getMessage());
     }
 
     //トレードをアイテム化する
@@ -130,13 +136,13 @@ public class EditTradePageListener implements Listener {
 
         if (trade == null) return;
         ShopTrade.TradeResult result = trade.getResult(p, gui.getShop());
-        if(!result.equals(ShopTrade.TradeResult.Success)){
-            if(gui.getConvertSlot().contains(slot)) ShopTrade.playResultEffect(p , result);
-            if(result.equals(ShopTrade.TradeResult.NotAfford)) SearchTradeListener.search(event);
+        if (!result.equals(ShopTrade.TradeResult.Success)) {
+            if (gui.getConvertSlot().contains(slot)) ShopTrade.playResultEffect(p, result);
+            if (result.equals(ShopTrade.TradeResult.NotAfford)) SearchTradeListener.search(event);
             return;
         }
 
-            //取引
+        //取引
         int times = 1;
         switch (type) {
             case SHIFT_RIGHT:
@@ -151,9 +157,9 @@ public class EditTradePageListener implements Listener {
         LogUtil.log(p.getUniqueId().toString(), holder.getShop().getID(), trade, resultTime);
     }
 
-    //購入制限を設定する
+    //取引オプションを設定する
     @EventHandler
-    public void changeTradeLimit(InventoryClickEvent event) {
+    public void changeTradeOption(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
@@ -162,19 +168,77 @@ public class EditTradePageListener implements Listener {
         if (event.getClickedInventory() == null) return;
         int slot = event.getSlot();
         if (!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
-        //イベントキャンセル
-        event.setCancelled(true);
 
         Player p = (Player) event.getWhoClicked();
-        ShopTrade trade = holder.getShop().getTrade(event.getClickedInventory(), slot);
+        Shop shop = holder.getShop();
+        ShopTrade trade = shop.getTrade(event.getClickedInventory(), slot);
         //トレードをアイテム化する
         if (event.isShiftClick()) return;
-        if (trade == null) return;
-        if (!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
-        if (!(trade.getLimit() == 0 && event.isLeftClick())) {
-            event.setCurrentItem(trade.changeLimit(event.isLeftClick() ? -1 : 1));
-            SoundUtil.playClickShopSound(p);
-        } else
+        if (trade == null)
             SoundUtil.playFailSound(p);
+        else
+            p.openInventory(new EditOptionGui(trade, new TradeOption(), shop, holder.getGui().getPage()).getInventory(ShopMode.EDIT, holder));
+    }
+
+    @EventHandler
+    public void editOption(InventoryClickEvent event) {
+        //インベントリがショップなのかチェック
+        ShopHolder holder = ShopUtil.getShopHolder(event);
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof EditOptionGui)) return;
+        if (!holder.getMode().equals(ShopMode.EDIT)) return;
+        if (event.getClickedInventory() == null) return;
+        int slot = event.getSlot();
+        if (slot / 9 == 0) return;
+
+        Player p = (Player) event.getWhoClicked();
+        OptionType type = OptionType.valueOf(NBTUtil.getNMSStringTag(event.getCurrentItem(), "OptionType").toUpperCase());
+        EditOptionGui gui = ((EditOptionGui) holder.getGui());
+        TradeOption option = gui.getOption();
+        if (slot == 5 && event.isShiftClick()) {
+            SchedulerListener.setSchedulers(p, "ignore", event.getClickedInventory(), (message) -> {
+                //成功時の処理
+                try {
+                    switch (type) {
+                        case LIMIT:
+                            option.setLimit(Math.max(Integer.parseInt(message), 0));
+                            break;
+                        case RATE:
+                            option.setRate(Math.max(Integer.parseInt(message), 0));
+                            break;
+                        case MONEY:
+                            option.setMoney(Math.max(Double.parseDouble(message), 0));
+                            break;
+                    }
+                    SoundUtil.playSuccessSound(p);
+                } catch (IllegalArgumentException e) {
+                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "正しい数値を入力してください");
+                    SoundUtil.playFailSound(p);
+                }
+                p.openInventory(new EditOptionGui(gui.getTrade(), new TradeOption(), gui.getShop(), holder.getGui().getPage()).getInventory(ShopMode.EDIT, holder));
+            });
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "適用する正の数値を入力してください");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());
+            SoundUtil.playClickShopSound(p);
+        } else if (slot == 5) {
+            if(type.equals(OptionType.MONEY)) {
+                option.setGive(!option.isGive());
+                SoundUtil.playClickShopSound(p);
+            }
+        } else {
+            int value = Integer.parseInt(NBTUtil.getNMSStringTag(event.getCurrentItem(), "OptionValue"));
+            switch (type) {
+                case LIMIT:
+                    option.setLimit(Math.max(option.getLimit() + value, 0));
+                    break;
+                case RATE:
+                    option.setRate(Math.min(Math.max(option.getRate() + value, 0) , 100));
+                    break;
+                case MONEY:
+                    option.setMoney(Math.max(option.getMoney() + value, 0));
+                    break;
+            }
+            SoundUtil.playClickShopSound(p);
+        }
     }
 }

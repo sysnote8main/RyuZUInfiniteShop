@@ -36,7 +36,7 @@ public class ChangeDisplayNameListener implements Listener {
         int slot = event.getSlot();
         if (slot != 5 * 9 + 3) return;
         //チャット入力待機
-        SchedulerListener.setSchedulers(p, holder.getShop().getID(), (message) -> {
+        SchedulerListener.setSchedulers(p, holder.getShop().getID(), event.getClickedInventory(), (message) -> {
             //成功時の処理
             shop.setDisplayName(ColorUtil.color(message));
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_SET_DISPLAY_NAME.getMessage());
