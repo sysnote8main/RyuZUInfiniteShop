@@ -47,7 +47,8 @@ repositories {
 
 dependencies {
     api ("com.github.Y-RyuZU:RyuZUCommandsGenerator:2.3")
-    api ( "de.tr7zw:item-nbt-api-plugin:2.11.2")
+    api ("de.tr7zw:item-nbt-api-plugin:2.11.2")
+    api("com.google.guava:guava:31.1-jre")
     api (project(":searchableinfiniteshop-v16newer"))
     api (project(":searchableinfiniteshop-v16older"))
     api (project(":searchableinfiniteshop-api"))
@@ -55,6 +56,7 @@ dependencies {
     compileOnly ("org.projectlombok:lombok:1.18.26")
     annotationProcessor ("org.projectlombok:lombok:1.18.26")
     compileOnly ("com.mojang:authlib:1.5.21")
+    compileOnly ("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
         exclude ("*", "*")
     }

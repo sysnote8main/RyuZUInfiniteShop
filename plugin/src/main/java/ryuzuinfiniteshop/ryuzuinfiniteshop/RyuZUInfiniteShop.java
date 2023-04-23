@@ -11,9 +11,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.command.CommandChain;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.player.SearchTradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
@@ -28,20 +27,13 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.EditTradePageLis
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.player.OpenShopListener;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 public final class RyuZUInfiniteShop extends JavaPlugin {
     @Getter
@@ -60,6 +52,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         CommandChain.registerCommand();
         registerEvents();
         ConfigurationSerialization.registerClass(MythicItem.class);
+        ConfigurationSerialization.registerClass(TradeOption.class);
         if(VERSION < 14) NBTInjector.inject();
         FileUtil.loadAll();
         RyuZUCommandsGenerator.initialize(this, LanguageKey.COMMAND_ERROR_PERMISSION.getMessage());

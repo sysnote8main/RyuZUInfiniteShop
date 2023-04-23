@@ -1,0 +1,47 @@
+package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
+
+import com.github.ryuzu.searchableinfiniteshop.api.IMythicHandler;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
+
+import java.util.UUID;
+
+public class VaultHandler {
+    private static Economy economy;
+
+    public static Economy getInstance() {
+        if (economy == null) throw new NullPointerException(LanguageKey.ERROR_MYTHICMOBS_INVALID_LOADED.getMessage());
+        return economy;
+    }
+
+    public double getMoney(UUID p) {
+        return economy.getBalance(Bukkit.getOfflinePlayer(p));
+    }
+
+    public void takeMoney(UUID p, double amount) {
+        economy.withdrawPlayer(Bukkit.getOfflinePlayer(p), amount);
+    }
+
+    public void giveMoney(UUID p, double amount) {
+        economy.depositPlayer(Bukkit.getOfflinePlayer(p), amount);
+    }
+
+    public boolean hasMoney(UUID p, double amount) {
+        return economy.has(Bukkit.getOfflinePlayer(p), amount);
+    }
+
+    public static boolean isLoaded() {
+        return economy != null;
+    }
+
+    public static void setInstance() {
+        if (Bukkit.getServer().getPluginManager().getPlugin("Vault") == null) return;
+        RegisteredServiceProvider<Economy> rsp = RyuZUInfiniteShop.getPlugin().getServer().getServicesManager().getRegistration(Economy.class);
+        if(rsp == null) return;
+        economy = rsp.getProvider();
+    }
+}

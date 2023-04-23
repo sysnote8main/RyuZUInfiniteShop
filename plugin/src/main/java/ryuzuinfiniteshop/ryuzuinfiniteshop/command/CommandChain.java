@@ -100,11 +100,13 @@ public class CommandChain {
                                 Shop shop = ShopUtil.reloadShop(ShopUtil.getShop(LocationUtil.toStringFromLocation(location)));
                                 shop.respawnNPC();
                                 player.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SHOP_UPDATED.getMessage());
+                                SoundUtil.playSuccessSound(player);
                                 return;
                             }
                             Shop shop = ShopUtil.createNewShop(location, EntityType.VILLAGER.name(), null);
                             shop.respawnNPC();
                             data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SHOP_CREATED.getMessage());
+                            SoundUtil.playSuccessSound(player);
                             LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(location));
                         }
                 )
@@ -134,6 +136,7 @@ public class CommandChain {
                                 ShopUtil.createNewShop(loc, data.getArgs()[1], null);
                             ShopUtil.getShop(LocationUtil.toStringFromLocation(loc)).respawnNPC();
                             data.sendMessage(ChatColor.GREEN + LanguageKey.MESSAGE_SHOP_CREATED.getMessage());
+                            if(data.getSender() instanceof Player) SoundUtil.playSuccessSound((Player) data.getSender());
                             LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(loc));
                         }
                 )

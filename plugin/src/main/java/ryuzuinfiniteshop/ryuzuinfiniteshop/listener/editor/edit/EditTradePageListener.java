@@ -23,6 +23,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
 public class EditTradePageListener implements Listener {
     //ショップのラインナップを変更
@@ -140,7 +141,7 @@ public class EditTradePageListener implements Listener {
         switch (type) {
             case SHIFT_RIGHT:
             case SHIFT_LEFT:
-                times = 10;
+                times = 8;
                 break;
             case MIDDLE:
                 times = 64;

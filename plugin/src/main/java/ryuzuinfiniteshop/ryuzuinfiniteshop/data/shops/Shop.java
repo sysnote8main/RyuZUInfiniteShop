@@ -13,7 +13,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -49,6 +48,7 @@ public class Shop {
 
     @Getter
     protected Entity npc;
+    protected Entity hologram;
     @Getter
     protected EntityNBTBuilder NBTBuilder;
     @Getter
@@ -314,7 +314,7 @@ public class Shop {
     }
 
     public ItemStack convertShopToItemStack() {
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM.getMessage() + ChatColor.GREEN + getDisplayNameOrElseNone(),
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_NAME.getMessage() + ChatColor.GREEN + getDisplayNameOrElseNone(),
                                                         ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
                                                         ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
                                                         ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
@@ -325,6 +325,7 @@ public class Shop {
 
     public void removeShop() {
         if (npc != null) npc.remove();
+        if (hologram != null) hologram.remove();
         getFile().delete();
         ShopUtil.removeShop(getID());
     }
@@ -505,6 +506,10 @@ public class Shop {
     public void setDisplayName(String name) {
         this.displayName = name;
         if (npc != null) npc.setCustomName(name);
+        if(entityType.equalsIgnoreCase("BLOCK")) {
+            if (hologram != null) hologram.remove();
+            hologram = EntityUtil.spawnHologram(location.clone().add(0.5, 1, 0.5), displayName);
+        }
     }
 
     public boolean containsDisplayName(String name) {
@@ -699,7 +704,8 @@ public class Shop {
             npc = citizen.getEntity();
             setNpcMeta();
         } else if (entityType.equalsIgnoreCase("BLOCK")) {
-            EntityUtil.spawnHologram(location.clone().add(0, 0.5, 0), displayName);
+            if (hologram != null && hologram.isValid()) return;
+            hologram = EntityUtil.spawnHologram(location.clone().add(0.5, 1, 0.5), displayName);
         } else {
             spawnNPC(EntityType.valueOf(entityType));
             npc.setCustomName(displayName);

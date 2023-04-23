@@ -1,36 +1,44 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.system;
 
+import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Table;
 import lombok.EqualsAndHashCode;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
 @EqualsAndHashCode
 public class ShopTrade {
-    public static final HashMap<ShopTrade, UUID> tradeUUID = new HashMap<>();
+    public static final BiMap<ShopTrade, UUID> tradeUUID = HashBiMap.create();
     public static final Table<UUID, UUID, Integer> tradeCounts = HashBasedTable.create();
-    public static final HashMap<UUID, Integer> tradeLimits = new HashMap<>();
+    public static final HashMap<UUID, TradeOption> tradeLimits = new HashMap<>();
 
     public enum TradeResult {NotAfford, Full, Success, Lack, Limited, Locked, Error, Normal}
 
@@ -60,7 +68,7 @@ public class ShopTrade {
 
     public ShopTrade(Inventory inv, int slot, ShopType type, int limit) {
         setTrade(inv, slot, type);
-        setTradeLimits(limit, false);
+        setTradeLimits(limit, limit != 0);
     }
 
     public ItemStack[] getGiveItems() {
@@ -73,7 +81,7 @@ public class ShopTrade {
 
     public int getLimit() {
         if (!tradeUUID.containsKey(this)) return 0;
-        return tradeLimits.getOrDefault(tradeUUID.get(this), 0);
+        return tradeLimits.getOrDefault(tradeUUID.get(this), new TradeOption()).getLimit();
     }
 
     public Integer getTradeCount(Player player) {
@@ -96,14 +104,29 @@ public class ShopTrade {
         tradeCounts.put(player.getUniqueId(), tradeUUID.get(this), count);
     }
 
-    public void setTradeLimits(int count, boolean force) {
-        if (count == 0) {
-            tradeLimits.remove(tradeUUID.get(this));
-            tradeUUID.remove(this);
-        } else {
-            if (!tradeUUID.containsKey(this)) tradeUUID.put(this, UUID.randomUUID());
-            if (!(!force && tradeLimits.containsKey(tradeUUID.get(this)))) tradeLimits.put(tradeUUID.get(this), count);
+    public void saveTradeLimit() {
+        if (getLimit() <= 0) return;
+        File file = FileUtil.initializeFile("limits.yml");
+        YamlConfiguration config = new YamlConfiguration();
+        try {
+            config.load(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            throw new RuntimeException(e);
         }
+        saveTradeLimit(config);
+
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            if (!Config.readOnlyIgnoreIOException) e.printStackTrace();
+        }
+    }
+
+    public void saveTradeLimit(YamlConfiguration config) {
+        if (getLimit() <= 0) return;
+        UUID tradeID = tradeUUID.get(this);
+        config.set(tradeID.toString() + ".limit", getLimit());
+        ShopTrade.tradeCounts.rowKeySet().forEach(playerID -> config.set(tradeID + ".counts." + playerID.toString(), ShopTrade.tradeCounts.get(playerID, tradeID)));
     }
 
     public static ItemStack getFilter() {
@@ -153,14 +176,20 @@ public class ShopTrade {
         ), "TradeLimit", String.valueOf(value));
     }
 
+    public void setTradeLimits(int limit, boolean force) {
+        TradeOption data = tradeLimits.computeIfAbsent(tradeUUID.computeIfAbsent(this, key -> UUID.randomUUID()), key -> new TradeOption());
+        if (force)
+            data.setLimit(limit);
+        else
+            data.setLimit(Math.max(data.getLimit(), limit));
+        if (data.isNoData()) {
+            tradeLimits.remove(tradeUUID.get(this));
+            tradeUUID.remove(this);
+        }
+    }
 
     public ItemStack changeLimit(int variation) {
         int value = Math.max(getLimit() + variation, 0);
-        if (value == 0)
-            tradeUUID.remove(this);
-        else
-            tradeUUID.put(this, UUID.randomUUID());
-        tradeLimits.put(tradeUUID.get(this), value);
         return getSettingsFilter(value);
     }
 
@@ -288,6 +317,7 @@ public class ShopTrade {
         }
         //結果に対するエフェクトを表示
         playResultEffect(p, result);
+        saveTradeLimit();
         return resultTime;
     }
 
@@ -307,9 +337,8 @@ public class ShopTrade {
     }
 
     private boolean isLimited(Player p) {
-        if (!tradeUUID.containsKey(this)) return false;
-        if (tradeLimits.getOrDefault(tradeUUID.get(this), 0) == 0) return false;
-        return getCounts(p) >= tradeLimits.getOrDefault(tradeUUID.get(this), 0);
+        if (getLimit() == 0) return false;
+        return getCounts(p) >= getLimit();
     }
 
     public static void playResultEffect(Player p, TradeResult result) {

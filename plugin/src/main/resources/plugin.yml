@@ -6,10 +6,10 @@ description: 無限にページを作成し、検索機能も付けられたShop
 softdepend:
   - MythicMobs
   - Citizens
+  - Vault
 
 commands:
   sis:
-    usage:  /sis
     description: SearchableInfiniteShopのコマンド
 
 permissions:

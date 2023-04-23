@@ -5,19 +5,20 @@ import lombok.Getter;
 import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
 
 @EqualsAndHashCode(callSuper = true)
 @Getter
-public class ShopHolder extends PageableHolder {
-    protected final Shop shop;
+public class OptionalDataHolder extends ShopHolder {
+    private final TradeOption data;
 
-    public ShopHolder(ShopMode mode, Shop shop, ShopGui gui) {
-        this(mode, shop, gui, null);
+    public OptionalDataHolder(ShopMode mode, Shop shop, TradeOption data, ShopGui gui) {
+        this(mode, shop, data, gui, null);
     }
 
-    public ShopHolder(ShopMode mode, Shop shop, ShopGui gui, ModeHolder before) {
-        super(mode, gui, before);
-        this.shop = shop;
+    public OptionalDataHolder(ShopMode mode, Shop shop, TradeOption data, ShopGui gui, ModeHolder before) {
+        super(mode, shop, gui, before);
+        this.data = data;
     }
 
     @Override

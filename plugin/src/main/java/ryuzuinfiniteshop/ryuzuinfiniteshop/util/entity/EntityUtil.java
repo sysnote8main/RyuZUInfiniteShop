@@ -7,6 +7,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 
 import java.lang.reflect.Constructor;
@@ -22,17 +23,18 @@ public class EntityUtil {
     }
 
     public static ArmorStand spawnHologram(Location location, String text) {
+        if(JavaUtil.isEmptyString(text)) return null;
         ArmorStand hologram = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
         NBTUtil.setNMSTag(hologram, "Shop", "Hologram");
         new EntityNBTBuilder(hologram).setInvisible(true);
         hologram.setCustomName(text);
+        hologram.setCustomNameVisible(true);
         hologram.setInvulnerable(true);
         hologram.setGravity(false);
         hologram.setAI(false);
         hologram.setMarker(true);
         hologram.setVisible(false);
         hologram.setRemoveWhenFarAway(true);
-        hologram.setCustomNameVisible(true);
         hologram.setSmall(true);
         return hologram;
     }

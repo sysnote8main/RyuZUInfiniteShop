@@ -2,7 +2,6 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item;
 
 import lombok.Value;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -38,7 +37,7 @@ public class DisplayPanel {
         ItemStack item = ItemUtil.withCustomModelData(ItemUtil.getNamedItem(this.item, panels.get(result)), data);
         if(result.equals(ShopTrade.TradeResult.Success)) {
             ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_ONCE.getMessage());
-            ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_TEN.getMessage());
+            ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_EIGHT.getMessage());
             ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_STACK.getMessage());
             if(limit != 0)
                 ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_REMAINING.getMessage(limit - count));

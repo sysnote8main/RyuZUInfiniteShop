@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
@@ -45,14 +46,7 @@ public class TradeUtil {
     public static void saveTradeLimits() {
         File file = FileUtil.initializeFile("limits.yml");
         YamlConfiguration config = new YamlConfiguration();
-        ShopTrade.tradeUUID.values().forEach(tradeID -> {
-            if (ShopTrade.tradeLimits.getOrDefault(tradeID, 0) == 0) return;
-            config.set(tradeID.toString() + ".limit", ShopTrade.tradeLimits.get(tradeID));
-            ShopTrade.tradeCounts.rowKeySet().forEach(playerID -> {
-                config.set(tradeID + ".counts." + playerID.toString(), ShopTrade.tradeCounts.get(playerID, tradeID));
-            });
-        });
-
+        ShopTrade.tradeUUID.values().forEach(tradeID -> ShopTrade.tradeUUID.inverse().get(tradeID).saveTradeLimit(config));
         try {
             config.save(file);
         } catch (IOException e) {
@@ -71,11 +65,10 @@ public class TradeUtil {
             throw new RuntimeException(e);
         }
         for (String tradeID : config.getKeys(false)) {
-            ShopTrade.tradeLimits.put(UUID.fromString(tradeID), config.getInt(tradeID + ".limit"));
+            ShopTrade.tradeLimits.put(UUID.fromString(tradeID), config.getSerializable(tradeID + ".data", TradeOption.class));
             if (config.contains(tradeID + ".counts"))
-                for (String playerID : config.getConfigurationSection(tradeID + ".counts").getKeys(false)) {
+                for (String playerID : config.getConfigurationSection(tradeID + ".counts").getKeys(false))
                     ShopTrade.tradeCounts.put(UUID.fromString(playerID), UUID.fromString(tradeID), config.getInt(tradeID + ".counts." + playerID));
-                }
         }
     }
 
