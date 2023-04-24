@@ -253,6 +253,6 @@ public class EditTradePageListener implements Listener {
         Player p = (Player) event.getPlayer();
         OptionHolder optionHolder = (OptionHolder) holder;
         Inventory inv = optionHolder.getBefore().getInventory();
-        optionHolder.getGui().getTrade()
+//        optionHolder.getGui().getTrade()
     }
 }
