@@ -16,6 +16,10 @@ public class SoundUtil {
         p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
     }
 
+    public static void playBreakSound(Player p) {
+        p.playSound(p.getLocation(), Sound.ITEM_SHIELD_BREAK, 1, 0);
+    }
+
     public static void playSuccessSound(Player p) {
         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
     }

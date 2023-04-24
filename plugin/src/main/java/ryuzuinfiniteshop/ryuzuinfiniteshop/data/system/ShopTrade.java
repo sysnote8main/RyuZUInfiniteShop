@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.UUID;
 
 @EqualsAndHashCode
@@ -40,8 +41,9 @@ public class ShopTrade {
     public static final BiMap<ShopTrade, UUID> tradeUUID = HashBiMap.create();
     public static final Table<UUID, UUID, Integer> tradeCounts = HashBasedTable.create();
     public static final HashMap<UUID, TradeOption> tradeLimits = new HashMap<>();
+    private static final Random random = new Random();
 
-    public enum TradeResult {NotEnoughMoney, NotEnoughItems, Full, Success, Lack, Limited, Locked, Error, Normal}
+    public enum TradeResult {NotEnoughMoney, NotEnoughItems,Fail, Full, Success, Lack, Limited, Locked, Error, Normal}
 
     private ObjectItems giveData;
     private ObjectItems takeData;
@@ -288,7 +290,12 @@ public class ShopTrade {
         //アイテムを追加する
         if (result == TradeResult.Success) {
             inv.removeItem(getTakeItems());
-            inv.addItem(getGiveItems());
+            if(getOption().getMoney() != 0 && !getOption().isGive()) VaultHandler.takeMoney(p.getUniqueId(), getOption().getMoney());
+            if(getOption().getRate() == 100 || getOption().getRate() > random.nextInt(100) + 1) {
+                if(getOption().getMoney() != 0 && getOption().isGive()) VaultHandler.giveMoney(p.getUniqueId(), getOption().getMoney());
+                inv.addItem(getGiveItems());
+            } else
+                result = TradeResult.Fail;
             addTradeCount(p);
         }
         return result;
@@ -299,7 +306,7 @@ public class ShopTrade {
         int resultTime = times;
         for (int time = 0; time < times; time++) {
             result = trade(p);
-            if (!result.equals(TradeResult.Success)) {
+            if (!result.equals(TradeResult.Success) && !result.equals(TradeResult.Fail)) {
                 if (time != 0)
                     result = TradeResult.Lack;
                 resultTime = time;
@@ -324,7 +331,7 @@ public class ShopTrade {
 
     private boolean affordMoney(Player p) {
         if(getOption().getMoney() == 0) return true;
-        return VaultHandler.getInstance().has(p , getOption().getMoney());
+        return VaultHandler.hasMoney(p.getUniqueId() , getOption().getMoney());
     }
 
     private boolean isError() {
@@ -354,6 +361,10 @@ public class ShopTrade {
             case Error:
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.COMMAND_INVALID_TRADE.getMessage());
                 SoundUtil.playFailSound(p);
+                break;
+            case Fail:
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.ESSAGE_ERROR_TRADE_FAILED.getMessage());
+                SoundUtil.playBreakSound(p);
                 break;
             case Limited:
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_TRADE_LIMITED.getMessage());

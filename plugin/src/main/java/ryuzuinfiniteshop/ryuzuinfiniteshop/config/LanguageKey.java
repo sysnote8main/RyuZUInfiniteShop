@@ -114,6 +114,7 @@ public enum LanguageKey {
     ITEM_EDIT_WINDOW_OPEN("シフトクリック: 編集画面を開く", "Shift click: Open edit window"),
     MESSAGE_ERROR_NOT_ENOUGH_ITEMS("アイテムが足りません", "Not enough items"),
     MESSAGE_ERROR_NOT_ENOUGH_MONEY("お金が足りません。", "You don't have enough money."),
+    ESSAGE_ERROR_TRADE_FAILED("取引に失敗しました。", "Trade failed."),
     COMMAND_INVALID_TRADE("エラーが発生しました。無効な取引です", "An error occurred. Invalid trade"),
     MESSAGE_ERROR_TRADE_LIMITED("取引上限です", "Trade limit reached"),
     MESSAGE_ERROR_NOT_ENOUGH_SPACE("すべてを購入できませんでした", "Not enough space"),

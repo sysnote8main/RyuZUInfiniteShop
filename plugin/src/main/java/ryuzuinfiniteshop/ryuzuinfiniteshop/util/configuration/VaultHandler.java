@@ -18,19 +18,19 @@ public class VaultHandler {
         return economy;
     }
 
-    public double getMoney(UUID p) {
+    public static double getMoney(UUID p) {
         return economy.getBalance(Bukkit.getOfflinePlayer(p));
     }
 
-    public void takeMoney(UUID p, double amount) {
+    public static void takeMoney(UUID p, double amount) {
         economy.withdrawPlayer(Bukkit.getOfflinePlayer(p), amount);
     }
 
-    public void giveMoney(UUID p, double amount) {
+    public static void giveMoney(UUID p, double amount) {
         economy.depositPlayer(Bukkit.getOfflinePlayer(p), amount);
     }
 
-    public boolean hasMoney(UUID p, double amount) {
+    public static boolean hasMoney(UUID p, double amount) {
         return economy.has(Bukkit.getOfflinePlayer(p), amount);
     }
 
