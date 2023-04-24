@@ -94,7 +94,7 @@ ShopListListener implements Listener {
             shop.setEditting(true);
         } else {
             //取引画面を開く
-            if (!shop.isAvailableShop(p)) return;
+            if (!shop.isTradableShop(p)) return;
             if(shop.getTrades().size() == 0) {
                 p.sendMessage(ChatColor.RED + LanguageKey.MESSAGE_NO_TRADES_AVAILABLE.getMessage());
                 SoundUtil.playFailSound(p);

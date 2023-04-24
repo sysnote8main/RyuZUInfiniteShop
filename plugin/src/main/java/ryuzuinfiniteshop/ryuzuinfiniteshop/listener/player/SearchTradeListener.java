@@ -172,7 +172,7 @@ public class SearchTradeListener implements Listener {
                 shop.setEditting(true);
             } else {
                 //取引画面を開く
-                if (!shop.isAvailableShop(p)) return;
+                if (!shop.isTradableShop(p)) return;
                 ShopTradeGui gui = shop.getPage(Integer.parseInt(NBTUtil.getNMSStringTag(item, "Page")));
                 if (gui == null) {
                     SoundUtil.playFailSound(p);

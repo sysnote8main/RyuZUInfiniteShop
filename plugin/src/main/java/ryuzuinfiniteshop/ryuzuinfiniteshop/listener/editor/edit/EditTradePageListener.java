@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.EditOptionGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.OptionHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.OptionType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
@@ -24,7 +25,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.SchedulerListe
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.player.SearchTradeListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.ColorUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
@@ -138,7 +138,7 @@ public class EditTradePageListener implements Listener {
         ShopTrade.TradeResult result = trade.getResult(p, gui.getShop());
         if (!result.equals(ShopTrade.TradeResult.Success)) {
             if (gui.getConvertSlot().contains(slot)) ShopTrade.playResultEffect(p, result);
-            if (result.equals(ShopTrade.TradeResult.NotAfford)) SearchTradeListener.search(event);
+            if (result.equals(ShopTrade.TradeResult.NotEnoughItems)) SearchTradeListener.search(event);
             return;
         }
 
@@ -177,7 +177,7 @@ public class EditTradePageListener implements Listener {
         if (trade == null)
             SoundUtil.playFailSound(p);
         else
-            p.openInventory(new EditOptionGui(trade, new TradeOption(), shop, holder.getGui().getPage()).getInventory(ShopMode.EDIT, holder));
+            p.openInventory(new EditOptionGui(trade, new TradeOption(), shop, holder.getGui().getPage(), slot).getInventory(ShopMode.EDIT, holder));
     }
 
     @EventHandler
@@ -215,15 +215,17 @@ public class EditTradePageListener implements Listener {
                     p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "正しい数値を入力してください");
                     SoundUtil.playFailSound(p);
                 }
-                p.openInventory(new EditOptionGui(gui.getTrade(), new TradeOption(), gui.getShop(), holder.getGui().getPage()).getInventory(ShopMode.EDIT, holder));
+                p.openInventory(event.getClickedInventory());
+                event.getClickedInventory().setItem((slot / 9) * 9 + 5, gui.getOptionPanel(type));
             });
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "適用する正の数値を入力してください");
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());
             SoundUtil.playClickShopSound(p);
         } else if (slot == 5) {
-            if(type.equals(OptionType.MONEY)) {
+            if (type.equals(OptionType.MONEY)) {
                 option.setGive(!option.isGive());
                 SoundUtil.playClickShopSound(p);
+                event.getClickedInventory().setItem((slot / 9) * 9 + 5, gui.getOptionPanel(type));
             }
         } else {
             int value = Integer.parseInt(NBTUtil.getNMSStringTag(event.getCurrentItem(), "OptionValue"));
@@ -232,13 +234,28 @@ public class EditTradePageListener implements Listener {
                     option.setLimit(Math.max(option.getLimit() + value, 0));
                     break;
                 case RATE:
-                    option.setRate(Math.min(Math.max(option.getRate() + value, 0) , 100));
+                    option.setRate(Math.min(Math.max(option.getRate() + value, 0), 100));
                     break;
                 case MONEY:
                     option.setMoney(Math.max(option.getMoney() + value, 0));
                     break;
             }
             SoundUtil.playClickShopSound(p);
+            event.getClickedInventory().setItem((slot / 9) * 9 + 5, gui.getOptionPanel(type));
         }
+    }
+
+    @EventHandler
+    public void completeEdittingOption(InventoryCloseEvent event) {
+        //インベントリがショップなのかチェック
+        ShopHolder holder = ShopUtil.getShopHolder(event.getInventory());
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof EditOptionGui)) return;
+        if (!holder.getMode().equals(ShopMode.EDIT)) return;
+        Player p = (Player) event.getPlayer();
+        OptionHolder optionHolder = (OptionHolder) holder;
+        Inventory inv = optionHolder.getBefore().getInventory();
+        inv.setItem(optionHolder.getGui().getSlot(), optionHolder.getGui().getTrade().getFilter(ShopMode.EDIT));
+        p.openInventory(inv);
     }
 }

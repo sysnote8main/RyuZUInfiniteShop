@@ -22,6 +22,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.ObjectItems;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.VaultHandler;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
@@ -40,7 +41,7 @@ public class ShopTrade {
     public static final Table<UUID, UUID, Integer> tradeCounts = HashBasedTable.create();
     public static final HashMap<UUID, TradeOption> tradeLimits = new HashMap<>();
 
-    public enum TradeResult {NotAfford, Full, Success, Lack, Limited, Locked, Error, Normal}
+    public enum TradeResult {NotEnoughMoney, NotEnoughItems, Full, Success, Lack, Limited, Locked, Error, Normal}
 
     private ObjectItems giveData;
     private ObjectItems takeData;
@@ -82,6 +83,11 @@ public class ShopTrade {
     public int getLimit() {
         if (!tradeUUID.containsKey(this)) return 0;
         return tradeLimits.getOrDefault(tradeUUID.get(this), new TradeOption()).getLimit();
+    }
+
+    public TradeOption getOption() {
+        if (!tradeUUID.containsKey(this)) return new TradeOption();
+        return tradeLimits.getOrDefault(tradeUUID.get(this), new TradeOption());
     }
 
     public Integer getTradeCount(Player player) {
@@ -133,12 +139,8 @@ public class ShopTrade {
         return ItemUtil.getNamedItem(ItemUtil.getColoredItem("BLACK_STAINED_GLASS_PANE"), ChatColor.BLACK + "");
     }
 
-    private ItemStack getFilter(ShopMode mode) {
+    public ItemStack getFilter(ShopMode mode) {
         return mode.equals(ShopMode.EDIT) ? getSettingsFilter() : getFilter();
-    }
-
-    public static ItemStack getFilter(ShopMode mode, int value) {
-        return mode.equals(ShopMode.EDIT) ? getSettingsFilter(value) : getFilter();
     }
 
     public ItemStack getFilter(String id, Player player) {
@@ -165,15 +167,7 @@ public class ShopTrade {
     }
 
     private ItemStack getSettingsFilter() {
-        return getSettingsFilter(getLimit());
-    }
-
-    private static ItemStack getSettingsFilter(int value) {
-        return NBTUtil.setNMSTag(ItemUtil.withLore(
-                DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack(),
-                ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_SET_LIMIT.getMessage() + ChatColor.YELLOW + " " + LanguageKey.ITEM_SETTINGS_TRADE_LIMIT.getMessage() + ": " + value,
-                ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_TO_ITEM.getMessage()
-        ), "TradeLimit", String.valueOf(value));
+        return getOption().getOptionsPanel(DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack());
     }
 
     public void setTradeLimits(int limit, boolean force) {
@@ -186,11 +180,6 @@ public class ShopTrade {
             tradeLimits.remove(tradeUUID.get(this));
             tradeUUID.remove(this);
         }
-    }
-
-    public ItemStack changeLimit(int variation) {
-        int value = Math.max(getLimit() + variation, 0);
-        return getSettingsFilter(value);
     }
 
     public ItemStack[] getTradeItems(ShopType type, ShopMode mode) {
@@ -276,7 +265,9 @@ public class ShopTrade {
     public TradeResult getResult(Player p) {
         TradeResult result = TradeResult.Success;
 
-        if (!affordTrade(p)) result = TradeResult.NotAfford;
+        if (!affordItem(p)) result = TradeResult.NotEnoughItems;
+        else if (!affordMoney(p)) result = TradeResult.NotEnoughMoney;
+        else if (isError()) result = TradeResult.Error;
         else if (isError()) result = TradeResult.Error;
         else if (isLimited(p)) result = TradeResult.Limited;
         else if (!hasEnoughSpace(p)) result = TradeResult.Full;
@@ -327,8 +318,13 @@ public class ShopTrade {
     }
 
     //アイテムを所持しているか確認する
-    private boolean affordTrade(Player p) {
+    private boolean affordItem(Player p) {
         return ItemUtil.contains(p.getInventory(), getTakeItems());
+    }
+
+    private boolean affordMoney(Player p) {
+        if(getOption().getMoney() == 0) return true;
+        return VaultHandler.getInstance().has(p , getOption().getMoney());
     }
 
     private boolean isError() {
@@ -343,8 +339,12 @@ public class ShopTrade {
 
     public static void playResultEffect(Player p, TradeResult result) {
         switch (result) {
-            case NotAfford:
+            case NotEnoughItems:
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_ENOUGH_ITEMS.getMessage());
+                SoundUtil.playFailSound(p);
+                break;
+            case NotEnoughMoney:
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_ENOUGH_MONEY.getMessage());
                 SoundUtil.playFailSound(p);
                 break;
             case Locked:

@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.inventory.Inventory;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.EditOptionGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
@@ -12,11 +13,11 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
 public class OptionHolder extends ShopHolder {
     private final TradeOption data;
 
-    public OptionHolder(ShopMode mode, Shop shop, TradeOption data, ShopGui gui) {
+    public OptionHolder(ShopMode mode, Shop shop, TradeOption data, EditOptionGui gui) {
         this(mode, shop, data, gui, null);
     }
 
-    public OptionHolder(ShopMode mode, Shop shop, TradeOption data, ShopGui gui, ModeHolder before) {
+    public OptionHolder(ShopMode mode, Shop shop, TradeOption data, EditOptionGui gui, ModeHolder before) {
         super(mode, shop, gui, before);
         this.data = data;
     }
@@ -27,8 +28,8 @@ public class OptionHolder extends ShopHolder {
     }
 
     @Override
-    public ShopGui getGui() {
-        return (ShopGui) gui;
+    public EditOptionGui getGui() {
+        return (EditOptionGui) gui;
     }
 
     @Override

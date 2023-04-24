@@ -25,6 +25,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.change.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.EditMainPageListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit.EditTradePageListener;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.player.OpenShopListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.VaultHandler;
 
 import java.io.File;
 import java.net.URL;
@@ -49,6 +50,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         plugin = this;
         logger = getLogger();
         MythicInstanceProvider.setInstance();
+        VaultHandler.setInstance();
         CommandChain.registerCommand();
         registerEvents();
         ConfigurationSerialization.registerClass(MythicItem.class);

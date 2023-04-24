@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class DisplayPanel {
     private static final HashMap<ShopTrade.TradeResult, String> panels = new HashMap<ShopTrade.TradeResult, String>() {{
         put(ShopTrade.TradeResult.Success, ChatColor.GREEN + LanguageKey.ITEM_TRADE_SUCCESS.getMessage());
-        put(ShopTrade.TradeResult.NotAfford, ChatColor.RED + LanguageKey.ITEM_NOT_ENOUGH_ITEMS.getMessage());
+        put(ShopTrade.TradeResult.NotEnoughItems, ChatColor.RED + LanguageKey.ITEM_NOT_ENOUGH_ITEMS.getMessage());
         put(ShopTrade.TradeResult.Full, ChatColor.YELLOW + LanguageKey.ITEM_NOT_ENOUGH_SPACE.getMessage());
         put(ShopTrade.TradeResult.Limited, ChatColor.RED + LanguageKey.ITEM_TRADE_LIMITED.getMessage());
         put(ShopTrade.TradeResult.Normal, ChatColor.GREEN + LanguageKey.ITEM_TRADE_NORMAL.getMessage());

@@ -1,6 +1,5 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.config;
 
-import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.DisplayPanel;
@@ -15,7 +14,8 @@ import java.util.HashMap;
 public class DisplayPanelConfig {
     private static final HashMap<ShopTrade.TradeResult, String> defaultResultMaterial = new HashMap<ShopTrade.TradeResult, String>() {{
         put(ShopTrade.TradeResult.Success, "GREEN_STAINED_GLASS_PANE");
-        put(ShopTrade.TradeResult.NotAfford, "RED_STAINED_GLASS_PANE");
+        put(ShopTrade.TradeResult.NotEnoughItems, "RED_STAINED_GLASS_PANE");
+        put(ShopTrade.TradeResult.NotEnoughMoney, "RED_STAINED_GLASS_PANE");
         put(ShopTrade.TradeResult.Error, "RED_STAINED_GLASS_PANE");
         put(ShopTrade.TradeResult.Limited, "RED_STAINED_GLASS_PANE");
         put(ShopTrade.TradeResult.Full, "YELLOW_STAINED_GLASS_PANE");

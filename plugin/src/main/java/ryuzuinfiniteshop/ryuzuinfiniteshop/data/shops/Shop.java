@@ -659,8 +659,8 @@ public class Shop {
         return false;
     }
 
-    public boolean isAvailableShop(Player p) {
-        return isSearchable(p) && !isEditting(p) && !isEmpty(p);
+    public boolean isTradableShop(Player p) {
+        return (isSearchable(p) || !isLock()) && !isEditting(p) && !isEmpty(p);
     }
 
     public void setNpcType(String entityType) {

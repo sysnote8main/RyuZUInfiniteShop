@@ -25,7 +25,7 @@ public class ShopGui6to2 extends ShopTradeGui {
     public Inventory getInventory(ShopMode mode) {
         Inventory inv = getInventory(i -> i * 9 , mode);
         for (int i = 0; i < 6; i++) {
-            inv.setItem(i * 9 + 6, ShopTrade.getFilter(mode , 0));
+            inv.setItem(i * 9 + 6, ShopTrade.getFilter(0));
         }
         return inv;
     }

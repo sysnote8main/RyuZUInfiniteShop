@@ -93,7 +93,7 @@ public class OpenShopListener implements Listener {
                 shop.setEditting(true);
             } else {
                 //ショップの取引画面を開く
-                if (!shop.isAvailableShop(p)) return;
+                if (!shop.isTradableShop(p)) return;
                 if (!UnderstandSystemConfig.contains(p)) {
                     TextComponent understand = new TextComponent(ChatColor.YELLOW + "[" + LanguageKey.MESSAGE_UNDERSTAND_BUTTON_MESSAGE.getMessage() + ChatColor.YELLOW + "]");
                     understand.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sis understand"));

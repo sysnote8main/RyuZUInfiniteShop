@@ -11,6 +11,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.OptionHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.OptionType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.VaultHandler;
@@ -23,11 +24,13 @@ import java.util.*;
 public class EditOptionGui extends ShopGui {
     protected final ShopTrade trade;
     protected final TradeOption option;
+    protected final int slot;
 
-    public EditOptionGui(ShopTrade trade, TradeOption option, Shop shop, int page) {
+    public EditOptionGui(ShopTrade trade, TradeOption option, Shop shop, int page, int slot) {
         super(shop, page);
         this.trade = trade;
         this.option = option;
+        this.slot = slot;
     }
 
     @Override
@@ -68,9 +71,21 @@ public class EditOptionGui extends ShopGui {
                 panel = NBTUtil.setNMSTag(panel, "OptionValue", money.get(i).replace("+", ""));
                 inv.setItem(i + 9 * 3, panel);
             }
-            inv.setItem(31, NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.GOLD_INGOT, ChatColor.BLUE + "お金: " + ChatColor.YELLOW + option.getMoney(), ChatColor.YELLOW + "クリック: " + (option.isGive() ? "与えるお金" : "取るお金"), ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Money"));
+            inv.setItem(31, NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.GOLD_INGOT, ChatColor.BLUE + "お金: " + ChatColor.YELLOW + option.getMoney(), ChatColor.YELLOW + "クリック: " + (option.isGive() ? "受け取り" : "支払い"), ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Money"));
         }
 
         return inv;
+    }
+
+    public ItemStack getOptionPanel(OptionType type) {
+        switch (type) {
+            case LIMIT:
+                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.BARRIER, ChatColor.BLUE + "取引上限", ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Limit");
+            case RATE:
+                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.DAMAGED_ANVIL, ChatColor.BLUE + "取引成功確率: " + ChatColor.YELLOW + option.getRate(), ChatColor.YELLOW + "シフトクリック: チャットで値を入力") , "OptionType", "Rate");
+            case MONEY:
+                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.GOLD_INGOT, ChatColor.BLUE + "お金: " + ChatColor.YELLOW + option.getMoney(), ChatColor.YELLOW + "クリック: " + (option.isGive() ? "受け取り" : "支払い"), ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Money");
+        }
+        return new ItemStack(Material.AIR);
     }
 }
