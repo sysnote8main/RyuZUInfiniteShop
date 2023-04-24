@@ -30,13 +30,13 @@ public class CancelAffectNpc implements Listener {
         cancel(e, e.getEntity());
     }
 
-    @EventHandler
-    public void cancelOpenVillagerInventory(InventoryOpenEvent event) {
-        if (!event.getInventory().getType().equals(InventoryType.MERCHANT)) return;
-        Villager villager = (Villager) event.getInventory().getHolder();
-        if(villager == null) return;
-        cancel(event, villager);
-    }
+//    @EventHandler
+//    public void cancelOpenVillagerInventory(InventoryOpenEvent e) {
+//        if (!e.getInventory().getType().equals(InventoryType.MERCHANT)) return;
+//        Villager villager = (Villager) e.getInventory().getHolder();
+//        if(villager == null) return;
+//        cancel(e, villager);
+//    }
 
     private void cancel(Cancellable e, Entity entity) {
         String id = NBTUtil.getNMSStringTag(entity, "Shop");

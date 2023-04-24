@@ -11,6 +11,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.OptionHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.OptionType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
@@ -38,9 +39,9 @@ public class EditOptionGui extends ShopGui {
         Inventory inv = Bukkit.createInventory(new OptionHolder(ShopMode.EDIT, shop, option, this), 9 * (VaultHandler.isLoaded() ? 4 : 3), ChatColor.DARK_BLUE + "取引オプションの編集");
 
         for (int i = 0; i < 9; i++) {
-            inv.setItem(i, trade.getTradeItems(shop.getShopType(), ShopMode.EDIT)[i]);
+            inv.setItem(i, trade.getTradeItems(shop.getShopType())[i]);
         }
-        inv.setItem(5, ItemUtil.getNamedItem(DisplayPanelConfig.getPanel(ShopTrade.TradeResult.Normal).getItemStack(), ChatColor.BLACK + ""));
+        inv.setItem(shop.getShopType().equals(ShopType.SixtoTwo) ? 6 : 4, ItemUtil.getNamedItem(DisplayPanelConfig.getPanel(ShopTrade.TradeResult.Normal).getItemStack(), ChatColor.BLACK + ""));
 
         //取引上限
         List<String> limits = Arrays.asList("-64", "-32", "-8", "-1", "0", "+1", "+8", "+32", "+64");
@@ -50,7 +51,7 @@ public class EditOptionGui extends ShopGui {
             panel = NBTUtil.setNMSTag(panel, "OptionValue", limits.get(i).replace("+", ""));
             inv.setItem(i + 9, panel);
         }
-        inv.setItem(13, NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.BARRIER, ChatColor.BLUE + "取引上限", ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Limit"));
+        inv.setItem(13, NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.BARRIER, ChatColor.BLUE + "取引上限: " + ChatColor.YELLOW + option.getLimit(), ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Limit"));
 
         //取引確率
         List<String> rates = Arrays.asList("-100", "-30", "-10", "-1", "0", "+1", "+30", "+50", "+100");

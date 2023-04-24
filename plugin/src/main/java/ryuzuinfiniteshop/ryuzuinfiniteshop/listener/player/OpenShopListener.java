@@ -8,12 +8,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -40,6 +42,19 @@ public class OpenShopListener implements Listener {
     //ショップを開く
     @EventHandler
     public void openShop(PlayerInteractAtEntityEvent event) {
+        Entity entity = event.getRightClicked();
+        Player p = event.getPlayer();
+        if(entity instanceof LivingEntity) return;
+        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
+        String id = NBTUtil.getNMSStringTag(entity, "Shop");
+        if (id == null) return;
+        event.setCancelled(true);
+        openShop(id, p);
+    }
+
+    //ショップを開く
+    @EventHandler
+    public void openShop(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;

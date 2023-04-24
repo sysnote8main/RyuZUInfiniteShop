@@ -55,7 +55,7 @@ public class EditTradePageListener implements Listener {
 
     //トレードをアイテム化する
     @EventHandler
-    public void cancelClickDisplay(InventoryClickEvent event) {
+    public void convertTradeOne(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
@@ -63,13 +63,12 @@ public class EditTradePageListener implements Listener {
         if (!holder.getMode().equals(ShopMode.EDIT)) return;
         if (event.getClickedInventory() == null) return;
         int slot = event.getSlot();
-        if (!((ShopTradeGui) holder.getGui()).isDisplaySlot(slot)) return;
+        if (!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
 
         Player p = (Player) event.getWhoClicked();
         ItemStack item = holder.getShop().convertTrade(event.getClickedInventory(), slot);
         //トレードをアイテム化する
         if (!event.isShiftClick()) return;
-        if (!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
         if (ItemUtil.isAir(item)) {
             SoundUtil.playFailSound(p);
             return;
@@ -79,9 +78,6 @@ public class EditTradePageListener implements Listener {
             SoundUtil.playSuccessSound(p);
         } else
             SoundUtil.playFailSound(p);
-
-        //イベントキャンセル
-        event.setCancelled(true);
     }
 
     //ショップの取引編集ページを開く
@@ -159,7 +155,7 @@ public class EditTradePageListener implements Listener {
 
     //取引オプションを設定する
     @EventHandler
-    public void changeTradeOption(InventoryClickEvent event) {
+    public void openTradeOptionInventory(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
@@ -176,8 +172,10 @@ public class EditTradePageListener implements Listener {
         if (event.isShiftClick()) return;
         if (trade == null)
             SoundUtil.playFailSound(p);
-        else
+        else {
             p.openInventory(new EditOptionGui(trade, new TradeOption(), shop, holder.getGui().getPage(), slot).getInventory(ShopMode.EDIT, holder));
+            SoundUtil.playClickShopSound(p);
+        }
     }
 
     @EventHandler

@@ -225,9 +225,16 @@ public class ShopTrade {
         return items;
     }
 
+    public ItemStack[] getTradeItems(ShopType type) {
+        return getTradeItems(type, getFilter(ShopMode.EDIT));
+    }
+
     public ItemStack[] getTradeItems(ShopType type, String id, Player player) {
+        return getTradeItems(type, getFilter(id, player));
+    }
+
+    public ItemStack[] getTradeItems(ShopType type, ItemStack filter) {
         ItemStack[] items;
-        ItemStack filter = getFilter(id, player);
         switch (type) {
             case TwotoOne:
             case FourtoFour:

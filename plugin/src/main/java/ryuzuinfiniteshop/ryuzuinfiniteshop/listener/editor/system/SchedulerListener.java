@@ -36,7 +36,6 @@ public class SchedulerListener implements Listener {
         if(FileUtil.isSaveBlock(p)) return;
         ScheduleData data = schedulers.get(p.getUniqueId());
         Shop shop = ShopUtil.getShop(data.getId());
-        schedulers.remove(p.getUniqueId());
         event.setCancelled(true);
         if ((double) (System.currentTimeMillis() - schedulers.get(p.getUniqueId()).getTime()) / 1000 > 20 || event.getMessage().equalsIgnoreCase("Cancel")) {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCELLED.getMessage());
@@ -53,5 +52,6 @@ public class SchedulerListener implements Listener {
             } else
                 Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> data.getSuccessProcess().accept(event.getMessage()));
         }
+        schedulers.remove(p.getUniqueId());
     }
 }

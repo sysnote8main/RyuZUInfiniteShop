@@ -37,10 +37,6 @@ public abstract class ShopTradeGui extends ShopGui {
         return getDisplaySlot().contains(slot);
     }
 
-    public List<ShopTrade> getTrades() {
-        return trades;
-    }
-
     public ShopTrade getTrade(int number) {
         if (getTrades().size() <= number) return null;
         if (number < 0) return null;
@@ -82,6 +78,10 @@ public abstract class ShopTradeGui extends ShopGui {
         ((ShopHolder) inv.getHolder()).setBefore(before);
         if (!mode.equals(ShopMode.EDIT)) setTradeStatus(p, inv);
         return inv;
+    }
+
+    protected ItemStack getTradePanel(int i, ShopMode mode) {
+        return (getTrades().size() - 1) >= i ? getTrades().get(i).getFilter(mode) : ShopTrade.getFilter();
     }
 
     public boolean existTrades() {

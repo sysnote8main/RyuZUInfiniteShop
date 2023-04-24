@@ -54,7 +54,7 @@ public class ChangeNpcTypeListener implements Listener {
         });
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_INPUT_ENTITY_ID.getMessage());
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_BLOCK_SHOP.getMessage());
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_CANCEL_IN_20_SECONDS.getMessage());
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_CANCEL_INPUT.getMessage());
 
         SoundUtil.playClickShopSound(p);
         holder.getShop().setEditting(false);
