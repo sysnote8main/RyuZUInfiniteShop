@@ -214,7 +214,7 @@ public class EditTradePageListener implements Listener {
                     SoundUtil.playFailSound(p);
                 }
                 p.openInventory(event.getClickedInventory());
-                event.getClickedInventory().setItem((slot / 9) * 9 + 5, gui.getOptionPanel(type));
+                event.getClickedInventory().setItem((slot / 9) * 9 + 4, gui.getOptionPanel(type));
             });
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "適用する正の数値を入力してください");
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());
@@ -223,7 +223,7 @@ public class EditTradePageListener implements Listener {
             if (type.equals(OptionType.MONEY)) {
                 option.setGive(!option.isGive());
                 SoundUtil.playClickShopSound(p);
-                event.getClickedInventory().setItem((slot / 9) * 9 + 5, gui.getOptionPanel(type));
+                event.getClickedInventory().setItem((slot / 9) * 9 + 4, gui.getOptionPanel(type));
             }
         } else {
             int value = Integer.parseInt(NBTUtil.getNMSStringTag(event.getCurrentItem(), "OptionValue"));
@@ -239,21 +239,20 @@ public class EditTradePageListener implements Listener {
                     break;
             }
             SoundUtil.playClickShopSound(p);
-            event.getClickedInventory().setItem((slot / 9) * 9 + 5, gui.getOptionPanel(type));
+            event.getClickedInventory().setItem((slot / 9) * 9 + 4, gui.getOptionPanel(type));
         }
     }
 
-//    @EventHandler
-//    public void completeEdittingOption(InventoryCloseEvent event) {
-//        //インベントリがショップなのかチェック
-//        ShopHolder holder = ShopUtil.getShopHolder(event.getInventory());
-//        if (holder == null) return;
-//        if (!(holder.getGui() instanceof EditOptionGui)) return;
-//        if (!holder.getMode().equals(ShopMode.EDIT)) return;
-//        Player p = (Player) event.getPlayer();
-//        OptionHolder optionHolder = (OptionHolder) holder;
-//        Inventory inv = optionHolder.getBefore().getInventory();
-//        inv.setItem(optionHolder.getGui().getSlot(), optionHolder.getGui().getTrade().getFilter(ShopMode.EDIT));
-//        p.openInventory(inv);
-//    }
+    @EventHandler
+    public void completeEdittingOption(InventoryCloseEvent event) {
+        //インベントリがショップなのかチェック
+        ShopHolder holder = ShopUtil.getShopHolder(event.getInventory());
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof EditOptionGui)) return;
+        if (!holder.getMode().equals(ShopMode.EDIT)) return;
+        Player p = (Player) event.getPlayer();
+        OptionHolder optionHolder = (OptionHolder) holder;
+        Inventory inv = optionHolder.getBefore().getInventory();
+        optionHolder.getGui().getTrade()
+    }
 }

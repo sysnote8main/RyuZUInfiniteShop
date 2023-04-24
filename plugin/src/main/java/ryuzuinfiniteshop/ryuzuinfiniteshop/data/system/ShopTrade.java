@@ -40,7 +40,7 @@ import java.util.UUID;
 public class ShopTrade {
     public static final BiMap<ShopTrade, UUID> tradeUUID = HashBiMap.create();
     public static final Table<UUID, UUID, Integer> tradeCounts = HashBasedTable.create();
-    public static final HashMap<UUID, TradeOption> tradeLimits = new HashMap<>();
+    public static final HashMap<UUID, TradeOption> tradeOptions = new HashMap<>();
     private static final Random random = new Random();
 
     public enum TradeResult {NotEnoughMoney, NotEnoughItems,Fail, Full, Success, Lack, Limited, Locked, Error, Normal}
@@ -71,7 +71,7 @@ public class ShopTrade {
 
     public ShopTrade(Inventory inv, int slot, ShopType type, int limit) {
         setTrade(inv, slot, type);
-        setTradeLimits(limit, limit != 0);
+        setTradeOptions(limit, limit != 0);
     }
 
     public ItemStack[] getGiveItems() {
@@ -84,12 +84,12 @@ public class ShopTrade {
 
     public int getLimit() {
         if (!tradeUUID.containsKey(this)) return 0;
-        return tradeLimits.getOrDefault(tradeUUID.get(this), new TradeOption()).getLimit();
+        return tradeOptions.getOrDefault(tradeUUID.get(this), new TradeOption()).getLimit();
     }
 
     public TradeOption getOption() {
         if (!tradeUUID.containsKey(this)) return new TradeOption();
-        return tradeLimits.getOrDefault(tradeUUID.get(this), new TradeOption());
+        return tradeOptions.getOrDefault(tradeUUID.get(this), new TradeOption());
     }
 
     public Integer getTradeCount(Player player) {
@@ -169,17 +169,21 @@ public class ShopTrade {
     }
 
     private ItemStack getSettingsFilter() {
-        return getOption().getOptionsPanel(DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack());
+        return ItemUtil.withLore(
+                getOption().getOptionsPanel(DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack()) ,
+                ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_SET_OPTION.getMessage(),
+                ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_TO_ITEM.getMessage()
+        );
     }
 
-    public void setTradeLimits(int limit, boolean force) {
-        TradeOption data = tradeLimits.computeIfAbsent(tradeUUID.computeIfAbsent(this, key -> UUID.randomUUID()), key -> new TradeOption());
+    public void setTradeOptions(int limit, boolean force) {
+        TradeOption data = tradeOptions.computeIfAbsent(tradeUUID.computeIfAbsent(this, key -> UUID.randomUUID()), key -> new TradeOption());
         if (force)
             data.setLimit(limit);
         else
             data.setLimit(Math.max(data.getLimit(), limit));
         if (data.isNoData()) {
-            tradeLimits.remove(tradeUUID.get(this));
+            tradeOptions.remove(tradeUUID.get(this));
             tradeUUID.remove(this);
         }
     }

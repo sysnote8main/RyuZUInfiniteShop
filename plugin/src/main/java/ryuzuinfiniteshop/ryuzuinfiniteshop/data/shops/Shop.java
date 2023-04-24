@@ -225,7 +225,7 @@ public class Shop {
                 if (!trade.equals(expectedTrade))
                     LogUtil.log(LogUtil.LogType.REPLACETRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), trade, expectedTrade, trade.getLimit(), limit);
                 trade.setTrade(inv, i, getShopType());
-                trade.setTradeLimits(limit, true);
+                trade.setTradeOptions(limit, true);
             } else if (trade != null) {
                 // 取引を削除する
                 emptyTrades.add(trade);

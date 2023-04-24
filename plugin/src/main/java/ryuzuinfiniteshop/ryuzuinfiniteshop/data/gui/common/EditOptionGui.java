@@ -61,7 +61,7 @@ public class EditOptionGui extends ShopGui {
             panel = NBTUtil.setNMSTag(panel, "OptionValue", rates.get(i).replace("+", ""));
             inv.setItem(i + 9 * 2, panel);
         }
-        inv.setItem(22, NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.DAMAGED_ANVIL, ChatColor.BLUE + "取引成功確率: " + ChatColor.YELLOW + option.getRate(), ChatColor.YELLOW + "シフトクリック: チャットで値を入力") , "OptionType", "Rate"));
+        inv.setItem(22, NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.DAMAGED_ANVIL, ChatColor.BLUE + "取引成功確率: " + ChatColor.YELLOW + option.getRate() + "%", ChatColor.YELLOW + "シフトクリック: チャットで値を入力") , "OptionType", "Rate"));
 
         //お金
         if (VaultHandler.isLoaded()) {
@@ -72,7 +72,7 @@ public class EditOptionGui extends ShopGui {
                 panel = NBTUtil.setNMSTag(panel, "OptionValue", money.get(i).replace("+", ""));
                 inv.setItem(i + 9 * 3, panel);
             }
-            inv.setItem(31, NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.GOLD_INGOT, ChatColor.BLUE + "お金: " + ChatColor.YELLOW + option.getMoney(), ChatColor.YELLOW + "クリック: " + (option.isGive() ? "受け取り" : "支払い"), ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Money"));
+            inv.setItem(31, NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.GOLD_INGOT, ChatColor.BLUE + "お金: " + ChatColor.YELLOW + VaultHandler.getInstance().format(option.getMoney()), ChatColor.YELLOW + "クリック: " + (option.isGive() ? "受け取り" : "支払い"), ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Money"));
         }
 
         return inv;
@@ -81,11 +81,11 @@ public class EditOptionGui extends ShopGui {
     public ItemStack getOptionPanel(OptionType type) {
         switch (type) {
             case LIMIT:
-                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.BARRIER, ChatColor.BLUE + "取引上限", ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Limit");
+                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.BARRIER, ChatColor.BLUE + "取引上限: " + ChatColor.YELLOW + option.getLimit(), ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Limit");
             case RATE:
-                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.DAMAGED_ANVIL, ChatColor.BLUE + "取引成功確率: " + ChatColor.YELLOW + option.getRate(), ChatColor.YELLOW + "シフトクリック: チャットで値を入力") , "OptionType", "Rate");
+                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.DAMAGED_ANVIL, ChatColor.BLUE + "取引成功確率: " + ChatColor.YELLOW + option.getRate() + "%", ChatColor.YELLOW + "シフトクリック: チャットで値を入力") , "OptionType", "Rate");
             case MONEY:
-                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.GOLD_INGOT, ChatColor.BLUE + "お金: " + ChatColor.YELLOW + option.getMoney(), ChatColor.YELLOW + "クリック: " + (option.isGive() ? "受け取り" : "支払い"), ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Money");
+                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.GOLD_INGOT, ChatColor.BLUE + "お金: " + ChatColor.YELLOW + VaultHandler.getInstance().format(option.getMoney()), ChatColor.YELLOW + "クリック: " + (option.isGive() ? "受け取り" : "支払い"), ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Money");
         }
         return new ItemStack(Material.AIR);
     }

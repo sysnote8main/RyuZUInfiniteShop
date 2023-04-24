@@ -76,7 +76,7 @@ public class TradeUtil {
             throw new RuntimeException(e);
         }
         for (String tradeID : config.getKeys(false)) {
-            ShopTrade.tradeLimits.put(UUID.fromString(tradeID), config.getSerializable(tradeID + ".data", TradeOption.class));
+            ShopTrade.tradeOptions.put(UUID.fromString(tradeID), config.getSerializable(tradeID + ".data", TradeOption.class));
             if (config.contains(tradeID + ".counts"))
                 for (String playerID : config.getConfigurationSection(tradeID + ".counts").getKeys(false))
                     ShopTrade.tradeCounts.put(UUID.fromString(playerID), UUID.fromString(tradeID), config.getInt(tradeID + ".counts." + playerID));
