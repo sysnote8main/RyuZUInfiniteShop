@@ -167,7 +167,7 @@ public class EditTradePageListener implements Listener {
 
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
-        ShopTrade trade = shop.getTrade(event.getClickedInventory(), slot);
+        ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(slot);
         //トレードをアイテム化する
         if (event.isShiftClick()) return;
         if (trade == null)
@@ -188,6 +188,7 @@ public class EditTradePageListener implements Listener {
         if (event.getClickedInventory() == null) return;
         int slot = event.getSlot();
         if (slot / 9 == 0) return;
+        if(NBTUtil.getNMSStringTag(event.getCurrentItem(), "OptionType") == null) return;
 
         Player p = (Player) event.getWhoClicked();
         OptionType type = OptionType.valueOf(NBTUtil.getNMSStringTag(event.getCurrentItem(), "OptionType").toUpperCase());
@@ -251,6 +252,6 @@ public class EditTradePageListener implements Listener {
         if (!(holder.getGui() instanceof EditOptionGui)) return;
         if (!holder.getMode().equals(ShopMode.EDIT)) return;
         OptionHolder optionHolder = (OptionHolder) holder;
-        optionHolder.getGui().getTrade().setTradeOption(optionHolder.getGui().getOption(), true);
+//        optionHolder.getGui().getTrade().setTradeOption(optionHolder.getGui().getOption(), true);
     }
 }

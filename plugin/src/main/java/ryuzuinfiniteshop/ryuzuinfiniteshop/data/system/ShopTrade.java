@@ -128,7 +128,7 @@ public class ShopTrade {
     public void saveTradeOption(YamlConfiguration config) {
         if (getOption().isNoData()) return;
         UUID tradeID = tradeUUID.get(this);
-        config.set(tradeID.toString() + ".limit", getLimit());
+        config.set(tradeID.toString() + ".options", getOption());
         ShopTrade.tradeCounts.rowKeySet().forEach(playerID -> config.set(tradeID + ".counts." + playerID.toString(), ShopTrade.tradeCounts.get(playerID, tradeID)));
     }
 
@@ -173,8 +173,16 @@ public class ShopTrade {
 
     public void setTradeOption(TradeOption option, boolean force) {
         if(option.isNoData() && !force) return;
-        UUID uuid = tradeUUID.computeIfAbsent(this, key -> UUID.randomUUID());
-        tradeOptions.put(uuid, option);
+        System.out.println("setTradeOption: " + option);
+        if(option.isNoData() && force) {
+            if(tradeUUID.containsKey(this)) {
+                tradeOptions.remove(tradeUUID.get(this));
+                tradeUUID.remove(this);
+            }
+        } else {
+            UUID uuid = tradeUUID.computeIfAbsent(this, key -> UUID.randomUUID());
+            tradeOptions.put(uuid, option);
+        }
     }
 
 //    public void setTradeOption(TradeOption option, boolean force) {

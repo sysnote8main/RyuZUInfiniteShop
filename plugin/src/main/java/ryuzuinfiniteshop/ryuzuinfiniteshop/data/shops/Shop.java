@@ -148,7 +148,6 @@ public class Shop {
                 if(CitizensHandler.isLoaded() && CitizensAPI.getNPCRegistry().getByUniqueId(citizen) == null)
                     new RuntimeException(LanguageKey.ERROR_MYTHICMOBS_INVALID_ID.getMessage(citizen.toString())).printStackTrace();
             }
-            citizen = UUID.fromString(yaml.getString("Npc.Options.Citizen"));
             this.displayName = yaml.getString("Npc.Options.DisplayName");
             this.invisible = yaml.getBoolean("Npc.Options.Invisible", false);
             this.yaw = yaml.getInt("Npc.Status.Yaw", 0);
@@ -210,10 +209,7 @@ public class Shop {
             if (getShopType().equals(ShopType.TwotoOne) && i % 9 == 4) i++;
 
             // 取引のオプションのスロットを取得する
-            int optionSlot = 0;
-            if (getShopType().equals(ShopType.TwotoOne)) optionSlot = i + 2;
-            else if (getShopType().equals(ShopType.FourtoFour)) optionSlot = i + 4;
-            else if (getShopType().equals(ShopType.SixtoTwo)) optionSlot = i + 6;
+            int optionSlot = i + ShopUtil.getSubtractSlot(getShopType());
 
             ShopTrade trade = gui.getTradeFromSlot(i);
             ShopTrade expectedTrade = TradeUtil.getTrade(inv, i, getShopType());
@@ -235,6 +231,7 @@ public class Shop {
                     LogUtil.log(LogUtil.LogType.REPLACETRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), trade, expectedTrade, trade.getOption(), expectedTrade.getOption());
                 trade.setTrade(expectedTrade);
                 trade.setTradeOption(option, true);
+                System.out.println("上書き: " + option);
             } else if (trade != null) {
                 // 取引を削除する
                 emptyTrades.add(trade);

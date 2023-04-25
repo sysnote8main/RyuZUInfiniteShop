@@ -45,14 +45,14 @@ public class TradeOption implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("give", give);
-        result.put("value", money);
+        result.put("money", money);
         result.put("limit", limit);
         result.put("rate", rate);
         return result;
     }
 
     public static TradeOption deserialize(Map<String, Object> map) {
-        return new TradeOption((boolean) map.get("give"), (int) map.get("value"), (int) map.get("limit"), (int) map.get("rate"));
+        return new TradeOption((boolean) map.getOrDefault("give", "false"), (int) map.getOrDefault("money", 0), (int) map.getOrDefault("limit", 0), (int) map.getOrDefault("rate", 100));
     }
 
     public ItemStack getOptionsPanel(ItemStack panel) {

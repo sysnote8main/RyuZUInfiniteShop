@@ -93,7 +93,7 @@ public class ShopUtil {
                 }
                 Optional<String> mmid = Optional.ofNullable(config.getString("Npc.Options.MythicMob"));
                 if (mmid.isPresent() && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().exsistsMythicMob(mmid.get()))
-                    createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), mmid.get());
+                    new Shop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), mmid.get());
                 else
                     createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), config.getString("Npc.Options.EntityType", "VILLAGER"), null);
             } catch (Exception e) {
@@ -277,9 +277,9 @@ public class ShopUtil {
         String type = config.getString("Npc.Options.EntityType", "VILLAGER");
         String mythicmob = config.getString("Npc.Options.MythicMob");
         if (mythicmob != null && MythicInstanceProvider.getInstance().exsistsMythicMob(mythicmob))
-            return createNewShop(location, mythicmob);
+            return new Shop(location, mythicmob);
         else
-            return createNewShop(location, type);
+            return createNewShop(location, type, null);
     }
 
     public static HashMap<String, String> mergeShop(ItemStack item, Shop shop, Player p) {
