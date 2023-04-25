@@ -55,7 +55,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         registerEvents();
         ConfigurationSerialization.registerClass(MythicItem.class);
         ConfigurationSerialization.registerClass(TradeOption.class);
-        if(VERSION < 14) NBTInjector.inject();
+        if (VERSION < 14) NBTInjector.inject();
         FileUtil.loadAll();
         RyuZUCommandsGenerator.initialize(this, LanguageKey.COMMAND_ERROR_PERMISSION.getMessage());
     }
@@ -78,6 +78,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeIndividualSettingsListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeShopTypeListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeMythicMobTypeListener(), getPlugin());
+        getPlugin().getServer().getPluginManager().registerEvents(new ChangeCitizenNpcTypeListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeNpcDirecationListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeLockListener(), getPlugin());
         getPlugin().getServer().getPluginManager().registerEvents(new ChangeSearchableListener(), getPlugin());

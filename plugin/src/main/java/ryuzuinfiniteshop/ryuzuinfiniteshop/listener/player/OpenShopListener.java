@@ -57,6 +57,7 @@ public class OpenShopListener implements Listener {
     public void openShop(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
+        if(!(entity instanceof LivingEntity)) return;
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
         String id = NBTUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;

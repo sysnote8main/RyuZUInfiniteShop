@@ -220,10 +220,6 @@ public class ShopUtil {
         shops.put(id, shop);
     }
 
-    public static Shop createNewShop(Location location, String mmid) {
-        return new Shop(location, mmid);
-    }
-
     public static Shop createNewShop(Location location, String type, ConfigurationSection config) {
         if(type.equalsIgnoreCase("BLOCK"))
             return new Shop(location, type, config);

@@ -16,6 +16,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TradeUtil {
     public static boolean isAvailableTrade(Inventory inv, int slot, ShopType type) {
@@ -54,10 +55,16 @@ public class TradeUtil {
         return -1;
     }
 
+    public static void removeGarbageTradeOption() {
+        List<ShopTrade> trades = ShopUtil.getShops().values().stream().map(Shop::getTrades).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        ShopTrade.tradeOptions.keySet().removeIf(tradeID -> !trades.contains(ShopTrade.tradeUUID.inverse().get(tradeID)));
+    }
+
     public static void saveTradeLimits() {
+        removeGarbageTradeOption();
         File file = FileUtil.initializeFile("limits.yml");
         YamlConfiguration config = new YamlConfiguration();
-        ShopTrade.tradeUUID.values().forEach(tradeID -> ShopTrade.tradeUUID.inverse().get(tradeID).saveTradeLimit(config));
+        ShopTrade.tradeUUID.values().forEach(tradeID -> ShopTrade.tradeUUID.inverse().get(tradeID).saveTradeOption(config));
         try {
             config.save(file);
         } catch (IOException e) {

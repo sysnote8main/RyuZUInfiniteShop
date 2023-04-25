@@ -12,7 +12,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ModeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ScheduleData;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ScheduleStringData;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
@@ -22,10 +22,10 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class SchedulerListener implements Listener {
-    private static final HashMap<UUID, ScheduleData> schedulers = new HashMap<>();
+    private static final HashMap<UUID, ScheduleStringData> schedulers = new HashMap<>();
 
     public static void setSchedulers(Player p, String id, Inventory inv, Consumer<String> successProcess) {
-        schedulers.put(p.getUniqueId(), new ScheduleData(System.currentTimeMillis(), id, successProcess, inv));
+        schedulers.put(p.getUniqueId(), new ScheduleStringData(System.currentTimeMillis(), id, inv, successProcess));
         Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
     }
 
@@ -34,10 +34,11 @@ public class SchedulerListener implements Listener {
         Player p = event.getPlayer();
         if (!schedulers.containsKey(p.getUniqueId())) return;
         if(FileUtil.isSaveBlock(p)) return;
-        ScheduleData data = schedulers.get(p.getUniqueId());
+        ScheduleStringData data = schedulers.get(p.getUniqueId());
         Shop shop = ShopUtil.getShop(data.getId());
+        if(shop == null && !data.getId().equalsIgnoreCase("ignore")) return;
         event.setCancelled(true);
-        if ((double) (System.currentTimeMillis() - schedulers.get(p.getUniqueId()).getTime()) / 1000 > 20 || event.getMessage().equalsIgnoreCase("Cancel")) {
+        if (System.currentTimeMillis() - schedulers.get(p.getUniqueId()).getTime() / 1000d > 20 || event.getMessage().equalsIgnoreCase("Cancel")) {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCELLED.getMessage());
             SoundUtil.playClickShopSound(p);
             p.openInventory(data.getInventory());

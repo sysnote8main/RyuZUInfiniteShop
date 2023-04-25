@@ -15,12 +15,9 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.config.UnderstandSystemConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SelectSearchItemGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LogUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
@@ -130,13 +127,17 @@ public class CommandChain {
                                 Player p = (Player) data.getSender();
                                 loc = p.getLocation();
                             }
-                            if (MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().exsistsMythicMob(data.getArgs()[1]))
-                                ShopUtil.createNewShop(loc, data.getArgs()[1]);
+                            if(data.getArgs()[1].equalsIgnoreCase("BLOCK"))
+                                new Shop(loc, "BLOCK", null);
+                            else if(data.getArgs()[1].equalsIgnoreCase("CITIZEN"))
+                                new Shop(loc, ((Player) data.getSender()).getUniqueId());
+                            else if (MythicInstanceProvider.getInstance().exsistsMythicMob(data.getArgs()[1]))
+                                new Shop(loc, data.getArgs()[1]);
                             else
                                 ShopUtil.createNewShop(loc, data.getArgs()[1], null);
                             ShopUtil.getShop(LocationUtil.toStringFromLocation(loc)).respawnNPC();
                             data.sendMessage(ChatColor.GREEN + LanguageKey.MESSAGE_SHOP_CREATED.getMessage());
-                            if(data.getSender() instanceof Player) SoundUtil.playSuccessSound((Player) data.getSender());
+                            if (data.getSender() instanceof Player) SoundUtil.playSuccessSound((Player) data.getSender());
                             LogUtil.log(LogUtil.LogType.CREATESHOP, data.getSender().getName(), LocationUtil.toStringFromLocation(loc));
                         }
                 )
@@ -145,6 +146,8 @@ public class CommandChain {
                     if (LocationUtil.isLocationString(data.getArgs()[1]))
                         return true;
                     if (data.getArgs()[1].equalsIgnoreCase("BLOCK"))
+                        return true;
+                    if (CitizensHandler.isLoaded() && isPlayer(data.getSender()) && data.getArgs()[1].equalsIgnoreCase("CITIZEN"))
                         return true;
                     if (!isPlayer(data.getSender()))
                         return false;
@@ -160,10 +163,10 @@ public class CommandChain {
                     }
                 })
                 .tabCompleteConditon(data -> data.getArgs().length >= 2 && !FileUtil.isSaveBlock(data))
-                .complete(1 , "BLOCK")
-                .complete(1 , Arrays.stream(EntityType.values()).map(Enum::name).collect(Collectors.toList()))
-                .complete(1 , MythicInstanceProvider.isLoaded() ? new ArrayList<>(MythicInstanceProvider.getInstance().getMythicMobs()) : new ArrayList<>());
-
+                .complete(1, "BLOCK")
+                .complete(1, Arrays.stream(EntityType.values()).map(Enum::name).collect(Collectors.toList()))
+                .complete(1, MythicInstanceProvider.isLoaded() ? new ArrayList<>(MythicInstanceProvider.getInstance().getMythicMobs()) : new ArrayList<>())
+                .complete(1, CitizensHandler.isLoaded() ? Arrays.asList("CITIZEN") : new ArrayList<>());
 
         CommandsGenerator.registerCommand(
                         "sis.open",
@@ -243,7 +246,7 @@ public class CommandChain {
                 .tabCompleteConditon(data -> data.getArgs().length < 4 && isPlayer(data.getSender()) && !FileUtil.isSaveBlock(data));
 
         Predicate<CommandData> limitCondition = data -> {
-            if(data.getArgs().length < 4) return false;
+            if (data.getArgs().length < 4) return false;
             if (Bukkit.getServer().getPlayer(data.getArgs()[2]) == null) {
                 data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_EXIST_PLAYER.getMessage());
                 return false;

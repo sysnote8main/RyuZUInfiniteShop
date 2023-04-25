@@ -4,6 +4,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
 import org.bukkit.ChatColor;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
@@ -46,13 +47,13 @@ public class LogUtil {
         log(log);
     }
 
-    public static void log(LogType type, String player, String id, ShopTrade fromTrade, ShopTrade toTrade, int fromLimit, int toLimit) {
+    public static void log(LogType type, String player, String id, ShopTrade fromTrade, ShopTrade toTrade, TradeOption fromOption, TradeOption toOption) {
         if(!Config.editLog) return;
         List<String> logBuilder = baseLog(type, player, id);
         logBuilder.add(Arrays.stream(fromTrade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
         logBuilder.add(Arrays.stream(toTrade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
-        logBuilder.add(String.valueOf(fromLimit));
-        logBuilder.add(String.valueOf(toLimit));
+        logBuilder.add(fromOption.serialize().keySet().stream().map(Objects::toString).collect(Collectors.joining("+")));
+        logBuilder.add(toOption.serialize().keySet().stream().map(Objects::toString).collect(Collectors.joining("+")));
         String log = String.join(",", logBuilder);
         log(log);
     }

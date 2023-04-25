@@ -173,7 +173,7 @@ public class EditTradePageListener implements Listener {
         if (trade == null)
             SoundUtil.playFailSound(p);
         else {
-            p.openInventory(new EditOptionGui(trade, new TradeOption(), shop, holder.getGui().getPage(), slot).getInventory(ShopMode.EDIT, holder));
+            p.openInventory(new EditOptionGui(trade, shop, holder.getGui().getPage(), slot).getInventory(ShopMode.EDIT, holder));
             SoundUtil.playClickShopSound(p);
         }
     }
@@ -250,9 +250,7 @@ public class EditTradePageListener implements Listener {
         if (holder == null) return;
         if (!(holder.getGui() instanceof EditOptionGui)) return;
         if (!holder.getMode().equals(ShopMode.EDIT)) return;
-        Player p = (Player) event.getPlayer();
         OptionHolder optionHolder = (OptionHolder) holder;
-        Inventory inv = optionHolder.getBefore().getInventory();
-//        optionHolder.getGui().getTrade()
+        optionHolder.getGui().getTrade().setTradeOption(optionHolder.getGui().getOption(), true);
     }
 }

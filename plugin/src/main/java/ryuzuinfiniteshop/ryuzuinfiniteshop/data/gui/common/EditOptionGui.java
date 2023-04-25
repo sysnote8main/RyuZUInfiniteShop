@@ -27,16 +27,16 @@ public class EditOptionGui extends ShopGui {
     protected final TradeOption option;
     protected final int slot;
 
-    public EditOptionGui(ShopTrade trade, TradeOption option, Shop shop, int page, int slot) {
+    public EditOptionGui(ShopTrade trade, Shop shop, int page, int slot) {
         super(shop, page);
         this.trade = trade;
-        this.option = option;
+        this.option = trade.getOption();
         this.slot = slot;
     }
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new OptionHolder(ShopMode.EDIT, shop, option, this), 9 * (VaultHandler.isLoaded() ? 4 : 3), ChatColor.DARK_BLUE + "取引オプションの編集");
+        Inventory inv = Bukkit.createInventory(new OptionHolder(ShopMode.EDIT, shop, this), 9 * (VaultHandler.isLoaded() ? 4 : 3), ChatColor.DARK_BLUE + "取引オプションの編集");
 
         for (int i = 0; i < 9; i++) {
             inv.setItem(i, trade.getTradeItems(shop.getShopType())[i]);

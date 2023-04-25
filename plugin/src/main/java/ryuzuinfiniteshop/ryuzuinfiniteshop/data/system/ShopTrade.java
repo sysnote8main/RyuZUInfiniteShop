@@ -69,11 +69,6 @@ public class ShopTrade {
         this.takeData = new ObjectItems(take);
     }
 
-    public ShopTrade(Inventory inv, int slot, ShopType type, int limit) {
-        setTrade(inv, slot, type);
-        setTradeOptions(limit, limit != 0);
-    }
-
     public ItemStack[] getGiveItems() {
         return giveData.toItemStacks();
     }
@@ -112,7 +107,7 @@ public class ShopTrade {
         tradeCounts.put(player.getUniqueId(), tradeUUID.get(this), count);
     }
 
-    public void saveTradeLimit() {
+    public void saveTradeOption() {
         if (getLimit() <= 0) return;
         File file = FileUtil.initializeFile("limits.yml");
         YamlConfiguration config = new YamlConfiguration();
@@ -121,7 +116,7 @@ public class ShopTrade {
         } catch (IOException | InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
-        saveTradeLimit(config);
+        saveTradeOption(config);
 
         try {
             config.save(file);
@@ -130,8 +125,8 @@ public class ShopTrade {
         }
     }
 
-    public void saveTradeLimit(YamlConfiguration config) {
-        if (getLimit() <= 0) return;
+    public void saveTradeOption(YamlConfiguration config) {
+        if (getOption().isNoData()) return;
         UUID tradeID = tradeUUID.get(this);
         config.set(tradeID.toString() + ".limit", getLimit());
         ShopTrade.tradeCounts.rowKeySet().forEach(playerID -> config.set(tradeID + ".counts." + playerID.toString(), ShopTrade.tradeCounts.get(playerID, tradeID)));
@@ -176,17 +171,23 @@ public class ShopTrade {
         );
     }
 
-    public void setTradeOptions(int limit, boolean force) {
-        TradeOption data = tradeOptions.computeIfAbsent(tradeUUID.computeIfAbsent(this, key -> UUID.randomUUID()), key -> new TradeOption());
-        if (force)
-            data.setLimit(limit);
-        else
-            data.setLimit(Math.max(data.getLimit(), limit));
-        if (data.isNoData()) {
-            tradeOptions.remove(tradeUUID.get(this));
-            tradeUUID.remove(this);
-        }
+    public void setTradeOption(TradeOption option, boolean force) {
+        if(option.isNoData() && !force) return;
+        UUID uuid = tradeUUID.computeIfAbsent(this, key -> UUID.randomUUID());
+        tradeOptions.put(uuid, option);
     }
+
+//    public void setTradeOption(TradeOption option, boolean force) {
+//        TradeOption data = tradeOptions.computeIfAbsent(tradeUUID.computeIfAbsent(this, key -> UUID.randomUUID()), key -> new TradeOption());
+//        if (force)
+//            data.setLimit(limit);
+//        else
+//            data.setLimit(Math.max(data.getLimit(), limit));
+//        if (data.isNoData()) {
+//            tradeOptions.remove(tradeUUID.get(this));
+//            tradeUUID.remove(this);
+//        }
+//    }
 
     public ItemStack[] getTradeItems(ShopType type, ShopMode mode) {
         ItemStack[] items;
@@ -268,8 +269,7 @@ public class ShopTrade {
         return items;
     }
 
-    public void setTrade(Inventory inv, int slot, ShopType type) {
-        ShopTrade trade = TradeUtil.getTrade(inv, slot, type);
+    public void setTrade(ShopTrade trade) {
         if (trade == null) return;
         this.takeData = trade.takeData;
         this.giveData = trade.giveData;
@@ -326,7 +326,7 @@ public class ShopTrade {
         }
         //結果に対するエフェクトを表示
         playResultEffect(p, result);
-        saveTradeLimit();
+        saveTradeOption();
         return resultTime;
     }
 
