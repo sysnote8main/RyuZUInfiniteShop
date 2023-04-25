@@ -76,7 +76,7 @@ public abstract class ShopTradeGui extends ShopGui {
     public Inventory getInventory(ShopMode mode, Player p, @Nullable ModeHolder before) {
         Inventory inv = getInventory(mode);
         ((ShopHolder) inv.getHolder()).setBefore(before);
-        if (!mode.equals(ShopMode.EDIT)) setTradeStatus(p, inv);
+        if (mode.equals(ShopMode.TRADE)) setTradeStatus(p, inv);
         return inv;
     }
 
@@ -94,7 +94,7 @@ public abstract class ShopTradeGui extends ShopGui {
         for (int i = 0; i < getTrades().size(); i++) {
             ShopTrade trade = getTrade(i);
             ShopTrade.TradeResult result = trade.getResult(p);
-            inventory.setItem(getConvertSlot().get(i), DisplayPanelConfig.getPanel(result).getItemStack(trade.getLimit(), trade.getTradeCount(p)));
+            inventory.setItem(getConvertSlot().get(i), trade.getOption().getOptionsPanel(DisplayPanelConfig.getPanel(result).getItemStack(), p, trade));
         }
     }
 }

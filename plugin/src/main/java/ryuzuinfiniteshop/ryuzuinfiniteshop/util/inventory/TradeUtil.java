@@ -60,9 +60,9 @@ public class TradeUtil {
         ShopTrade.tradeOptions.keySet().removeIf(tradeID -> !trades.contains(ShopTrade.tradeUUID.inverse().get(tradeID)));
     }
 
-    public static void saveTradeLimits() {
+    public static void saveTradeOptions() {
         removeGarbageTradeOption();
-        File file = FileUtil.initializeFile("limits.yml");
+        File file = FileUtil.initializeFile("options.yml");
         YamlConfiguration config = new YamlConfiguration();
         ShopTrade.tradeUUID.values().forEach(tradeID -> ShopTrade.tradeUUID.inverse().get(tradeID).saveTradeOption(config));
         try {
@@ -72,8 +72,8 @@ public class TradeUtil {
         }
     }
 
-    public static void loadTradeLimits() {
-        File file = FileUtil.initializeFile("limits.yml");
+    public static void loadTradeOptions() {
+        File file = FileUtil.initializeFile("options.yml");
         YamlConfiguration config = new YamlConfiguration();
         try {
             config.load(file);
@@ -83,7 +83,7 @@ public class TradeUtil {
             throw new RuntimeException(e);
         }
         for (String tradeID : config.getKeys(false)) {
-            ShopTrade.tradeOptions.put(UUID.fromString(tradeID), config.getSerializable(tradeID + ".options", TradeOption.class));
+            ShopTrade.tradeOptions.put(UUID.fromString(tradeID), config.getSerializable(tradeID + ".options", TradeOption.class, new TradeOption()));
             if (config.contains(tradeID + ".counts"))
                 for (String playerID : config.getConfigurationSection(tradeID + ".counts").getKeys(false))
                     ShopTrade.tradeCounts.put(UUID.fromString(playerID), UUID.fromString(tradeID), config.getInt(tradeID + ".counts." + playerID));

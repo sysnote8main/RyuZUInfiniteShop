@@ -2,10 +2,6 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.trait.Equipment;
-import net.citizensnpcs.trait.LookClose;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Slab;
@@ -85,22 +81,16 @@ public class Shop {
     protected ObjectItems equipments;
 
     public Shop(Location location, String entityType, ConfigurationSection config) {
-        boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
-        this.location = location;
         this.shopkeepersConfig = config;
-        ShopUtil.addShop(getID(), this);
-        loadYamlProcess(getFile());
-        this.entityType = entityType;
-        if (!exsited) {
-            createEditorNewPage();
-            if (config == null) saveYaml();
-        }
+        initialize(location, () -> {
+            this.entityType = entityType;
+        });
     }
 
-    public Shop(Location location, UUID uuid) {
+    public Shop(Location location, UUID uuid, boolean load) {
         initialize(location, () -> {
             this.entityType = EntityType.VILLAGER.name();
-            this.citizen = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, Bukkit.getOfflinePlayer(uuid).getName()).getUniqueId();
+            this.citizen = CitizensHandler.createNPC(uuid, load);
         });
     }
 
@@ -108,11 +98,6 @@ public class Shop {
         initialize(location, () -> {
             this.mythicmob = mmid;
             this.entityType = EntityType.VILLAGER.name();
-        });
-    }
-
-    public Shop(Location location) {
-        initialize(location, () -> {
         });
     }
 
@@ -143,9 +128,10 @@ public class Shop {
             this.mythicmob = yaml.getString("Npc.Options.MythicMob");
             if (mythicmob != null && MythicInstanceProvider.isLoaded() && !MythicInstanceProvider.getInstance().exsistsMythicMob(mythicmob))
                 new RuntimeException(LanguageKey.ERROR_MYTHICMOBS_INVALID_ID.getMessage(mythicmob)).printStackTrace();
-            if(yaml.getString("Npc.Options.Citizen") != null) {
-                this.citizen = UUID.fromString(yaml.getString("Npc.Options.Citizen"));
-                if(CitizensHandler.isLoaded() && CitizensAPI.getNPCRegistry().getByUniqueId(citizen) == null)
+            String citizenId = yaml.getString("Npc.Options.Citizen");
+            if (citizenId != null) {
+                this.citizen = UUID.fromString(citizenId);
+                if (CitizensHandler.isLoaded() && !CitizensHandler.isCitizensNPC(citizen))
                     new RuntimeException(LanguageKey.ERROR_MYTHICMOBS_INVALID_ID.getMessage(citizen.toString())).printStackTrace();
             }
             this.displayName = yaml.getString("Npc.Options.DisplayName");
@@ -231,7 +217,6 @@ public class Shop {
                     LogUtil.log(LogUtil.LogType.REPLACETRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), trade, expectedTrade, trade.getOption(), expectedTrade.getOption());
                 trade.setTrade(expectedTrade);
                 trade.setTradeOption(option, true);
-                System.out.println("上書き: " + option);
             } else if (trade != null) {
                 // 取引を削除する
                 emptyTrades.add(trade);
@@ -321,9 +306,9 @@ public class Shop {
 
     public ItemStack convertShopToItemStack() {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_NAME.getMessage() + ChatColor.GREEN + getDisplayNameOrElseNone(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
-                ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
         );
         item = NBTUtil.setNMSTag(item, convertShopToMap());
         return item;
@@ -331,6 +316,7 @@ public class Shop {
 
     public void removeShop() {
         if (npc != null) npc.remove();
+        if (citizen != null) CitizensHandler.removeNPC(citizen);
         if (hologram != null) hologram.remove();
         getFile().delete();
         ShopUtil.removeShop(getID());
@@ -472,7 +458,7 @@ public class Shop {
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
         return yaml -> {
             yaml.set("Npc.Options.MythicMob", mythicmob);
-            yaml.set("Npc.Options.MythicMob", citizen == null ? null : citizen.toString());
+            yaml.set("Npc.Options.Citizen", citizen == null ? null : citizen.toString());
             yaml.set("Npc.Options.DisplayName", displayName);
             yaml.set("Npc.Options.EntityType", entityType);
             yaml.set("Npc.Options.Invisible", invisible);
@@ -536,15 +522,8 @@ public class Shop {
         npc.setPersistent(false);
         NBTUtil.setNMSTag(npc, "Shop", getID());
         initializeLivingEntitiy();
-        if (entityType.equals(EntityType.ENDER_CRYSTAL))
+        if (entityType.equals(EntityType.ENDER_CRYSTAL.name()))
             ((EnderCrystal) npc).setShowingBottom(false);
-//        NBTBuilder.setSilent(true);
-//        NBTBuilder.setInvulnerable(true);
-//        NBTBuilder.setNoGravity(true);
-//        NBTUtil.setNMSTag(npc, "Shop", getID());
-//        initializeLivingEntitiy();
-//        if (npc.getType().equals(EntityType.ENDER_CRYSTAL))
-//            NBTBuilder.setSilent(true);
     }
 
     public void setNpcMeta(ConfigurationSection section) {
@@ -613,15 +592,12 @@ public class Shop {
         if (citizen == null) {
             if (npc instanceof LivingEntity) {
                 LivingEntity livnpc = ((LivingEntity) npc);
-                for (EquipmentSlot slot : EquipmentUtil.getEquipmentsSlot().values()) {
+                for (EquipmentSlot slot : EquipmentUtil.getEquipmentsSlot().values())
                     livnpc.getEquipment().setItem(slot, equipments.toItemStacks()[slot.ordinal()]);
-                }
             }
-        } else {
-            for (EquipmentSlot slot : EquipmentUtil.getEquipmentsSlot().values()) {
-                NPC citizenNpc = CitizensAPI.getNPCRegistry().getByUniqueId(citizen);
-                citizenNpc.getOrAddTrait(Equipment.class).set(slot.ordinal(), equipments.toItemStacks()[slot.ordinal()]);
-            }
+        } else if(CitizensHandler.isLoaded() && CitizensHandler.isCitizensNPC(citizen)) {
+            for (EquipmentSlot slot : EquipmentUtil.getEquipmentsSlot().values())
+                CitizensHandler.setEquipment(citizen, slot, equipments.toItemStacks()[slot.ordinal()]);
         }
     }
 
@@ -677,15 +653,15 @@ public class Shop {
         if (npc != null) npc.remove();
         this.mythicmob = mythicType;
         this.citizen = null;
-        this.entityType = null;
+        this.entityType = EntityType.VILLAGER.name();
         respawnNPC();
     }
 
     public void setCitizen(Entity entity) {
         if (npc != null) npc.remove();
-        this.citizen = CitizensAPI.getNPCRegistry().getNPC(entity).getUniqueId();
+        this.citizen = CitizensHandler.getNpcUUID(entity);
         this.mythicmob = null;
-        this.entityType = null;
+        this.entityType = EntityType.VILLAGER.name();
 
         respawnNPC();
     }
@@ -699,6 +675,7 @@ public class Shop {
 
     public void removeNPC() {
         if (npc != null) npc.remove();
+        if(citizen != null) CitizensHandler.despawnNPC(citizen);
         npc = null;
     }
 
@@ -708,17 +685,12 @@ public class Shop {
         if (npc != null && npc.isValid()) return;
         if (!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) return;
         if (mythicmob != null && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().exsistsMythicMob(mythicmob)) {
-            if (npc != null) npc.remove();
             npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob, location);
             setNpcMeta();
-        } else if (citizen != null && CitizensAPI.getNPCRegistry().getByUniqueId(citizen) != null) {
-            NPC citizenNpc = CitizensAPI.getNPCRegistry().getByUniqueId(citizen);
-            if (npc != null) citizenNpc.despawn();
-            citizenNpc.spawn(location);
-            citizenNpc.setName(displayName);
-            citizenNpc.addTrait(LookClose.class);
-            npc = citizenNpc.getEntity();
+        } else if (citizen != null && CitizensHandler.isLoaded() && CitizensHandler.isCitizensNPC(citizen)) {
+            npc = CitizensHandler.spawnNPC(citizen, this);
             setNpcMeta();
+            System.out.println("Citizens NPC spawned");
         } else if (entityType.equalsIgnoreCase("BLOCK")) {
             if (hologram != null && hologram.isValid()) return;
             hologram = EntityUtil.spawnHologram(location.clone().add(0.5, 1, 0.5), displayName);

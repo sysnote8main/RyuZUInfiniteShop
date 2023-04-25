@@ -33,21 +33,15 @@ public class DisplayPanel {
         return result;
     }
 
-    public ItemStack getItemStack(int limit, int count) {
+    public ItemStack getItemStack() {
         ItemStack item = ItemUtil.withCustomModelData(ItemUtil.getNamedItem(this.item, panels.get(result)), data);
         if(result.equals(ShopTrade.TradeResult.Success)) {
             ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_ONCE.getMessage());
             ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_EIGHT.getMessage());
             ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_STACK.getMessage());
-            if(limit != 0)
-                ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_REMAINING.getMessage(limit - count));
         } else if(!result.equals(ShopTrade.TradeResult.Normal)) {
             ItemUtil.withLore(item, ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_VALUEORPRODUCT.getMessage());
         }
         return item;
-    }
-
-    public ItemStack getItemStack() {
-        return getItemStack(0, 0);
     }
 }

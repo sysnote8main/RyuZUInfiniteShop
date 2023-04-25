@@ -22,10 +22,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -49,8 +46,7 @@ public class CommandChain {
                                 data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " open [world,x,y,z] <player> " + ChatColor.GOLD + LanguageKey.COMMAND_OPEN_TRADE_GUI.getMessage());
                                 data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " list " + ChatColor.GOLD + LanguageKey.COMMAND_LIST_SHOPS.getMessage());
                                 data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " reload " + ChatColor.GOLD + LanguageKey.COMMAND_RELOAD_ALL_DATA.getMessage());
-                                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " load " + ChatColor.GOLD + LanguageKey.COMMAND_LOAD_ALL_DATA.getMessage());
-                                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " unload " + ChatColor.GOLD + LanguageKey.COMMAND_UNLOAD_ALL_DATA.getMessage());
+                                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " save " + ChatColor.GOLD + LanguageKey.COMMAND_SAVE_ALL_DATA.getMessage());
                                 data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " limit [increase/decrease/set] [player] [value] " + ChatColor.GOLD + LanguageKey.COMMAND_CHANGE_TRADE_LIMIT.getMessage());
                                 data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "[arg] " + ChatColor.GOLD + LanguageKey.COMMAND_ARGUMENT_REQUIRED.getMessage() + ", " + ChatColor.BLUE + "<arg> " + ChatColor.GOLD + LanguageKey.COMMAND_ARGUMENT_OPTIONAL.getMessage());
                             }
@@ -69,11 +65,6 @@ public class CommandChain {
         CommandsGenerator.registerCommand(
                 "sis.save",
                 data -> FileUtil.saveAll()
-        ).permissions("sis.op").tabCompleteConditon(data -> !FileUtil.isSaveBlock(data));
-
-        CommandsGenerator.registerCommand(
-                "sis.load",
-                data -> FileUtil.loadAll()
         ).permissions("sis.op").tabCompleteConditon(data -> !FileUtil.isSaveBlock(data));
 
         CommandsGenerator.registerCommand(
@@ -130,7 +121,7 @@ public class CommandChain {
                             if(data.getArgs()[1].equalsIgnoreCase("BLOCK"))
                                 new Shop(loc, "BLOCK", null);
                             else if(data.getArgs()[1].equalsIgnoreCase("CITIZEN"))
-                                new Shop(loc, ((Player) data.getSender()).getUniqueId());
+                                new Shop(loc, ((Player) data.getSender()).getUniqueId(), false);
                             else if (MythicInstanceProvider.getInstance().exsistsMythicMob(data.getArgs()[1]))
                                 new Shop(loc, data.getArgs()[1]);
                             else
@@ -166,7 +157,7 @@ public class CommandChain {
                 .complete(1, "BLOCK")
                 .complete(1, Arrays.stream(EntityType.values()).map(Enum::name).collect(Collectors.toList()))
                 .complete(1, MythicInstanceProvider.isLoaded() ? new ArrayList<>(MythicInstanceProvider.getInstance().getMythicMobs()) : new ArrayList<>())
-                .complete(1, CitizensHandler.isLoaded() ? Arrays.asList("CITIZEN") : new ArrayList<>());
+                .complete(1, CitizensHandler.isLoaded() ? Collections.singletonList("CITIZEN") : new ArrayList<>());
 
         CommandsGenerator.registerCommand(
                         "sis.open",
@@ -273,7 +264,7 @@ public class CommandChain {
                                     Player p = (Player) data.getSender();
                                     Player target = Bukkit.getServer().getPlayer(data.getArgs()[2]);
                                     ShopTrade trade = TradeUtil.getFirstTrade(p.getInventory().getItemInMainHand());
-                                    trade.setTradeCount(target, limitargs2.get(key).apply(trade.getCounts(target), Integer.parseInt(data.getArgs()[3])));
+                                    trade.setTradeCount(target, limitargs2.get(key).apply(trade.getTradeCount(target), Integer.parseInt(data.getArgs()[3])));
                                     data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_LIMIT_CHANGE.getMessage(target.getName()));
                                     SoundUtil.playClickShopSound(p);
                                 }

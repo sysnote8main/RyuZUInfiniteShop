@@ -151,10 +151,17 @@ public class ItemUtil {
     }
 
     public static ItemStack withLore(ItemStack item, String... lore) {
+        return withLore(item, false, lore);
+    }
+
+    public static ItemStack withLore(ItemStack item, boolean reverse, String... lore) {
         ItemMeta meta = item.getItemMeta();
         List<String> lores = meta.getLore();
         if (lores == null) lores = new ArrayList<>();
-        lores.addAll(Arrays.asList(lore));
+        if(reverse)
+            lores.addAll(0, Arrays.asList(lore));
+        else
+            lores.addAll(Arrays.asList(lore));
         meta.setLore(lores);
         item.setItemMeta(meta);
         return item;

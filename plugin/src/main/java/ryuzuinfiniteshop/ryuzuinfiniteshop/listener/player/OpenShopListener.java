@@ -46,8 +46,10 @@ public class OpenShopListener implements Listener {
         Player p = event.getPlayer();
         if(entity instanceof LivingEntity) return;
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
+        System.out.println("testShop: " + entity.getUniqueId());
         String id = NBTUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;
+        System.out.println("openShop");
         event.setCancelled(true);
         openShop(id, p);
     }
@@ -59,8 +61,10 @@ public class OpenShopListener implements Listener {
         Player p = event.getPlayer();
         if(!(entity instanceof LivingEntity)) return;
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
+        System.out.println("testShop: " + entity.getUniqueId());
         String id = NBTUtil.getNMSStringTag(entity, "Shop");
         if (id == null) return;
+        System.out.println("openShop");
         event.setCancelled(true);
         openShop(id, p);
     }

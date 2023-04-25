@@ -1,13 +1,14 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.change;
 
-import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
@@ -18,9 +19,8 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ScheduleEntityData;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ScheduleStringData;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.SchedulerListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.CitizensHandler;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
@@ -52,12 +52,12 @@ public class ChangeCitizenNpcTypeListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
         int slot = event.getSlot();
-        if (slot != 4 * 9 + 3) return;
+        if (slot != 2 * 9 + 7) return;
         //チャット入力待機
         setSchedulers(p, shop.getID(), event.getClickedInventory(), (entity) -> {
             //成功時の処理
             //NPCを再構築する
-            if (!CitizensAPI.getNPCRegistry().isNPC(entity)) {
+            if (!CitizensHandler.isNPC(entity)) {
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "そのEntityはCitizenのNPCではありません");
                 SoundUtil.playFailSound(p);
                 return;
@@ -80,11 +80,25 @@ public class ChangeCitizenNpcTypeListener implements Listener {
         if (!schedulers.containsKey(p.getUniqueId())) return;
         if(FileUtil.isSaveBlock(p)) return;
         ScheduleEntityData data = schedulers.get(p.getUniqueId());
-        if(System.currentTimeMillis() - data.getTime() / 1000d > 20) return;
+        if((System.currentTimeMillis() - data.getTime()) / 1000d > 20) return;
         Shop shop = ShopUtil.getShop(data.getId());
         if(shop == null) return;
         event.setCancelled(true);
         data.getSuccessProcess().accept(entity);
         schedulers.remove(p.getUniqueId());
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void change(AsyncPlayerChatEvent event) {
+        Player p = event.getPlayer();
+        if (!schedulers.containsKey(p.getUniqueId())) return;
+        if (FileUtil.isSaveBlock(p)) return;
+        ScheduleEntityData data = schedulers.get(p.getUniqueId());
+        if ((System.currentTimeMillis() - schedulers.get(p.getUniqueId()).getTime()) / 1000d > 20 || event.getMessage().equalsIgnoreCase("Cancel"))  {
+            event.setCancelled(true);
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCELLED.getMessage());
+            SoundUtil.playClickShopSound(p);
+            p.openInventory(data.getInventory());
+        }
     }
 }

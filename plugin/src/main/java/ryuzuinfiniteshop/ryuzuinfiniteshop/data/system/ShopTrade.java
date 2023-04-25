@@ -27,7 +27,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +42,7 @@ public class ShopTrade {
     public static final HashMap<UUID, TradeOption> tradeOptions = new HashMap<>();
     private static final Random random = new Random();
 
-    public enum TradeResult {NotEnoughMoney, NotEnoughItems,Fail, Full, Success, Lack, Limited, Locked, Error, Normal}
+    public enum TradeResult {NotEnoughMoney, NotEnoughItems, Fail, Full, Success, Lack, Limited, Locked, Error, Normal}
 
     private ObjectItems giveData;
     private ObjectItems takeData;
@@ -92,24 +91,21 @@ public class ShopTrade {
         return tradeCounts.contains(player.getUniqueId(), tradeUUID.get(this)) ? tradeCounts.get(player.getUniqueId(), tradeUUID.get(this)) : 0;
     }
 
-    public int getCounts(Player p) {
-        if (!tradeUUID.containsKey(this)) return 0;
-        return tradeCounts.contains(p.getUniqueId(), tradeUUID.get(this)) ? tradeCounts.get(p.getUniqueId(), tradeUUID.get(this)) : 0;
-    }
-
     public void addTradeCount(Player player) {
         if (!tradeUUID.containsKey(this)) return;
+        if (getOption().getLimit() == 0) return;
         tradeCounts.put(player.getUniqueId(), tradeUUID.get(this), getTradeCount(player) + 1);
     }
 
     public void setTradeCount(Player player, int count) {
         if (!tradeUUID.containsKey(this)) return;
+        if (getOption().getLimit() == 0) return;
         tradeCounts.put(player.getUniqueId(), tradeUUID.get(this), count);
     }
 
     public void saveTradeOption() {
-        if (getLimit() <= 0) return;
-        File file = FileUtil.initializeFile("limits.yml");
+        if (getOption().isNoData()) return;
+        File file = FileUtil.initializeFile("options.yml");
         YamlConfiguration config = new YamlConfiguration();
         try {
             config.load(file);
@@ -148,7 +144,7 @@ public class ShopTrade {
         return NBTUtil.setNMSTag(
                 NBTUtil.setNMSTag(
                         ItemUtil.getNamedItem(
-                                DisplayPanelConfig.getPanel(result).getItemStack(getLimit(), getTradeCount(player)),
+                                DisplayPanelConfig.getPanel(result).getItemStack(),
                                 ChatColor.GREEN + LanguageKey.ITEM_TRADE_WITH.getMessage(ShopUtil.getShop(id).getDisplayNameOrElseNone()),
                                 false,
                                 ChatColor.YELLOW + LanguageKey.INVENTORY_PAGE.getMessage(page),
@@ -165,17 +161,17 @@ public class ShopTrade {
 
     private ItemStack getSettingsFilter() {
         return ItemUtil.withLore(
-                getOption().getOptionsPanel(DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack()) ,
+                getOption().getOptionsPanel(DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack()),
+                true,
                 ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_SET_OPTION.getMessage(),
                 ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_TO_ITEM.getMessage()
         );
     }
 
     public void setTradeOption(TradeOption option, boolean force) {
-        if(option.isNoData() && !force) return;
-        System.out.println("setTradeOption: " + option);
-        if(option.isNoData() && force) {
-            if(tradeUUID.containsKey(this)) {
+        if (option.isNoData() && !force) return;
+        if (option.isNoData() && force) {
+            if (tradeUUID.containsKey(this)) {
                 tradeOptions.remove(tradeUUID.get(this));
                 tradeUUID.remove(this);
             }
@@ -309,9 +305,11 @@ public class ShopTrade {
         //アイテムを追加する
         if (result == TradeResult.Success) {
             inv.removeItem(getTakeItems());
-            if(getOption().getMoney() != 0 && !getOption().isGive()) VaultHandler.takeMoney(p.getUniqueId(), getOption().getMoney());
-            if(getOption().getRate() == 100 || getOption().getRate() > random.nextInt(100) + 1) {
-                if(getOption().getMoney() != 0 && getOption().isGive()) VaultHandler.giveMoney(p.getUniqueId(), getOption().getMoney());
+            if (getOption().getMoney() != 0 && !getOption().isGive())
+                VaultHandler.takeMoney(p.getUniqueId(), getOption().getMoney());
+            if (getOption().getRate() == 100 || getOption().getRate() > random.nextInt(100) + 1) {
+                if (getOption().getMoney() != 0 && getOption().isGive())
+                    VaultHandler.giveMoney(p.getUniqueId(), getOption().getMoney());
                 inv.addItem(getGiveItems());
             } else
                 result = TradeResult.Fail;
@@ -323,6 +321,7 @@ public class ShopTrade {
     public int trade(Player p, int times) {
         TradeResult result = getResult(p);
         int resultTime = times;
+        boolean failed = false;
         for (int time = 0; time < times; time++) {
             result = trade(p);
             if (!result.equals(TradeResult.Success) && !result.equals(TradeResult.Fail)) {
@@ -330,9 +329,13 @@ public class ShopTrade {
                     result = TradeResult.Lack;
                 resultTime = time;
                 break;
+            } else if(result.equals(TradeResult.Fail)) {
+                failed = true;
             }
         }
         //結果に対するエフェクトを表示
+        if(times != 1 && failed)
+            result = TradeResult.Lack;
         playResultEffect(p, result);
         saveTradeOption();
         return resultTime;
@@ -349,8 +352,8 @@ public class ShopTrade {
     }
 
     private boolean affordMoney(Player p) {
-        if(getOption().getMoney() == 0) return true;
-        return VaultHandler.hasMoney(p.getUniqueId() , getOption().getMoney());
+        if (getOption().getMoney() == 0) return true;
+        return VaultHandler.hasMoney(p.getUniqueId(), getOption().getMoney());
     }
 
     private boolean isError() {
@@ -360,7 +363,7 @@ public class ShopTrade {
 
     private boolean isLimited(Player p) {
         if (getLimit() == 0) return false;
-        return getCounts(p) >= getLimit();
+        return getTradeCount(p) >= getLimit();
     }
 
     public static void playResultEffect(Player p, TradeResult result) {
@@ -390,7 +393,7 @@ public class ShopTrade {
                 SoundUtil.playFailSound(p);
                 break;
             case Lack:
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_ENOUGH_SPACE.getMessage());
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_BOUGHT_EVERYTHING.getMessage());
                 SoundUtil.playCautionSound(p);
                 break;
             case Full:

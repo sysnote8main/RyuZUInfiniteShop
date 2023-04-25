@@ -15,6 +15,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.player.SearchTradeListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.CitizensHandler;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.MythicItem;
@@ -51,6 +52,7 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         logger = getLogger();
         MythicInstanceProvider.setInstance();
         VaultHandler.setInstance();
+        CitizensHandler.setInstance();
         CommandChain.registerCommand();
         registerEvents();
         ConfigurationSerialization.registerClass(MythicItem.class);

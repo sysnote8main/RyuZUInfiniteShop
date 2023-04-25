@@ -92,8 +92,11 @@ public class ShopUtil {
                     e.printStackTrace();
                 }
                 Optional<String> mmid = Optional.ofNullable(config.getString("Npc.Options.MythicMob"));
+                Optional<String> citizen = Optional.ofNullable(config.getString("Npc.Options.Citizen"));
                 if (mmid.isPresent() && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().exsistsMythicMob(mmid.get()))
                     new Shop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), mmid.get());
+                else if (citizen.isPresent() && CitizensHandler.isLoaded() && CitizensHandler.isCitizensNPC(UUID.fromString(citizen.get())))
+                    new Shop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), UUID.fromString(citizen.get()), true);
                 else
                     createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), config.getString("Npc.Options.EntityType", "VILLAGER"), null);
             } catch (Exception e) {
@@ -183,7 +186,7 @@ public class ShopUtil {
             for (Entity entity : world.getEntities()) {
                 if (entity instanceof Player) continue;
                 String id = NBTUtil.getNMSStringTag(entity, "Shop");
-                if (id != null) entity.getWorld().getNearbyEntities(entity.getLocation(), 0.1, 0.1, 0.1).forEach(Entity::remove);
+                if (id != null) entity.remove();
             }
         }
     }
@@ -276,8 +279,11 @@ public class ShopUtil {
 
         String type = config.getString("Npc.Options.EntityType", "VILLAGER");
         String mythicmob = config.getString("Npc.Options.MythicMob");
+        String citizen = config.getString("Npc.Options.Citizen");
         if (mythicmob != null && MythicInstanceProvider.getInstance().exsistsMythicMob(mythicmob))
             return new Shop(location, mythicmob);
+        if (citizen != null && CitizensHandler.isLoaded() && CitizensHandler.isCitizensNPC(UUID.fromString(citizen)))
+            return new Shop(location, UUID.fromString(citizen) , true);
         else
             return createNewShop(location, type, null);
     }
@@ -299,17 +305,6 @@ public class ShopUtil {
         shopData.putAll(TradeUtil.convertTradesToMap(item, trades.stream().distinct().collect(Collectors.toList())));
         return shopData;
     }
-
-//    public static Shop overwriteShop(Location location, String data, HashMap<String, String> trades, EntityType type) {
-//        return reloadShop(location, data, TradeUtil.convertTradesToList(trades), config -> {
-//            config.set("Npc.Options.MythicMob", null);
-//            config.set("Npc.Options.EntityType", type.toString());
-//        });
-//    }
-//
-//    public static Shop overwriteShop(Location location, String data, HashMap<String, String> trades, String mmid) {
-//        return reloadShop(location, data, TradeUtil.convertTradesToList(trades), config -> config.set("Npc.Options.MythicMob", mmid));
-//    }
 
     public static void closeShopTradeInventory(Player p, Shop shop) {
         if (p.getOpenInventory().getTopInventory().getHolder() instanceof ShopHolder) {

@@ -194,7 +194,7 @@ public class EditTradePageListener implements Listener {
         OptionType type = OptionType.valueOf(NBTUtil.getNMSStringTag(event.getCurrentItem(), "OptionType").toUpperCase());
         EditOptionGui gui = ((EditOptionGui) holder.getGui());
         TradeOption option = gui.getOption();
-        if (slot == 5 && event.isShiftClick()) {
+        if (slot % 9 == 4 && event.isShiftClick()) {
             SchedulerListener.setSchedulers(p, "ignore", event.getClickedInventory(), (message) -> {
                 //成功時の処理
                 try {
@@ -215,16 +215,20 @@ public class EditTradePageListener implements Listener {
                     SoundUtil.playFailSound(p);
                 }
                 p.openInventory(event.getClickedInventory());
-                event.getClickedInventory().setItem((slot / 9) * 9 + 4, gui.getOptionPanel(type));
+                event.getClickedInventory().setItem(slot, gui.getOptionPanel(type));
             });
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "適用する正の数値を入力してください");
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());
             SoundUtil.playClickShopSound(p);
-        } else if (slot == 5) {
-            if (type.equals(OptionType.MONEY)) {
+        } else if (slot % 9 == 4) {
+            if(type.equals(OptionType.RATE)) {
+                option.setHide(!option.isHide());
+                SoundUtil.playClickShopSound(p);
+                event.getClickedInventory().setItem(slot, gui.getOptionPanel(type));
+            } else if (type.equals(OptionType.MONEY)) {
                 option.setGive(!option.isGive());
                 SoundUtil.playClickShopSound(p);
-                event.getClickedInventory().setItem((slot / 9) * 9 + 4, gui.getOptionPanel(type));
+                event.getClickedInventory().setItem(slot, gui.getOptionPanel(type));
             }
         } else {
             int value = Integer.parseInt(NBTUtil.getNMSStringTag(event.getCurrentItem(), "OptionValue"));
@@ -252,6 +256,6 @@ public class EditTradePageListener implements Listener {
         if (!(holder.getGui() instanceof EditOptionGui)) return;
         if (!holder.getMode().equals(ShopMode.EDIT)) return;
         OptionHolder optionHolder = (OptionHolder) holder;
-//        optionHolder.getGui().getTrade().setTradeOption(optionHolder.getGui().getOption(), true);
+        optionHolder.getGui().getTrade().setTradeOption(optionHolder.getGui().getOption(), true);
     }
 }

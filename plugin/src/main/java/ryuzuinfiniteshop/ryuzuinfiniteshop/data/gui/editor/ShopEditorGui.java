@@ -11,6 +11,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.CitizensHandler;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EquipmentUtil;
@@ -93,6 +94,8 @@ public class ShopEditorGui extends ShopGui {
     private void setShopStatus(Inventory inv) {
         if (MythicInstanceProvider.isLoaded())
             inv.setItem(4 * 9 + 3, ItemUtil.getNamedItem(Material.ENDER_EYE, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SET_MYTHICMOBID.getMessage()));
+        if (CitizensHandler.isLoaded())
+            inv.setItem( 2 * 9 + 7, ItemUtil.getNamedItem(Material.TOTEM_OF_UNDYING, ChatColor.GREEN + "CitizensのNpcを登録する"));
         inv.setItem(4 * 9 + 4, ItemUtil.getNamedItem(Material.ENDER_PEARL, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SET_ENTITYTYPE.getMessage()));
         inv.setItem(4 * 9 + 5, getShop().isSearchable() ?
                 ItemUtil.getNamedItem(Material.CLOCK, ChatColor.GREEN + LanguageKey.ITEM_SEARCH_SELECT.getMessage()) :

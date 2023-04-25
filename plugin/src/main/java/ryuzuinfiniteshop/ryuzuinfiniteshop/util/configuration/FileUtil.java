@@ -53,7 +53,7 @@ public class FileUtil {
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
             Config.load();
             LanguageConfig.load();
-            TradeUtil.saveTradeLimits();
+            TradeUtil.saveTradeOptions();
             ShopUtil.saveAllShops();
             UnderstandSystemConfig.save();
             Config.save();
@@ -61,7 +61,7 @@ public class FileUtil {
             DisplayPanelConfig.save();
             DisplayPanelConfig.load();
             boolean converted = ShopUtil.loadAllShops();
-            TradeUtil.loadTradeLimits();
+            TradeUtil.loadTradeOptions();
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
                 saveBlock = false;
                 if(converted) saveAll();
@@ -85,7 +85,7 @@ public class FileUtil {
             DisplayPanelConfig.load();
             UnderstandSystemConfig.load();
             boolean converted = ShopUtil.loadAllShops();
-            TradeUtil.loadTradeLimits();
+            TradeUtil.loadTradeOptions();
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
                 saveBlock = false;
                 if(converted) saveAll();
@@ -102,7 +102,7 @@ public class FileUtil {
 
         saveBlock = true;
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
-            TradeUtil.saveTradeLimits();
+            TradeUtil.saveTradeOptions();
             ShopUtil.saveAllShops();
             UnderstandSystemConfig.save();
             Config.save();
@@ -120,7 +120,7 @@ public class FileUtil {
         ShopUtil.removeAllNPC();
         ShopUtil.getAllShopInventoryViewer();
         Config.load();
-        TradeUtil.saveTradeLimits();
+        TradeUtil.saveTradeOptions();
         ShopUtil.saveAllShops();
         UnderstandSystemConfig.save();
         DisplayPanelConfig.save();
