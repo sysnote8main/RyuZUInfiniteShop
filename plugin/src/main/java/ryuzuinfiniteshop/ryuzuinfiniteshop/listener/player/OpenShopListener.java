@@ -29,7 +29,9 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.CitizensHandler;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
@@ -46,10 +48,8 @@ public class OpenShopListener implements Listener {
         Player p = event.getPlayer();
         if(entity instanceof LivingEntity) return;
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
-        System.out.println("testShop: " + entity.getUniqueId());
-        String id = NBTUtil.getNMSStringTag(entity, "Shop");
+        String id = JavaUtil.getNonNull(CitizensHandler.getCitizensShopString(entity), NBTUtil.getNMSStringTag(entity, "Shop"));
         if (id == null) return;
-        System.out.println("openShop");
         event.setCancelled(true);
         openShop(id, p);
     }
@@ -61,10 +61,8 @@ public class OpenShopListener implements Listener {
         Player p = event.getPlayer();
         if(!(entity instanceof LivingEntity)) return;
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
-        System.out.println("testShop: " + entity.getUniqueId());
-        String id = NBTUtil.getNMSStringTag(entity, "Shop");
+        String id = JavaUtil.getNonNull(CitizensHandler.getCitizensShopString(entity), NBTUtil.getNMSStringTag(entity, "Shop"));
         if (id == null) return;
-        System.out.println("openShop");
         event.setCancelled(true);
         openShop(id, p);
     }

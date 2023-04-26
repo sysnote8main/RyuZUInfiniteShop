@@ -32,6 +32,7 @@ public class ShopUtil {
     private static HashMap<String, Shop> shops = new HashMap<>();
 
     public static ShopHolder getShopHolder(InventoryClickEvent event) {
+        if (event.getAction().equals(InventoryAction.CLONE_STACK)) return null;
         return getShopHolder(getSecureInventory(event));
     }
 
@@ -189,6 +190,9 @@ public class ShopUtil {
                 if (id != null) entity.remove();
             }
         }
+        for (Shop shop : ShopUtil.getShops().values()) {
+            shop.removeNPC();
+        }
     }
 
     public static void saveAllShops() {
@@ -283,7 +287,7 @@ public class ShopUtil {
         if (mythicmob != null && MythicInstanceProvider.getInstance().exsistsMythicMob(mythicmob))
             return new Shop(location, mythicmob);
         if (citizen != null && CitizensHandler.isLoaded() && CitizensHandler.isCitizensNPC(UUID.fromString(citizen)))
-            return new Shop(location, UUID.fromString(citizen) , true);
+            return new Shop(location, UUID.fromString(citizen) , false);
         else
             return createNewShop(location, type, null);
     }

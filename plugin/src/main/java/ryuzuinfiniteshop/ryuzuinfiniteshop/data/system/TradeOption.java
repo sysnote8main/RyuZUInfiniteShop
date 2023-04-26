@@ -82,11 +82,11 @@ public class TradeOption implements ConfigurationSerializable {
                               ChatColor.GREEN + "取引上限: " + ChatColor.YELLOW + (trade == null ? "" : trade.getTradeCount(p) + "/") + limit
             );
         }
-        if(rate != 100 && (p == null || !hide)) {
+        if(rate != 100) {
             panel = NBTUtil.setNMSTag(panel, "Rate", String.valueOf(rate));
             panel = NBTUtil.setNMSTag(panel, "Hide", String.valueOf(hide));
             ItemUtil.withLore(panel,
-                              ChatColor.GREEN + "取引成功確率: " + ChatColor.YELLOW + rate + "%" + (p == null ? "" : (" " + (hide ? ChatColor.RED + "確率を隠す" : ChatColor.GREEN + "確率を表示する")))
+                              ChatColor.GREEN + "取引成功確率: " + ChatColor.YELLOW + ((p != null && hide) ? "?" : rate) + "%" + (p == null ? "" : (" " + (hide ? ChatColor.RED + "確率を隠す" : ChatColor.GREEN + "確率を表示する")))
             );
         }
         return panel;

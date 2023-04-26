@@ -46,7 +46,6 @@ public class ChangeMythicMobTypeListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_SET_MYTHIC_MOB_ID.getMessage());
             SoundUtil.playSuccessSound(p);
             shop.setMythicType(message);
-//            ShopUtil.overwriteShop(shop.getLocation(), shop.convertShopToString(), shop.convertTradesToMap(), message);
         });
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_MYTHICMOBID.getMessage());
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());

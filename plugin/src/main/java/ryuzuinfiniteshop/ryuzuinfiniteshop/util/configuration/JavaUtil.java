@@ -35,6 +35,10 @@ public class JavaUtil {
         return obj == null || (obj instanceof ItemStack && ((ItemStack)obj).getType().equals(Material.AIR)) || (obj instanceof String && ((String)obj).isEmpty()) ? defaultobj : obj;
     }
 
+    public static <T> T getNonNull(@Nullable T obj1 , @Nullable T obj2) {
+        return obj1 == null ? obj2 : obj1;
+    }
+
     public static boolean isEmptyString(@Nullable String str) {
         return str == null || ChatColor.stripColor(str).isEmpty();
     }

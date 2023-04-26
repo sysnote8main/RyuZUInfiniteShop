@@ -55,6 +55,7 @@ public class Shop {
     protected Location location;
     @Getter
     protected String mythicmob;
+    @Getter
     protected UUID citizen;
     protected String entityType;
     protected ShopType type;
@@ -82,15 +83,13 @@ public class Shop {
 
     public Shop(Location location, String entityType, ConfigurationSection config) {
         this.shopkeepersConfig = config;
-        initialize(location, () -> {
-            this.entityType = entityType;
-        });
+        initialize(location, () -> this.entityType = entityType);
     }
 
     public Shop(Location location, UUID uuid, boolean load) {
         initialize(location, () -> {
             this.entityType = EntityType.VILLAGER.name();
-            this.citizen = CitizensHandler.createNPC(uuid, load);
+            this.citizen = load ? CitizensHandler.createNPC(this) : uuid;
         });
     }
 
@@ -148,6 +147,7 @@ public class Shop {
             if (shopkeepersConfig == null) return;
             setNpcMeta(shopkeepersConfig.getConfigurationSection("object"));
             setDisplayName(shopkeepersConfig.getString("name", "").isEmpty() ? "" : ChatColor.GREEN + shopkeepersConfig.getString("name"));
+            shopkeepersConfig = null;
         };
     }
 
@@ -315,8 +315,8 @@ public class Shop {
     }
 
     public void removeShop() {
-        if (npc != null) npc.remove();
-        if (citizen != null) CitizensHandler.removeNPC(citizen);
+        removeNPC();
+        if (citizen != null) CitizensHandler.destoryNPC(this);
         if (hologram != null) hologram.remove();
         getFile().delete();
         ShopUtil.removeShop(getID());
@@ -610,15 +610,6 @@ public class Shop {
         return false;
     }
 
-    public boolean isLocked(Player p) {
-        if (isLock() && !p.hasPermission("sis.op")) {
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_LOCKED.getMessage());
-            SoundUtil.playFailSound(p);
-            return true;
-        }
-        return false;
-    }
-
     public boolean isSearchable(Player p) {
         if (!isSearchable() && !p.hasPermission("sis.op")) {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_UNSEARCHABLE.getMessage());
@@ -642,7 +633,7 @@ public class Shop {
     }
 
     public void setNpcType(String entityType) {
-        if (npc != null) npc.remove();
+        removeNPC();
         this.entityType = entityType;
         this.mythicmob = null;
         this.citizen = null;
@@ -650,7 +641,7 @@ public class Shop {
     }
 
     public void setMythicType(String mythicType) {
-        if (npc != null) npc.remove();
+        removeNPC();
         this.mythicmob = mythicType;
         this.citizen = null;
         this.entityType = EntityType.VILLAGER.name();
@@ -658,24 +649,23 @@ public class Shop {
     }
 
     public void setCitizen(Entity entity) {
-        if (npc != null) npc.remove();
-        this.citizen = CitizensHandler.getNpcUUID(entity);
+        removeNPC();
+        this.citizen = entity.getUniqueId();
         this.mythicmob = null;
         this.entityType = EntityType.VILLAGER.name();
-
         respawnNPC();
     }
 
     public void setBlock() {
-        if (npc != null) npc.remove();
+        removeNPC();
         this.entityType = "BLOCK";
         this.mythicmob = null;
         this.citizen = null;
     }
 
     public void removeNPC() {
-        if (npc != null) npc.remove();
-        if(citizen != null) CitizensHandler.despawnNPC(citizen);
+        if(npc != null) npc.remove();
+        if(citizen != null) CitizensHandler.despawnNPC(this);
         npc = null;
     }
 
@@ -688,9 +678,8 @@ public class Shop {
             npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob, location);
             setNpcMeta();
         } else if (citizen != null && CitizensHandler.isLoaded() && CitizensHandler.isCitizensNPC(citizen)) {
-            npc = CitizensHandler.spawnNPC(citizen, this);
-            setNpcMeta();
-            System.out.println("Citizens NPC spawned");
+            npc = CitizensHandler.spawnNPC(this);
+//            setNpcMeta();
         } else if (entityType.equalsIgnoreCase("BLOCK")) {
             if (hologram != null && hologram.isValid()) return;
             hologram = EntityUtil.spawnHologram(location.clone().add(0.5, 1, 0.5), displayName);

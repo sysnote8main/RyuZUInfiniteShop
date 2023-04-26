@@ -118,9 +118,7 @@ public class CommandChain {
                                 Player p = (Player) data.getSender();
                                 loc = p.getLocation();
                             }
-                            if(data.getArgs()[1].equalsIgnoreCase("BLOCK"))
-                                new Shop(loc, "BLOCK", null);
-                            else if(data.getArgs()[1].equalsIgnoreCase("CITIZEN"))
+                            if(data.getArgs()[1].equalsIgnoreCase("CITIZEN"))
                                 new Shop(loc, ((Player) data.getSender()).getUniqueId(), false);
                             else if (MythicInstanceProvider.getInstance().exsistsMythicMob(data.getArgs()[1]))
                                 new Shop(loc, data.getArgs()[1]);
