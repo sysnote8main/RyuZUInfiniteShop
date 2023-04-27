@@ -9,6 +9,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -511,7 +513,9 @@ public class Shop {
 
     private void spawnNPC(EntityType entityType) {
         this.location.setPitch(0);
-        this.npc = location.getWorld().spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entityType);
+        this.npc = EntityUtil.spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entityType);
+        CreatureSpawnEvent spawnEvent = new CreatureSpawnEvent(((LivingEntity) npc), CreatureSpawnEvent.SpawnReason.CUSTOM);
+        Bukkit.getPluginManager().callEvent(spawnEvent);
         setNpcMeta();
     }
 
