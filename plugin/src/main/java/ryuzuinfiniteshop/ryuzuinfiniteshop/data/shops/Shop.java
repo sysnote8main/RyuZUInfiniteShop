@@ -89,7 +89,7 @@ public class Shop {
     public Shop(Location location, UUID uuid, boolean load) {
         initialize(location, () -> {
             this.entityType = EntityType.VILLAGER.name();
-            this.citizen = load ? CitizensHandler.createNPC(this) : uuid;
+            this.citizen = uuid;
         });
     }
 
@@ -595,9 +595,10 @@ public class Shop {
                 for (EquipmentSlot slot : EquipmentUtil.getEquipmentsSlot().values())
                     livnpc.getEquipment().setItem(slot, equipments.toItemStacks()[slot.ordinal()]);
             }
-        } else if(CitizensHandler.isLoaded() && CitizensHandler.isCitizensNPC(citizen)) {
+        } else if (CitizensHandler.isLoaded() && CitizensHandler.isCitizensNPC(citizen)) {
             for (EquipmentSlot slot : EquipmentUtil.getEquipmentsSlot().values())
                 CitizensHandler.setEquipment(citizen, slot, equipments.toItemStacks()[slot.ordinal()]);
+            CitizensHandler.respawn(this);
         }
     }
 
@@ -617,6 +618,19 @@ public class Shop {
             return false;
         }
         return true;
+    }
+
+    public boolean isLock(Player p) {
+        if (isLock() && !p.hasPermission("sis.op")) {
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_LOCKED.getMessage());
+            SoundUtil.playFailSound(p);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isLockSilent(Player p) {
+        return isLock() && !p.hasPermission("sis.op");
     }
 
     public boolean isEmpty(Player p) {
@@ -650,7 +664,7 @@ public class Shop {
 
     public void setCitizen(Entity entity) {
         removeNPC();
-        this.citizen = entity.getUniqueId();
+        this.citizen = CitizensHandler.getNpcUUID(entity);
         this.mythicmob = null;
         this.entityType = EntityType.VILLAGER.name();
         respawnNPC();
@@ -664,12 +678,16 @@ public class Shop {
     }
 
     public void removeNPC() {
-        if(npc != null) npc.remove();
-        if(citizen != null) CitizensHandler.despawnNPC(this);
+        if (npc != null) npc.remove();
+        if (citizen != null) CitizensHandler.despawnNPC(this);
         npc = null;
     }
 
     public void respawnNPC() {
+        respawnNPC(false);
+    }
+
+    public void respawnNPC(boolean clone) {
         if (entityType == null && JavaUtil.isEmptyString(displayName)) return;
         if (FileUtil.isSaveBlock()) return;
         if (npc != null && npc.isValid()) return;
@@ -677,7 +695,8 @@ public class Shop {
         if (mythicmob != null && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().exsistsMythicMob(mythicmob)) {
             npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob, location);
             setNpcMeta();
-        } else if (citizen != null && CitizensHandler.isLoaded() && CitizensHandler.isCitizensNPC(citizen)) {
+        } else if (citizen != null && CitizensHandler.isLoaded() && (clone ? CitizensHandler.cloneNpc(this) : CitizensHandler.createNPC(this)) != null) {
+            this.citizen = CitizensHandler.createNPC(this);
             npc = CitizensHandler.spawnNPC(this);
 //            setNpcMeta();
         } else if (entityType.equalsIgnoreCase("BLOCK")) {

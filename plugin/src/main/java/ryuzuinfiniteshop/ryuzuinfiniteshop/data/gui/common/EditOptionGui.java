@@ -26,12 +26,14 @@ public class EditOptionGui extends ShopGui {
     protected final ShopTrade trade;
     protected final TradeOption option;
     protected final int slot;
+    protected final Inventory inventory;
 
-    public EditOptionGui(ShopTrade trade, Shop shop, int page, int slot) {
+    public EditOptionGui(ShopTrade trade, Shop shop, int page, int slot, Inventory inventory) {
         super(shop, page);
         this.trade = trade;
         this.option = trade.getOption();
         this.slot = slot;
+        this.inventory = inventory;
     }
 
     @Override
@@ -69,7 +71,7 @@ public class EditOptionGui extends ShopGui {
             for (int i = 0; i < 9; i++) {
                 ItemStack panel = ItemUtil.getNamedItem(ItemUtil.getColoredItem((i < 5 ? "RED" : "GREEN") + "_STAINED_GLASS_PANE"), (i < 5 ? ChatColor.RED : ChatColor.GREEN) + money.get(i));
                 panel = NBTUtil.setNMSTag(panel, "OptionType", "Money");
-                panel = NBTUtil.setNMSTag(panel, "OptionValue", money.get(i).replace("+", ""));
+                panel = NBTUtil.setNMSTag(panel, "OptionValue", money.get(i).replace("+", "").replace(",", ""));
                 inv.setItem(i + 9 * 3, panel);
             }
             inv.setItem(31, NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.GOLD_INGOT, ChatColor.BLUE + "お金: " + ChatColor.YELLOW + VaultHandler.getInstance().format(option.getMoney()) + " " + (option.isGive() ? ChatColor.GREEN + "受け取り" : ChatColor.RED + "支払い"), ChatColor.YELLOW + "クリック: 切り替え", ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Money"));

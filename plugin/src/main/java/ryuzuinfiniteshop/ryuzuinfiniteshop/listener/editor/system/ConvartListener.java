@@ -124,7 +124,7 @@ public class ConvartListener implements Listener {
 
         //ショップを読み込む
         Shop shop = ShopUtil.reloadShop(block.getLocation().add(0, 1, 0), shopData, TradeUtil.convertTradesToList(item));
-        shop.respawnNPC();
+        shop.respawnNPC(true);
 
         //音を出し、メッセージを送信
         SoundUtil.playSuccessSound(p);

@@ -21,6 +21,11 @@ public class OptionHolder extends ShopHolder {
     }
 
     @Override
+    public Inventory getInventory() {
+        return ((EditOptionGui) gui).getInventory();
+    }
+
+    @Override
     public EditOptionGui getGui() {
         return (EditOptionGui) gui;
     }

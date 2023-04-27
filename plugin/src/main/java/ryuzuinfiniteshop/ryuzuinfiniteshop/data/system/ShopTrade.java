@@ -136,6 +136,10 @@ public class ShopTrade {
         return mode.equals(ShopMode.EDIT) ? getSettingsFilter() : getFilter();
     }
 
+    public static ItemStack getFilterNoData(ShopMode mode) {
+        return mode.equals(ShopMode.EDIT) ? getSettingsFilterNoData() : getFilter();
+    }
+
     public ItemStack getFilter(String id, Player player) {
         Shop shop = ShopUtil.getShop(id);
         String page = String.valueOf(shop.getPage(this));
@@ -162,6 +166,15 @@ public class ShopTrade {
     private ItemStack getSettingsFilter() {
         return ItemUtil.withLore(
                 getOption().getOptionsPanel(DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack()),
+                true,
+                ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_SET_OPTION.getMessage(),
+                ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_TO_ITEM.getMessage()
+        );
+    }
+
+    private static ItemStack getSettingsFilterNoData() {
+        return ItemUtil.withLore(
+                DisplayPanelConfig.getPanel(TradeResult.Normal).getItemStack(),
                 true,
                 ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_SET_OPTION.getMessage(),
                 ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_TRADE_TO_ITEM.getMessage()
@@ -285,7 +298,6 @@ public class ShopTrade {
         if (!affordItem(p)) result = TradeResult.NotEnoughItems;
         else if (!affordMoney(p)) result = TradeResult.NotEnoughMoney;
         else if (isError()) result = TradeResult.Error;
-        else if (isError()) result = TradeResult.Error;
         else if (isLimited(p)) result = TradeResult.Limited;
         else if (!hasEnoughSpace(p)) result = TradeResult.Full;
         return result;
@@ -293,7 +305,7 @@ public class ShopTrade {
 
     public TradeResult getResult(Player p, Shop shop) {
         TradeResult result = getResult(p);
-        if (shop.isLock()) result = TradeResult.Locked;
+        if (shop.isLockSilent(p)) result = TradeResult.Locked;
 
         return result;
     }
@@ -329,9 +341,8 @@ public class ShopTrade {
                     result = TradeResult.Lack;
                 resultTime = time;
                 break;
-            } else if(result.equals(TradeResult.Fail)) {
+            } else if(result.equals(TradeResult.Fail))
                 failed = true;
-            }
         }
         //結果に対するエフェクトを表示
         if(times != 1 && failed)
@@ -377,8 +388,8 @@ public class ShopTrade {
                 SoundUtil.playFailSound(p);
                 break;
             case Locked:
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_LOCKED.getMessage());
-                SoundUtil.playFailSound(p);
+//                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SHOP_LOCKED.getMessage());
+//                SoundUtil.playFailSound(p);
                 break;
             case Error:
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.COMMAND_INVALID_TRADE.getMessage());

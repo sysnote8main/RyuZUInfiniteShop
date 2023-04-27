@@ -62,6 +62,11 @@ public class ChangeCitizenNpcTypeListener implements Listener {
                 SoundUtil.playFailSound(p);
                 return;
             }
+            if (CitizensHandler.getCitizensShopString(entity) != null) {
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "すでに登録されているNPCです");
+                SoundUtil.playFailSound(p);
+                return;
+            }
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "登録が完了しました");
             SoundUtil.playSuccessSound(p);
             shop.setCitizen(entity);

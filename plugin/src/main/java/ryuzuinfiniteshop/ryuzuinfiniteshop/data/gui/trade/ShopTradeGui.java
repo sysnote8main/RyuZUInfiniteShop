@@ -81,7 +81,7 @@ public abstract class ShopTradeGui extends ShopGui {
     }
 
     protected ItemStack getTradePanel(int i, ShopMode mode) {
-        return (getTrades().size() - 1) >= i ? getTrades().get(i).getFilter(mode) : ShopTrade.getFilter();
+        return (getTrades().size() - 1) >= i ? getTrades().get(i).getFilter(mode) : ShopTrade.getFilterNoData(mode);
     }
 
     public boolean existTrades() {
@@ -93,7 +93,7 @@ public abstract class ShopTradeGui extends ShopGui {
     public void setTradeStatus(Player p, Inventory inventory) {
         for (int i = 0; i < getTrades().size(); i++) {
             ShopTrade trade = getTrade(i);
-            ShopTrade.TradeResult result = trade.getResult(p);
+            ShopTrade.TradeResult result = trade.getResult(p, shop);
             inventory.setItem(getConvertSlot().get(i), trade.getOption().getOptionsPanel(DisplayPanelConfig.getPanel(result).getItemStack(), p, trade));
         }
     }

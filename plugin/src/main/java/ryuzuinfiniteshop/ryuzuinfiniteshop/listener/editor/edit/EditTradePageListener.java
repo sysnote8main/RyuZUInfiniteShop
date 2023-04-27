@@ -1,13 +1,11 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
@@ -30,6 +28,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
 public class EditTradePageListener implements Listener {
     //ショップのラインナップを変更
@@ -123,7 +122,7 @@ public class EditTradePageListener implements Listener {
         if (holder == null) return;
         if (!(holder.getGui() instanceof ShopTradeGui)) return;
         if (!holder.getMode().equals(ShopMode.TRADE)) return;
-        if(event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR)) return;
+        if (event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR)) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
@@ -133,6 +132,7 @@ public class EditTradePageListener implements Listener {
         ShopTrade trade = gui.getTradeFromSlot(slot);
 
         if (trade == null) return;
+        if (holder.getShop().isLock(p)) return;
         ShopTrade.TradeResult result = trade.getResult(p, gui.getShop());
         if (!result.equals(ShopTrade.TradeResult.Success)) {
             if (gui.getConvertSlot().contains(slot)) ShopTrade.playResultEffect(p, result);
@@ -169,13 +169,13 @@ public class EditTradePageListener implements Listener {
 
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
-        ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(slot);
+        ShopTrade trade = TradeUtil.getTrade(event.getClickedInventory(), slot - ShopUtil.getSubtractSlot(shop.getShopType()), shop.getShopType());
         //トレードをアイテム化する
         if (event.isShiftClick()) return;
         if (trade == null)
             SoundUtil.playFailSound(p);
         else {
-            p.openInventory(new EditOptionGui(trade, shop, holder.getGui().getPage(), slot).getInventory(ShopMode.EDIT, holder));
+            p.openInventory(new EditOptionGui(trade, shop, holder.getGui().getPage(), slot, event.getClickedInventory()).getInventory(ShopMode.EDIT));
             SoundUtil.playClickShopSound(p);
         }
     }
@@ -190,7 +190,7 @@ public class EditTradePageListener implements Listener {
         if (event.getClickedInventory() == null) return;
         int slot = event.getSlot();
         if (slot / 9 == 0) return;
-        if(NBTUtil.getNMSStringTag(event.getCurrentItem(), "OptionType") == null) return;
+        if (NBTUtil.getNMSStringTag(event.getCurrentItem(), "OptionType") == null) return;
 
         Player p = (Player) event.getWhoClicked();
         OptionType type = OptionType.valueOf(NBTUtil.getNMSStringTag(event.getCurrentItem(), "OptionType").toUpperCase());
@@ -223,7 +223,7 @@ public class EditTradePageListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());
             SoundUtil.playClickShopSound(p);
         } else if (slot % 9 == 4) {
-            if(type.equals(OptionType.RATE)) {
+            if (type.equals(OptionType.RATE)) {
                 option.setHide(!option.isHide());
                 SoundUtil.playClickShopSound(p);
                 event.getClickedInventory().setItem(slot, gui.getOptionPanel(type));
@@ -258,6 +258,9 @@ public class EditTradePageListener implements Listener {
         if (!(holder.getGui() instanceof EditOptionGui)) return;
         if (!holder.getMode().equals(ShopMode.EDIT)) return;
         OptionHolder optionHolder = (OptionHolder) holder;
+        Player p = (Player) event.getPlayer();
         optionHolder.getGui().getTrade().setTradeOption(optionHolder.getGui().getOption(), true);
+        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> p.openInventory(optionHolder.getInventory()), 1L);
+        SoundUtil.playCloseShopSound(p);
     }
 }

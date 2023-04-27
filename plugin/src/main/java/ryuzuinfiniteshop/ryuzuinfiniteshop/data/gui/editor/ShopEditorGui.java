@@ -124,8 +124,10 @@ public class ShopEditorGui extends ShopGui {
         setTeleport(inv);
         if (!(MythicInstanceProvider.isLoaded() && getShop().getMythicmob() != null)) {
             setEquipment(inv);
-            setDisplayName(inv);
-            setSettings(inv);
+            if (!(CitizensHandler.isLoaded() && getShop().getCitizen() != null)) {
+                setDisplayName(inv);
+                setSettings(inv);
+            }
         }
         setCover(inv);
     }
