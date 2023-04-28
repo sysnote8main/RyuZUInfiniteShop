@@ -9,6 +9,7 @@ import io.lumine.xikage.mythicmobs.items.MythicItem;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.mobs.entities.SpawnReason;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,7 +46,7 @@ public class MythicHandlerV4_12_0 implements IMythicHandler, Listener {
 
     @Override
     public String getID(ItemStack item) {
-        if (item == null || item.getType().isAir()) return null;
+        if (item == null || item.getType().equals(Material.AIR)) return null;
         ItemStack copy = item.clone();
         copy.setAmount(1);
         String id = getMythicMobsInstance().getVolatileCodeHandler().getItemHandler().getNBTData(copy).getString("MYTHIC_TYPE");
@@ -82,6 +83,11 @@ public class MythicHandlerV4_12_0 implements IMythicHandler, Listener {
     @Override
     public boolean isMythicMob(Entity entity) {
         return getMythicMobsInstance().getAPIHelper().isMythicMob(entity);
+    }
+
+    @Override
+    public JavaPlugin getPlugin() {
+        return getMythicMobsInstance();
     }
 
     private MythicMobs getMythicMobsInstance() {

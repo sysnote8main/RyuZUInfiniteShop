@@ -23,4 +23,6 @@ public interface IMythicHandler {
     Entity spawnMythicMob(String id, Location location);
 
     boolean isMythicMob(Entity entity);
+
+    JavaPlugin getPlugin();
 }

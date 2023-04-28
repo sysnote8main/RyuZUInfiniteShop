@@ -47,6 +47,6 @@ public class CatShop extends SittableShop {
     @Override
     public void respawnNPC() {
         super.respawnNPC();
-        setCatType(type);
+        if (isEditableNpc()) setCatType(type);
     }
 }

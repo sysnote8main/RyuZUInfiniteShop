@@ -77,7 +77,7 @@ public class VillagerableShop extends AgeableShop {
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.profession = Villager.Profession.valueOf(yaml.getString("Npc.Options.Profession", "NONE"));
+            this.profession = Villager.Profession.valueOf(yaml.getString("Npc.Options.Profession", RyuZUInfiniteShop.VERSION >= 14 ? "NONE" : "NORMAL"));
             if(RyuZUInfiniteShop.VERSION < 14) return;
             this.biome = Villager.Type.valueOf(yaml.getString("Npc.Options.Biome", "PLAINS"));
             this.level = yaml.getInt("Npc.Options.Level", 1);
@@ -87,10 +87,12 @@ public class VillagerableShop extends AgeableShop {
     @Override
     public void respawnNPC() {
         super.respawnNPC();
-        setProfession(profession);
-        if(RyuZUInfiniteShop.VERSION < 14) return;
-        setBiome(biome);
-        setLevel(level);
+        if (isEditableNpc()) {
+            setProfession(profession);
+            if(RyuZUInfiniteShop.VERSION < 14) return;
+            setBiome(biome);
+            setLevel(level);
+        }
     }
 
     public Material getJobBlockMaterial() {

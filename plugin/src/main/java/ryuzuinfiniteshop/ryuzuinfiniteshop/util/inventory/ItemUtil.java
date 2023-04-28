@@ -266,8 +266,10 @@ public class ItemUtil {
     public static ItemStack getColoredItem(String material) {
         if (!(RyuZUInfiniteShop.VERSION < 13 && (material.contains("STAINED_GLASS_PANE") || material.contains("WOOL"))))
             return new ItemStack(Material.valueOf(material));
-        String color = material.split("_")[0];
-        String type = material.split("_")[1];
-        return new ItemStack(Material.valueOf(type), 1, (short) DyeColor.valueOf(color).ordinal());
+        String result = material;
+        Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(c -> material.contains(c.name())).findFirst();
+        if(color.isPresent())
+            result = material.replace(color.get().name() + "_", "");
+        return new ItemStack(Material.valueOf(result), 1, color.map(Enum::ordinal).orElse(0).shortValue());
     }
 }

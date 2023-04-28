@@ -46,7 +46,7 @@ public class ParrotShop extends SittableShop {
     @Override
     public void respawnNPC() {
         super.respawnNPC();
-        setColor(color);
+        if (isEditableNpc()) setColor(color);
     }
 
     public ItemStack getColorItem() {

@@ -65,8 +65,10 @@ public class HorseShop extends AgeableShop {
     @Override
     public void respawnNPC() {
         super.respawnNPC();
-        setColor(color);
-        setStyle(style);
+        if (isEditableNpc()) {
+            setStyle(style);
+            setColor(color);
+        }
     }
 
     public Material getColorMaterial() {

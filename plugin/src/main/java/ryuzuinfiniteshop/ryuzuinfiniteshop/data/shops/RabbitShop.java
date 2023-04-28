@@ -46,6 +46,6 @@ public class RabbitShop extends Shop {
     @Override
     public void respawnNPC() {
         super.respawnNPC();
-        setRabbitType(type);
+        if (isEditableNpc()) setRabbitType(type);
     }
 }

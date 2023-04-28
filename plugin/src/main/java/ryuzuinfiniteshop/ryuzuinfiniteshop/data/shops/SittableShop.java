@@ -42,6 +42,6 @@ public class SittableShop extends Shop {
     @Override
     public void respawnNPC() {
         super.respawnNPC();
-        setSitting(sitting);
+        if (isEditableNpc()) setSitting(sitting);
     }
 }

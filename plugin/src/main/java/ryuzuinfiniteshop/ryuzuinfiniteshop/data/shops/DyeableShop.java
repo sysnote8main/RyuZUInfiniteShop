@@ -74,8 +74,10 @@ public class DyeableShop extends Shop {
     @Override
     public void respawnNPC() {
         super.respawnNPC();
-        setColor(color);
-        setOptionalInfo(optionalInfo);
+        if (isEditableNpc()) {
+            setColor(color);
+            setOptionalInfo(optionalInfo);
+        }
     }
 
     public ItemStack getColorMaterial() {

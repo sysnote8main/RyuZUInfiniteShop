@@ -8,6 +8,7 @@ import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -60,6 +61,11 @@ public class MythicHandlerV5_2_1 implements IMythicHandler {
 //        } catch (InvalidMobTypeException e) {
 //            throw new RuntimeException(e);
 //        }
+    }
+
+    @Override
+    public JavaPlugin getPlugin() {
+        return getMythicMobsInstance();
     }
 
     @Override

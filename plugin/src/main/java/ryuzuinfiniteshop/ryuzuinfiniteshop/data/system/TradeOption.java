@@ -75,13 +75,13 @@ public class TradeOption implements ConfigurationSerializable {
             panel = NBTUtil.setNMSTag(panel, "Money", String.valueOf(money));
             ItemUtil.withLore(panel,
                     (give ? ChatColor.GREEN + LanguageKey.ITEM_OPTIONS_MONEY_RECEIVE.getMessage() : ChatColor.RED + LanguageKey.ITEM_OPTIONS_MONEY_PAY.getMessage()) +
-                            ChatColor.GREEN + " " + LanguageKey.ITEM_OPTIONS_MONEY_AMOUNT.getMessage() + ": " + ChatColor.YELLOW + VaultHandler.getInstance().format(money)
+                            ChatColor.YELLOW + " " + LanguageKey.ITEM_OPTIONS_MONEY_AMOUNT.getMessage(VaultHandler.getInstance().format(money))
             );
         }
         if(limit != 0) {
             panel = NBTUtil.setNMSTag(panel, "Limit", String.valueOf(limit));
             ItemUtil.withLore(panel,
-                    ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_LIMIT.getMessage(p == null ? "" : trade.getTradeCount(p) , limit)
+                    ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_LIMIT_VALUE2.getMessage(p == null ? "" : trade.getTradeCount(p) , limit)
             );
         }
         if(rate != 100) {

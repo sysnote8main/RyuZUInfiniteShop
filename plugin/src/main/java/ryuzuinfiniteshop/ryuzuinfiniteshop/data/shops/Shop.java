@@ -523,7 +523,7 @@ public class Shop {
         npc.setSilent(true);
         npc.setInvulnerable(true);
         npc.setGravity(false);
-        npc.setPersistent(false);
+//        npc.setPersistent(false);
         NBTUtil.setNMSTag(npc, "Shop", getID());
         initializeLivingEntitiy();
         if (entityType.equals(EntityType.ENDER_CRYSTAL.name()))
@@ -696,14 +696,15 @@ public class Shop {
         if (FileUtil.isSaveBlock()) return;
         if (npc != null && npc.isValid()) return;
         if (!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) return;
-        if (mythicmob != null && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().exsistsMythicMob(mythicmob)) {
+        NpcType type = getNpcType(clone);
+        if (type.equals(NpcType.MYTHICMOB)) {
             npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob, location);
             setNpcMeta();
-        } else if (citizen != null && CitizensHandler.isLoaded() && (clone ? CitizensHandler.cloneNpc(this) : CitizensHandler.createNPC(this)) != null) {
+        } else if (type.equals(NpcType.CITIZEN)) {
             this.citizen = CitizensHandler.createNPC(this);
             npc = CitizensHandler.spawnNPC(this);
 //            setNpcMeta();
-        } else if (entityType.equalsIgnoreCase("BLOCK")) {
+        } else if (type.equals(NpcType.BLOCK)) {
             if (hologram != null && hologram.isValid()) return;
             hologram = EntityUtil.spawnHologram(location.clone().add(0.5, 1, 0.5), displayName);
             return;
@@ -715,13 +716,31 @@ public class Shop {
             if (npc instanceof LivingEntity)
                 updateEquipments();
         }
-        this.NBTBuilder = new EntityNBTBuilder(npc);
-        Block block = location.clone().subtract(0, -1, 0).getBlock();
-        if (block.getBlockData() instanceof Slab && ((Slab) block.getBlockData()).getType().equals(Slab.Type.BOTTOM))
-            npc.teleport(location.clone().add(0, -0.5, 0));
-        if (npc instanceof LivingEntity)
-            NBTBuilder.setInvisible(invisible);
-        this.location.setYaw(yaw);
+        if(isEditableNpc()) {
+            this.NBTBuilder = new EntityNBTBuilder(npc);
+            Block block = location.clone().subtract(0, -1, 0).getBlock();
+            if (npc != null && block.getBlockData() instanceof Slab && ((Slab) block.getBlockData()).getType().equals(Slab.Type.BOTTOM))
+                npc.teleport(location.clone().add(0, -0.5, 0));
+            if (npc instanceof LivingEntity)
+                NBTBuilder.setInvisible(invisible);
+            this.location.setYaw(yaw);
+        }
+    }
+
+    public NpcType getNpcType(boolean clone) {
+        if (mythicmob != null && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().exsistsMythicMob(mythicmob))
+            return NpcType.MYTHICMOB;
+        else if (citizen != null && CitizensHandler.isLoaded() && (clone ? CitizensHandler.cloneNpc(this) : CitizensHandler.createNPC(this)) != null)
+            return NpcType.CITIZEN;
+        else if (entityType.equalsIgnoreCase("BLOCK"))
+            return NpcType.BLOCK;
+        else
+            return NpcType.NORMAL;
+    }
+
+    protected boolean isEditableNpc() {
+        NpcType type = getNpcType(false);
+        return type.equals(NpcType.NORMAL) || type.equals(NpcType.MYTHICMOB);
     }
 
     @Override

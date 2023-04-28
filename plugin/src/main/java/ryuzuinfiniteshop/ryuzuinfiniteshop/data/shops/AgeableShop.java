@@ -19,7 +19,7 @@ public class AgeableShop extends Shop {
 
     public void setAgeLook(boolean look) {
         this.adult = look;
-        if(npc == null) return;
+        if (npc == null) return;
         if (look)
             ((Ageable) npc).setAdult();
         else
@@ -29,21 +29,17 @@ public class AgeableShop extends Shop {
 
     @Override
     public Consumer<YamlConfiguration> getSaveYamlProcess() {
-        return super.getSaveYamlProcess().andThen(yaml -> {
-            yaml.set("Npc.Options.Adult", adult);
-        });
+        return super.getSaveYamlProcess().andThen(yaml -> yaml.set("Npc.Options.Adult", adult));
     }
 
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
-        return super.getLoadYamlProcess().andThen(yaml -> {
-            this.adult = yaml.getBoolean("Npc.Options.Adult" , true);
-        });
+        return super.getLoadYamlProcess().andThen(yaml -> this.adult = yaml.getBoolean("Npc.Options.Adult", true));
     }
 
     @Override
     public void respawnNPC() {
         super.respawnNPC();
-        setAgeLook(adult);
+        if (isEditableNpc()) setAgeLook(adult);
     }
 }

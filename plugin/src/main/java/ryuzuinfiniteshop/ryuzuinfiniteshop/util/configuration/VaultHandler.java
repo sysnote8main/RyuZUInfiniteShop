@@ -1,9 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
 
-import com.github.ryuzu.searchableinfiniteshop.api.IMythicHandler;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
@@ -14,7 +12,9 @@ public class VaultHandler {
     private static Economy economy;
 
     public static Economy getInstance() {
-        if (economy == null) throw new NullPointerException(LanguageKey.ERROR_MYTHICMOBS_INVALID_LOADED.getMessage());
+        if(economy == null || !economy.isEnabled()) setInstance();
+        if (economy == null) throw new NullPointerException(LanguageKey.ERROR_INVALID_LOADED_VAULT.getMessage());
+
         return economy;
     }
 

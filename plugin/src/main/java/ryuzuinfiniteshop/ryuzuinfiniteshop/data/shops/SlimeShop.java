@@ -40,6 +40,6 @@ public class SlimeShop extends Shop {
     @Override
     public void respawnNPC() {
         super.respawnNPC();
-        setSize(size);
+        if (isEditableNpc()) setSize(size);
     }
 }

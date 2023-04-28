@@ -67,8 +67,10 @@ public class TropicalFishShop extends Shop {
     @Override
     public void respawnNPC() {
         super.respawnNPC();
-        setBodyColor(bodyColor);
-        setPatternColor(patternColor);
-        setPattern(pattern);
+        if (isEditableNpc()) {
+            setBodyColor(bodyColor);
+            setPatternColor(patternColor);
+            setPattern(pattern);
+        }
     }
 }

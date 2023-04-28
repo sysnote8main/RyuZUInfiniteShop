@@ -74,7 +74,7 @@ public class ShopEditorGui extends ShopGui {
     private void setTradesPage(Inventory inv) {
         int lastslot = getTradeLastSlotNumber();
         for (int i = 0; i <= lastslot; i++) {
-            inv.setItem(i, ItemUtil.getNamedItem(Material.LIME_STAINED_GLASS_PANE, ChatColor.GREEN + LanguageKey.INVENTORY_PAGE.getMessage(getTradePageNumber(i))));
+            inv.setItem(i, ItemUtil.getNamedItem(ItemUtil.getColoredItem("LIME_STAINED_GLASS_PANE"), ChatColor.GREEN + LanguageKey.INVENTORY_PAGE.getMessage(getTradePageNumber(i))));
         }
         int newslot = getTradeNewSlotNumber();
         if (newslot == 18)

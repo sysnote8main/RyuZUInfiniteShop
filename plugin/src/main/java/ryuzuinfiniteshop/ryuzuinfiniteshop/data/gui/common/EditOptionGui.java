@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.OptionHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
@@ -38,7 +39,7 @@ public class EditOptionGui extends ShopGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = Bukkit.createInventory(new OptionHolder(ShopMode.EDIT, shop, this), 9 * (VaultHandler.isLoaded() ? 4 : 3), ChatColor.DARK_BLUE + "取引オプションの編集");
+        Inventory inv = Bukkit.createInventory(new OptionHolder(ShopMode.EDIT, shop, this), 9 * (VaultHandler.isLoaded() ? 4 : 3), ChatColor.DARK_BLUE + LanguageKey.INVENTORY_EDITOR_OPTIONS.getMessage());
 
         for (int i = 0; i < 9; i++) {
             inv.setItem(i, trade.getTradeItems(shop.getShopType())[i]);
@@ -53,7 +54,7 @@ public class EditOptionGui extends ShopGui {
             panel = NBTUtil.setNMSTag(panel, "OptionValue", limits.get(i).replace("+", ""));
             inv.setItem(i + 9, panel);
         }
-        inv.setItem(13, NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.BARRIER, ChatColor.BLUE + "取引上限: " + ChatColor.YELLOW + option.getLimit(), ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Limit"));
+        inv.setItem(13, getOptionPanel(OptionType.LIMIT));
 
         //取引確率
         List<String> rates = Arrays.asList("-100", "-30", "-10", "-1", "0", "+1", "+30", "+50", "+100");
@@ -63,7 +64,7 @@ public class EditOptionGui extends ShopGui {
             panel = NBTUtil.setNMSTag(panel, "OptionValue", rates.get(i).replace("+", ""));
             inv.setItem(i + 9 * 2, panel);
         }
-        inv.setItem(22, NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.DAMAGED_ANVIL, ChatColor.BLUE + "取引成功確率: " + ChatColor.YELLOW + option.getRate() + "%" + " " + (option.isHide() ? ChatColor.RED + "確率を隠す" : ChatColor.GREEN + "確率を表示する"), ChatColor.YELLOW + "クリック: 切り替え", ChatColor.YELLOW + "シフトクリック: チャットで値を入力") , "OptionType", "Rate"));
+        inv.setItem(22, getOptionPanel(OptionType.RATE));
 
         //お金
         if (VaultHandler.isLoaded()) {
@@ -74,7 +75,7 @@ public class EditOptionGui extends ShopGui {
                 panel = NBTUtil.setNMSTag(panel, "OptionValue", money.get(i).replace("+", "").replace(",", ""));
                 inv.setItem(i + 9 * 3, panel);
             }
-            inv.setItem(31, NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.GOLD_INGOT, ChatColor.BLUE + "お金: " + ChatColor.YELLOW + VaultHandler.getInstance().format(option.getMoney()) + " " + (option.isGive() ? ChatColor.GREEN + "受け取り" : ChatColor.RED + "支払い"), ChatColor.YELLOW + "クリック: 切り替え", ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Money"));
+            inv.setItem(31, getOptionPanel(OptionType.MONEY));
         }
 
         return inv;
@@ -83,12 +84,12 @@ public class EditOptionGui extends ShopGui {
     public ItemStack getOptionPanel(OptionType type) {
         switch (type) {
             case LIMIT:
-                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.BARRIER, ChatColor.BLUE + "取引上限: " + ChatColor.YELLOW + option.getLimit(), ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Limit");
+                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.BARRIER, ChatColor.BLUE + LanguageKey.ITEM_OPTIONS_LIMIT_VALUE.getMessage(ChatColor.YELLOW + String.valueOf(option.getLimit())), ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_LIMIT_SHIFT.getMessage()), "OptionType", "Limit");
             case RATE:
-                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.DAMAGED_ANVIL, ChatColor.BLUE + "取引成功確率: " + ChatColor.YELLOW + option.getRate() + "% " + (option.isHide() ? ChatColor.RED + "確率を隠す" : ChatColor.GREEN + "確率を表示する"), ChatColor.YELLOW + "クリック: 切り替え", ChatColor.YELLOW + "シフトクリック: チャットで値を入力") , "OptionType", "Rate");
+                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.DAMAGED_ANVIL, ChatColor.BLUE + LanguageKey.ITEM_OPTIONS_RATE_VALUE.getMessage(ChatColor.YELLOW + String.valueOf(option.getRate()), (option.isHide() ? ChatColor.RED + LanguageKey.ITEM_OPTIONS_RATE_HIDE.getMessage() : ChatColor.GREEN + LanguageKey.ITEM_OPTIONS_RATE_SHOW.getMessage())), ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_RATE_CLICK.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_RATE_SHIFT.getMessage()), "OptionType", "Rate");
             case MONEY:
                 return NBTUtil.setNMSTag(
-                        ItemUtil.getNamedItem(Material.GOLD_INGOT, ChatColor.BLUE + "お金: " + ChatColor.YELLOW + VaultHandler.getInstance().format(option.getMoney()) + " " + (option.isGive() ? ChatColor.GREEN + "受け取り" : ChatColor.RED + "支払い"), ChatColor.YELLOW + "クリック: 切り替え", ChatColor.YELLOW + "シフトクリック: チャットで値を入力"), "OptionType", "Money");
+                        ItemUtil.getNamedItem(Material.GOLD_INGOT, ChatColor.BLUE + LanguageKey.ITEM_OPTIONS_MONEY_VALUE.getMessage(ChatColor.YELLOW + String.valueOf(VaultHandler.getInstance().format(option.getMoney())), (option.isGive() ? ChatColor.GREEN + LanguageKey.ITEM_OPTIONS_MONEY_RECEIVE.getMessage() : ChatColor.RED + LanguageKey.ITEM_OPTIONS_MONEY_PAY.getMessage())), ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_MONEY_CLICK.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_MONEY_SHIFT.getMessage()), "OptionType", "Money");
         }
         return new ItemStack(Material.AIR);
     }

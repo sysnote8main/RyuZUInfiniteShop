@@ -44,6 +44,6 @@ public class PoweredableShop extends Shop {
     @Override
     public void respawnNPC() {
         super.respawnNPC();
-        setPowered(powered);
+        if (isEditableNpc()) setPowered(powered);
     }
 }
