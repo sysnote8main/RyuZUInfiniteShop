@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.VaultHandler;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
@@ -73,20 +74,22 @@ public class TradeOption implements ConfigurationSerializable {
             panel = NBTUtil.setNMSTag(panel, "Give", String.valueOf(give));
             panel = NBTUtil.setNMSTag(panel, "Money", String.valueOf(money));
             ItemUtil.withLore(panel,
-                               (give ? ChatColor.GREEN + "受け取り" : ChatColor.RED + "支払い") + ChatColor.GREEN + " 取引金額: " + ChatColor.YELLOW + VaultHandler.getInstance().format(money)
+                    (give ? ChatColor.GREEN + LanguageKey.ITEM_OPTIONS_MONEY_RECEIVE.getMessage() : ChatColor.RED + LanguageKey.ITEM_OPTIONS_MONEY_PAY.getMessage()) +
+                            ChatColor.GREEN + " " + LanguageKey.ITEM_OPTIONS_MONEY_AMOUNT.getMessage() + ": " + ChatColor.YELLOW + VaultHandler.getInstance().format(money)
             );
         }
         if(limit != 0) {
             panel = NBTUtil.setNMSTag(panel, "Limit", String.valueOf(limit));
             ItemUtil.withLore(panel,
-                              ChatColor.GREEN + "取引上限: " + ChatColor.YELLOW + (trade == null ? "" : trade.getTradeCount(p) + "/") + limit
+                    ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_LIMIT.getMessage(p == null ? "" : trade.getTradeCount(p) , limit)
             );
         }
         if(rate != 100) {
             panel = NBTUtil.setNMSTag(panel, "Rate", String.valueOf(rate));
             panel = NBTUtil.setNMSTag(panel, "Hide", String.valueOf(hide));
             ItemUtil.withLore(panel,
-                              ChatColor.GREEN + "取引成功確率: " + ChatColor.YELLOW + ((p != null && hide) ? "?" : rate) + "%" + (p == null ? "" : (" " + (hide ? ChatColor.RED + "確率を隠す" : ChatColor.GREEN + "確率を表示する")))
+                    ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_RATE_SUCCESS.getMessage(((p != null && hide) ? "?" : rate)) +
+                            (p == null ? "" : (" " + (hide ? ChatColor.RED + LanguageKey.ITEM_OPTIONS_RATE_HIDE.getMessage() : ChatColor.GREEN + LanguageKey.ITEM_OPTIONS_RATE_SHOW.getMessage())))
             );
         }
         return panel;

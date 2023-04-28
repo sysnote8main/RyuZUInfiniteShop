@@ -87,6 +87,8 @@ public class ShopTrade {
     }
 
     public Integer getTradeCount(Player player) {
+        if(player == null) return 0;
+        int count = 0;
         if (!tradeUUID.containsKey(this)) return 0;
         return tradeCounts.contains(player.getUniqueId(), tradeUUID.get(this)) ? tradeCounts.get(player.getUniqueId(), tradeUUID.get(this)) : 0;
     }
