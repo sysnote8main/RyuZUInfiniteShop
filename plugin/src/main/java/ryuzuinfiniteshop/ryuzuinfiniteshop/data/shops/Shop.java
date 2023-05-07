@@ -596,8 +596,30 @@ public class Shop {
         if (citizen == null) {
             if (npc instanceof LivingEntity) {
                 LivingEntity livnpc = ((LivingEntity) npc);
-                for (EquipmentSlot slot : EquipmentUtil.getEquipmentsSlot().values())
-                    livnpc.getEquipment().setItem(slot, equipments.toItemStacks()[slot.ordinal()]);
+                for (EquipmentSlot slot : EquipmentUtil.getEquipmentsSlot().values()) {
+                    switch (slot) {
+                        case HAND:
+                            livnpc.getEquipment().setItemInMainHand(getEquipmentItem(slot.ordinal()));
+                            break;
+                        case OFF_HAND:
+                            livnpc.getEquipment().setItemInOffHand(getEquipmentItem(slot.ordinal()));
+                            break;
+                        case FEET:
+                            livnpc.getEquipment().setBoots(getEquipmentItem(slot.ordinal()));
+                            break;
+                        case LEGS:
+                            livnpc.getEquipment().setLeggings(getEquipmentItem(slot.ordinal()));
+                            break;
+                        case CHEST:
+                            livnpc.getEquipment().setChestplate(getEquipmentItem(slot.ordinal()));
+                            break;
+                        case HEAD:
+                            livnpc.getEquipment().setHelmet(getEquipmentItem(slot.ordinal()));
+                            break;
+                    }
+                }
+//                for (EquipmentSlot slot : EquipmentUtil.getEquipmentsSlot().values())
+//                    livnpc.getEquipment().setItem(slot, getEquipmentItem(slot.ordinal()));
             }
         } else if (CitizensHandler.isLoaded() && CitizensHandler.isCitizensNPC(citizen)) {
             for (EquipmentSlot slot : EquipmentUtil.getEquipmentsSlot().values())

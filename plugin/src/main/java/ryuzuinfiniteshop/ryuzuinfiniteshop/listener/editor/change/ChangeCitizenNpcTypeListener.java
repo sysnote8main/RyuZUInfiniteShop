@@ -105,5 +105,6 @@ public class ChangeCitizenNpcTypeListener implements Listener {
             SoundUtil.playClickShopSound(p);
             p.openInventory(data.getInventory());
         }
+        schedulers.remove(p.getUniqueId());
     }
 }
