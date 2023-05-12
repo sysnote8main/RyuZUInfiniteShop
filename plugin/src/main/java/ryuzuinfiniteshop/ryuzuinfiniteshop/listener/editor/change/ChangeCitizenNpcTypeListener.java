@@ -103,7 +103,7 @@ public class ChangeCitizenNpcTypeListener implements Listener {
             event.setCancelled(true);
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCELLED.getMessage());
             SoundUtil.playClickShopSound(p);
-            p.openInventory(data.getInventory());
+            Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> p.openInventory(data.getInventory()));
         }
         schedulers.remove(p.getUniqueId());
     }

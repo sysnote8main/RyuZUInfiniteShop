@@ -41,7 +41,7 @@ public class SchedulerListener implements Listener {
         if ((System.currentTimeMillis() - schedulers.get(p.getUniqueId()).getTime()) / 1000d > 20 || event.getMessage().equalsIgnoreCase("Cancel")) {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCELLED.getMessage());
             SoundUtil.playClickShopSound(p);
-            p.openInventory(data.getInventory());
+            Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> p.openInventory(data.getInventory()));
         } else {
             if (shop == null) {
                 if(data.getId().equals("ignore"))
