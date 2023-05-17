@@ -211,16 +211,16 @@ public class SearchTradeListener implements Listener {
         ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(slot);
 
         if (trade == null) return;
-        if (trade.getResult(p, holder.getShop()).equals(ShopTrade.TradeResult.Success)) return;
+//        if (trade.getResult(p, holder.getShop()).equals(ShopTrade.TradeResult.Success)) return;
 
-        int info = ShopUtil.getSubtractSlot(type);
+        int info = type.getSubtractSlot();
         int surplus = slot % 9;
         int base = (type.equals(ShopType.TwotoOne) && surplus > 4) ? surplus - 5 : surplus;
         if(ItemUtil.isAir(event.getCurrentItem())) return;
-        if(!(p.hasPermission("sis.search") || p.hasPermission("sis.op"))) return;
         if(base == info) return;
 
-        LinkedHashMap<ShopTrade, Shop> searchedTrades = base < info ? TradeUtil.getTradesFromGive(event.getCurrentItem(), ShopMode.SEARCH) : TradeUtil.getTradesFromTake(event.getCurrentItem(), ShopMode.SEARCH);
+        ItemStack item = trade.getTradeItems(holder.getShop().getShopType(), ShopMode.SEARCH)[base];
+        LinkedHashMap<ShopTrade, Shop> searchedTrades = base < info ? TradeUtil.getTradesFromGive(item, ShopMode.SEARCH) : TradeUtil.getTradesFromTake(item, ShopMode.SEARCH);
         if (searchedTrades.size() == 0) {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NORESULTS.getMessage());
             SoundUtil.playFailSound(p);

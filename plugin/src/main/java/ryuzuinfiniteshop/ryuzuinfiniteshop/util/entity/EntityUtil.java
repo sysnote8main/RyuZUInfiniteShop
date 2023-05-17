@@ -9,6 +9,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -23,7 +24,7 @@ public class EntityUtil {
     }
 
     public static ArmorStand spawnHologram(Location location, String text) {
-        if(JavaUtil.isEmptyString(text)) return null;
+        if (JavaUtil.isEmptyString(text)) return null;
         ArmorStand hologram = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
         NBTUtil.setNMSTag(hologram, "Shop", "Hologram");
         new EntityNBTBuilder(hologram).setInvisible(true);
@@ -51,10 +52,10 @@ public class EntityUtil {
             Object entityObject = spawnEntityMethod.invoke(craftWorldClass.cast(location.getWorld()), location, entityTypeObj, CreatureSpawnEvent.SpawnReason.CUSTOM);
             UUID uuid = (UUID) entityObject.getClass().getMethod("getUniqueId").invoke(entityObject);
             Entity entity = Bukkit.getEntity(uuid);
-            if(entity == null) return location.getWorld().spawnEntity(location, entityType);
+            if (entity == null) return location.getWorld().spawnEntity(location, entityType);
             return entity;
-        }catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException | InvocationTargetException |
-                NoSuchMethodException e) {
+        } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException | InvocationTargetException |
+                 NoSuchMethodException e) {
             return location.getWorld().spawnEntity(location, entityType);
         }
     }

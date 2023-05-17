@@ -22,11 +22,11 @@ public class TradeUtil {
     public static boolean isAvailableTrade(Inventory inv, int slot, ShopType type) {
         switch (type) {
             case TwotoOne:
-                return ItemUtil.getItemSet(inv, slot, 2).length != 0 && inv.getItem(slot + 3) != null;
+                return ItemUtil.getItemSet(inv, slot, type.getSubtractSlot()).length != 0 && inv.getItem(slot + 3) != null;
             case FourtoFour:
-                return ItemUtil.getItemSet(inv, slot, 4).length != 0 && ItemUtil.getItemSet(inv, slot + 5, 4).length != 0;
+                return ItemUtil.getItemSet(inv, slot, type.getSubtractSlot()).length != 0 && ItemUtil.getItemSet(inv, slot + 5, 4).length != 0;
             case SixtoTwo:
-                return ItemUtil.getItemSet(inv, slot, 6).length != 0 && ItemUtil.getItemSet(inv, slot + 7, 2).length != 0;
+                return ItemUtil.getItemSet(inv, slot, type.getSubtractSlot()).length != 0 && ItemUtil.getItemSet(inv, slot + 7, 2).length != 0;
         }
         return false;
     }
@@ -35,24 +35,13 @@ public class TradeUtil {
         if (!isAvailableTrade(inv, slot, type)) return null;
         switch (type) {
             case TwotoOne:
-                return new ShopTrade(new ItemStack[]{inv.getItem(slot + 3)}, ItemUtil.getItemSet(inv, slot, 2));
+                return new ShopTrade(new ItemStack[]{inv.getItem(slot + 3)}, ItemUtil.getItemSet(inv, slot, type.getSubtractSlot()));
             case FourtoFour:
-                return new ShopTrade(ItemUtil.getItemSet(inv, slot + 5, 4), ItemUtil.getItemSet(inv, slot, 4));
+                return new ShopTrade(ItemUtil.getItemSet(inv, slot + 5, 4), ItemUtil.getItemSet(inv, slot, type.getSubtractSlot()));
             case SixtoTwo:
-                return new ShopTrade(ItemUtil.getItemSet(inv, slot + 7, 2), ItemUtil.getItemSet(inv, slot, 6));
+                return new ShopTrade(ItemUtil.getItemSet(inv, slot + 7, 2), ItemUtil.getItemSet(inv, slot, type.getSubtractSlot()));
         }
         return null;
-    }
-
-    public static int getTradeSlot(int slot, ShopType type) {
-        switch (type) {
-            case TwotoOne:
-                return (slot / 9) * 9 + (slot % 9 <= 3 ? 0 : 5);
-            case FourtoFour:
-            case SixtoTwo:
-                return (slot / 9) * 9;
-        }
-        return -1;
     }
 
     public static void removeGarbageTradeOption() {
@@ -101,8 +90,8 @@ public class TradeUtil {
         LinkedHashMap<ShopTrade, Shop> trades = new LinkedHashMap<>();
         ShopUtil.getShops().values().forEach(shop -> {
             if (shop.isSearchable() || mode.equals(ShopMode.EDIT))
-                shop.getTrades().forEach(trade -> Arrays.stream(trade.getGiveItems()).forEach(take -> {
-                                             if (take.isSimilar(item))
+                shop.getTrades().forEach(trade -> Arrays.stream(trade.getGiveItems()).forEach(give -> {
+                                             if (give.isSimilar(item))
                                                  trades.put(trade, shop);
                                          })
                 );

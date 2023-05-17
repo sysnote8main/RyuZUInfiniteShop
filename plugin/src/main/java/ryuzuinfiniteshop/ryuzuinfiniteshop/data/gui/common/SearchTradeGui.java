@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.TradesGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.SeachTradeHolder;
@@ -38,8 +39,9 @@ public class SearchTradeGui extends TradesGui {
                 }
             } else {
                 Shop shop = shops.get(i);
+                ItemStack[] items = trades.get(i).getTradeItems(shop.getShopType(), shop.getID(), player);
                 for (int j = 0; j < 9; j++) {
-                    inv.setItem((i % 6) * 9 + j, trades.get(i).getTradeItems(shop.getShopType(), shop.getID(), player)[j]);
+                    inv.setItem((i % 6) * 9 + j, items[j]);
                 }
             }
         }

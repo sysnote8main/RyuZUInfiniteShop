@@ -133,10 +133,12 @@ public class EditTradePageListener implements Listener {
 
         if (trade == null) return;
         if (holder.getShop().isLock(p)) return;
-        ShopTrade.TradeResult result = trade.getResult(p, gui.getShop());
-        if (!result.equals(ShopTrade.TradeResult.Success)) {
-            if (gui.getConvertSlot().contains(slot)) ShopTrade.playResultEffect(p, result);
-            if (result.equals(ShopTrade.TradeResult.NotEnoughItems)) SearchTradeListener.search(event);
+//        ShopTrade.TradeResult result = trade.getResult(p, gui.getShop());
+        if (!gui.getConvertSlot().contains(slot))
+//            ShopTrade.playResultEffect(p, result);
+//        else
+        {
+            SearchTradeListener.search(event);
             return;
         }
 
@@ -169,7 +171,7 @@ public class EditTradePageListener implements Listener {
 
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
-        ShopTrade trade = TradeUtil.getTrade(event.getClickedInventory(), slot - ShopUtil.getSubtractSlot(shop.getShopType()), shop.getShopType());
+        ShopTrade trade = TradeUtil.getTrade(event.getClickedInventory(), slot - shop.getShopType().getSubtractSlot(), shop.getShopType());
         //トレードをアイテム化する
         if (event.isShiftClick()) return;
         if (trade == null)

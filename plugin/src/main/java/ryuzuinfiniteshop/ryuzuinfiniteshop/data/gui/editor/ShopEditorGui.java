@@ -106,7 +106,7 @@ public class ShopEditorGui extends ShopGui {
                 ItemUtil.getNamedItem(Material.TRIPWIRE_HOOK, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_UNLOCKED.getMessage())
         );
         inv.setItem(4 * 9 + 7, ItemUtil.getNamedItem(Material.ARROW, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_CHANGE_DIRECTION.getMessage()));
-        inv.setItem(4 * 9 + 8, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, getShop().getShopTypeDisplay()));
+        inv.setItem(4 * 9 + 8, ItemUtil.getNamedItem(Material.MAGENTA_GLAZED_TERRACOTTA, getShop().getShopType().getShopTypeDisplay()));
     }
 
     private void setShopOperation(Inventory inv) {

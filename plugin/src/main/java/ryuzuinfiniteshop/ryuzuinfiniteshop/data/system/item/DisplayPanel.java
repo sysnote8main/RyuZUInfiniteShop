@@ -39,9 +39,10 @@ public class DisplayPanel {
             ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_ONCE.getMessage());
             ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_EIGHT.getMessage());
             ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_STACK.getMessage());
-        } else if(!result.equals(ShopTrade.TradeResult.Normal)) {
-            ItemUtil.withLore(item, ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_VALUEORPRODUCT.getMessage());
         }
+//        else if(!result.equals(ShopTrade.TradeResult.Normal)) {
+//            ItemUtil.withLore(item, ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_VALUEORPRODUCT.getMessage());
+//        }
         return item;
     }
 }

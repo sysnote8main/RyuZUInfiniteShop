@@ -159,9 +159,9 @@ public class ItemUtil {
         List<String> lores = meta.getLore();
         if (lores == null) lores = new ArrayList<>();
         if(reverse)
-            lores.addAll(0, Arrays.asList(lore));
+            lores.addAll(0, Arrays.stream(lore).filter(Objects::nonNull).collect(Collectors.toList()));
         else
-            lores.addAll(Arrays.asList(lore));
+            lores.addAll(Arrays.stream(lore).filter(Objects::nonNull).collect(Collectors.toList()));
         meta.setLore(lores);
         item.setItemMeta(meta);
         return item;

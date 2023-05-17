@@ -14,6 +14,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -54,7 +55,7 @@ public abstract class ShopTradeGui extends ShopGui {
         for (int i = 0; i < getTrades().size(); i++) {
             ShopTrade trade = getTrades().get(i);
             int slot = function.apply(i);
-            ItemStack[] items = trade.getTradeItems(getShop().getShopType(), mode);
+            ItemStack[] items = trade.getTradeItems(getShop().getShopType(), mode, mode.equals(ShopMode.TRADE));
             for (int k = 0; k < items.length; k++) {
                 inv.setItem(slot + k, items[k]);
             }
@@ -85,7 +86,7 @@ public abstract class ShopTradeGui extends ShopGui {
     }
 
     public boolean existTrades() {
-        return getTrades().size() > (getPage() - 2) * getShop().getLimitSize();
+        return getTrades().size() > (getPage() - 2) * getShop().getShopType().getLimitSize();
     }
 
     public abstract ShopTrade getTradeFromSlot(int slot);
@@ -94,7 +95,7 @@ public abstract class ShopTradeGui extends ShopGui {
         for (int i = 0; i < getTrades().size(); i++) {
             ShopTrade trade = getTrade(i);
             ShopTrade.TradeResult result = trade.getResult(p, shop);
-            inventory.setItem(getConvertSlot().get(i), trade.getOption().getOptionsPanel(DisplayPanelConfig.getPanel(result).getItemStack(), p, trade));
+            inventory.setItem(getConvertSlot().get(i), NBTUtil.setNMSTag(trade.getOption().getOptionsPanel(DisplayPanelConfig.getPanel(result).getItemStack(), p, trade), "A" , String.valueOf(i)));
         }
     }
 }

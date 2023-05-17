@@ -61,18 +61,6 @@ public class ShopUtil {
         return JavaUtil.getOrDefault(event.getClickedInventory(), event.getView().getTopInventory());
     }
 
-    public static int getSubtractSlot(ShopType type) {
-        switch (type) {
-            case TwotoOne:
-                return 2;
-            case FourtoFour:
-                return 4;
-            case SixtoTwo:
-                return 6;
-        }
-        return 0;
-    }
-
     public static boolean loadAllShops() {
         getShops().clear();
         File directory = FileUtil.initializeFolder("shops");

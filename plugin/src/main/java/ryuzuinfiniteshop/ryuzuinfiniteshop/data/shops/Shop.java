@@ -165,20 +165,8 @@ public class Shop {
 
     public void changeShopType() {
         if (!type.equals(ShopType.TwotoOne)) trades.clear();
-        this.type = getNextShopType();
+        this.type = type.getNextShopType();
         updateTradeContents();
-    }
-
-    public ShopType getNextShopType() {
-        switch (type) {
-            case TwotoOne:
-                return ShopType.FourtoFour;
-            case FourtoFour:
-                return ShopType.SixtoTwo;
-            case SixtoTwo:
-                return ShopType.TwotoOne;
-        }
-        return ShopType.TwotoOne;
     }
 
     // 重複している取引があればtrueを返す
@@ -193,11 +181,11 @@ public class Shop {
         HashSet<ShopTrade> emptyTrades = new HashSet<>();
         List<ShopTrade> onTrades = new ArrayList<>(getTrades());
         gui.getTrades().forEach(onTrades::remove);
-        for (int i = 0; i < 9 * 6; i += getShopType().equals(ShopType.TwotoOne) ? 4 : 9) {
+        for (int i = 0; i < 9 * 6; i += getShopType().getAddSlot()) {
             if (getShopType().equals(ShopType.TwotoOne) && i % 9 == 4) i++;
 
             // 取引のオプションのスロットを取得する
-            int optionSlot = i + ShopUtil.getSubtractSlot(getShopType());
+            int optionSlot = i + getShopType().getSubtractSlot();
 
             ShopTrade trade = gui.getTradeFromSlot(i);
             ShopTrade expectedTrade = TradeUtil.getTrade(inv, i, getShopType());
@@ -234,21 +222,9 @@ public class Shop {
         return duplication;
     }
 
-    public String getShopTypeDisplay() {
-        switch (type) {
-            case TwotoOne:
-                return ChatColor.GREEN + "2 -> 1";
-            case FourtoFour:
-                return ChatColor.GREEN + "4 -> 4";
-            case SixtoTwo:
-                return ChatColor.GREEN + "6 -> 2";
-        }
-        return "";
-    }
-
     public ShopTrade getTrade(Inventory inv, int slot) {
         if (!((ShopTradeGui) ShopUtil.getShopHolder(inv).getGui()).isConvertSlot(slot)) return null;
-        return TradeUtil.getTrade(inv, slot - ShopUtil.getSubtractSlot(type), type);
+        return TradeUtil.getTrade(inv, slot - type.getSubtractSlot(), type);
     }
 
     //トレードをアイテム化する
@@ -256,7 +232,7 @@ public class Shop {
         ShopTrade trade = getTrade(inv, slot);
         if (trade == null) return null;
 
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + LanguageKey.ITEM_TRADE_COMPRESSION_GEM.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay());
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + LanguageKey.ITEM_TRADE_COMPRESSION_GEM.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + type.getShopTypeDisplay());
         item = NBTUtil.setNMSTag(item, "ShopType", type.toString());
         item = NBTUtil.setNMSTag(item, "TradesSize", String.valueOf(1));
         item = NBTUtil.setNMSTag(item, "Give" + 0, ItemUtil.toStringFromItemStackArray(trade.getGiveItems()));
@@ -277,7 +253,7 @@ public class Shop {
     }
 
     public ItemStack convertTradesToItemStack() {
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + LanguageKey.ITEM_TRADE_COMPRESSION_GEM.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay());
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + LanguageKey.ITEM_TRADE_COMPRESSION_GEM.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + type.getShopTypeDisplay());
         item = NBTUtil.setNMSTag(item, convertTradesToMap());
         return item;
     }
@@ -310,7 +286,7 @@ public class Shop {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_NAME.getMessage() + ChatColor.GREEN + getDisplayNameOrElseNone(),
                                                         ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
                                                         ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
-                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + getShopTypeDisplay()
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + type.getShopTypeDisplay()
         );
         item = NBTUtil.setNMSTag(item, convertShopToMap());
         return item;
@@ -334,7 +310,7 @@ public class Shop {
     }
 
     public List<ShopTrade> getTrades(int page) {
-        List<ShopTrade>[] trades = JavaUtil.splitList(getTrades(), getLimitSize());
+        List<ShopTrade>[] trades = JavaUtil.splitList(getTrades(), type.getLimitSize());
         if (trades.length == page - 1) return new ArrayList<>();
         return trades[page - 1];
     }
@@ -362,7 +338,7 @@ public class Shop {
 
     public int getPage(ShopTrade trade) {
         if (!trades.contains(trade)) return -1;
-        return (int) Math.ceil((double) (trades.indexOf(trade) + 1) / getLimitSize());
+        return (int) Math.ceil((double) (trades.indexOf(trade) + 1) / type.getLimitSize());
     }
 
     public void setTradePages() {
@@ -399,12 +375,8 @@ public class Shop {
             editors.add(new ShopEditorGui(this, getEditorPageCountFromTradesCount() + 1));
     }
 
-    public int getLimitSize() {
-        return type.equals(ShopType.TwotoOne) ? 12 : 6;
-    }
-
     public boolean isLimitPage(int page) {
-        return getPage(page).getTrades().size() == getLimitSize();
+        return getPage(page).getTrades().size() == type.getLimitSize();
     }
 
     public int getPageCount() {
@@ -412,8 +384,8 @@ public class Shop {
     }
 
     public int getTradePageCountFromTradesCount() {
-        int size = trades.size() / getLimitSize();
-        if (trades.size() % getLimitSize() != 0) size++;
+        int size = trades.size() / type.getLimitSize();
+        if (trades.size() % type.getLimitSize() != 0) size++;
         return size;
     }
 
@@ -514,9 +486,11 @@ public class Shop {
     private void spawnNPC(EntityType entityType) {
         this.location.setPitch(0);
         this.npc = EntityUtil.spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entityType);
-        CreatureSpawnEvent spawnEvent = new CreatureSpawnEvent(((LivingEntity) npc), CreatureSpawnEvent.SpawnReason.CUSTOM);
-        Bukkit.getPluginManager().callEvent(spawnEvent);
         setNpcMeta();
+        if(npc instanceof LivingEntity) {
+            CreatureSpawnEvent spawnEvent = new CreatureSpawnEvent(((LivingEntity) npc), CreatureSpawnEvent.SpawnReason.CUSTOM);
+            Bukkit.getPluginManager().callEvent(spawnEvent);
+        }
     }
 
     public void setNpcMeta() {
@@ -704,7 +678,12 @@ public class Shop {
     }
 
     public void removeNPC() {
-        if (npc != null) npc.remove();
+        if (npc != null) {
+            npc.remove();
+            Block block = location.clone().subtract(0, -1, 0).getBlock();
+            Location pos = block.getBlockData() instanceof Slab && ((Slab) block.getBlockData()).getType().equals(Slab.Type.BOTTOM) ? location.clone().add(0, -0.5, 0) : location;
+            pos.getWorld().getNearbyEntities(pos, 0.1, 0.1, 0.1).stream().filter(entity -> NBTUtil.getNMSStringTag(entity, "Shop") != null).forEach(Entity::remove);
+        }
         if (citizen != null) CitizensHandler.despawnNPC(this);
         npc = null;
     }
@@ -718,6 +697,7 @@ public class Shop {
         if (FileUtil.isSaveBlock()) return;
         if (npc != null && npc.isValid()) return;
         if (!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) return;
+        if(npc != null) removeNPC();
         NpcType type = getNpcType(clone);
         if (type.equals(NpcType.MYTHICMOB)) {
             npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob, location);

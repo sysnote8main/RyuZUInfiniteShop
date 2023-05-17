@@ -87,7 +87,7 @@ public class ShopTrade {
     }
 
     public Integer getTradeCount(Player player) {
-        if(player == null) return 0;
+        if (player == null) return 0;
         int count = 0;
         if (!tradeUUID.containsKey(this)) return 0;
         return tradeCounts.contains(player.getUniqueId(), tradeUUID.get(this)) ? tradeCounts.get(player.getUniqueId(), tradeUUID.get(this)) : 0;
@@ -157,7 +157,7 @@ public class ShopTrade {
                                 isAdmin ? (ChatColor.YELLOW + LanguageKey.ITEM_EDITOR_IS_SEARCHABLE.getMessage(shop.isSearchable() ? ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SEARCH_ENABLED.getMessage() : ChatColor.RED + LanguageKey.ITEM_EDITOR_SEARCH_DISABLED.getMessage())) : null,
                                 isAdmin ? (ChatColor.YELLOW + LanguageKey.ITEM_IS_LOCKED.getMessage(shop.isLock() ? ChatColor.RED + LanguageKey.ITEM_EDITOR_LOCKED.getMessage() : ChatColor.GREEN + LanguageKey.ITEM_EDITOR_UNLOCKED.getMessage())) : null,
                                 ChatColor.GREEN + LanguageKey.ITEM_TRADE_WINDOW_OPEN.getMessage(),
-                                isAdmin ? null : ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_VALUEORPRODUCT.getMessage(),
+//                                isAdmin ? null : ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_VALUEORPRODUCT.getMessage(),
                                 isAdmin ? ChatColor.GREEN + LanguageKey.ITEM_EDIT_WINDOW_OPEN.getMessage() : null
                         ),
                         "Shop", id
@@ -209,43 +209,25 @@ public class ShopTrade {
 //    }
 
     public ItemStack[] getTradeItems(ShopType type, ShopMode mode) {
-        ItemStack[] items;
+        return getTradeItems(type, mode, false);
+    }
+
+    public ItemStack[] getTradeItems(ShopType type, ShopMode mode, boolean explain) {
+        ItemStack[] items = new ItemStack[type.getAddSlot()];
         ItemStack filter = getFilter(mode);
-        switch (type) {
-            case TwotoOne:
-                items = new ItemStack[4];
-                items[2] = filter;
-                for (int i = 0; i < getTakeItems().length; i++) {
-                    items[i] = getTakeItems()[i];
-                }
-                for (int i = 0; i < getGiveItems().length; i++) {
-                    items[i + 3] = getGiveItems()[i];
-                }
-                break;
-            case FourtoFour:
-                items = new ItemStack[9];
-                items[4] = filter;
-                for (int i = 0; i < getTakeItems().length; i++) {
-                    items[i] = getTakeItems()[i];
-                }
-                for (int i = 0; i < getGiveItems().length; i++) {
-                    items[i + 5] = getGiveItems()[i];
-                }
-                break;
-            case SixtoTwo:
-                items = new ItemStack[9];
-                items[6] = filter;
-                for (int i = 0; i < getTakeItems().length; i++) {
-                    items[i] = getTakeItems()[i];
-                }
-                for (int i = 0; i < getGiveItems().length; i++) {
-                    items[i + 7] = getGiveItems()[i];
-                }
-                break;
-            default:
-                items = new ItemStack[0];
-                break;
-        }
+        items[type.getSubtractSlot()] = filter;
+        for (int i = 0; i < getTakeItems().length; i++)
+            items[i] = ItemUtil.withLore(
+                    getTakeItems()[i],
+                    explain ? ChatColor.BLACK + "" : null,
+                    explain ? ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_PRODUCT.getMessage() : null
+            );
+        for (int i = 0; i < getGiveItems().length; i++)
+            items[type.getSubtractSlot() + 1 + i] = ItemUtil.withLore(
+                    getGiveItems()[i],
+                    explain ? ChatColor.BLACK + "" : null,
+                    explain ? ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_VALUE.getMessage() : null
+            );
         return items;
     }
 
@@ -258,33 +240,12 @@ public class ShopTrade {
     }
 
     public ItemStack[] getTradeItems(ShopType type, ItemStack filter) {
-        ItemStack[] items;
-        switch (type) {
-            case TwotoOne:
-            case FourtoFour:
-                items = new ItemStack[9];
-                items[4] = filter;
-                for (int i = 0; i < getTakeItems().length; i++) {
-                    items[i] = getTakeItems()[i];
-                }
-                for (int i = 0; i < getGiveItems().length; i++) {
-                    items[i + 5] = getGiveItems()[i];
-                }
-                break;
-            case SixtoTwo:
-                items = new ItemStack[9];
-                items[6] = filter;
-                for (int i = 0; i < getTakeItems().length; i++) {
-                    items[i] = getTakeItems()[i];
-                }
-                for (int i = 0; i < getGiveItems().length; i++) {
-                    items[i + 7] = getGiveItems()[i];
-                }
-                break;
-            default:
-                items = new ItemStack[0];
-                break;
-        }
+        ItemStack[] items = new ItemStack[9];
+        items[(type.equals(ShopType.SixtoTwo) ? 6 : 4)] = filter;
+        for (int i = 0; i < getTakeItems().length; i++)
+            items[i] = getTakeItems()[i];
+        for (int i = 0; i < getGiveItems().length; i++)
+            items[(type.equals(ShopType.SixtoTwo) ? 6 : 4) + 1 + i] = getGiveItems()[i];
         return items;
     }
 
@@ -343,11 +304,11 @@ public class ShopTrade {
                     result = TradeResult.Lack;
                 resultTime = time;
                 break;
-            } else if(result.equals(TradeResult.Fail))
+            } else if (result.equals(TradeResult.Fail))
                 failed = true;
         }
         //結果に対するエフェクトを表示
-        if(times != 1 && failed)
+        if (times != 1 && failed)
             result = TradeResult.Lack;
         playResultEffect(p, result);
         saveTradeOption();
