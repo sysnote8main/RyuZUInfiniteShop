@@ -14,6 +14,7 @@ import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
@@ -35,6 +36,8 @@ public class ChangeCitizenNpcTypeListener implements Listener {
 
     public static void setSchedulers(Player p, String id, Inventory inv, Consumer<Entity> successProcess) {
         schedulers.put(p.getUniqueId(), new ScheduleEntityData(System.currentTimeMillis(), id, inv, successProcess));
+        ModeHolder holder = ShopUtil.getModeHolder(p.getOpenInventory().getTopInventory());
+        if(holder != null) holder.setBefore(null);
         Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
     }
 
@@ -73,6 +76,7 @@ public class ChangeCitizenNpcTypeListener implements Listener {
         });
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "登録したいCitizenのNPCを右クリックしてください");
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());
+
 
         SoundUtil.playClickShopSound(p);
         holder.getShop().setEditting(false);

@@ -11,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ModeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ScheduleStringData;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
@@ -26,6 +27,8 @@ public class SchedulerListener implements Listener {
 
     public static void setSchedulers(Player p, String id, Inventory inv, Consumer<String> successProcess) {
         schedulers.put(p.getUniqueId(), new ScheduleStringData(System.currentTimeMillis(), id, inv, successProcess));
+        ModeHolder holder = ShopUtil.getModeHolder(p.getOpenInventory().getTopInventory());
+        if(holder != null) holder.setBefore(null);
         Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
     }
 
