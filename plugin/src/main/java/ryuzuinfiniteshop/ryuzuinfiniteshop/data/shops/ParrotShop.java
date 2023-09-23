@@ -3,7 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Parrot;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
@@ -19,7 +19,7 @@ public class ParrotShop extends SittableShop {
 
     public void setColor(Parrot.Variant color) {
         this.color = color;
-        if(npc == null) return;
+        if (npc == null) return;
         ((Parrot) npc).setVariant(color);
 //        NBTBuilder.setVariant(color.ordinal());
     }
@@ -39,7 +39,7 @@ public class ParrotShop extends SittableShop {
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.color = Parrot.Variant.valueOf(yaml.getString("Npc.Options.Color" , "RED"));
+            this.color = Parrot.Variant.valueOf(yaml.getString("Npc.Options.Color", "RED"));
         });
     }
 

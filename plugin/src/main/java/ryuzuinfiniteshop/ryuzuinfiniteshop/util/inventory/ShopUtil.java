@@ -1,6 +1,9 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -16,16 +19,15 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ShopUtil {
@@ -165,7 +167,7 @@ public class ShopUtil {
         try {
             config.save(file);
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
+            if (!Config.readOnlyIgnoreIOException) e.printStackTrace();
         }
         return keys.size() > 0;
     }
@@ -185,7 +187,7 @@ public class ShopUtil {
 
     public static void saveAllShops() {
         for (Shop shop : getShops().values()) {
-            try{
+            try {
                 shop.saveYaml();
             } catch (Exception e) {
                 throw new RuntimeException(LanguageKey.ERROR_FILE_SAVING.getMessage(shop.getID()), e);
@@ -216,7 +218,7 @@ public class ShopUtil {
     }
 
     public static Shop createNewShop(Location location, String type, ConfigurationSection config) {
-        if(type.equalsIgnoreCase("BLOCK"))
+        if (type.equalsIgnoreCase("BLOCK"))
             return new Shop(location, type, config);
         EntityType entityType = EntityType.valueOf(type);
         if (entityType.equals(EntityType.VILLAGER) || entityType.equals(EntityType.ZOMBIE_VILLAGER))
@@ -266,7 +268,7 @@ public class ShopUtil {
         try {
             config.save(file);
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
+            if (!Config.readOnlyIgnoreIOException) e.printStackTrace();
         }
 
         String type = config.getString("Npc.Options.EntityType", "VILLAGER");
@@ -275,7 +277,7 @@ public class ShopUtil {
         if (mythicmob != null && MythicInstanceProvider.getInstance().exsistsMythicMob(mythicmob))
             return new Shop(location, mythicmob);
         if (citizen != null && CitizensHandler.isLoaded() && CitizensHandler.isCitizensNPC(UUID.fromString(citizen)))
-            return new Shop(location, UUID.fromString(citizen) , false);
+            return new Shop(location, UUID.fromString(citizen), false);
         else
             return createNewShop(location, type, null);
     }

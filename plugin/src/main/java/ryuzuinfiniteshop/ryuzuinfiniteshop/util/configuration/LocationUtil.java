@@ -11,7 +11,7 @@ public class LocationUtil {
     }
 
     public static String toStringFromLocation(Location loc) {
-        if(loc.getWorld() == null) throw new RuntimeException(LanguageKey.ERROR_WORLD_NOT_FOUND.getMessage(loc));
+        if (loc.getWorld() == null) throw new RuntimeException(LanguageKey.ERROR_WORLD_NOT_FOUND.getMessage(loc));
         return loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
     }
 

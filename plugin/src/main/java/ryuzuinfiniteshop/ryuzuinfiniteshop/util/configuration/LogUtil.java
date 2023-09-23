@@ -34,13 +34,13 @@ public class LogUtil {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             log = br.lines().collect(Collectors.toList());
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreIOException) throw new RuntimeException(e);
+            if (!Config.readOnlyIgnoreIOException) throw new RuntimeException(e);
         }
         return log;
     }
 
     public static void log(LogType type, String player, String id, ShopTrade trade, int limit) {
-        if(!Config.editLog) return;
+        if (!Config.editLog) return;
         List<String> logBuilder = baseLog(type, player, id);
         logBuilder.add(Arrays.stream(trade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
         logBuilder.add(Arrays.stream(trade.getGiveItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
@@ -50,7 +50,7 @@ public class LogUtil {
     }
 
     public static void log(LogType type, String player, String id, ShopTrade fromTrade, ShopTrade toTrade, TradeOption fromOption, TradeOption toOption) {
-        if(!Config.editLog) return;
+        if (!Config.editLog) return;
         List<String> logBuilder = baseLog(type, player, id);
         logBuilder.add(Arrays.stream(fromTrade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
         logBuilder.add(Arrays.stream(toTrade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
@@ -61,7 +61,7 @@ public class LogUtil {
     }
 
     public static void log(String player, String id, ShopTrade trade, int times) {
-        if(!Config.tradeLog) return;
+        if (!Config.tradeLog) return;
         List<String> logBuilder = baseLog(LogType.TRADE, player, id);
         logBuilder.add(Arrays.stream(trade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
         logBuilder.add(Arrays.stream(trade.getTakeItems()).filter(Objects::nonNull).map(ItemUtil::getString).collect(Collectors.joining("+")));
@@ -90,11 +90,11 @@ public class LogUtil {
 
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
             try (FileWriter fileWriter = new FileWriter(file)) {
-                for(String l : logs) {
+                for (String l : logs) {
                     fileWriter.write(l + System.lineSeparator());
                 }
             } catch (IOException e) {
-                if(!Config.readOnlyIgnoreIOException) throw new RuntimeException(e);
+                if (!Config.readOnlyIgnoreIOException) throw new RuntimeException(e);
             }
         });
     }

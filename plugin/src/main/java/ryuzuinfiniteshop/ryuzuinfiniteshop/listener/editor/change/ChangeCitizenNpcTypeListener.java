@@ -19,7 +19,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ScheduleEntityData;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ScheduleStringData;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.CitizensHandler;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
@@ -37,7 +36,7 @@ public class ChangeCitizenNpcTypeListener implements Listener {
     public static void setSchedulers(Player p, String id, Inventory inv, Consumer<Entity> successProcess) {
         schedulers.put(p.getUniqueId(), new ScheduleEntityData(System.currentTimeMillis(), id, inv, successProcess));
         ModeHolder holder = ShopUtil.getModeHolder(p.getOpenInventory().getTopInventory());
-        if(holder != null) holder.setBefore(null);
+        if (holder != null) holder.setBefore(null);
         Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
     }
 
@@ -87,11 +86,11 @@ public class ChangeCitizenNpcTypeListener implements Listener {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
         if (!schedulers.containsKey(p.getUniqueId())) return;
-        if(FileUtil.isSaveBlock(p)) return;
+        if (FileUtil.isSaveBlock(p)) return;
         ScheduleEntityData data = schedulers.get(p.getUniqueId());
-        if((System.currentTimeMillis() - data.getTime()) / 1000d > 20) return;
+        if ((System.currentTimeMillis() - data.getTime()) / 1000d > 20) return;
         Shop shop = ShopUtil.getShop(data.getId());
-        if(shop == null) return;
+        if (shop == null) return;
         event.setCancelled(true);
         data.getSuccessProcess().accept(entity);
         schedulers.remove(p.getUniqueId());
@@ -103,7 +102,7 @@ public class ChangeCitizenNpcTypeListener implements Listener {
         if (!schedulers.containsKey(p.getUniqueId())) return;
         if (FileUtil.isSaveBlock(p)) return;
         ScheduleEntityData data = schedulers.get(p.getUniqueId());
-        if ((System.currentTimeMillis() - schedulers.get(p.getUniqueId()).getTime()) / 1000d > 20 || event.getMessage().equalsIgnoreCase("Cancel"))  {
+        if ((System.currentTimeMillis() - schedulers.get(p.getUniqueId()).getTime()) / 1000d > 20 || event.getMessage().equalsIgnoreCase("Cancel")) {
             event.setCancelled(true);
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCELLED.getMessage());
             SoundUtil.playClickShopSound(p);

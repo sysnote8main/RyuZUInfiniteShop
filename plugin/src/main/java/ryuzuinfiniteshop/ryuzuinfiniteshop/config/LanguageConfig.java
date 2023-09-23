@@ -47,13 +47,13 @@ public class LanguageConfig {
             }
 
             Arrays.stream(LanguageKey.values()).forEach(key -> {
-                if(!yaml.contains(key.getConfigKey())) yaml.set(key.getConfigKey(), key.getLanguage(language));
+                if (!yaml.contains(key.getConfigKey())) yaml.set(key.getConfigKey(), key.getLanguage(language));
             });
 
             try {
                 yaml.save(file);
             } catch (IOException e) {
-                if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
+                if (!Config.readOnlyIgnoreIOException) e.printStackTrace();
             }
         }
     }

@@ -9,7 +9,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
@@ -158,7 +157,7 @@ public class ItemUtil {
         ItemMeta meta = item.getItemMeta();
         List<String> lores = meta.getLore();
         if (lores == null) lores = new ArrayList<>();
-        if(reverse)
+        if (reverse)
             lores.addAll(0, Arrays.stream(lore).filter(Objects::nonNull).collect(Collectors.toList()));
         else
             lores.addAll(Arrays.stream(lore).filter(Objects::nonNull).collect(Collectors.toList()));
@@ -268,7 +267,7 @@ public class ItemUtil {
             return new ItemStack(Material.valueOf(material));
         String result = material;
         Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(c -> material.contains(c.name())).findFirst();
-        if(color.isPresent())
+        if (color.isPresent())
             result = material.replace(color.get().name() + "_", "");
         return new ItemStack(Material.valueOf(result), 1, color.map(Enum::ordinal).orElse(0).shortValue());
     }

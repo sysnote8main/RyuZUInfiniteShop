@@ -12,7 +12,7 @@ public class VaultHandler {
     private static Economy economy;
 
     public static Economy getInstance() {
-        if(economy == null || !economy.isEnabled()) setInstance();
+        if (economy == null || !economy.isEnabled()) setInstance();
         if (economy == null) throw new NullPointerException(LanguageKey.ERROR_INVALID_LOADED_VAULT.getMessage());
 
         return economy;
@@ -41,7 +41,7 @@ public class VaultHandler {
     public static void setInstance() {
         if (Bukkit.getServer().getPluginManager().getPlugin("Vault") == null) return;
         RegisteredServiceProvider<Economy> rsp = RyuZUInfiniteShop.getPlugin().getServer().getServicesManager().getRegistration(Economy.class);
-        if(rsp == null) return;
+        if (rsp == null) return;
         economy = rsp.getProvider();
     }
 }

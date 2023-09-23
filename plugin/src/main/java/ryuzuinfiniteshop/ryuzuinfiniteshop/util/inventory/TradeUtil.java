@@ -6,10 +6,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 
@@ -57,7 +57,7 @@ public class TradeUtil {
         try {
             config.save(file);
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
+            if (!Config.readOnlyIgnoreIOException) e.printStackTrace();
         }
     }
 

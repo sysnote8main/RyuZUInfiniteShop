@@ -4,7 +4,7 @@
 
 plugins {
 //    id("com.github.ryuzu.java-conventions")
-    id ("java-library")
+    id("java-library")
 }
 
 repositories {

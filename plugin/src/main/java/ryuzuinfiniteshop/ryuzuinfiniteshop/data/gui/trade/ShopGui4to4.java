@@ -23,7 +23,7 @@ public class ShopGui4to4 extends ShopTradeGui {
 
     @Override
     public Inventory getInventory(ShopMode mode) {
-        Inventory inv = getInventory(i -> i * 9 , mode);
+        Inventory inv = getInventory(i -> i * 9, mode);
         for (int i = 0; i < 6; i++) {
             inv.setItem(i * 9 + 4, getTradePanel(i, mode));
         }

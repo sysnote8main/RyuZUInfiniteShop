@@ -4,7 +4,6 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Creeper;
-import org.bukkit.entity.EntityType;
 
 import java.util.function.Consumer;
 
@@ -21,7 +20,7 @@ public class PoweredableShop extends Shop {
 
     public void setPowered(boolean powered) {
         this.powered = powered;
-        if(npc == null) return;
+        if (npc == null) return;
         ((Creeper) npc).setPowered(powered);
 //        NBTBuilder.setPowered(powered);
     }
@@ -36,7 +35,7 @@ public class PoweredableShop extends Shop {
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.powered = yaml.getBoolean("Npc.Options.Powered" , false);
+            this.powered = yaml.getBoolean("Npc.Options.Powered", false);
             setPowered(powered);
         });
     }

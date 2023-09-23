@@ -26,6 +26,7 @@ public class DisplayPanel {
     ShopTrade.TradeResult result;
     ItemStack item;
     int data;
+
     public ConfigurationSection serialize() {
         ConfigurationSection result = new YamlConfiguration();
         result.set("Material", item.getType().name());
@@ -35,7 +36,7 @@ public class DisplayPanel {
 
     public ItemStack getItemStack() {
         ItemStack item = ItemUtil.withCustomModelData(ItemUtil.getNamedItem(this.item, panels.get(result)), data);
-        if(result.equals(ShopTrade.TradeResult.Success)) {
+        if (result.equals(ShopTrade.TradeResult.Success)) {
             ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_ONCE.getMessage());
             ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_EIGHT.getMessage());
             ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_STACK.getMessage());

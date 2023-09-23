@@ -8,13 +8,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ConfirmRemoveGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
 //ショップのNPCの装備を変更する
 public class RemoveShopListener implements Listener {
@@ -55,7 +55,7 @@ public class RemoveShopListener implements Listener {
         int slot = event.getSlot();
         if (slot != 0 && slot != 8) return;
 
-        if(slot == 0) {
+        if (slot == 0) {
             //音を出す
             SoundUtil.playClickShopSound(p);
 
@@ -63,7 +63,7 @@ public class RemoveShopListener implements Listener {
             p.openInventory(shop.getEditor(holder.getGui().getPage()).getInventory(holder.getMode()));
         } else {
             //ショップを開いている人がいたら閉じる
-            for(Player opener : Bukkit.getServer().getOnlinePlayers()) {
+            for (Player opener : Bukkit.getServer().getOnlinePlayers()) {
                 ShopHolder listholder = ShopUtil.getShopHolder(opener.getOpenInventory().getTopInventory());
                 if (listholder == null) continue;
                 if (!(listholder.getShop().equals(shop))) continue;

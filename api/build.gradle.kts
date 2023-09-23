@@ -4,7 +4,7 @@
 
 plugins {
 //    id ("com.github.ryuzu.java-conventions")
-    id ("java-library")
+    id("java-library")
 }
 
 repositories {
@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly ("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
 }
 
 description = "Searchable Infinite Shop API"

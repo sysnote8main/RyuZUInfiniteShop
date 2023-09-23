@@ -1,17 +1,15 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
 
 import com.github.ryuzu.searchableinfiniteshop.api.IMythicHandler;
-//import com.github.ryuzu.searchableinfiniteshop.v16newer.MythicHandlerV5_2_1;
-//import com.github.ryuzu.searchableinfiniteshop.v16older.MythicHandlerV4_12_0;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.function.Consumer;
-
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.function.Consumer;
 
 public class MythicInstanceProvider {
     private static IMythicHandler instance;

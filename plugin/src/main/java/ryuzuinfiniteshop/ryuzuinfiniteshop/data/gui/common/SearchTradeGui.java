@@ -11,9 +11,10 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.SeachTradeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class SearchTradeGui extends TradesGui {
     protected final LinkedHashMap<ShopTrade, Shop> searchedTrade;

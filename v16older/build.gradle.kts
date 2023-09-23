@@ -4,7 +4,7 @@
 
 plugins {
 //    id ("com.github.ryuzu.java-conventions")
-    id ("java-library")
+    id("java-library")
 }
 
 repositories {
@@ -24,9 +24,9 @@ repositories {
 }
 
 dependencies {
-    api (project(":searchableinfiniteshop-api"))
-    compileOnly ("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
-    compileOnly ("io.lumine.xikage:MythicMobs:4.12.0")
+    api(project(":searchableinfiniteshop-api"))
+    compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
+    compileOnly("io.lumine.xikage:MythicMobs:4.12.0")
 }
 
 description = "Searchable Infinite Shop V16Older"

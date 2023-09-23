@@ -5,7 +5,8 @@ import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EntityUtil;
@@ -25,7 +26,7 @@ public class DyeableShop extends Shop {
 
     public void setColor(DyeColor color) {
         this.color = color;
-        if(npc == null) return;
+        if (npc == null) return;
         if (npc instanceof Colorable) ((Colorable) npc).setColor(color);
         if (npc instanceof Wolf) {
             ((Wolf) npc).setTamed(!color.equals(DyeColor.WHITE));
@@ -37,13 +38,13 @@ public class DyeableShop extends Shop {
 
     public void setOptionalInfo(boolean optionalInfo) {
         this.optionalInfo = optionalInfo;
-        if(npc == null) return;
-        if(npc instanceof Wolf) {
-            if(color.equals(DyeColor.WHITE))
+        if (npc == null) return;
+        if (npc instanceof Wolf) {
+            if (color.equals(DyeColor.WHITE))
                 ((Wolf) npc).setAngry(optionalInfo);
             else
                 ((Wolf) npc).setSitting(optionalInfo);
-        } else if(npc instanceof Sheep)
+        } else if (npc instanceof Sheep)
             ((Sheep) npc).setSheared(optionalInfo);
     }
 

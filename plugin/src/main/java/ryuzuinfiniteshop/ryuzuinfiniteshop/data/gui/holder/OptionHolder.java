@@ -2,11 +2,8 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.EditOptionGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
 
 @EqualsAndHashCode(callSuper = true)
 @Getter

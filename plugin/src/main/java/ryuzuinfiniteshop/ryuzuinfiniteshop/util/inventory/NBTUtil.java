@@ -106,7 +106,7 @@ public class NBTUtil {
 
 
     public static ItemStack itemWithBase64(ItemStack item, GameProfile profile) {
-        if(ItemUtil.isAir(item)) return null;
+        if (ItemUtil.isAir(item)) return null;
         if (!(item.getItemMeta() instanceof SkullMeta))
             return null;
         SkullMeta meta = (SkullMeta) item.getItemMeta();
@@ -144,7 +144,8 @@ public class NBTUtil {
                 metaSetProfileMethod.setAccessible(true);
             }
             return ((GameProfile) metaSetProfileMethod.invoke(meta));
-        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | NullPointerException | InvocationTargetException ex) {
+        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | NullPointerException |
+                 InvocationTargetException ex) {
             try {
                 if (metaProfileField == null) {
                     metaProfileField = meta.getClass().getDeclaredField("profile");

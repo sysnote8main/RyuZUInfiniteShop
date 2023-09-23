@@ -6,14 +6,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EntityUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 
 //NPCのエンティティタイプごとの固有のNBTを変更
 public class ChangeIndividualSettingsListener implements Listener {
@@ -27,7 +27,7 @@ public class ChangeIndividualSettingsListener implements Listener {
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
         if (!holder.getMode().equals(ShopMode.EDIT)) return;
         if (event.getClickedInventory() == null) return;
-        if(ItemUtil.getWhitePanel().equals(event.getCurrentItem())) return;
+        if (ItemUtil.getWhitePanel().equals(event.getCurrentItem())) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
@@ -52,7 +52,7 @@ public class ChangeIndividualSettingsListener implements Listener {
         changePattern(holder, event.getSlot());
         changeCatType(holder, event.getSlot());
         changeRabbitType(holder, event.getSlot());
-        if(RyuZUInfiniteShop.VERSION >= 14) {
+        if (RyuZUInfiniteShop.VERSION >= 14) {
             changeBiome(holder, event.getSlot());
             changeLevel(holder, event.getSlot());
         }

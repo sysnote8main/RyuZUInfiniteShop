@@ -14,7 +14,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 public class CitizensHandler {
@@ -28,8 +27,8 @@ public class CitizensHandler {
     }
 
     public static String getCitizensShopString(Entity entity) {
-        if(!loaded) return null;
-        if(!npcMap.containsKey(entity.getUniqueId())) return null;
+        if (!loaded) return null;
+        if (!npcMap.containsKey(entity.getUniqueId())) return null;
         return npcMap.get(entity.getUniqueId()).getID();
     }
 
@@ -50,13 +49,13 @@ public class CitizensHandler {
     }
 
     public static void destoryNPC(Shop shop) {
-        if(!isCitizensNPC(shop.getCitizen())) return;
+        if (!isCitizensNPC(shop.getCitizen())) return;
         getByUniqueId(shop.getCitizen()).destroy();
         npcMap.remove(shop.getCitizen());
     }
 
     public static void despawnNPC(Shop shop) {
-        if(!isCitizensNPC(shop.getCitizen())) return;
+        if (!isCitizensNPC(shop.getCitizen())) return;
         getByUniqueId(shop.getCitizen()).despawn();
         npcMap.remove(shop.getCitizen());
     }
@@ -66,16 +65,16 @@ public class CitizensHandler {
     }
 
     public static UUID createNPC(Shop shop) {
-        if(isCitizensNPC(shop.getCitizen())) return shop.getCitizen();
-        if(Bukkit.getOfflinePlayer(shop.getCitizen()).getName() == null) return null;
+        if (isCitizensNPC(shop.getCitizen())) return shop.getCitizen();
+        if (Bukkit.getOfflinePlayer(shop.getCitizen()).getName() == null) return null;
         return CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, Bukkit.getOfflinePlayer(shop.getCitizen()).getName()).getUniqueId();
     }
 
     public static void setEquipment(UUID uuid, EquipmentSlot slot, ItemStack equipment) {
         int slotNumer = slot.ordinal();
-        if(slotNumer == 1)
+        if (slotNumer == 1)
             slotNumer = 5;
-        else if(slotNumer == 5)
+        else if (slotNumer == 5)
             slotNumer = 1;
         getByUniqueId(uuid).getOrAddTrait(Equipment.class).set(slotNumer, equipment);
     }
@@ -88,7 +87,7 @@ public class CitizensHandler {
     public static Entity spawnNPC(Shop shop) {
         NPC citizenNpc = CitizensAPI.getNPCRegistry().getByUniqueId(shop.getCitizen());
         citizenNpc.spawn(shop.getLocation());
-        if(!JavaUtil.isEmptyString(shop.getDisplayName())) citizenNpc.setName(shop.getDisplayName());
+        if (!JavaUtil.isEmptyString(shop.getDisplayName())) citizenNpc.setName(shop.getDisplayName());
         citizenNpc.getOrAddTrait(LookClose.class).lookClose(true);
         npcMap.put(citizenNpc.getEntity().getUniqueId(), shop);
         return citizenNpc.getEntity();

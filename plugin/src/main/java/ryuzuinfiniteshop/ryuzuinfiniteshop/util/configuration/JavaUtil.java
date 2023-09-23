@@ -32,10 +32,10 @@ public class JavaUtil {
     }
 
     public static <T> T getOrDefault(@Nullable T obj, T defaultobj) {
-        return obj == null || (obj instanceof ItemStack && ((ItemStack)obj).getType().equals(Material.AIR)) || (obj instanceof String && ((String)obj).isEmpty()) ? defaultobj : obj;
+        return obj == null || (obj instanceof ItemStack && ((ItemStack) obj).getType().equals(Material.AIR)) || (obj instanceof String && ((String) obj).isEmpty()) ? defaultobj : obj;
     }
 
-    public static <T> T getNonNull(@Nullable T obj1 , @Nullable T obj2) {
+    public static <T> T getNonNull(@Nullable T obj1, @Nullable T obj2) {
         return obj1 == null ? obj2 : obj1;
     }
 
@@ -43,13 +43,13 @@ public class JavaUtil {
         return str == null || ChatColor.stripColor(str).isEmpty();
     }
 
-    public static boolean containsIgnoreCase(@Nullable ItemStack item,@Nullable String str2) {
-        if(ItemUtil.isAir(item)) return false;
-        if(!item.hasItemMeta()) return false;
+    public static boolean containsIgnoreCase(@Nullable ItemStack item, @Nullable String str2) {
+        if (ItemUtil.isAir(item)) return false;
+        if (!item.hasItemMeta()) return false;
         return containsIgnoreCase(item.getItemMeta().getDisplayName(), str2);
     }
 
-    public static boolean containsIgnoreCase(@Nullable String str1,@Nullable String str2) {
+    public static boolean containsIgnoreCase(@Nullable String str1, @Nullable String str2) {
         if (str1 == null || str1.isEmpty()) return false;
         if (str2 == null || str2.isEmpty()) return false;
         return ChatColor.stripColor(str1).toLowerCase().contains(ChatColor.stripColor(str2).toLowerCase());

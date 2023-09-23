@@ -22,7 +22,7 @@ public class EntityNBTBuilder {
     }};
 
     public EntityNBTBuilder(Entity entity) {
-        if(RyuZUInfiniteShop.VERSION < 14) {
+        if (RyuZUInfiniteShop.VERSION < 14) {
             this.entity = entity;
             this.compound = NBTInjector.getNbtData(entity);
         } else {
@@ -33,13 +33,13 @@ public class EntityNBTBuilder {
 
     public void setInvisible(boolean invisible) {
 //        compound.setByte("Invisible", invisible ? (byte) 1 : (byte) 0);
-        if(RyuZUInfiniteShop.VERSION <= 15) {
-            if(invisible)
-                ((LivingEntity)entity).addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 1, false, false));
+        if (RyuZUInfiniteShop.VERSION <= 15) {
+            if (invisible)
+                ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 1, false, false));
             else
-                ((LivingEntity)entity).removePotionEffect(PotionEffectType.INVISIBILITY);
+                ((LivingEntity) entity).removePotionEffect(PotionEffectType.INVISIBILITY);
         } else
-            ((LivingEntity)entity).setInvisible(invisible);
+            ((LivingEntity) entity).setInvisible(invisible);
     }
 
     public void setInvulnerable(boolean invulnerable) {

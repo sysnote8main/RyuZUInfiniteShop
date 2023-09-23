@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Ageable;
-import org.bukkit.entity.EntityType;
 
 import java.util.function.Consumer;
 

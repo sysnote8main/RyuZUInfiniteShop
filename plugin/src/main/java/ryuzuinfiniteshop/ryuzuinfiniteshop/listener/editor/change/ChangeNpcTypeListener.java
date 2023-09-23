@@ -8,14 +8,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.system.SchedulerListener;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 
 //ショップのNPCの名前を変更する
 public class ChangeNpcTypeListener implements Listener {
@@ -41,7 +41,7 @@ public class ChangeNpcTypeListener implements Listener {
             try {
                 shop.setNpcType(EntityType.valueOf(message.toUpperCase()).name());
             } catch (IllegalArgumentException e) {
-                if(message.equalsIgnoreCase("Block"))
+                if (message.equalsIgnoreCase("Block"))
                     shop.setBlock();
                 else {
                     p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_INVALID_ENTITY_TYPE.getMessage());

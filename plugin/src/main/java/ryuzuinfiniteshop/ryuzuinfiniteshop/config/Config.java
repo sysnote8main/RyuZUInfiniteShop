@@ -52,27 +52,29 @@ public class Config {
         } catch (IOException | InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
-        if(!yaml.contains("AutoSaveInterval")) yaml.set("AutoSaveInterval", autoSaveInterval);
-        if(!yaml.contains("EditLog")) yaml.set("EditLog", editLog);
-        if(!yaml.contains("TradeLog")) yaml.set("TradeLog", tradeLog);
-        if(!yaml.contains("SaveByMMID")) yaml.set("SaveByMMID", saveByMMID);
-        if(!yaml.contains("OverwriteConverting")) yaml.set("OverwriteConverting", overwriteConverting);
-        if(!yaml.contains("DefaultSearchableInConverting")) yaml.set("DefaultSearchableInConverting", overwriteConverting);
-        if(!yaml.contains("FollowPlayer")) yaml.set("FollowPlayer" , followPlayer);
-        if(!yaml.contains("Language")) yaml.set("Language", language);
-        if(!yaml.contains("ReadOnlyIgnoreIOException")) yaml.set("ReadOnlyIgnoreIOException", readOnlyIgnoreIOException);
+        if (!yaml.contains("AutoSaveInterval")) yaml.set("AutoSaveInterval", autoSaveInterval);
+        if (!yaml.contains("EditLog")) yaml.set("EditLog", editLog);
+        if (!yaml.contains("TradeLog")) yaml.set("TradeLog", tradeLog);
+        if (!yaml.contains("SaveByMMID")) yaml.set("SaveByMMID", saveByMMID);
+        if (!yaml.contains("OverwriteConverting")) yaml.set("OverwriteConverting", overwriteConverting);
+        if (!yaml.contains("DefaultSearchableInConverting"))
+            yaml.set("DefaultSearchableInConverting", overwriteConverting);
+        if (!yaml.contains("FollowPlayer")) yaml.set("FollowPlayer", followPlayer);
+        if (!yaml.contains("Language")) yaml.set("Language", language);
+        if (!yaml.contains("ReadOnlyIgnoreIOException"))
+            yaml.set("ReadOnlyIgnoreIOException", readOnlyIgnoreIOException);
 
         try {
             yaml.save(file);
         } catch (IOException e) {
-            if(!readOnlyIgnoreIOException) e.printStackTrace();
+            if (!readOnlyIgnoreIOException) e.printStackTrace();
         }
     }
 
     public static void runAutoSave() {
-        if(autoSaveInterval <= 0) return;
-        if(autoSaveTask != null) autoSaveTask.cancel();
-        if(respawnTask != null) respawnTask.cancel();
+        if (autoSaveInterval <= 0) return;
+        if (autoSaveTask != null) autoSaveTask.cancel();
+        if (respawnTask != null) respawnTask.cancel();
         autoSaveTask = Bukkit.getScheduler().runTaskTimer(RyuZUInfiniteShop.getPlugin(), FileUtil::reloadAllWithMessage, 20L * 60 * autoSaveInterval, 20L * 60 * autoSaveInterval);
         respawnTask = Bukkit.getScheduler().runTaskTimer(RyuZUInfiniteShop.getPlugin(), () -> ShopUtil.getShops().values().forEach(Shop::respawnNPC), 20L, 20L * 15);
     }

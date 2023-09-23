@@ -10,7 +10,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ModeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ScheduleStringData;
@@ -28,7 +27,7 @@ public class SchedulerListener implements Listener {
     public static void setSchedulers(Player p, String id, Inventory inv, Consumer<String> successProcess) {
         schedulers.put(p.getUniqueId(), new ScheduleStringData(System.currentTimeMillis(), id, inv, successProcess));
         ModeHolder holder = ShopUtil.getModeHolder(p.getOpenInventory().getTopInventory());
-        if(holder != null) holder.setBefore(null);
+        if (holder != null) holder.setBefore(null);
         Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
     }
 
@@ -36,10 +35,10 @@ public class SchedulerListener implements Listener {
     public void change(AsyncPlayerChatEvent event) {
         Player p = event.getPlayer();
         if (!schedulers.containsKey(p.getUniqueId())) return;
-        if(FileUtil.isSaveBlock(p)) return;
+        if (FileUtil.isSaveBlock(p)) return;
         ScheduleStringData data = schedulers.get(p.getUniqueId());
         Shop shop = ShopUtil.getShop(data.getId());
-        if(shop == null && !data.getId().equalsIgnoreCase("ignore")) return;
+        if (shop == null && !data.getId().equalsIgnoreCase("ignore")) return;
         event.setCancelled(true);
         if ((System.currentTimeMillis() - schedulers.get(p.getUniqueId()).getTime()) / 1000d > 20 || event.getMessage().equalsIgnoreCase("Cancel")) {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCELLED.getMessage());
@@ -47,7 +46,7 @@ public class SchedulerListener implements Listener {
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> p.openInventory(data.getInventory()));
         } else {
             if (shop == null) {
-                if(data.getId().equals("ignore"))
+                if (data.getId().equals("ignore"))
                     Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> data.getSuccessProcess().accept(event.getMessage()));
                 else {
                     p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_FOUND.getMessage());

@@ -3,11 +3,11 @@
  */
 
 plugins {
-    id ("java")
-    id ("java-library")
-    id ("maven-publish")
+    id("java")
+    id("java-library")
+    id("maven-publish")
 //    id ("com.github.ryuzu.java-conventions")
-    id ("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 repositories {
@@ -46,19 +46,19 @@ repositories {
 }
 
 dependencies {
-    api ("com.github.Y-RyuZU:RyuZUCommandsGenerator:2.3")
-    api ("de.tr7zw:item-nbt-api-plugin:2.11.2")
+    api("com.github.Y-RyuZU:RyuZUCommandsGenerator:2.3")
+    api("de.tr7zw:item-nbt-api-plugin:2.11.2")
     api("com.google.guava:guava:31.1-jre")
-    api (project(":searchableinfiniteshop-v16newer"))
-    api (project(":searchableinfiniteshop-v16older"))
-    api (project(":searchableinfiniteshop-api"))
-    compileOnly ("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
-    compileOnly ("org.projectlombok:lombok:1.18.26")
-    annotationProcessor ("org.projectlombok:lombok:1.18.26")
-    compileOnly ("com.mojang:authlib:1.5.21")
-    compileOnly ("com.github.MilkBowl:VaultAPI:1.7")
+    api(project(":searchableinfiniteshop-v16newer"))
+    api(project(":searchableinfiniteshop-v16older"))
+    api(project(":searchableinfiniteshop-api"))
+    compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
+    compileOnly("org.projectlombok:lombok:1.18.26")
+    annotationProcessor("org.projectlombok:lombok:1.18.26")
+    compileOnly("com.mojang:authlib:1.5.21")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
-        exclude ("*", "*")
+        exclude("*", "*")
     }
 }
 

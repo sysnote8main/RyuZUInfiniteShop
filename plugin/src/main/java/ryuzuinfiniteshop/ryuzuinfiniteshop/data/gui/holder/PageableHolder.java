@@ -1,7 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder;
 
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.PageableGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.TradesGui;
 
 public abstract class PageableHolder extends ModeHolder {
     public PageableHolder(ShopMode mode, PageableGui gui) {

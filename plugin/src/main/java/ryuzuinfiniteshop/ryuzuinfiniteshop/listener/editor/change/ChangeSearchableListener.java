@@ -19,10 +19,10 @@ public class ChangeSearchableListener implements Listener {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
         if (holder == null) return;
-        if(!(holder.getGui() instanceof ShopEditorGui)) return;
+        if (!(holder.getGui() instanceof ShopEditorGui)) return;
         if (!holder.getMode().equals(ShopMode.EDIT)) return;
         if (event.getClickedInventory() == null) return;
-        if(ItemUtil.getWhitePanel().equals(event.getCurrentItem())) return;
+        if (ItemUtil.getWhitePanel().equals(event.getCurrentItem())) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();

@@ -3,9 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder;
 import lombok.Getter;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 @Getter

@@ -1,7 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 
 import org.bukkit.ChatColor;
-import org.bukkit.inventory.ItemStack;
 
 public enum ShopType {
     TwotoOne,

@@ -4,10 +4,6 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Cat;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Parrot;
-import org.bukkit.inventory.ItemStack;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -21,7 +17,7 @@ public class CatShop extends SittableShop {
 
     public void setCatType(Cat.Type type) {
         this.type = type;
-        if(npc == null) return;
+        if (npc == null) return;
         ((Cat) npc).setCatType(type);
     }
 
@@ -40,7 +36,7 @@ public class CatShop extends SittableShop {
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.type = Cat.Type.valueOf(yaml.getString("Npc.Options.CatType" , "TABBY"));
+            this.type = Cat.Type.valueOf(yaml.getString("Npc.Options.CatType", "TABBY"));
         });
     }
 

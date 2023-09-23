@@ -1,13 +1,11 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor;
 
-import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
 import java.util.Arrays;
@@ -31,7 +29,7 @@ public abstract class ModeGui {
 
         //必要なデータの取得
         Inventory inv = getInventory(holder.getMode());
-        if(!holder.equals(ShopUtil.getShopHolder(inv))) return;
+        if (!holder.equals(ShopUtil.getShopHolder(inv))) return;
         ItemStack[] clear = target.getContents();
         Arrays.fill(clear, new ItemStack(Material.AIR));
         target.setContents(clear);

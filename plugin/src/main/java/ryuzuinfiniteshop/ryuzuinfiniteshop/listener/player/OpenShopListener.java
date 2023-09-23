@@ -26,19 +26,19 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.UnderstandSystemConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.CitizensHandler;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 
 import java.util.HashMap;
 
@@ -48,7 +48,8 @@ public class OpenShopListener implements Listener {
     public void openShop(PlayerInteractAtEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
-        if(entity instanceof LivingEntity && !entity.getType().equals(EntityType.ARMOR_STAND) && !entity.getType().equals(EntityType.ENDER_DRAGON)) return;
+        if (entity instanceof LivingEntity && !entity.getType().equals(EntityType.ARMOR_STAND) && !entity.getType().equals(EntityType.ENDER_DRAGON))
+            return;
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
         String id = JavaUtil.getNonNull(CitizensHandler.getCitizensShopString(entity), NBTUtil.getNMSStringTag(entity, "Shop"));
         if (id == null) return;
@@ -61,7 +62,7 @@ public class OpenShopListener implements Listener {
     public void openShop(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
-        if(!(entity instanceof LivingEntity)) return;
+        if (!(entity instanceof LivingEntity)) return;
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
         String id = JavaUtil.getNonNull(CitizensHandler.getCitizensShopString(entity), NBTUtil.getNMSStringTag(entity, "Shop"));
         if (id == null) return;
@@ -78,7 +79,7 @@ public class OpenShopListener implements Listener {
         Block block = event.getClickedBlock();
         if (block == null) return;
         String id = LocationUtil.toStringFromLocation(block.getLocation());
-        if(ShopUtil.getShop(id) == null) return;
+        if (ShopUtil.getShop(id) == null) return;
         event.setCancelled(true);
         openShop(id, p);
     }
@@ -105,7 +106,7 @@ public class OpenShopListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_SHOP_MERGE.getMessage(displayName));
             SoundUtil.playSuccessSound(p);
         } else {
-            if(p.isSneaking() && p.hasPermission("sis.op")) {
+            if (p.isSneaking() && p.hasPermission("sis.op")) {
                 //ショップの編集画面を開く
                 if (shop.isEditting(p)) return;
                 ShopUtil.closeAllShopTradeInventory(shop);
@@ -160,9 +161,9 @@ public class OpenShopListener implements Listener {
                     if (warn) {
                         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_TRADE_DUPLICATE.getMessage());
                         p.openInventory(shop.getPage(page).getInventory(mode, p, holder.getBefore()));
-                    } else if(shop.ableCreateNewPage()) {
+                    } else if (shop.ableCreateNewPage()) {
                         shop.createNewPage();
-                        if(shop.getPage(page + 1) != null) {
+                        if (shop.getPage(page + 1) != null) {
                             p.openInventory(shop.getPage(page + 1).getInventory(mode, p, holder.getBefore()));
                             fail = false;
                         }

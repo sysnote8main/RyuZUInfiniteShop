@@ -2,8 +2,8 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.config;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.DisplayPanel;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.DisplayPanel;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 
@@ -27,6 +27,7 @@ public class DisplayPanelConfig {
     public static DisplayPanel getPanel(ShopTrade.TradeResult result) {
         return panels.get(result);
     }
+
     public static void load() {
         File file = FileUtil.initializeFile("panel.yml");
         YamlConfiguration yaml = new YamlConfiguration();
@@ -36,13 +37,14 @@ public class DisplayPanelConfig {
             throw new RuntimeException(e);
         }
         panels = new HashMap<ShopTrade.TradeResult, DisplayPanel>() {{
-            for(ShopTrade.TradeResult result : defaultResultMaterial.keySet()) {
-                put(result,
-                    new DisplayPanel(
-                            result,
-                            ItemUtil.getColoredItem(yaml.getString(getResultConfig(result) + ".Material", defaultResultMaterial.get(result))),
-                            yaml.getInt(getResultConfig(result) + ".CustomModelData", -1)
-                    )
+            for (ShopTrade.TradeResult result : defaultResultMaterial.keySet()) {
+                put(
+                        result,
+                        new DisplayPanel(
+                                result,
+                                ItemUtil.getColoredItem(yaml.getString(getResultConfig(result) + ".Material", defaultResultMaterial.get(result))),
+                                yaml.getInt(getResultConfig(result) + ".CustomModelData", -1)
+                        )
                 );
             }
         }};
@@ -56,14 +58,16 @@ public class DisplayPanelConfig {
         } catch (IOException | InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
-        for(ShopTrade.TradeResult result : defaultResultMaterial.keySet()) {
-            if(!yaml.contains(getResultConfig(result) + ".Material")) yaml.set(getResultConfig(result) + ".Material", panels.get(result).getItem().getType().name());
-            if(!yaml.contains(getResultConfig(result) + ".CustomModelData")) yaml.set(getResultConfig(result) + ".CustomModelData", panels.get(result).getData());
+        for (ShopTrade.TradeResult result : defaultResultMaterial.keySet()) {
+            if (!yaml.contains(getResultConfig(result) + ".Material"))
+                yaml.set(getResultConfig(result) + ".Material", panels.get(result).getItem().getType().name());
+            if (!yaml.contains(getResultConfig(result) + ".CustomModelData"))
+                yaml.set(getResultConfig(result) + ".CustomModelData", panels.get(result).getData());
         }
         try {
             yaml.save(file);
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
+            if (!Config.readOnlyIgnoreIOException) e.printStackTrace();
         }
     }
 

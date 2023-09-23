@@ -1,25 +1,19 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.editor.edit;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
 public class EditMainPageListener implements Listener {
     //ショップの編集画面を開く
@@ -57,7 +51,7 @@ public class EditMainPageListener implements Listener {
         ShopHolder shopholder = (ShopHolder) inv.getHolder();
         Shop shop = shopholder.getShop();
 
-        if(Config.autoSaveInterval <= 0) shop.saveYaml();
+        if (Config.autoSaveInterval <= 0) shop.saveYaml();
         shop.setEditting(false);
     }
 

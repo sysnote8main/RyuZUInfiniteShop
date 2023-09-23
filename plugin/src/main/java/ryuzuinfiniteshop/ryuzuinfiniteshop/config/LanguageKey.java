@@ -37,7 +37,7 @@ public enum LanguageKey {
     ITEM_TRADE_ONCE("クリック: 1回購入", "Click: Buy one time"),
     ITEM_TRADE_EIGHT("シフトクリック: 8回購入", "Shift click: Buy eight times"),
     ITEM_TRADE_STACK("ミドルクリック: 64回購入", "Middle click: Buy a stack"),
-//    ITEM_SEARCH_BY_VALUEORPRODUCT("対価、商品をクリック: 商品、対価で検索", "Click: the item and the price to search by item and price"),
+    //    ITEM_SEARCH_BY_VALUEORPRODUCT("対価、商品をクリック: 商品、対価で検索", "Click: the item and the price to search by item and price"),
     ITEM_LOCATION("座標: {0}", "Location: {0}"),
     ITEM_EDITOR_IS_SEARCHABLE("検索可否: {0}", "Searchability: {0}"),
     ITEM_EDITOR_SEARCHABLE("可能", "Searchable"),

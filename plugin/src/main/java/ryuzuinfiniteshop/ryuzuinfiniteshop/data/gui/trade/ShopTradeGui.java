@@ -7,13 +7,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.DisplayPanelConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 
 import javax.annotation.Nullable;
@@ -27,6 +26,7 @@ public abstract class ShopTradeGui extends ShopGui {
     }
 
     public abstract List<Integer> getDisplaySlot();
+
     public abstract List<Integer> getConvertSlot();
 
     public boolean isConvertSlot(int slot) {
@@ -56,7 +56,7 @@ public abstract class ShopTradeGui extends ShopGui {
         }
 
         for (int i = function.apply(getTrades().size()); i < 9 * 6; i++) {
-            if(mode.equals(ShopMode.TRADE)) inv.setItem(i, ShopTrade.getFilter());
+            if (mode.equals(ShopMode.TRADE)) inv.setItem(i, ShopTrade.getFilter());
         }
 
         return inv;
@@ -89,7 +89,7 @@ public abstract class ShopTradeGui extends ShopGui {
         for (int i = 0; i < getTrades().size(); i++) {
             ShopTrade trade = getTrade(i);
             ShopTrade.TradeResult result = trade.getResult(p, shop);
-            inventory.setItem(getConvertSlot().get(i), NBTUtil.setNMSTag(trade.getOption().getOptionsPanel(DisplayPanelConfig.getPanel(result).getItemStack(), p, trade), "A" , String.valueOf(i)));
+            inventory.setItem(getConvertSlot().get(i), NBTUtil.setNMSTag(trade.getOption().getOptionsPanel(DisplayPanelConfig.getPanel(result).getItemStack(), p, trade), "A", String.valueOf(i)));
         }
     }
 }

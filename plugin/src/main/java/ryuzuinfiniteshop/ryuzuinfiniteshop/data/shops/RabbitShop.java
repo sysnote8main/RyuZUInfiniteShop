@@ -3,9 +3,6 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Cat;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Rabbit;
 
 import java.util.Arrays;
@@ -20,7 +17,7 @@ public class RabbitShop extends Shop {
 
     public void setRabbitType(Rabbit.Type type) {
         this.type = type;
-        if(npc == null) return;
+        if (npc == null) return;
         ((Rabbit) npc).setRabbitType(type);
     }
 
@@ -39,7 +36,7 @@ public class RabbitShop extends Shop {
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.type = Rabbit.Type.valueOf(yaml.getString("Npc.Options.RabbitType" , "BROWN"));
+            this.type = Rabbit.Type.valueOf(yaml.getString("Npc.Options.RabbitType", "BROWN"));
         });
     }
 

@@ -9,8 +9,8 @@ import org.bukkit.inventory.Inventory;
 import java.util.function.Consumer;
 
 @Value
-@EqualsAndHashCode(callSuper=true)
-@ToString(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class ScheduleEntityData extends ScheduleData {
     Consumer<Entity> successProcess;
 

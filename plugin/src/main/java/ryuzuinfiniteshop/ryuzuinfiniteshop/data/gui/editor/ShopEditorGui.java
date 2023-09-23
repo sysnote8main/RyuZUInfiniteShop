@@ -8,14 +8,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.*;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.CitizensHandler;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.MythicInstanceProvider;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.XMaterial;
 
 import java.util.HashMap;
 import java.util.List;
@@ -93,12 +94,12 @@ public class ShopEditorGui extends ShopGui {
 
     private void setShopStatus(Inventory inv) {
         if (MythicInstanceProvider.isLoaded())
-            inv.setItem(4 * 9 + 3, ItemUtil.getNamedItem(Material.ENDER_EYE, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SET_MYTHICMOBID.getMessage()));
+            inv.setItem(4 * 9 + 3, ItemUtil.getNamedItem(XMaterial.matchXMaterial("ENDER_EYE").get().parseMaterial(), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SET_MYTHICMOBID.getMessage()));
         if (CitizensHandler.isLoaded())
-            inv.setItem( 2 * 9 + 7, ItemUtil.getNamedItem(Material.TOTEM_OF_UNDYING, ChatColor.GREEN + "CitizensのNpcを登録する"));
+            inv.setItem(2 * 9 + 7, ItemUtil.getNamedItem(XMaterial.matchXMaterial("TOTEM_OF_UNDYING").get().parseMaterial(), ChatColor.GREEN + "CitizensのNpcを登録する"));
         inv.setItem(4 * 9 + 4, ItemUtil.getNamedItem(Material.ENDER_PEARL, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SET_ENTITYTYPE.getMessage()));
         inv.setItem(4 * 9 + 5, getShop().isSearchable() ?
-                ItemUtil.getNamedItem(Material.CLOCK, ChatColor.GREEN + LanguageKey.ITEM_SEARCH_SELECT.getMessage()) :
+                ItemUtil.getNamedItem(XMaterial.matchXMaterial("CLOCK").get().parseMaterial(), ChatColor.GREEN + LanguageKey.ITEM_SEARCH_SELECT.getMessage()) :
                 ItemUtil.getNamedEnchantedItem(Material.CLOCK, ChatColor.RED + LanguageKey.ITEM_SEARCH_NOT_SELECTABLE.getMessage())
         );
         inv.setItem(4 * 9 + 6, getShop().isLock() ?
@@ -177,7 +178,7 @@ public class ShopEditorGui extends ShopGui {
     private void setSitting(Inventory inv) {
         if (!(getShop() instanceof SittableShop)) return;
         ItemStack item = ((SittableShop) getShop()).isSitting() ?
-                ItemUtil.getNamedItem(Material.STONE_PRESSURE_PLATE, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SITTING.getMessage()) :
+                ItemUtil.getNamedItem(XMaterial.matchXMaterial("STONE_PRESSURE_PLATE").get().parseMaterial(), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SITTING.getMessage()) :
                 ItemUtil.getNamedItem(Material.STONE, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_STANDING.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
@@ -187,8 +188,8 @@ public class ShopEditorGui extends ShopGui {
     private void setPower(Inventory inv) {
         if (!(getShop() instanceof PoweredableShop)) return;
         ItemStack item = ((PoweredableShop) getShop()).isPowered() ?
-                ItemUtil.getNamedEnchantedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_POWERED.getMessage()) :
-                ItemUtil.getNamedItem(Material.CREEPER_SPAWN_EGG, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_NOT_POWERED.getMessage());
+                ItemUtil.getNamedEnchantedItem(XMaterial.matchXMaterial("CREEPER_SPAWN_EGG").get().parseMaterial(), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_POWERED.getMessage()) :
+                ItemUtil.getNamedItem(XMaterial.matchXMaterial("CREEPER_SPAWN_EGG").get().parseMaterial(), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_NOT_POWERED.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Power);
@@ -284,7 +285,7 @@ public class ShopEditorGui extends ShopGui {
 
     private void setHorseStyle(Inventory inv) {
         if (!(getShop() instanceof HorseShop)) return;
-        ItemStack item = ItemUtil.getNamedItem(Material.TERRACOTTA, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_HORSE_STYLE.getMessage());
+        ItemStack item = ItemUtil.getNamedItem(XMaterial.matchXMaterial("GRAY_GLAZED_TERRACOTTA").get().parseMaterial(), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_HORSE_STYLE.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.HorseStyle);
@@ -316,7 +317,7 @@ public class ShopEditorGui extends ShopGui {
         if (!(getShop().getNpc() instanceof LivingEntity)) return;
         ItemStack item = getShop().isInvisible() ?
                 ItemUtil.getNamedItem(Material.GLASS, ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_VISIBILITY_INVISIBLE.getMessage()) :
-                ItemUtil.getNamedItem(Material.POLISHED_ANDESITE, ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_VISIBILITY_VISIBLE.getMessage());
+                ItemUtil.getNamedItem(XMaterial.matchXMaterial("POLISHED_ANDESITE").get().parseMaterial(), ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_VISIBILITY_VISIBLE.getMessage());
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Visible);

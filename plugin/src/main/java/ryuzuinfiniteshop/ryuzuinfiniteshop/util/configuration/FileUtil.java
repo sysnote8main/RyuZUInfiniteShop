@@ -24,14 +24,14 @@ public class FileUtil {
 
     public static File initializeFile(String path) {
         String[] splited = path.split("/");
-        File folder = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), String.join("" , Arrays.copyOf(splited , splited.length - 1)));
+        File folder = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), String.join("", Arrays.copyOf(splited, splited.length - 1)));
         File file = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), path);
-        if(!folder.exists()) folder.mkdirs();
-        if(!file.exists()) {
+        if (!folder.exists()) folder.mkdirs();
+        if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
+                if (!Config.readOnlyIgnoreIOException) e.printStackTrace();
             }
         }
         return file;
@@ -39,12 +39,12 @@ public class FileUtil {
 
     public static File initializeFolder(String path) {
         File folder = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), path);
-        if(!folder.exists()) folder.mkdirs();
+        if (!folder.exists()) folder.mkdirs();
         return folder;
     }
 
     public static boolean reloadAllWithMessage() {
-        if(saveBlock) return false;
+        if (saveBlock) return false;
 
         ShopUtil.removeAllNPC();
         saveBlock = true;
@@ -64,7 +64,7 @@ public class FileUtil {
             TradeUtil.loadTradeOptions();
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
                 saveBlock = false;
-                if(converted) saveAll();
+                if (converted) saveAll();
                 Config.runAutoSave();
                 Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_FILES_RELOADING_COMPLETE.getMessage()));
                 ShopUtil.getShops().values().forEach(Shop::respawnNPC);
@@ -75,7 +75,7 @@ public class FileUtil {
     }
 
     public static boolean loadAll() {
-        if(saveBlock) return false;
+        if (saveBlock) return false;
 
         ShopUtil.removeAllNPC();
         saveBlock = true;
@@ -88,7 +88,7 @@ public class FileUtil {
             TradeUtil.loadTradeOptions();
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
                 saveBlock = false;
-                if(converted) saveAll();
+                if (converted) saveAll();
                 Config.runAutoSave();
                 Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_FILES_LOADING_COMPLETE.getMessage()));
                 ShopUtil.getShops().values().forEach(Shop::respawnNPC);
@@ -98,7 +98,7 @@ public class FileUtil {
     }
 
     public static boolean saveAll() {
-        if(saveBlock) return false;
+        if (saveBlock) return false;
 
         saveBlock = true;
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
@@ -129,7 +129,7 @@ public class FileUtil {
     }
 
     public static boolean isSaveBlock(Player p) {
-        if(saveBlock) {
+        if (saveBlock) {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_FILES_RELOADING_BLOCKED.getMessage());
             SoundUtil.playFailSound(p);
         }
@@ -137,7 +137,8 @@ public class FileUtil {
     }
 
     public static boolean isSaveBlock(CommandData data) {
-        if(saveBlock) data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_FILES_RELOADING_BLOCKED.getMessage());
+        if (saveBlock)
+            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_FILES_RELOADING_BLOCKED.getMessage());
 
         return saveBlock;
     }

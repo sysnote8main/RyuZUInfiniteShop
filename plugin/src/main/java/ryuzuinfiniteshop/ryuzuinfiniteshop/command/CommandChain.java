@@ -13,11 +13,11 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.UnderstandSystemConfig;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SelectSearchItemGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
@@ -118,7 +118,7 @@ public class CommandChain {
                                 Player p = (Player) data.getSender();
                                 loc = p.getLocation();
                             }
-                            if(data.getArgs()[1].equalsIgnoreCase("CITIZEN"))
+                            if (data.getArgs()[1].equalsIgnoreCase("CITIZEN"))
                                 new Shop(loc, ((Player) data.getSender()).getUniqueId(), false);
                             else if (MythicInstanceProvider.getInstance().exsistsMythicMob(data.getArgs()[1]))
                                 new Shop(loc, data.getArgs()[1]);

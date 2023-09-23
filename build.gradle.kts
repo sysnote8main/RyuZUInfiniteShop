@@ -4,8 +4,8 @@
 
 plugins {
 //    id ("com.github.ryuzu.java-conventions")
-    id ("java-library")
-    id ("com.github.johnrengelman.shadow") version "7.1.2"
+    id("java-library")
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 repositories {

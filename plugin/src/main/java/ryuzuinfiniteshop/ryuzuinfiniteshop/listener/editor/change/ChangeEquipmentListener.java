@@ -5,14 +5,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EquipmentUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 
 //ショップのNPCの装備を変更する
 public class ChangeEquipmentListener implements Listener {
@@ -24,7 +24,7 @@ public class ChangeEquipmentListener implements Listener {
         if (!(holder.getGui() instanceof ShopEditorGui)) return;
         if (!holder.getMode().equals(ShopMode.EDIT)) return;
         if (event.getClickedInventory() == null) return;
-        if(ItemUtil.getWhitePanel().equals(event.getCurrentItem())) return;
+        if (ItemUtil.getWhitePanel().equals(event.getCurrentItem())) return;
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
@@ -39,7 +39,7 @@ public class ChangeEquipmentListener implements Listener {
             if (ItemUtil.isAir(event.getCursor())) {
                 if (ItemUtil.isAir(shop.getEquipmentItem(EquipmentUtil.getEquipmentSlot(slot).ordinal())))
                     return;
-                 else
+                else
                     event.setCurrentItem(EquipmentUtil.getEquipmentDisplayItem(EquipmentUtil.getEquipmentSlot(slot)));
             } else
                 event.setCurrentItem(ItemUtil.getOneItemStack(event.getCursor()));

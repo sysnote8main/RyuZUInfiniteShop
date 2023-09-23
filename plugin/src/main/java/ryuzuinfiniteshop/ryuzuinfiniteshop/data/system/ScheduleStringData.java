@@ -1,6 +1,8 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.system;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.bukkit.inventory.Inventory;
 
 import java.util.function.Consumer;

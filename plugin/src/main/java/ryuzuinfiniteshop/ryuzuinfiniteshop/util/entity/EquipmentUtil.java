@@ -10,12 +10,12 @@ import java.util.HashMap;
 
 public class EquipmentUtil {
     private static final HashMap<Integer, EquipmentSlot> equipmentslots = new HashMap<Integer, EquipmentSlot>() {{
-            put(2 * 9 + 1, EquipmentSlot.HEAD);
-            put(3 * 9 + 1, EquipmentSlot.CHEST);
-            put(4 * 9 + 1, EquipmentSlot.LEGS);
-            put(5 * 9 + 1, EquipmentSlot.FEET);
-            put(3 * 9 + 0, EquipmentSlot.HAND);
-            put(3 * 9 + 2, EquipmentSlot.OFF_HAND);
+        put(2 * 9 + 1, EquipmentSlot.HEAD);
+        put(3 * 9 + 1, EquipmentSlot.CHEST);
+        put(4 * 9 + 1, EquipmentSlot.LEGS);
+        put(5 * 9 + 1, EquipmentSlot.FEET);
+        put(3 * 9 + 0, EquipmentSlot.HAND);
+        put(3 * 9 + 2, EquipmentSlot.OFF_HAND);
     }};
     private static final HashMap<EquipmentSlot, String> equipmentDisplayName = new HashMap<EquipmentSlot, String>() {{
         put(EquipmentSlot.HAND, ChatColor.GREEN + LanguageKey.ITEM_EQUIP_HAND_MAIN.getMessage());

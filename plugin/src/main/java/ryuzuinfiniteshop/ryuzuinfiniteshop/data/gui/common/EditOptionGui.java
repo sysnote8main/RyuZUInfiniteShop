@@ -15,11 +15,14 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.OptionType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.VaultHandler;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.XMaterial;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 @Getter
 public class EditOptionGui extends ShopGui {
@@ -81,7 +84,7 @@ public class EditOptionGui extends ShopGui {
             case LIMIT:
                 return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.BARRIER, ChatColor.BLUE + LanguageKey.ITEM_OPTIONS_LIMIT_VALUE_EDITTING.getMessage(ChatColor.YELLOW + String.valueOf(trade.getOption().getLimit())), ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_LIMIT_SHIFT.getMessage()), "OptionType", "Limit");
             case RATE:
-                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(Material.DAMAGED_ANVIL, ChatColor.BLUE + LanguageKey.ITEM_OPTIONS_RATE_VALUE.getMessage(ChatColor.YELLOW + String.valueOf(trade.getOption().getRate()), (trade.getOption().isHide() ? ChatColor.RED + LanguageKey.ITEM_OPTIONS_RATE_HIDE.getMessage() : ChatColor.GREEN + LanguageKey.ITEM_OPTIONS_RATE_SHOW.getMessage())), ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_RATE_CLICK.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_RATE_SHIFT.getMessage()), "OptionType", "Rate");
+                return NBTUtil.setNMSTag(ItemUtil.getNamedItem(XMaterial.matchXMaterial("DAMAGED_ANVIL").get().parseMaterial(), ChatColor.BLUE + LanguageKey.ITEM_OPTIONS_RATE_VALUE.getMessage(ChatColor.YELLOW + String.valueOf(trade.getOption().getRate()), (trade.getOption().isHide() ? ChatColor.RED + LanguageKey.ITEM_OPTIONS_RATE_HIDE.getMessage() : ChatColor.GREEN + LanguageKey.ITEM_OPTIONS_RATE_SHOW.getMessage())), ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_RATE_CLICK.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_RATE_SHIFT.getMessage()), "OptionType", "Rate");
             case MONEY:
                 return NBTUtil.setNMSTag(
                         ItemUtil.getNamedItem(Material.GOLD_INGOT, ChatColor.BLUE + LanguageKey.ITEM_OPTIONS_MONEY_VALUE.getMessage(ChatColor.YELLOW + String.valueOf(VaultHandler.getInstance().format(trade.getOption().getMoney())), (trade.getOption().isGive() ? ChatColor.GREEN + LanguageKey.ITEM_OPTIONS_MONEY_RECEIVE.getMessage() : ChatColor.RED + LanguageKey.ITEM_OPTIONS_MONEY_PAY.getMessage())), ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_MONEY_CLICK.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_MONEY_SHIFT.getMessage()), "OptionType", "Money");

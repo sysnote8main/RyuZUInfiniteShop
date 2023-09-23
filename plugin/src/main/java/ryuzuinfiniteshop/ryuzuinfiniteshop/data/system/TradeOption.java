@@ -49,12 +49,12 @@ public class TradeOption implements ConfigurationSerializable {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> result = new LinkedHashMap<>();
-        if(money != 0) {
+        if (money != 0) {
             result.put("give", give);
             result.put("money", money);
         }
-        if(limit != 0) result.put("limit", limit);
-        if(rate != 100) {
+        if (limit != 0) result.put("limit", limit);
+        if (rate != 100) {
             result.put("hide", hide);
             result.put("rate", rate);
         }
@@ -62,7 +62,7 @@ public class TradeOption implements ConfigurationSerializable {
     }
 
     public static TradeOption deserialize(Map<String, Object> map) {
-        return new TradeOption((boolean) map.getOrDefault("give", false), (double) map.getOrDefault("money", 0d), (int) map.getOrDefault("limit", 0),(boolean) map.getOrDefault("hide", false), (int) map.getOrDefault("rate", 100));
+        return new TradeOption((boolean) map.getOrDefault("give", false), (double) map.getOrDefault("money", 0d), (int) map.getOrDefault("limit", 0), (boolean) map.getOrDefault("hide", false), (int) map.getOrDefault("rate", 100));
     }
 
     public ItemStack getOptionsPanel(ItemStack panel) {
@@ -73,21 +73,24 @@ public class TradeOption implements ConfigurationSerializable {
         if (money != 0) {
             panel = NBTUtil.setNMSTag(panel, "Give", String.valueOf(give));
             panel = NBTUtil.setNMSTag(panel, "Money", String.valueOf(money));
-            ItemUtil.withLore(panel,
+            ItemUtil.withLore(
+                    panel,
                     (give ? ChatColor.GREEN + LanguageKey.ITEM_OPTIONS_MONEY_RECEIVE.getMessage() : ChatColor.RED + LanguageKey.ITEM_OPTIONS_MONEY_PAY.getMessage()) +
                             ChatColor.YELLOW + " " + LanguageKey.ITEM_OPTIONS_MONEY_AMOUNT.getMessage(VaultHandler.getInstance().format(money))
             );
         }
-        if(limit != 0) {
+        if (limit != 0) {
             panel = NBTUtil.setNMSTag(panel, "Limit", String.valueOf(limit));
-            ItemUtil.withLore(panel,
-                    ChatColor.YELLOW + (p == null ? LanguageKey.ITEM_OPTIONS_LIMIT_VALUE_EDITTING.getMessage(limit) : LanguageKey.ITEM_OPTIONS_LIMIT_VALUE_BUYING.getMessage(limit - trade.getTradeCount(p) , limit))
+            ItemUtil.withLore(
+                    panel,
+                    ChatColor.YELLOW + (p == null ? LanguageKey.ITEM_OPTIONS_LIMIT_VALUE_EDITTING.getMessage(limit) : LanguageKey.ITEM_OPTIONS_LIMIT_VALUE_BUYING.getMessage(limit - trade.getTradeCount(p), limit))
             );
         }
-        if(rate != 100) {
+        if (rate != 100) {
             panel = NBTUtil.setNMSTag(panel, "Rate", String.valueOf(rate));
             panel = NBTUtil.setNMSTag(panel, "Hide", String.valueOf(hide));
-            ItemUtil.withLore(panel,
+            ItemUtil.withLore(
+                    panel,
                     ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_RATE_SUCCESS.getMessage(((p != null && hide) ? "?" : rate)) +
                             (p == null ? (" " + (hide ? ChatColor.RED + LanguageKey.ITEM_OPTIONS_RATE_HIDE.getMessage() : ChatColor.GREEN + LanguageKey.ITEM_OPTIONS_RATE_SHOW.getMessage())) : "")
             );

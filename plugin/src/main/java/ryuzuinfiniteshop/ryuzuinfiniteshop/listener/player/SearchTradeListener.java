@@ -10,10 +10,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SearchTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SelectSearchItemGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.ShopListGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.common.SearchTradeGui;
-import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.*;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ModeHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.SeachTradeHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
@@ -164,7 +167,7 @@ public class SearchTradeListener implements Listener {
         }
 
         if (isOpenShop) {
-            if(p.hasPermission("sis.op") && event.isShiftClick()) {
+            if (p.hasPermission("sis.op") && event.isShiftClick()) {
                 //編集画面を開く
                 ShopUtil.closeAllShopTradeInventory(shop);
                 p.openInventory(shop.getEditor(1).getInventory(ShopMode.EDIT, holder));
@@ -182,9 +185,9 @@ public class SearchTradeListener implements Listener {
                 SoundUtil.playClickShopSound(p);
             }
         } else {
-            if(ItemUtil.isAir(event.getCurrentItem())) return;
-            if(!(p.hasPermission("sis.search") || p.hasPermission("sis.op"))) return;
-            if(slot % 9 == info) return;
+            if (ItemUtil.isAir(event.getCurrentItem())) return;
+            if (!(p.hasPermission("sis.search") || p.hasPermission("sis.op"))) return;
+            if (slot % 9 == info) return;
             LinkedHashMap<ShopTrade, Shop> searchedTrades = (slot % 9 < info) ? TradeUtil.getTradesFromGive(event.getCurrentItem(), holder.getMode()) : TradeUtil.getTradesFromTake(event.getCurrentItem(), holder.getMode());
             if (searchedTrades.size() == 0) {
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NORESULTS.getMessage());
@@ -216,8 +219,8 @@ public class SearchTradeListener implements Listener {
         int info = type.getSubtractSlot();
         int surplus = slot % 9;
         int base = (type.equals(ShopType.TwotoOne) && surplus > 4) ? surplus - 5 : surplus;
-        if(ItemUtil.isAir(event.getCurrentItem())) return;
-        if(base == info) return;
+        if (ItemUtil.isAir(event.getCurrentItem())) return;
+        if (base == info) return;
 
         ItemStack item = trade.getTradeItems(holder.getShop().getShopType(), ShopMode.SEARCH)[base];
         LinkedHashMap<ShopTrade, Shop> searchedTrades = base < info ? TradeUtil.getTradesFromGive(item, ShopMode.SEARCH) : TradeUtil.getTradesFromTake(item, ShopMode.SEARCH);

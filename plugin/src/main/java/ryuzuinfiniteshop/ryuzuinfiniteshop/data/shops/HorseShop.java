@@ -4,9 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -21,13 +19,13 @@ public class HorseShop extends AgeableShop {
 
     public void setStyle(Horse.Style style) {
         this.style = style;
-        if(npc == null) return;
+        if (npc == null) return;
         ((Horse) npc).setStyle(style);
     }
 
     public void setColor(Horse.Color color) {
         this.color = color;
-        if(npc == null) return;
+        if (npc == null) return;
         ((Horse) npc).setColor(color);
 //        NBTBuilder.setVariant(color.name().toLowerCase(), style.name().toLowerCase());
     }
@@ -57,8 +55,8 @@ public class HorseShop extends AgeableShop {
     @Override
     public Consumer<YamlConfiguration> getLoadYamlProcess() {
         return super.getLoadYamlProcess().andThen(yaml -> {
-            this.color = Horse.Color.valueOf(yaml.getString("Npc.Options.Color" , "WHITE"));
-            this.style = Horse.Style.valueOf(yaml.getString("Npc.Options.Style" , "NONE"));
+            this.color = Horse.Color.valueOf(yaml.getString("Npc.Options.Color", "WHITE"));
+            this.style = Horse.Style.valueOf(yaml.getString("Npc.Options.Style", "NONE"));
         });
     }
 
@@ -74,13 +72,13 @@ public class HorseShop extends AgeableShop {
     public Material getColorMaterial() {
         switch (color) {
             case CREAMY:
-                return  Material.WHITE_GLAZED_TERRACOTTA;
+                return Material.WHITE_GLAZED_TERRACOTTA;
             case CHESTNUT:
                 return Material.BROWN_GLAZED_TERRACOTTA;
             case DARK_BROWN:
                 return Material.BLACK_GLAZED_TERRACOTTA;
             case GRAY:
-                return Material.getMaterial(  "GRAY_WOOL");
+                return Material.getMaterial("GRAY_WOOL");
             case BROWN:
                 return Material.getMaterial("BROWN_WOOL");
             case WHITE:

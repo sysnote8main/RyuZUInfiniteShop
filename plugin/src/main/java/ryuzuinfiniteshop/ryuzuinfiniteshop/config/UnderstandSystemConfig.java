@@ -8,9 +8,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class UnderstandSystemConfig {
     private static List<String> signedPlayers;
@@ -33,7 +31,7 @@ public class UnderstandSystemConfig {
         try {
             yaml.save(file);
         } catch (IOException e) {
-            if(!Config.readOnlyIgnoreIOException) e.printStackTrace();
+            if (!Config.readOnlyIgnoreIOException) e.printStackTrace();
         }
     }
 
