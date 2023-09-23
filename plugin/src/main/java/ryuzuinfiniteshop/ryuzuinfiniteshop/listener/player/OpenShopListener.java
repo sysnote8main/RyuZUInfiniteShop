@@ -12,6 +12,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.*;
@@ -179,8 +180,9 @@ public class OpenShopListener implements Listener {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void openBeforePage(InventoryCloseEvent event) {
+        System.out.println("openBeforePage");
         //インベントリがショップなのかチェック
         Inventory inv = event.getInventory();
         ModeHolder holder = ShopUtil.getModeHolder(inv);
@@ -195,6 +197,7 @@ public class OpenShopListener implements Listener {
                 SoundUtil.playCloseShopSound(p);
             if (ShopUtil.getModeHolder(p.getOpenInventory().getTopInventory()) != null) return;
             if (holder.getBefore() == null) return;
+            if (holder.getBefore().getGui() instanceof ShopTradeGui) ((ShopTradeGui) holder.getBefore().getGui()).getShop().getTrades().forEach(System.out::println);
             if (holder.getBefore().getGui() instanceof ShopTradeGui)
                 p.openInventory(((ShopTradeGui) holder.getBefore().getGui()).getInventory(holder.getBefore().getMode(), p, holder.getBefore().getBefore()));
             else

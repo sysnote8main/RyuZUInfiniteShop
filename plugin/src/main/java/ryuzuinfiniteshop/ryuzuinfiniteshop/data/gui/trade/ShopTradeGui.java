@@ -24,7 +24,6 @@ public abstract class ShopTradeGui extends ShopGui {
 
     public ShopTradeGui(Shop shop, int page) {
         super(shop, page);
-        this.trades = shop.getTrades(page);
     }
 
     public abstract List<Integer> getDisplaySlot();
@@ -42,11 +41,6 @@ public abstract class ShopTradeGui extends ShopGui {
         if (getTrades().size() <= number) return null;
         if (number < 0) return null;
         return getTrades().get(number);
-    }
-
-    @Override
-    public Inventory getInventory(ShopMode mode) {
-        return null;
     }
 
     public Inventory getInventory(Function<Integer, Integer> function, ShopMode mode) {
