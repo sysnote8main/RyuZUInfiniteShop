@@ -682,8 +682,8 @@ public class Shop {
         if (npc != null) {
             npc.remove();
             Block block = location.clone().subtract(0, -1, 0).getBlock();
-            Location pos = block.getBlockData() instanceof Slab && ((Slab) block.getBlockData()).getType().equals(Slab.Type.BOTTOM) ? location.clone().add(0, -0.5, 0) : location;
-            pos.getWorld().getNearbyEntities(pos, 0.1, 0.1, 0.1).stream().filter(entity -> NBTUtil.getNMSStringTag(entity, "Shop") != null).forEach(Entity::remove);
+//            Location pos = block.getBlockData() instanceof Slab && ((Slab) block.getBlockData()).getType().equals(Slab.Type.BOTTOM) ? location.clone().add(0, -0.5, 0) : location;
+            location.getWorld().getNearbyEntities(location, 0.1, 0.1, 0.1).stream().filter(entity -> NBTUtil.getNMSStringTag(entity, "Shop") != null).forEach(Entity::remove);
         }
         if (citizen != null) CitizensHandler.despawnNPC(this);
         npc = null;
@@ -722,8 +722,8 @@ public class Shop {
         if (isEditableNpc()) {
             this.NBTBuilder = new EntityNBTBuilder(npc);
             Block block = location.clone().subtract(0, -1, 0).getBlock();
-            if (npc != null && block.getBlockData() instanceof Slab && ((Slab) block.getBlockData()).getType().equals(Slab.Type.BOTTOM))
-                npc.teleport(location.clone().add(0, -0.5, 0));
+//            if (npc != null && block.getBlockData() instanceof Slab && ((Slab) block.getBlockData()).getType().equals(Slab.Type.BOTTOM))
+//                npc.teleport(location.clone().add(0, -0.5, 0));
             if (npc instanceof LivingEntity)
                 NBTBuilder.setInvisible(invisible);
             this.location.setYaw(yaw);

@@ -191,7 +191,6 @@ public class ShopTrade {
         } else {
             UUID uuid = tradeUUID.computeIfAbsent(this, key -> UUID.randomUUID());
             tradeOptions.put(uuid, option);
-            System.out.println("setTradeOption: " + uuid + " " + option);
         }
     }
 
