@@ -81,7 +81,7 @@ public class TradeOption implements ConfigurationSerializable {
         if(limit != 0) {
             panel = NBTUtil.setNMSTag(panel, "Limit", String.valueOf(limit));
             ItemUtil.withLore(panel,
-                    ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_LIMIT_VALUE2.getMessage(p == null ? "" : trade.getTradeCount(p) , limit)
+                    ChatColor.YELLOW + (p == null ? LanguageKey.ITEM_OPTIONS_LIMIT_VALUE_EDITTING.getMessage(limit) : LanguageKey.ITEM_OPTIONS_LIMIT_VALUE_BUYING.getMessage(limit - trade.getTradeCount(p) , limit))
             );
         }
         if(rate != 100) {
@@ -89,7 +89,7 @@ public class TradeOption implements ConfigurationSerializable {
             panel = NBTUtil.setNMSTag(panel, "Hide", String.valueOf(hide));
             ItemUtil.withLore(panel,
                     ChatColor.YELLOW + LanguageKey.ITEM_OPTIONS_RATE_SUCCESS.getMessage(((p != null && hide) ? "?" : rate)) +
-                            (p == null ? "" : (" " + (hide ? ChatColor.RED + LanguageKey.ITEM_OPTIONS_RATE_HIDE.getMessage() : ChatColor.GREEN + LanguageKey.ITEM_OPTIONS_RATE_SHOW.getMessage())))
+                            (p == null ? (" " + (hide ? ChatColor.RED + LanguageKey.ITEM_OPTIONS_RATE_HIDE.getMessage() : ChatColor.GREEN + LanguageKey.ITEM_OPTIONS_RATE_SHOW.getMessage())) : "")
             );
         }
         return panel;

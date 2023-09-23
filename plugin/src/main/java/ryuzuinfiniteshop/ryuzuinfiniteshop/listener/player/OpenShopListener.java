@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,7 +47,7 @@ public class OpenShopListener implements Listener {
     public void openShop(PlayerInteractAtEntityEvent event) {
         Entity entity = event.getRightClicked();
         Player p = event.getPlayer();
-        if(entity instanceof LivingEntity) return;
+        if(entity instanceof LivingEntity && !entity.getType().equals(EntityType.ARMOR_STAND) && !entity.getType().equals(EntityType.ENDER_DRAGON)) return;
         if (!event.getHand().equals(EquipmentSlot.HAND)) return;
         String id = JavaUtil.getNonNull(CitizensHandler.getCitizensShopString(entity), NBTUtil.getNMSStringTag(entity, "Shop"));
         if (id == null) return;

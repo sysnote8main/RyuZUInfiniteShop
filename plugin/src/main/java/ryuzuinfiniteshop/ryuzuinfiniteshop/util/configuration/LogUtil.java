@@ -1,7 +1,9 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration;
 
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.config.Config;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.TradeOption;
@@ -86,12 +88,14 @@ public class LogUtil {
         List<String> logs = getLog();
         logs.add(log);
 
-        try (FileWriter fileWriter = new FileWriter(file)) {
-            for(String l : logs) {
-                fileWriter.write(l + System.lineSeparator());
+        Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
+            try (FileWriter fileWriter = new FileWriter(file)) {
+                for(String l : logs) {
+                    fileWriter.write(l + System.lineSeparator());
+                }
+            } catch (IOException e) {
+                if(!Config.readOnlyIgnoreIOException) throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            if(!Config.readOnlyIgnoreIOException) throw new RuntimeException(e);
-        }
+        });
     }
 }

@@ -322,12 +322,12 @@ public class ShopEditorGui extends ShopGui {
         SettingsMap.put(slot, ShopSettings.Visible);
     }
 
-    public int getTradePageRawNumber(int slot) {
+    public int getTradePageByRawNumber(int slot) {
         return slot + 1 + (getPage() - 1) * 18;
     }
 
     public int getTradePageNumber(int slot) {
-        int page = getTradePageRawNumber(slot);
+        int page = getTradePageByRawNumber(slot);
         return page <= getShop().getPageCount() ? page : 0;
     }
 

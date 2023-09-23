@@ -49,6 +49,7 @@ public class EditTradePageListener implements Listener {
 
         //取引を上書きし、取引として成立しないものは削除する
         boolean warn = shop.checkTrades(inv);
+        System.out.println("warn = " + warn);
         if (warn)
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_TRADE_DUPLICATE.getMessage());
     }
@@ -98,7 +99,7 @@ public class EditTradePageListener implements Listener {
 
         int lastslot = editormainpage.getTradeLastSlotNumber();
         int newslot = editormainpage.getTradeNewSlotNumber();
-        int page = editormainpage.getTradePageRawNumber(slot);
+        int page = editormainpage.getTradePageByRawNumber(slot);
 
         //存在するページなのかチェック
         if (slot > lastslot && slot != newslot) return;
@@ -133,11 +134,7 @@ public class EditTradePageListener implements Listener {
 
         if (trade == null) return;
         if (holder.getShop().isLock(p)) return;
-//        ShopTrade.TradeResult result = trade.getResult(p, gui.getShop());
-        if (!gui.getConvertSlot().contains(slot))
-//            ShopTrade.playResultEffect(p, result);
-//        else
-        {
+        if (!gui.getConvertSlot().contains(slot)) {
             SearchTradeListener.search(event);
             return;
         }
@@ -177,7 +174,7 @@ public class EditTradePageListener implements Listener {
         if (trade == null)
             SoundUtil.playFailSound(p);
         else {
-            p.openInventory(new EditOptionGui(trade, shop, holder.getGui().getPage(), slot, event.getClickedInventory()).getInventory(ShopMode.EDIT));
+            p.openInventory(new EditOptionGui(trade, shop, holder.getGui().getPage(), slot).getInventory(ShopMode.EDIT, holder));
             SoundUtil.playClickShopSound(p);
         }
     }
@@ -197,7 +194,7 @@ public class EditTradePageListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         OptionType type = OptionType.valueOf(NBTUtil.getNMSStringTag(event.getCurrentItem(), "OptionType").toUpperCase());
         EditOptionGui gui = ((EditOptionGui) holder.getGui());
-        TradeOption option = gui.getOption();
+        TradeOption option = gui.getTrade().getOption();
         if (slot % 9 == 4 && event.isShiftClick()) {
             SchedulerListener.setSchedulers(p, "ignore", event.getClickedInventory(), (message) -> {
                 //成功時の処理
@@ -260,9 +257,6 @@ public class EditTradePageListener implements Listener {
         if (!(holder.getGui() instanceof EditOptionGui)) return;
         if (!holder.getMode().equals(ShopMode.EDIT)) return;
         OptionHolder optionHolder = (OptionHolder) holder;
-        Player p = (Player) event.getPlayer();
-        optionHolder.getGui().getTrade().setTradeOption(optionHolder.getGui().getOption(), true);
-        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> p.openInventory(optionHolder.getInventory()), 1L);
-        SoundUtil.playCloseShopSound(p);
+        optionHolder.getGui().getTrade().setTradeOption(optionHolder.getGui().getTrade().getOption(), true);
     }
 }

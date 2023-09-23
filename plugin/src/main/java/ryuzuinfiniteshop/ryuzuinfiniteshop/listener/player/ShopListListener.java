@@ -21,7 +21,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 public class
 
 
-
 ShopListListener implements Listener {
     //ショップのページ切り替え
     @EventHandler
@@ -56,11 +55,10 @@ ShopListListener implements Listener {
             } else
                 p.openInventory(new ShopListGui(page + 1, shopListHolder.getShops()).getInventory(mode));
         }
-        if (fail) {
+        if (fail)
             SoundUtil.playFailSound(p);
-        } else {
+        else
             SoundUtil.playClickShopSound(p);
-        }
     }
 
     //ショップのページ切り替え
@@ -80,7 +78,7 @@ ShopListListener implements Listener {
         if (ItemUtil.isAir(item)) return;
         Player p = (Player) event.getWhoClicked();
         Shop shop = ShopUtil.getShop(NBTUtil.getNMSStringTag(item, "Shop"));
-        if(shop == null) {
+        if (shop == null) {
             p.sendMessage(ChatColor.RED + LanguageKey.MESSAGE_SHOP_NOT_FOUND.getMessage());
             SoundUtil.playFailSound(p);
             return;
@@ -95,7 +93,7 @@ ShopListListener implements Listener {
         } else {
             //取引画面を開く
             if (!shop.isTradableShop(p)) return;
-            if(shop.getTrades().size() == 0) {
+            if (shop.getTrades().size() == 0) {
                 p.sendMessage(ChatColor.RED + LanguageKey.MESSAGE_NO_TRADES_AVAILABLE.getMessage());
                 SoundUtil.playFailSound(p);
                 return;

@@ -487,7 +487,7 @@ public class Shop {
         this.location.setPitch(0);
         this.npc = EntityUtil.spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entityType);
         setNpcMeta();
-        if(npc instanceof LivingEntity) {
+        if (npc instanceof LivingEntity) {
             CreatureSpawnEvent spawnEvent = new CreatureSpawnEvent(((LivingEntity) npc), CreatureSpawnEvent.SpawnReason.CUSTOM);
             Bukkit.getPluginManager().callEvent(spawnEvent);
         }
@@ -544,6 +544,7 @@ public class Shop {
     public void changeInvisible() {
         if (!(npc instanceof LivingEntity)) return;
         NBTBuilder.setInvisible(!invisible);
+        invisible = !invisible;
     }
 
     public void changeNPCDirecation() {
@@ -697,7 +698,7 @@ public class Shop {
         if (FileUtil.isSaveBlock()) return;
         if (npc != null && npc.isValid()) return;
         if (!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) return;
-        if(npc != null) removeNPC();
+        if (npc != null) removeNPC();
         NpcType type = getNpcType(clone);
         if (type.equals(NpcType.MYTHICMOB)) {
             npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob, location);
@@ -718,7 +719,7 @@ public class Shop {
             if (npc instanceof LivingEntity)
                 updateEquipments();
         }
-        if(isEditableNpc()) {
+        if (isEditableNpc()) {
             this.NBTBuilder = new EntityNBTBuilder(npc);
             Block block = location.clone().subtract(0, -1, 0).getBlock();
             if (npc != null && block.getBlockData() instanceof Slab && ((Slab) block.getBlockData()).getType().equals(Slab.Type.BOTTOM))

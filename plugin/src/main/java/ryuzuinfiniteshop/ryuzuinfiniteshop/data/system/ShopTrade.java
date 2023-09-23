@@ -185,14 +185,13 @@ public class ShopTrade {
 
     public void setTradeOption(TradeOption option, boolean force) {
         if (option.isNoData() && !force) return;
-        if (option.isNoData() && force) {
-            if (tradeUUID.containsKey(this)) {
-                tradeOptions.remove(tradeUUID.get(this));
-                tradeUUID.remove(this);
-            }
+        if (option.isNoData() && force && tradeUUID.containsKey(this)) {
+            tradeOptions.remove(tradeUUID.get(this));
+            tradeUUID.remove(this);
         } else {
             UUID uuid = tradeUUID.computeIfAbsent(this, key -> UUID.randomUUID());
             tradeOptions.put(uuid, option);
+            System.out.println("setTradeOption: " + uuid + " " + option);
         }
     }
 

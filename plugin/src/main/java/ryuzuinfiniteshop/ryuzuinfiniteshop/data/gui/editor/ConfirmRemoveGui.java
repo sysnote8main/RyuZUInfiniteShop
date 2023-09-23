@@ -25,6 +25,4 @@ public class ConfirmRemoveGui extends ShopGui {
 
         return inv;
     }
-
-
 }
