@@ -88,7 +88,7 @@ public class FileUtil {
             TradeUtil.loadTradeOptions();
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
                 saveBlock = false;
-                if (converted) saveAll();
+                if (converted) saveAll(false);
                 Config.runAutoSave();
                 Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_FILES_LOADING_COMPLETE.getMessage()));
                 ShopUtil.getShops().values().forEach(Shop::respawnNPC);
@@ -98,6 +98,10 @@ public class FileUtil {
     }
 
     public static boolean saveAll() {
+        return saveAll(true);
+    }
+
+    public static boolean saveAll(boolean message) {
         if (saveBlock) return false;
 
         saveBlock = true;
@@ -110,7 +114,7 @@ public class FileUtil {
             DisplayPanelConfig.save();
             Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
                 saveBlock = false;
-                Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_FILES_SAVING_COMPLETE.getMessage()));
+                if(message) Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_FILES_SAVING_COMPLETE.getMessage()));
             });
         });
         return true;

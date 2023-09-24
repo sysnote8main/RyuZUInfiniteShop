@@ -35,7 +35,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -83,29 +82,30 @@ public class Shop {
 
     public Shop(Location location, String entityType, ConfigurationSection config) {
         this.shopkeepersConfig = config;
-        initialize(location, () -> this.entityType = entityType);
+        initialize(location, () -> this.entityType = entityType, () -> {});
     }
 
     public Shop(Location location, UUID uuid, boolean load) {
-        initialize(location, () -> {
+        initialize(location, () -> {}, () -> {
             this.entityType = EntityType.VILLAGER.name();
             this.citizen = uuid;
         });
     }
 
     public Shop(Location location, String mmid) {
-        initialize(location, () -> {
+        initialize(location, () -> {}, () -> {
             this.mythicmob = mmid;
             this.entityType = EntityType.VILLAGER.name();
         });
     }
 
-    private void initialize(Location location, Runnable initializer) {
+    private void initialize(Location location, Runnable beforeInitializer, Runnable afterInitializer) {
         boolean exsited = new File(RyuZUInfiniteShop.getPlugin().getDataFolder(), "shops/" + LocationUtil.toStringFromLocation(location) + ".yml").exists();
         this.location = location;
         ShopUtil.addShop(getID(), this);
+        beforeInitializer.run();
         loadYamlProcess(getFile());
-        initializer.run();
+        afterInitializer.run();
         if (!exsited) {
             createEditorNewPage();
             saveYaml();
@@ -145,7 +145,7 @@ public class Shop {
             updateTradeContents();
 
             if (shopkeepersConfig == null) return;
-            setNpcMeta(shopkeepersConfig.getConfigurationSection("object"));
+            setNpcMetaFromShopkeepersConfiguration(shopkeepersConfig.getConfigurationSection(RyuZUInfiniteShop.VERSION < 14 ? "" : "object"));
             setDisplayName(shopkeepersConfig.getString("name", "").isEmpty() ? "" : ChatColor.GREEN + shopkeepersConfig.getString("name"));
             shopkeepersConfig = null;
         };
@@ -499,7 +499,7 @@ public class Shop {
             ((EnderCrystal) npc).setShowingBottom(false);
     }
 
-    public void setNpcMeta(ConfigurationSection section) {
+    public void setNpcMetaFromShopkeepersConfiguration(ConfigurationSection section) {
         if (this instanceof AgeableShop)
             ((AgeableShop) this).setAgeLook(!section.getBoolean("baby", false));
         if (this instanceof PoweredableShop)
@@ -509,7 +509,7 @@ public class Shop {
             ((HorseShop) this).setStyle(Horse.Style.valueOf(section.getString("style", "NONE")));
         }
         if (this instanceof VillagerableShop) {
-            ((VillagerableShop) this).setProfession(Villager.Profession.valueOf(section.getString(RyuZUInfiniteShop.VERSION < 14 ? "prof" : "profession")));
+            ((VillagerableShop) this).setProfession(Villager.Profession.valueOf(section.getString(RyuZUInfiniteShop.VERSION < 14 ? "prof" : "profession", "FARMER")));
             if (RyuZUInfiniteShop.VERSION < 14) return;
             ((VillagerableShop) this).setBiome(Villager.Type.valueOf(section.getString("villagerType")));
             ((VillagerableShop) this).setLevel(section.getInt("villagerLevel"));
@@ -517,7 +517,14 @@ public class Shop {
         if (this instanceof ParrotShop)
             ((ParrotShop) this).setColor(Parrot.Variant.valueOf(section.getString("parrotVariant", "RED")));
         if (this instanceof DyeableShop) {
-            ((DyeableShop) this).setColor(DyeColor.valueOf(section.getString("color", "WHITE")));
+            String color;
+            try {
+                Integer.parseInt(section.getString("color", "WHITE"));
+                color = DyeColor.values()[section.getInt("color", 0)].name();
+            } catch (NumberFormatException e) {
+                color = section.getString("color", "WHITE");
+            }
+            ((DyeableShop) this).setColor(DyeColor.valueOf(color));
             ((DyeableShop) this).setOptionalInfo(
                     (
                             section.contains("angry") ? section.getBoolean("angry", false) :

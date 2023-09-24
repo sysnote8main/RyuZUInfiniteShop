@@ -124,13 +124,13 @@ public class SearchTradeListener implements Listener {
             if (page - 1 == 0)
                 fail = true;
             else
-                p.openInventory(new SearchTradeGui(page - 1, p, seachTradeHolder.getTrades()).getInventory(mode));
+                p.openInventory(new SearchTradeGui(page - 1, p, seachTradeHolder.getTrades()).getInventory(mode, holder.getBefore()));
         }
         if (type.isRightClick()) {
             if (page == seachTradeHolder.getMaxPage()) {
                 fail = true;
             } else
-                p.openInventory(new SearchTradeGui(page + 1, p, seachTradeHolder.getTrades()).getInventory(mode));
+                p.openInventory(new SearchTradeGui(page + 1, p, seachTradeHolder.getTrades()).getInventory(mode, holder.getBefore()));
         }
         if (fail) {
             SoundUtil.playFailSound(p);

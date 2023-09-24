@@ -112,7 +112,10 @@ public class ShopUtil {
             try {
                 EntityType type;
                 try {
-                    type = EntityType.valueOf(config.getString(key + ".object.type", "VILLAGER").replace("-", "_").toUpperCase());
+                    type = EntityType.valueOf(
+                            config.getString(base + "object.type",
+                                             config.getString(base + "object", "VILLAGER")
+                            ).replace("-", "_").toUpperCase());
                 } catch (IllegalArgumentException e) {
                     continue;
                 }
@@ -135,7 +138,7 @@ public class ShopUtil {
                     if (Config.overwriteConverting) {
                         shop.setNpcType(type.name());
                         shop.setDisplayName(config.getConfigurationSection(key).getString("name", "").isEmpty() ? "" : ChatColor.GREEN + config.getConfigurationSection(key).getString("name"));
-                        shop.setNpcMeta(config.getConfigurationSection(base + "object"));
+                        shop.setNpcMetaFromShopkeepersConfiguration(config.getConfigurationSection(RyuZUInfiniteShop.VERSION < 14 ? key : base + "object"));
                         shop.setTrades(trades);
                     } else
                         shop.addAllTrades(trades);
