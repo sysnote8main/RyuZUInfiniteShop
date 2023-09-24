@@ -10,7 +10,10 @@ import org.bukkit.entity.ZombieVillager;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 import java.util.function.Consumer;
 
 @Getter
@@ -18,6 +21,7 @@ public class VillagerableShop extends AgeableShop {
     protected Villager.Profession profession;
     protected Villager.Type biome;
     protected int level = 1;
+    private static final Random random = new Random();
 
     public VillagerableShop(Location location, String entityType, ConfigurationSection config) {
         super(location, entityType, config);
@@ -26,8 +30,12 @@ public class VillagerableShop extends AgeableShop {
     public void setProfession(Villager.Profession profession) {
         this.profession = profession;
         if (npc == null) return;
-        if (npc instanceof Villager)
-            ((Villager) npc).setProfession(profession);
+        if (npc instanceof Villager) {
+            if(RyuZUInfiniteShop.VERSION < 14)
+                setVillagerCareer((Villager) npc, profession.name());
+            else
+                ((Villager) npc).setProfession(profession);
+        }
         else
             ((ZombieVillager) npc).setVillagerProfession(profession);
 //        NBTBuilder.setVillagerData(profession, biome, level);
@@ -186,6 +194,29 @@ public class VillagerableShop extends AgeableShop {
             case 1:
             default:
                 return Material.COBBLESTONE;
+        }
+    }
+
+    public void setVillagerCareer(Villager villager, String profession) {
+        try {
+            System.out.println(profession);
+            String careerStr = profession.equals("NORMAL") ? Villager.Profession.values()[random.nextInt(Villager.Profession.values().length)].name() : profession;
+            // getCareersメソッドを呼び出すためにProfessionクラスを取得
+            Class<?> professionClass = Villager.Profession.valueOf(careerStr).getClass();
+            Method getCareersMethod = professionClass.getMethod("getCareers");
+
+            // professionからCareerのListを取得
+            List<?> careers = (List<?>) getCareersMethod.invoke(Villager.Profession.valueOf(careerStr));
+
+            // CareerのListから最初のCareerを取得
+            Object career = careers.get(0);
+            System.out.println(career.toString());
+
+            // setCareerメソッドを取得しinvokeする
+            Method setCareerMethod = villager.getClass().getMethod("setCareer", career.getClass());
+            setCareerMethod.invoke(villager, career);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -8,7 +8,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -36,6 +35,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -483,12 +483,9 @@ public class Shop {
 
     private void spawnNPC(EntityType entityType) {
         this.location.setPitch(0);
-        this.npc = EntityUtil.spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entityType);
+//        this.npc = EntityUtil.spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entityType);
+        this.npc = location.getWorld().spawnEntity(location, entityType);
         setNpcMeta();
-        if (npc instanceof LivingEntity) {
-            CreatureSpawnEvent spawnEvent = new CreatureSpawnEvent(((LivingEntity) npc), CreatureSpawnEvent.SpawnReason.CUSTOM);
-            Bukkit.getPluginManager().callEvent(spawnEvent);
-        }
     }
 
     public void setNpcMeta() {
@@ -496,8 +493,8 @@ public class Shop {
         npc.setInvulnerable(true);
         npc.setGravity(false);
 //        npc.setPersistent(false);
-        NBTUtil.setNMSTag(npc, "Shop", getID());
         initializeLivingEntitiy();
+        NBTUtil.setNMSTag(npc, "Shop", getID());
         if (entityType.equals(EntityType.ENDER_CRYSTAL.name()))
             ((EnderCrystal) npc).setShowingBottom(false);
     }
@@ -508,22 +505,23 @@ public class Shop {
         if (this instanceof PoweredableShop)
             ((PoweredableShop) this).setPowered(section.getBoolean("powered", false));
         if (this instanceof HorseShop) {
-            ((HorseShop) this).setColor(Horse.Color.valueOf(section.getString("color")));
-            ((HorseShop) this).setStyle(Horse.Style.valueOf(section.getString("style")));
+            ((HorseShop) this).setColor(Horse.Color.valueOf(section.getString("color", "WHITE")));
+            ((HorseShop) this).setStyle(Horse.Style.valueOf(section.getString("style", "NONE")));
         }
         if (this instanceof VillagerableShop) {
-            ((VillagerableShop) this).setProfession(Villager.Profession.valueOf(section.getString("profession")));
+            ((VillagerableShop) this).setProfession(Villager.Profession.valueOf(section.getString(RyuZUInfiniteShop.VERSION < 14 ? "prof" : "profession")));
+            if (RyuZUInfiniteShop.VERSION < 14) return;
             ((VillagerableShop) this).setBiome(Villager.Type.valueOf(section.getString("villagerType")));
             ((VillagerableShop) this).setLevel(section.getInt("villagerLevel"));
         }
         if (this instanceof ParrotShop)
-            ((ParrotShop) this).setColor(Parrot.Variant.valueOf(section.getString("parrotVariant")));
+            ((ParrotShop) this).setColor(Parrot.Variant.valueOf(section.getString("parrotVariant", "RED")));
         if (this instanceof DyeableShop) {
             ((DyeableShop) this).setColor(DyeColor.valueOf(section.getString("color", "WHITE")));
             ((DyeableShop) this).setOptionalInfo(
                     (
-                            section.contains("angry") ? section.getBoolean("angry") :
-                                    (section.contains("sitting") ? section.getBoolean("sitting") :
+                            section.contains("angry") ? section.getBoolean("angry", false) :
+                                    (section.contains("sitting") ? section.getBoolean("sitting", false) :
                                             (section.getBoolean("shaved", false)))
                     )
             );
@@ -534,8 +532,9 @@ public class Shop {
         if (!(npc instanceof LivingEntity)) return;
         LivingEntity livnpc = (LivingEntity) npc;
         livnpc.setAI(false);
+        livnpc.setCollidable(false);
         livnpc.setRemoveWhenFarAway(true);
-//        NBTBuilder.setNoAI(true);
+//        if(RyuZUInfiniteShop.VERSION < 14) NBTBuilder.setNoAI(true);
 //        NBTBuilder.setPersistenceRequired(true);
     }
 
@@ -698,25 +697,31 @@ public class Shop {
         if (!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) return;
         if (npc != null) removeNPC();
         NpcType type = getNpcType(clone);
-        if (type.equals(NpcType.MYTHICMOB)) {
-            npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob, location);
-            setNpcMeta();
-        } else if (type.equals(NpcType.CITIZEN)) {
-            this.citizen = CitizensHandler.createNPC(this);
-            npc = CitizensHandler.spawnNPC(this);
+
+        switch (type) {
+            case MYTHICMOB:
+                npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob, location);
+                setNpcMeta();
+                break;
+            case CITIZEN:
+                this.citizen = CitizensHandler.createNPC(this);
+                npc = CitizensHandler.spawnNPC(this);
 //            setNpcMeta();
-        } else if (type.equals(NpcType.BLOCK)) {
-            if (hologram != null && hologram.isValid()) return;
-            hologram = EntityUtil.spawnHologram(location.clone().add(0.5, 1, 0.5), displayName);
-            return;
-        } else {
-            spawnNPC(EntityType.valueOf(entityType));
-            npc.setCustomName(displayName);
-            npc.getPassengers().forEach(Entity::remove);
-            Optional.ofNullable(npc.getVehicle()).ifPresent(Entity::remove);
-            if (npc instanceof LivingEntity)
-                updateEquipments();
+                break;
+            case BLOCK:
+                if (hologram != null && hologram.isValid()) return;
+                hologram = EntityUtil.spawnHologram(location.clone().add(0.5, 1, 0.5), displayName);
+                return;
+            default:
+                spawnNPC(EntityType.valueOf(entityType));
+                npc.setCustomName(displayName);
+                npc.getPassengers().forEach(Entity::remove);
+                Optional.ofNullable(npc.getVehicle()).ifPresent(Entity::remove);
+                if (npc instanceof LivingEntity)
+                    updateEquipments();
+                break;
         }
+
         if (isEditableNpc()) {
             this.NBTBuilder = new EntityNBTBuilder(npc);
             Block block = location.clone().subtract(0, -1, 0).getBlock();

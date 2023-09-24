@@ -31,6 +31,8 @@ public class ShopEditorGui extends ShopGui {
         Visible,
         ParrotColor,
         CatType,
+        AxolotlType,
+        Derp,
         RabbitType,
         DyeColor,
         SizeIncrease,
@@ -160,6 +162,8 @@ public class ShopEditorGui extends ShopGui {
         setBodyColor(inv);
         setPatternColor(inv);
         setPattern(inv);
+        setAxolotlType(inv);
+        setDerp(inv);
         if (RyuZUInfiniteShop.VERSION < 14) return;
         setBiome(inv);
         setLevel(inv);
@@ -193,6 +197,16 @@ public class ShopEditorGui extends ShopGui {
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.Power);
+    }
+
+    private void setDerp(Inventory inv) {
+        if (!(getShop() instanceof SnowmanShop)) return;
+        ItemStack item = ((SnowmanShop) getShop()).isDerp() ?
+                ItemUtil.getNamedEnchantedItem(Material.SHEARS, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_POWERED.getMessage()) :
+                ItemUtil.getNamedItem(Material.SHEARS, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_NOT_POWERED.getMessage());
+        int slot = 3 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.Derp);
     }
 
     private void setSizeIncrease(Inventory inv) {
@@ -249,6 +263,14 @@ public class ShopEditorGui extends ShopGui {
         int slot = 3 * 9 + 8 - SettingsMap.size();
         inv.setItem(slot, item);
         SettingsMap.put(slot, ShopSettings.CatType);
+    }
+
+    private void setAxolotlType(Inventory inv) {
+        if (!(getShop() instanceof AxolotlShop)) return;
+        ItemStack item = ItemUtil.getNamedItem(Material.BLACK_GLAZED_TERRACOTTA, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_CAT_TYPE.getMessage());
+        int slot = 3 * 9 + 8 - SettingsMap.size();
+        inv.setItem(slot, item);
+        SettingsMap.put(slot, ShopSettings.AxolotlType);
     }
 
     private void setRabbitType(Inventory inv) {

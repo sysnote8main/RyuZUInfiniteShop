@@ -6,6 +6,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.ShopTrade;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.item.DisplayPanel;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.XMaterial;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class DisplayPanelConfig {
                         result,
                         new DisplayPanel(
                                 result,
-                                ItemUtil.getColoredItem(yaml.getString(getResultConfig(result) + ".Material", defaultResultMaterial.get(result))),
+                                XMaterial.matchXMaterial(yaml.getString(getResultConfig(result) + ".Material", defaultResultMaterial.get(result))).get().parseItem(),
                                 yaml.getInt(getResultConfig(result) + ".CustomModelData", -1)
                         )
                 );

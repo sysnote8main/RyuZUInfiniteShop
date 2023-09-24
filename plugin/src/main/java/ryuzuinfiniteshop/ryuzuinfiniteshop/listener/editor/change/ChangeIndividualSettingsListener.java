@@ -38,6 +38,7 @@ public class ChangeIndividualSettingsListener implements Listener {
         changeAgeLook(holder, event.getSlot());
         changeSitting(holder, event.getSlot());
         changePowered(holder, event.getSlot());
+        changeDerp(holder, event.getSlot());
         changeProfession(holder, event.getSlot());
         changeVisible(holder, event.getSlot());
         changeParrotColor(holder, event.getSlot());
@@ -52,6 +53,7 @@ public class ChangeIndividualSettingsListener implements Listener {
         changePattern(holder, event.getSlot());
         changeCatType(holder, event.getSlot());
         changeRabbitType(holder, event.getSlot());
+        changeAxolotlType(holder, event.getSlot());
         if (RyuZUInfiniteShop.VERSION >= 14) {
             changeBiome(holder, event.getSlot());
             changeLevel(holder, event.getSlot());
@@ -96,6 +98,16 @@ public class ChangeIndividualSettingsListener implements Listener {
 
         //帯電させるか変更
         ((PoweredableShop) holder.getShop()).setPowered(!((PoweredableShop) holder.getShop()).isPowered());
+    }
+
+    public void changeDerp(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        if (!((ShopEditorGui) holder.getGui()).getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.Derp))
+            return;
+        if (!(holder.getShop() instanceof SnowmanShop)) return;
+
+        //帯電させるか変更
+        ((SnowmanShop) holder.getShop()).setDerp(!((SnowmanShop) holder.getShop()).isDerp());
     }
 
     public void changeSizeIncrease(ShopHolder holder, int slot) {
@@ -156,6 +168,16 @@ public class ChangeIndividualSettingsListener implements Listener {
 
         //模様の変更
         ((CatShop) holder.getShop()).setCatType(((CatShop) holder.getShop()).getNextType());
+    }
+
+    public void changeAxolotlType(ShopHolder holder, int slot) {
+        //必要なデータを取得
+        if (!((ShopEditorGui) holder.getGui()).getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.AxolotlType))
+            return;
+        if (!(holder.getShop() instanceof AxolotlShop)) return;
+
+        //模様の変更
+        ((AxolotlShop) holder.getShop()).setCatType(((AxolotlShop) holder.getShop()).getNextType());
     }
 
     public void changeRabbitType(ShopHolder holder, int slot) {

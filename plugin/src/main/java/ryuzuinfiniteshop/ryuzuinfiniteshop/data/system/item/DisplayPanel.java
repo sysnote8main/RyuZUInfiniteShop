@@ -22,7 +22,6 @@ public class DisplayPanel {
         put(ShopTrade.TradeResult.Error, ChatColor.RED + LanguageKey.ITEM_TRADE_INVALID.getMessage());
     }};
 
-
     ShopTrade.TradeResult result;
     ItemStack item;
     int data;
@@ -37,9 +36,9 @@ public class DisplayPanel {
     public ItemStack getItemStack() {
         ItemStack item = ItemUtil.withCustomModelData(ItemUtil.getNamedItem(this.item, panels.get(result)), data);
         if (result.equals(ShopTrade.TradeResult.Success)) {
-            ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_ONCE.getMessage());
-            ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_EIGHT.getMessage());
-            ItemUtil.withLore(item, ChatColor.YELLOW + LanguageKey.ITEM_TRADE_STACK.getMessage());
+            ItemUtil.withLore(item, ChatColor.GREEN + LanguageKey.ITEM_TRADE_ONCE.getMessage());
+            ItemUtil.withLore(item, ChatColor.GREEN + LanguageKey.ITEM_TRADE_EIGHT.getMessage());
+            ItemUtil.withLore(item, ChatColor.GREEN + LanguageKey.ITEM_TRADE_STACK.getMessage());
         }
 //        else if(!result.equals(ShopTrade.TradeResult.Normal)) {
 //            ItemUtil.withLore(item, ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_VALUEORPRODUCT.getMessage());

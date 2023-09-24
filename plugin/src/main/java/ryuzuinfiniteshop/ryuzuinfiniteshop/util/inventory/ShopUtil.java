@@ -231,8 +231,12 @@ public class ShopUtil {
             return new DyeableShop(location, type, config);
         if (entityType.equals(EntityType.PARROT))
             return new ParrotShop(location, type, config);
-        if (entityType.equals(EntityType.CAT))
+        if (RyuZUInfiniteShop.VERSION >= 13 && entityType.equals(EntityType.CAT))
             return new CatShop(location, type, config);
+        if (RyuZUInfiniteShop.VERSION >= 18 && entityType.equals(EntityType.AXOLOTL))
+            return new AxolotlShop(location, type, config);
+        if (entityType.equals(EntityType.SNOWMAN))
+            return new SnowmanShop(location, type, config);
         if (entityType.equals(EntityType.RABBIT))
             return new RabbitShop(location, type, config);
         if (entityType.equals(EntityType.HORSE))

@@ -1,6 +1,7 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity;
 
 import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtapi.NBTEntity;
 import de.tr7zw.nbtinjector.NBTInjector;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
@@ -24,7 +25,7 @@ public class EntityNBTBuilder {
     public EntityNBTBuilder(Entity entity) {
         if (RyuZUInfiniteShop.VERSION < 14) {
             this.entity = entity;
-            this.compound = NBTInjector.getNbtData(entity);
+            this.compound = new NBTEntity(entity);
         } else {
             this.entity = entity;
             this.compound = null;

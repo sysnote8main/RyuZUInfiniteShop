@@ -157,7 +157,6 @@ public class ShopTrade {
                                 isAdmin ? (ChatColor.YELLOW + LanguageKey.ITEM_EDITOR_IS_SEARCHABLE.getMessage(shop.isSearchable() ? ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SEARCH_ENABLED.getMessage() : ChatColor.RED + LanguageKey.ITEM_EDITOR_SEARCH_DISABLED.getMessage())) : null,
                                 isAdmin ? (ChatColor.YELLOW + LanguageKey.ITEM_IS_LOCKED.getMessage(shop.isLock() ? ChatColor.RED + LanguageKey.ITEM_EDITOR_LOCKED.getMessage() : ChatColor.GREEN + LanguageKey.ITEM_EDITOR_UNLOCKED.getMessage())) : null,
                                 ChatColor.GREEN + LanguageKey.ITEM_TRADE_WINDOW_OPEN.getMessage(),
-//                                isAdmin ? null : ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_VALUEORPRODUCT.getMessage(),
                                 isAdmin ? ChatColor.GREEN + LanguageKey.ITEM_EDIT_WINDOW_OPEN.getMessage() : null
                         ),
                         "Shop", id
@@ -215,17 +214,9 @@ public class ShopTrade {
         ItemStack filter = getFilter(mode);
         items[type.getSubtractSlot()] = filter;
         for (int i = 0; i < getTakeItems().length; i++)
-            items[i] = ItemUtil.withLore(
-                    getTakeItems()[i],
-                    explain ? ChatColor.BLACK + "" : null,
-                    explain ? ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_PRODUCT.getMessage() : null
-            );
+            items[i] = getTakeItems()[i];
         for (int i = 0; i < getGiveItems().length; i++)
-            items[type.getSubtractSlot() + 1 + i] = ItemUtil.withLore(
-                    getGiveItems()[i],
-                    explain ? ChatColor.BLACK + "" : null,
-                    explain ? ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_VALUE.getMessage() : null
-            );
+            items[type.getSubtractSlot() + 1 + i] = getGiveItems()[i];
         return items;
     }
 
@@ -376,13 +367,5 @@ public class ShopTrade {
                 SoundUtil.playClickShopSound(p);
                 break;
         }
-    }
-
-    @Override
-    public String toString() {
-        return "ShopTrade{" +
-                "takeData=" + takeData +
-                ", giveData=" + giveData +
-                '}';
     }
 }
