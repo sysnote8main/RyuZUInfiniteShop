@@ -251,11 +251,11 @@ public class ItemUtil {
     }
 
     public static ItemStack getColoredItem(DyeColor color) {
-        return getColoredItem(Material.valueOf(color.name() + "_WOOL").name());
+        return XMaterial.matchXMaterial(color.name() + "_WOOL").get().parseItem();
     }
 
     public static ItemStack getBooleanItem(boolean bool) {
-        return getColoredItem(bool ? "LIME_WOOL" : "RED_WOOL");
+        return XMaterial.matchXMaterial(bool ? "LIME_WOOL" : "RED_WOOL").get().parseItem();
     }
 
     public static ItemStack getWhitePanel() {
@@ -264,7 +264,7 @@ public class ItemUtil {
 
     public static ItemStack getColoredItem(String material) {
         if (!(RyuZUInfiniteShop.VERSION < 13 && (material.contains("STAINED_GLASS_PANE") || material.contains("WOOL"))))
-            return new ItemStack(Material.valueOf(material));
+            return XMaterial.matchXMaterial(material).get().parseItem();
         String result = material;
         Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(c -> material.contains(c.name())).findFirst();
         if (color.isPresent())

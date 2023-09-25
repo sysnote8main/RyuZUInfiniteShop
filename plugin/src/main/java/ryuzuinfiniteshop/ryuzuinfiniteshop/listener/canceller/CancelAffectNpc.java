@@ -5,9 +5,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreeperPowerEvent;
-import org.bukkit.event.entity.EntityCombustEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.*;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 
 public class CancelAffectNpc implements Listener {
@@ -24,6 +22,13 @@ public class CancelAffectNpc implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void cancelBurn(CreeperPowerEvent e) {
         cancel(e, e.getEntity());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void bypassSpawn(EntitySpawnEvent e) {
+        String id = NBTUtil.getNMSStringTag(e.getEntity(), "Shop");
+        if (id == null) return;
+        e.setCancelled(false);
     }
 
 //    @EventHandler

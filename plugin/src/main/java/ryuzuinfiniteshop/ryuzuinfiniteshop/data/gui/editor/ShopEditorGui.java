@@ -102,7 +102,7 @@ public class ShopEditorGui extends ShopGui {
         inv.setItem(4 * 9 + 4, ItemUtil.getNamedItem(Material.ENDER_PEARL, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SET_ENTITYTYPE.getMessage()));
         inv.setItem(4 * 9 + 5, getShop().isSearchable() ?
                 ItemUtil.getNamedItem(XMaterial.matchXMaterial("CLOCK").get().parseMaterial(), ChatColor.GREEN + LanguageKey.ITEM_SEARCH_SELECT.getMessage()) :
-                ItemUtil.getNamedEnchantedItem(Material.CLOCK, ChatColor.RED + LanguageKey.ITEM_SEARCH_NOT_SELECTABLE.getMessage())
+                ItemUtil.getNamedEnchantedItem(XMaterial.matchXMaterial("CLOCK").get().parseMaterial(), ChatColor.RED + LanguageKey.ITEM_SEARCH_NOT_SELECTABLE.getMessage())
         );
         inv.setItem(4 * 9 + 6, getShop().isLock() ?
                 ItemUtil.getNamedEnchantedItem(Material.TRIPWIRE_HOOK, ChatColor.RED + LanguageKey.ITEM_EDITOR_LOCKED.getMessage()) :

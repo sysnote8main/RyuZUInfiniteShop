@@ -43,6 +43,9 @@ repositories {
     maven {
         url = uri("https://repo.maven.apache.org/maven2/")
     }
+    maven {
+        url = uri("https://maven.enginehub.org/repo/")
+    }
 }
 
 dependencies {
@@ -55,6 +58,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
     compileOnly("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
+//    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.9")
     compileOnly("com.mojang:authlib:1.5.21")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
