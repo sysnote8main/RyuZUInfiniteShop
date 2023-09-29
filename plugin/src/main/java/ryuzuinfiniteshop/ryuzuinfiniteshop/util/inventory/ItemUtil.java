@@ -166,6 +166,16 @@ public class ItemUtil {
         return item;
     }
 
+    public static ItemStack withItemInfo(ItemStack item, LinkedHashMap<ItemStack, ItemStack> items) {
+        ItemMeta meta = item.getItemMeta();
+        List<String> lores = meta.getLore();
+        if (lores == null) lores = new ArrayList<>();
+        lores.addAll(items.entrySet().stream().limit(5).map(entry -> ChatColor.GRAY + getStringWithColor(entry.getKey()) + ChatColor.GREEN + " -> " + ChatColor.GRAY + getStringWithColor(entry.getValue())).collect(Collectors.toList()));
+        meta.setLore(lores);
+        item.setItemMeta(meta);
+        return item;
+    }
+
     public static ItemStack withCustomModelData(ItemStack item, int data) {
         ItemMeta meta = item.getItemMeta();
         if (data != -1) {
@@ -247,6 +257,15 @@ public class ItemUtil {
             return MythicInstanceProvider.getInstance().getID(item);
         if (item.hasItemMeta() && item.getItemMeta().hasDisplayName())
             return ChatColor.stripColor(item.getItemMeta().getDisplayName());
+        return item.getType().name();
+    }
+
+    public static String getStringWithColor(ItemStack item) {
+        if (isAir(item)) return "Air";
+        if (MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().getID(item) != null)
+            return MythicInstanceProvider.getInstance().getID(item);
+        if (item.hasItemMeta() && item.getItemMeta().hasDisplayName())
+            return item.getItemMeta().getDisplayName();
         return item.getType().name();
     }
 

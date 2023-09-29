@@ -5,7 +5,7 @@
 plugins {
 //    id ("com.github.ryuzu.java-conventions")
     id("java-library")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 repositories {
@@ -25,14 +25,6 @@ repositories {
 group = "com.github.ryuzu"
 version = "1.0.0"
 
-//publishing {
-//    publications {
-//        maven(MavenPublication) {
-//            from(components.java)
-//        }
-//    }
-//}
-
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
@@ -42,29 +34,11 @@ tasks.withType<Javadoc> {
 }
 
 dependencies {
-//    api "com.github.Y-RyuZU:RyuZUCommandsGenerator:2.0.3"
-//    api "de.tr7zw:item-nbt-api-plugin:2.11.2"
     api(project(":searchableinfiniteshop-plugin"))
     api(project(":searchableinfiniteshop-v16newer"))
     api(project(":searchableinfiniteshop-v16older"))
     api(project(":searchableinfiniteshop-api"))
-//    compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
-//    compileOnly "org.projectlombok:lombok:1.18.26"
-//    compileOnly "com.mojang:authlib:1.5.21"
-//    compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
-//        exclude group: "*", module: "*"
-//    }
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_11
 description = "Searchable Infinite Shop Plugin"
-
-//tasks {
-//    processResources {
-//        filteringCharset = "UTF-8"
-//        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-//        filesMatching("plugin.yml") {
-//            expand(mapOf("version" to project.version))
-//        }
-//    }
-//}

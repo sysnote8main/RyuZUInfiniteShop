@@ -1,7 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop;
 
 import com.github.ryuzu.ryuzucommandsgenerator.RyuZUCommandsGenerator;
-import de.tr7zw.nbtinjector.NBTInjector;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -54,7 +53,6 @@ public final class RyuZUInfiniteShop extends JavaPlugin {
         registerEvents();
         ConfigurationSerialization.registerClass(MythicItem.class);
         ConfigurationSerialization.registerClass(TradeOption.class);
-        if (VERSION < 14) NBTInjector.inject();
         FileUtil.loadAll();
         RyuZUCommandsGenerator.initialize(this, LanguageKey.COMMAND_ERROR_PERMISSION.getMessage());
     }

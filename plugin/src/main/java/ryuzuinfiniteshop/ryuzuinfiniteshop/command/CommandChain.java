@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 public class CommandChain {
     public static void registerCommand() {
-        Set<String> args1 = Sets.newHashSet("list", "search", "spawn", "open", "list", "reload", "load", "save", "limit");
+        Set<String> args1 = Sets.newHashSet("list", "search", "spawn", "open", "searchable", "unsearchable", "list", "reload", "load", "save", "limit");
 
         CommandsGenerator.registerCommand(
                         "sis",
@@ -48,6 +48,8 @@ public class CommandChain {
                                 data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " list " + ChatColor.GOLD + LanguageKey.COMMAND_LIST_SHOPS.getMessage());
                                 data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " reload " + ChatColor.GOLD + LanguageKey.COMMAND_RELOAD_ALL_DATA.getMessage());
                                 data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " save " + ChatColor.GOLD + LanguageKey.COMMAND_SAVE_ALL_DATA.getMessage());
+                                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " searchable [world] " + ChatColor.GOLD + LanguageKey.COMMAND_SET_SEARCHABLE.getMessage());
+                                data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " unsearchable [world] " + ChatColor.GOLD + LanguageKey.COMMAND_SET_UNSEARCHABLE.getMessage());
                                 data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "/" + data.getLabel() + " limit [increase/decrease/set] [player] [value] " + ChatColor.GOLD + LanguageKey.COMMAND_CHANGE_TRADE_LIMIT.getMessage());
                                 data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.BLUE + "[arg] " + ChatColor.GOLD + LanguageKey.COMMAND_ARGUMENT_REQUIRED.getMessage() + ", " + ChatColor.BLUE + "<arg> " + ChatColor.GOLD + LanguageKey.COMMAND_ARGUMENT_OPTIONAL.getMessage());
                             }
@@ -187,6 +189,48 @@ public class CommandChain {
                 })
                 .tabCompleteConditon(data -> !FileUtil.isSaveBlock(data))
                 .completePlayer(2);
+
+        CommandsGenerator.registerCommand(
+                        "sis.searchable",
+                        data -> {
+                            ShopUtil.getShops().values().stream().filter(shop -> shop.getLocation().getWorld().getName().equalsIgnoreCase(data.getArgs()[1])).forEach(shop -> shop.setSearchable(true));
+                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SET_SEARCHABLE.getMessage());
+                        }
+                )
+                .permissions("sis.op")
+                .condition(data -> {
+                    if (data.getArgs().length < 2) {
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "/" + data.getLabel() + " searchable [world]");
+                        return false;
+                    }
+                    if (Bukkit.getWorld(data.getArgs()[1]) == null) {
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_EXIST_WORLD.getMessage());
+                        return false;
+                    }
+                    return true;
+                })
+                .tabCompleteConditon(data -> !FileUtil.isSaveBlock(data));
+
+        CommandsGenerator.registerCommand(
+                        "sis.unsearchable",
+                        data -> {
+                            ShopUtil.getShops().values().stream().filter(shop -> shop.getLocation().getWorld().getName().equalsIgnoreCase(data.getArgs()[1])).forEach(shop -> shop.setSearchable(false));
+                            data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SET_UNSEARCHABLE.getMessage());
+                        }
+                )
+                .permissions("sis.op")
+                .condition(data -> {
+                    if (data.getArgs().length < 2) {
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "/" + data.getLabel() + " unsearchable [world]");
+                        return false;
+                    }
+                    if (Bukkit.getWorld(data.getArgs()[1]) == null) {
+                        data.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_EXIST_WORLD.getMessage());
+                        return false;
+                    }
+                    return true;
+                })
+                .tabCompleteConditon(data -> !FileUtil.isSaveBlock(data));
 
         CommandsGenerator.registerCommand(
                         "sis.list",

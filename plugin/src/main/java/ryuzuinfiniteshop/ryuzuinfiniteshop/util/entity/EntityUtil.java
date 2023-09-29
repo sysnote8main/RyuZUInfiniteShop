@@ -7,15 +7,21 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.SpawnShopData;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Queue;
 import java.util.UUID;
 
 public class EntityUtil {
+    public static final Queue<SpawnShopData> entityQueue = new ArrayDeque<>();
+
     public static DyeColor getNextColor(DyeColor color) {
         int nextindex = Arrays.asList(DyeColor.values()).indexOf(color) + 1;
         return nextindex == DyeColor.values().length ?
@@ -25,8 +31,8 @@ public class EntityUtil {
 
     public static ArmorStand spawnHologram(Location location, String text) {
         if (JavaUtil.isEmptyString(text)) return null;
-        ArmorStand hologram = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
-        NBTUtil.setNMSTag(hologram, "Shop", "Hologram");
+        ArmorStand hologram = (ArmorStand) EntityUtil.spawnEntity(LocationUtil.getMiddleLocation(location), EntityType.ARMOR_STAND);
+        hologram = (ArmorStand) NBTUtil.setNMSTag(hologram, "Shop", "Hologram");
         new EntityNBTBuilder(hologram).setInvisible(true);
         hologram.setCustomName(text);
         hologram.setCustomNameVisible(true);
@@ -41,6 +47,7 @@ public class EntityUtil {
     }
 
     public static Entity spawnEntity(Location location, EntityType entityType) {
+        entityQueue.add(new SpawnShopData(location, entityType));
         try {
             // CraftWorldクラスをリフレクションを使って取得
             Class<?> craftWorldClass = Class.forName("org.bukkit.craftbukkit." + getServerVersion() + ".CraftWorld");
@@ -56,7 +63,7 @@ public class EntityUtil {
             return entity;
         } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException | InvocationTargetException |
                  NoSuchMethodException e) {
-            return location.getWorld().spawnEntity(location, entityType);
+            return location.getWorld().spawnEntity(LocationUtil.getMiddleLocation(location), entityType);
         }
     }
 

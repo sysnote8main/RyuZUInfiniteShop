@@ -1,9 +1,8 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 
 import com.mojang.authlib.GameProfile;
-import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.NBTItem;
-import de.tr7zw.nbtinjector.NBTInjector;
+import com.saicone.rtag.RtagEntity;
+import com.saicone.rtag.RtagItem;
 import lombok.NonNull;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
@@ -24,24 +23,25 @@ public class NBTUtil {
     private static Method metaSetProfileMethod;
     private static Field metaProfileField;
 
-    public static void setNMSTag(Entity ent, String key, String value) {
+    public static Entity setNMSTag(Entity ent, String key, String value) {
         if (RyuZUInfiniteShop.VERSION < 14) {
-            ent = NBTInjector.patchEntity(ent);
-            NBTCompound comp = NBTInjector.getNbtData(ent);
-            comp.setString(RyuZUInfiniteShop.prefixPersistent + key, value);
+            return RtagEntity.edit(ent, tag -> {
+                tag.set(value, "__extraData", RyuZUInfiniteShop.prefixPersistent + key);
+                return tag.load();
+            });
         } else {
             PersistentDataContainer container = ent.getPersistentDataContainer();
             container.set(new NamespacedKey(RyuZUInfiniteShop.getPlugin(), key), PersistentDataType.STRING, value);
+            return ent;
         }
     }
 
     public static String getNMSStringTag(Entity ent, String key) {
         if (ent instanceof Player) return null;
         if (RyuZUInfiniteShop.VERSION < 14) {
-            ent = NBTInjector.patchEntity(ent);
-            NBTCompound comp = NBTInjector.getNbtData(ent);
-            String value = comp.getString(RyuZUInfiniteShop.prefixPersistent + key);
-            return value == null || value.isEmpty() ? null : value;
+            return RtagEntity.edit(ent, tag -> {
+                return tag.getOptional("__extraData", RyuZUInfiniteShop.prefixPersistent + key).asString(null);
+            });
         } else {
             String value = ent.getPersistentDataContainer().get(new NamespacedKey(RyuZUInfiniteShop.getPlugin(), key), PersistentDataType.STRING);
             return value == null || value.equalsIgnoreCase("") ? null : value;
@@ -50,9 +50,10 @@ public class NBTUtil {
 
     public static ItemStack setNMSTag(@NonNull ItemStack item, String key, String value) {
         if (RyuZUInfiniteShop.VERSION < 14) {
-            NBTItem nbtItem = new NBTItem(item);
-            nbtItem.setString(RyuZUInfiniteShop.prefixPersistent + key, value);
-            return nbtItem.getItem();
+            return RtagItem.edit(item, tag -> {
+                tag.set(value, "__extraData", RyuZUInfiniteShop.prefixPersistent + key);
+                return tag.load();
+            });
         } else {
             ItemMeta meta = item.getItemMeta();
             PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -65,11 +66,11 @@ public class NBTUtil {
     public static ItemStack setNMSTag(ItemStack item, HashMap<String, String> map) {
         if (ItemUtil.isAir(item) || !item.hasItemMeta()) return null;
         if (RyuZUInfiniteShop.VERSION < 14) {
-            NBTItem nbtItem = new NBTItem(item);
-            for (String key : map.keySet()) {
-                nbtItem.setString(RyuZUInfiniteShop.prefixPersistent + key, map.get(key));
-            }
-            return nbtItem.getItem();
+            return RtagItem.edit(item, tag -> {
+                for (String key : map.keySet())
+                    tag.set(map.get(key), "__extraData", RyuZUInfiniteShop.prefixPersistent + key);
+                return tag.load();
+            });
         } else {
             ItemMeta meta = item.getItemMeta();
             PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -84,25 +85,14 @@ public class NBTUtil {
     public static String getNMSStringTag(ItemStack item, String key) {
         if (ItemUtil.isAir(item) || !item.hasItemMeta()) return null;
         if (RyuZUInfiniteShop.VERSION < 14) {
-            NBTItem nbtItem = new NBTItem(item);
-            String value = nbtItem.getString(RyuZUInfiniteShop.prefixPersistent + key);
-            return value == null || value.isEmpty() ? null : value;
+            return RtagItem.edit(item, tag -> {
+                return tag.getOptional("__extraData", RyuZUInfiniteShop.prefixPersistent + key).asString(null);
+            });
         } else {
             String value = item.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(RyuZUInfiniteShop.getPlugin(), key), PersistentDataType.STRING);
             return value == null || value.equalsIgnoreCase("") ? null : value;
         }
     }
-
-    //    public static void getNMSSkullHead() {
-//        ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
-//        NBTItem nbti = new NBTItem(head);
-//        NBTCompound skull = nbti.addCompound("SkullOwner");
-//        skull.setString("Id", "fce0323d-7f50-4317-9720-5f6b14cf78ea");
-//        NBTListCompound texture = skull.addCompound("Properties").getCompoundList("textures").addCompound();
-//        texture.setString("Value", "eyJ0aW1lc3RhbXAiOjE0OTMwNDkwMTcxNTIsInByb2ZpbGVJZCI6ImZjZTAzMjNkN2Y1MDQzMTc5NzIwNWY2YjE0Y2Y3OGVhIiwicHJvZmlsZU5hbWUiOiJ0cjd6dyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTI3NDZlNWU5OGMwZWRmZTU1YTI3ZGRjNjUxMmJmNjllYzJiYmNlNmM3ZmNhNTQ5YmEzNjZkYThiNTRjZTRkYiJ9fX0=");
-//        head = nbti.getItem();
-//        Material.matchMaterial()
-//    }
 
 
     public static ItemStack itemWithBase64(ItemStack item, GameProfile profile) {

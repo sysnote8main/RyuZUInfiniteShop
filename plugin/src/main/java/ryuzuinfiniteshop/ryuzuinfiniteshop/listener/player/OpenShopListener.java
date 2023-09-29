@@ -103,7 +103,7 @@ public class OpenShopListener implements Listener {
             String displayName = shop.getDisplayNameOrElseShop();
             item = NBTUtil.setNMSTag(item, data);
             p.getInventory().setItemInMainHand(item);
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_SHOP_MERGE.getMessage(displayName));
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_SUCCESS_SHOP_MERGE.getMessage(displayName + ChatColor.GREEN));
             SoundUtil.playSuccessSound(p);
         } else {
             if (p.isSneaking() && p.hasPermission("sis.op")) {

@@ -235,6 +235,7 @@ public class Shop {
         item = NBTUtil.setNMSTag(item, "TradesSize", String.valueOf(1));
         item = NBTUtil.setNMSTag(item, "Give" + 0, ItemUtil.toStringFromItemStackArray(trade.getGiveItems()));
         item = NBTUtil.setNMSTag(item, "Take" + 0, ItemUtil.toStringFromItemStackArray(trade.getTakeItems()));
+        ItemUtil.withItemInfo(item, new LinkedHashMap<>(Map.of(trade.getFirstGiveTakeItem().getKey(), trade.getFirstGiveTakeItem().getValue())));
         return item;
     }
 
@@ -252,6 +253,7 @@ public class Shop {
 
     public ItemStack convertTradesToItemStack() {
         ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + LanguageKey.ITEM_TRADE_COMPRESSION_GEM.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + type.getShopTypeDisplay());
+        ItemUtil.withItemInfo(item, getTrades().stream().limit(5).map(ShopTrade::getFirstGiveTakeItem).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new)));
         item = NBTUtil.setNMSTag(item, convertTradesToMap());
         return item;
     }
@@ -286,6 +288,7 @@ public class Shop {
                                                         ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
                                                         ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + type.getShopTypeDisplay()
         );
+        ItemUtil.withItemInfo(item, getTrades().stream().limit(5).map(ShopTrade::getFirstGiveTakeItem).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new)));
         item = NBTUtil.setNMSTag(item, convertShopToMap());
         return item;
     }
@@ -484,7 +487,7 @@ public class Shop {
     private void spawnNPC(EntityType entityType) {
         this.location.setPitch(0);
 //        this.npc = EntityUtil.spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entityType);
-        this.npc = location.getWorld().spawnEntity(location, entityType);
+        this.npc = EntityUtil.spawnEntity(LocationUtil.getMiddleLocation(location), entityType);
         setNpcMeta();
     }
 
@@ -494,7 +497,7 @@ public class Shop {
         npc.setGravity(false);
 //        npc.setPersistent(false);
         initializeLivingEntitiy();
-        NBTUtil.setNMSTag(npc, "Shop", getID());
+        npc = NBTUtil.setNMSTag(npc, "Shop", getID());
         if (entityType.equals(EntityType.ENDER_CRYSTAL.name()))
             ((EnderCrystal) npc).setShowingBottom(false);
     }

@@ -30,10 +30,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @EqualsAndHashCode
 public class ShopTrade {
@@ -74,6 +71,10 @@ public class ShopTrade {
 
     public ItemStack[] getTakeItems() {
         return takeData.toItemStacks();
+    }
+
+    public Map.Entry<ItemStack, ItemStack> getFirstGiveTakeItem() {
+        return new AbstractMap.SimpleEntry<>(takeData.toItemStacks()[0], giveData.toItemStacks()[0]);
     }
 
     public int getLimit() {

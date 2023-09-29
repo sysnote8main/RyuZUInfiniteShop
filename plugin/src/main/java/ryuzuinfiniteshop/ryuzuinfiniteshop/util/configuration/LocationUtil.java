@@ -34,4 +34,8 @@ public class LocationUtil {
         }
         return true;
     }
+
+    public static Location getMiddleLocation(Location loc) {
+        return new Location(loc.getWorld(), loc.getBlockX() + 0.5, loc.getBlockY(), loc.getBlockZ() + 0.5);
+    }
 }

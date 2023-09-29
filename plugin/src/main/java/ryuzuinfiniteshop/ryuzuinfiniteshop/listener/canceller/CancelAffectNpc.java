@@ -6,6 +6,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.SpawnShopData;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EntityUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 
 public class CancelAffectNpc implements Listener {
@@ -26,18 +28,11 @@ public class CancelAffectNpc implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void bypassSpawn(EntitySpawnEvent e) {
-        String id = NBTUtil.getNMSStringTag(e.getEntity(), "Shop");
-        if (id == null) return;
+        if(EntityUtil.entityQueue.isEmpty()) return;
+        if(!EntityUtil.entityQueue.peek().contains(e)) return;
         e.setCancelled(false);
+        EntityUtil.entityQueue.poll();
     }
-
-//    @EventHandler
-//    public void cancelOpenVillagerInventory(InventoryOpenEvent e) {
-//        if (!e.getInventory().getType().equals(InventoryType.MERCHANT)) return;
-//        Villager villager = (Villager) e.getInventory().getHolder();
-//        if(villager == null) return;
-//        cancel(e, villager);
-//    }
 
     private void cancel(Cancellable e, Entity entity) {
         String id = NBTUtil.getNMSStringTag(entity, "Shop");

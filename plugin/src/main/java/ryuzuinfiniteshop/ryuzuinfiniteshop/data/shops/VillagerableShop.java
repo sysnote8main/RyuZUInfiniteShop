@@ -200,7 +200,7 @@ public class VillagerableShop extends AgeableShop {
     public void setVillagerCareer(Villager villager, String profession) {
         try {
             System.out.println(profession);
-            String careerStr = profession.equals("NORMAL") ? Villager.Profession.values()[random.nextInt(Villager.Profession.values().length)].name() : profession;
+            String careerStr = profession.equals("NORMAL") ? "FARMER" : profession;
             // getCareersメソッドを呼び出すためにProfessionクラスを取得
             Class<?> professionClass = Villager.Profession.valueOf(careerStr).getClass();
             Method getCareersMethod = professionClass.getMethod("getCareers");

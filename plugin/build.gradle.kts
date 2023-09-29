@@ -6,8 +6,7 @@ plugins {
     id("java")
     id("java-library")
     id("maven-publish")
-//    id ("com.github.ryuzu.java-conventions")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 repositories {
@@ -50,7 +49,9 @@ repositories {
 
 dependencies {
     api("com.github.Y-RyuZU:RyuZUCommandsGenerator:2.3")
-    api("de.tr7zw:item-nbt-api-plugin:2.11.2")
+    api("com.saicone.rtag:rtag:1.4.2")
+    api("com.saicone.rtag:rtag-entity:1.4.2")
+    api("com.saicone.rtag:rtag-item:1.4.2")
     api("com.google.guava:guava:31.1-jre")
     api(project(":searchableinfiniteshop-v16newer"))
     api(project(":searchableinfiniteshop-v16older"))
@@ -58,7 +59,6 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
     compileOnly("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
-//    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.9")
     compileOnly("com.mojang:authlib:1.5.21")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
@@ -66,27 +66,15 @@ dependencies {
     }
 }
 
-//publishing {
-//    publications {
-//        maven(MavenPublication) {
-//            from(components.java)
-//        }
-//    }
-//}
+tasks {
+    shadowJar {
+        // Relocate rtag (DO NOT IGNORE THIS)
+        relocate("com.saicone.rtag", "${project.group}.libs.rtag")
+        // Exclude unused classes (optional)
+        minimize()
+    }
+}
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
-
-tasks.withType<Javadoc> {
-    options.encoding = "UTF-8"
-}
-
-//processResources {
-//    def props = [version: version]
-//    inputs.properties props
-//    filteringCharset "UTF-8"
-//    filesMatching("plugin.yml") {
-//        expand props
-//    }
-//}
