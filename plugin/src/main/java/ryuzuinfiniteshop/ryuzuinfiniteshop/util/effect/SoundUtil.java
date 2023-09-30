@@ -10,7 +10,7 @@ public class SoundUtil {
     }
 
     public static void playClickShopSound(Player p) {
-        p.playSound(p.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 2);
+        p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 2);
     }
 
     public static void playFailSound(Player p) {

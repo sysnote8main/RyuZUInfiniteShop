@@ -496,8 +496,8 @@ public class Shop {
         npc.setInvulnerable(true);
         npc.setGravity(false);
 //        npc.setPersistent(false);
-        initializeLivingEntitiy();
         npc = NBTUtil.setNMSTag(npc, "Shop", getID());
+        initializeLivingEntitiy();
         if (entityType.equals(EntityType.ENDER_CRYSTAL.name()))
             ((EnderCrystal) npc).setShowingBottom(false);
     }
@@ -687,6 +687,7 @@ public class Shop {
 
     public void removeNPC() {
         if (npc != null) {
+            NBTUtil.removeNMSTag(npc);
             npc.remove();
             Block block = location.clone().subtract(0, -1, 0).getBlock();
 //            Location pos = block.getBlockData() instanceof Slab && ((Slab) block.getBlockData()).getType().equals(Slab.Type.BOTTOM) ? location.clone().add(0, -0.5, 0) : location;
@@ -710,7 +711,7 @@ public class Shop {
 
         switch (type) {
             case MYTHICMOB:
-                npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob, location);
+                npc = MythicInstanceProvider.getInstance().spawnMythicMob(mythicmob, LocationUtil.getMiddleLocation(location));
                 setNpcMeta();
                 break;
             case CITIZEN:
@@ -756,7 +757,7 @@ public class Shop {
 
     protected boolean isEditableNpc() {
         NpcType type = getNpcType(false);
-        return type.equals(NpcType.NORMAL) || type.equals(NpcType.MYTHICMOB);
+        return type.equals(NpcType.NORMAL);
     }
 
     @Override

@@ -49,9 +49,10 @@ repositories {
 
 dependencies {
     api("com.github.Y-RyuZU:RyuZUCommandsGenerator:2.3")
-    api("com.saicone.rtag:rtag:1.4.2")
-    api("com.saicone.rtag:rtag-entity:1.4.2")
-    api("com.saicone.rtag:rtag-item:1.4.2")
+    implementation("com.saicone.rtag:rtag:1.4.2")
+    implementation("com.saicone.rtag:rtag-entity:1.4.2")
+    implementation("com.saicone.rtag:rtag-item:1.4.2")
+//    implementation("de.tr7zw:item-nbt-api:2.12.0")
     api("com.google.guava:guava:31.1-jre")
     api(project(":searchableinfiniteshop-v16newer"))
     api(project(":searchableinfiniteshop-v16older"))

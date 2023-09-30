@@ -9,12 +9,14 @@ import org.bukkit.entity.Villager;
 import org.bukkit.entity.ZombieVillager;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.XMaterial;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Getter
 public class VillagerableShop extends AgeableShop {
@@ -31,8 +33,10 @@ public class VillagerableShop extends AgeableShop {
         this.profession = profession;
         if (npc == null) return;
         if (npc instanceof Villager) {
-            if(RyuZUInfiniteShop.VERSION < 14)
-                setVillagerCareer((Villager) npc, profession.name());
+            if(RyuZUInfiniteShop.VERSION < 14){
+                ((Villager) npc).setProfession(Villager.Profession.valueOf(profession.name().equals("NORMAL") || profession.name().equals("HUSK") ? "FARMER" : profession.name()));
+//                setVillagerCareer((Villager) npc, profession.name());
+            }
             else
                 ((Villager) npc).setProfession(profession);
         }
@@ -60,10 +64,11 @@ public class VillagerableShop extends AgeableShop {
     }
 
     public Villager.Profession getNextProfession() {
-        int nextindex = Arrays.asList(Villager.Profession.values()).indexOf(profession) + 1;
-        return nextindex == Villager.Profession.values().length ?
-                Villager.Profession.values()[0] :
-                Villager.Profession.values()[nextindex];
+        List<Villager.Profession> professions = Arrays.asList(Villager.Profession.values()).stream().filter(profession -> !profession.name().equals("NORMAL") && !profession.name().equals("HUSK")).collect(Collectors.toList());;
+        int nextindex = professions.indexOf(profession) + 1;
+        return nextindex == professions.size() ?
+                professions.get(0) :
+                professions.get(nextindex);
     }
 
     public Villager.Type getNextBiome() {
@@ -152,7 +157,7 @@ public class VillagerableShop extends AgeableShop {
                 case "BLACKSMITH":
                     return Material.ANVIL;
                 case "BUTCHER":
-                    return Material.PORKCHOP;
+                    return XMaterial.matchXMaterial("PORKCHOP").get().parseMaterial();
                 case "NITWIT":
                     return Material.SLIME_BALL;
                 default:
@@ -194,29 +199,6 @@ public class VillagerableShop extends AgeableShop {
             case 1:
             default:
                 return Material.COBBLESTONE;
-        }
-    }
-
-    public void setVillagerCareer(Villager villager, String profession) {
-        try {
-            System.out.println(profession);
-            String careerStr = profession.equals("NORMAL") ? "FARMER" : profession;
-            // getCareersメソッドを呼び出すためにProfessionクラスを取得
-            Class<?> professionClass = Villager.Profession.valueOf(careerStr).getClass();
-            Method getCareersMethod = professionClass.getMethod("getCareers");
-
-            // professionからCareerのListを取得
-            List<?> careers = (List<?>) getCareersMethod.invoke(Villager.Profession.valueOf(careerStr));
-
-            // CareerのListから最初のCareerを取得
-            Object career = careers.get(0);
-            System.out.println(career.toString());
-
-            // setCareerメソッドを取得しinvokeする
-            Method setCareerMethod = villager.getClass().getMethod("setCareer", career.getClass());
-            setCareerMethod.invoke(villager, career);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
