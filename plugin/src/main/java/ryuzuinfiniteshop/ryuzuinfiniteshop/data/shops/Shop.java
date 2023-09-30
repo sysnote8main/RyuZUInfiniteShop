@@ -145,7 +145,7 @@ public class Shop {
             updateTradeContents();
 
             if (shopkeepersConfig == null) return;
-            setNpcMetaFromShopkeepersConfiguration(shopkeepersConfig.getConfigurationSection(RyuZUInfiniteShop.VERSION < 14 ? "" : "object"));
+            setNpcMetaFromShopkeepersConfiguration(RyuZUInfiniteShop.VERSION < 14 ? shopkeepersConfig : shopkeepersConfig.getConfigurationSection("object"));
             setDisplayName(shopkeepersConfig.getString("name", "").isEmpty() ? "" : ChatColor.GREEN + shopkeepersConfig.getString("name"));
             shopkeepersConfig = null;
         };
@@ -659,7 +659,7 @@ public class Shop {
         this.entityType = entityType;
         this.mythicmob = null;
         this.citizen = null;
-        respawnNPC();
+        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> respawnNPC(), 1L);
     }
 
     public void setMythicType(String mythicType) {
@@ -667,7 +667,7 @@ public class Shop {
         this.mythicmob = mythicType;
         this.citizen = null;
         this.entityType = EntityType.VILLAGER.name();
-        respawnNPC();
+        Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), () -> respawnNPC(), 1L);
     }
 
     public void setCitizen(Entity entity) {
