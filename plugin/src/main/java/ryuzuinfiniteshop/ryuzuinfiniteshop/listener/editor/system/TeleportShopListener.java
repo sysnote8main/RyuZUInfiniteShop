@@ -9,6 +9,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.effect.SoundUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
@@ -30,7 +31,7 @@ public class TeleportShopListener implements Listener {
 
         Bukkit.getScheduler().runTaskLater(RyuZUInfiniteShop.getPlugin(), p::closeInventory, 1L);
         holder.setBefore(null);
-        p.teleport(holder.getShop().getLocation());
+        p.teleport(LocationUtil.getMiddleLocation(holder.getShop().getLocation()));
         SoundUtil.playSuccessSound(p);
     }
 }

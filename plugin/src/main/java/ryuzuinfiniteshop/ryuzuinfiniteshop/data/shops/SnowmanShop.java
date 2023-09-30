@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 @Getter
 
-public class SnowmanShop extends SittableShop {
+public class SnowmanShop extends Shop {
     protected boolean derp;
 
     public SnowmanShop(Location location, String entityType, ConfigurationSection config) {

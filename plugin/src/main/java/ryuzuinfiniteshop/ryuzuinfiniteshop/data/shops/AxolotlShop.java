@@ -9,7 +9,7 @@ import org.bukkit.entity.Cat;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-public class AxolotlShop extends SittableShop {
+public class AxolotlShop extends Shop {
     protected Axolotl.Variant type;
 
     public AxolotlShop(Location location, String entityType, ConfigurationSection config) {

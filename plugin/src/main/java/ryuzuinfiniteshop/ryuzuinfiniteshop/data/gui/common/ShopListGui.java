@@ -36,7 +36,7 @@ public class ShopListGui extends PageableGui {
             if (mode.equals(ShopMode.EDIT))
                 item = getDisplayItem(
                         shop.isLock(),
-                        shop.getTrades().size() == 0 ? new ItemStack(Material.BARRIER) : shop.getTrades().get(0).getGiveItems()[0],
+                        shop.getTrades().isEmpty() ? new ItemStack(Material.BARRIER) : shop.getTrades().get(0).getGiveItems()[0],
                         shop.getDisplayNameOrElseNone(),
                         ChatColor.YELLOW + LanguageKey.ITEM_LOCATION.getMessage(shop.getID()),
                         ChatColor.YELLOW + LanguageKey.ITEM_EDITOR_IS_SEARCHABLE.getMessage((shop.isSearchable() ? ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SEARCHABLE.getMessage() : ChatColor.RED + LanguageKey.ITEM_EDITOR_UNSEARCHABLE.getMessage())),
@@ -47,7 +47,7 @@ public class ShopListGui extends PageableGui {
             else
                 item = getDisplayItem(
                         shop.isLock(),
-                        shop.getTrades().size() == 0 ? new ItemStack(Material.BARRIER) : shop.getTrades().get(0).getGiveItems()[0],
+                        shop.getTrades().isEmpty() ? new ItemStack(Material.BARRIER) : shop.getTrades().get(0).getGiveItems()[0],
                         shop.getDisplayNameOrElseNone()
                 );
             item = NBTUtil.setNMSTag(item, "Shop", shop.getID());

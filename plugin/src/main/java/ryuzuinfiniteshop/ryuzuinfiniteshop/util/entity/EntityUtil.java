@@ -63,7 +63,7 @@ public class EntityUtil {
             return entity;
         } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException | InvocationTargetException |
                  NoSuchMethodException e) {
-            return location.getWorld().spawnEntity(LocationUtil.getMiddleLocation(location), entityType);
+            return location.getWorld().spawnEntity(location, entityType);
         }
     }
 
