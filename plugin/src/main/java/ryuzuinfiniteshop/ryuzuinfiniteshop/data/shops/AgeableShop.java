@@ -5,6 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Ageable;
+import org.bukkit.entity.EntityType;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 
 import java.util.function.Consumer;
 
@@ -19,6 +21,7 @@ public class AgeableShop extends Shop {
     public void setAgeLook(boolean look) {
         this.adult = look;
         if (npc == null) return;
+        if(RyuZUInfiniteShop.VERSION < 14 && npc.getType().equals(EntityType.ZOMBIE_VILLAGER)) return;
         if (look)
             ((Ageable) npc).setAdult();
         else

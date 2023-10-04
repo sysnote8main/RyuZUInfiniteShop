@@ -81,18 +81,7 @@ public class SearchTradeListener implements Listener {
                         SoundUtil.playFailSound(p);
                     else {
                         // アイテムで検索
-                        Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
-                            LinkedHashMap<ShopTrade, Shop> searchedTrades = slot == 0 ? TradeUtil.getTradesFromTake(searchItem, mode) : TradeUtil.getTradesFromGive(searchItem, mode);
-                            Bukkit.getScheduler().runTask(RyuZUInfiniteShop.getPlugin(), () -> {
-                                if (searchedTrades.isEmpty()) {
-                                    p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_SEARCH_NORESULTS.getMessage());
-                                    SoundUtil.playFailSound(p);
-                                    return;
-                                }
-                                p.openInventory(new SearchTradeGui(1, p, searchedTrades).getInventory(mode, holder));
-                                SoundUtil.playClickShopSound(p);
-                            });
-                        });
+                        SchedulerListener.setSearchScheduler(p, () -> slot == 0 ? TradeUtil.getTradesFromTake(searchItem, mode) : TradeUtil.getTradesFromGive(searchItem, mode), mode, holder);
                     }
                 }
             }

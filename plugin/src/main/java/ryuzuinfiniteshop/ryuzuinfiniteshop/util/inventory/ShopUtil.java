@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,6 +32,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ShopUtil {
+    @Getter
     private static HashMap<String, Shop> shops = new HashMap<>();
 
     public static ShopHolder getShopHolder(InventoryClickEvent event) {
@@ -140,6 +142,7 @@ public class ShopUtil {
                         shop.setDisplayName(config.getConfigurationSection(key).getString("name", "").isEmpty() ? "" : ChatColor.GREEN + config.getConfigurationSection(key).getString("name"));
                         shop.setNpcMetaFromShopkeepersConfiguration(config.getConfigurationSection(RyuZUInfiniteShop.VERSION < 14 ? key : base + "object"));
                         shop.setTrades(trades);
+                        reloadShop(shop);
                     } else
                         shop.addAllTrades(trades);
                     keys.add(key);
@@ -172,19 +175,19 @@ public class ShopUtil {
         } catch (IOException e) {
             if (!Config.readOnlyIgnoreIOException) e.printStackTrace();
         }
-        return keys.size() > 0;
+        return !keys.isEmpty();
     }
 
     public static void removeAllNPC() {
+        for (Shop shop : ShopUtil.getShops().values())
+            shop.removeNPC();
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntities()) {
                 if (entity instanceof Player) continue;
                 String id = NBTUtil.getNMSStringTag(entity, "Shop");
-                if (id != null) entity.remove();
+                if (id != null)
+                    entity.remove();
             }
-        }
-        for (Shop shop : ShopUtil.getShops().values()) {
-            shop.removeNPC();
         }
     }
 
@@ -196,10 +199,6 @@ public class ShopUtil {
                 throw new RuntimeException(LanguageKey.ERROR_FILE_SAVING.getMessage(shop.getID()), e);
             }
         }
-    }
-
-    public static HashMap<String, Shop> getShops() {
-        return shops;
     }
 
     public static LinkedHashMap<String, Shop> getSortedShops(ShopMode mode, String name) {

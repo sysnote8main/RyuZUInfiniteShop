@@ -691,7 +691,8 @@ public class Shop {
             npc.remove();
             Block block = location.clone().subtract(0, -1, 0).getBlock();
 //            Location pos = block.getBlockData() instanceof Slab && ((Slab) block.getBlockData()).getType().equals(Slab.Type.BOTTOM) ? location.clone().add(0, -0.5, 0) : location;
-            location.getWorld().getNearbyEntities(location, 0.1, 0.1, 0.1).stream().filter(entity -> NBTUtil.getNMSStringTag(entity, "Shop") != null).forEach(Entity::remove);
+//            location.getWorld().getNearbyEntities(LocationUtil.getMiddleLocation(location), 0.3, 0.3, 0.3).stream().filter(entity -> NBTUtil.getNMSStringTag(entity, "Shop") != null).forEach(Entity::remove);
+            location.getWorld().getNearbyEntities(LocationUtil.getMiddleLocation(location), 0.1, 0.1, 0.1).stream().forEach(Entity::remove);
         }
         if (citizen != null) CitizensHandler.despawnNPC(this);
         npc = null;
@@ -705,8 +706,10 @@ public class Shop {
         if (entityType == null && JavaUtil.isEmptyString(displayName)) return;
         if (FileUtil.isSaveBlock()) return;
         if (npc != null && npc.isValid()) return;
+        if (npc != null && !npc.isDead() && RyuZUInfiniteShop.VERSION < 14) return;
         if (!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) return;
-        if (npc != null) removeNPC();
+        if (npc != null)
+            removeNPC();
         NpcType type = getNpcType(clone);
 
         switch (type) {

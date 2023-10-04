@@ -59,9 +59,8 @@ public class NBTUtil {
     }
 
     public static void removeNMSTag(Entity ent) {
-        if (RyuZUInfiniteShop.VERSION < 14) {
+        if (RyuZUInfiniteShop.VERSION < 14)
             entityTags.remove(ent.getUniqueId());
-        }
     }
 
     public static ItemStack setNMSTag(@NonNull ItemStack item, String key, String value) {
@@ -97,9 +96,8 @@ public class NBTUtil {
         } else {
             ItemMeta meta = item.getItemMeta();
             PersistentDataContainer container = meta.getPersistentDataContainer();
-            for (String key : map.keySet()) {
+            for (String key : map.keySet())
                 container.set(new NamespacedKey(RyuZUInfiniteShop.getPlugin(), key), PersistentDataType.STRING, map.get(key));
-            }
             item.setItemMeta(meta);
         }
         return item;
@@ -117,6 +115,9 @@ public class NBTUtil {
         } else {
             String value = item.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(RyuZUInfiniteShop.getPlugin(), key), PersistentDataType.STRING);
             return value == null || value.equalsIgnoreCase("") ? null : value;
+//            return RtagItem.edit(item, tag -> {
+//                return tag.getOptional("PublicBukkitValues", RyuZUInfiniteShop.class.getName().toLowerCase() + ":" + key).asString(null);
+//            });
         }
     }
 
