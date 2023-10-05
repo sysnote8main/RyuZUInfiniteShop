@@ -178,6 +178,7 @@ public class SearchTradeListener implements Listener {
     }
 
     //取引、対価で検索を行う
+    @EventHandler
     public static void search(InventoryClickEvent event) {
         //インベントリがショップなのかチェック
         ShopHolder holder = ShopUtil.getShopHolder(event);
@@ -192,6 +193,7 @@ public class SearchTradeListener implements Listener {
         ShopTrade trade = ((ShopTradeGui) holder.getGui()).getTradeFromSlot(slot);
 
         if (trade == null) return;
+        if (!(p.hasPermission("sis.search") || p.hasPermission("sis.op"))) return;
 //        if (trade.getResult(p, holder.getShop()).equals(ShopTrade.TradeResult.Success)) return;
 
         int info = type.getSubtractSlot();
@@ -199,8 +201,9 @@ public class SearchTradeListener implements Listener {
         int base = (type.equals(ShopType.TwotoOne) && surplus > 4) ? surplus - 5 : surplus;
         if (ItemUtil.isAir(event.getCurrentItem())) return;
         if (base == info) return;
+        ShopMode mode = p.hasPermission("sis.op") ? ShopMode.EDIT : ShopMode.SEARCH;
 
-        ItemStack item = trade.getTradeItems(holder.getShop().getShopType(), ShopMode.SEARCH)[base];
-        SchedulerListener.setSearchScheduler(p, () -> base < info ? TradeUtil.getTradesFromGive(item, holder.getMode()) : TradeUtil.getTradesFromTake(item, holder.getMode()), holder.getMode(), holder);
+        ItemStack item = trade.getTradeItems(holder.getShop().getShopType(), mode)[base];
+        SchedulerListener.setSearchScheduler(p, () -> base < info ? TradeUtil.getTradesFromGive(item, mode) : TradeUtil.getTradesFromTake(item, mode), mode, holder);
     }
 }

@@ -55,10 +55,13 @@ public class ObjectItems {
     //return MythicItems or ItemStack
     //from MythicItems or ItemStack
     private static Object convert(Object object) {
-        if (object instanceof ItemStack && NBTUtil.getNMSStringTag((ItemStack) object, "Error") != null)
-            return new MythicItem(NBTUtil.getNMSStringTag((ItemStack) object, "Error"), ((ItemStack) object).getAmount());
-        if (object instanceof ItemStack && MythicInstanceProvider.isLoaded() && Config.saveByMMID && MythicInstanceProvider.getInstance().getID((ItemStack) object) != null)
-            return new MythicItem(MythicInstanceProvider.getInstance().getID((ItemStack) object), ((ItemStack) object).getAmount());
+        if (object instanceof ItemStack){
+            String tag = NBTUtil.getNMSStringTag((ItemStack) object, "Error");
+            if(tag != null)
+                return new MythicItem(tag, ((ItemStack) object).getAmount());
+            if (MythicInstanceProvider.isLoaded() && Config.saveByMMID && MythicInstanceProvider.getInstance().getID((ItemStack) object) != null)
+                return new MythicItem(MythicInstanceProvider.getInstance().getID((ItemStack) object), ((ItemStack) object).getAmount());
+        }
         if (object instanceof MythicItem && !Config.saveByMMID)
             return ((MythicItem) object).convertItemStack();
         if (object instanceof ItemStack && ((ItemStack) object).hasItemMeta() && ((ItemStack) object).getItemMeta() instanceof SkullMeta) {
