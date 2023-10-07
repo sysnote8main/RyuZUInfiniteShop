@@ -150,6 +150,9 @@ public class EditTradePageListener implements Listener {
             case MIDDLE:
                 times = 64;
                 break;
+            case DROP:
+                times = 64 * 48;
+                break;
         }
         int resultTime = trade.trade(p, times);
         LogUtil.log(p.getUniqueId().toString(), holder.getShop().getID(), trade, resultTime);

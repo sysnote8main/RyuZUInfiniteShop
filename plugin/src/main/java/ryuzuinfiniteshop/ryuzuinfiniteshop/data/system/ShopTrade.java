@@ -286,20 +286,19 @@ public class ShopTrade {
     public int trade(Player p, int times) {
         TradeResult result = getResult(p);
         int resultTime = times;
-        boolean failed = false;
         for (int time = 0; time < times; time++) {
             result = trade(p);
-            if (!result.equals(TradeResult.Success) && !result.equals(TradeResult.Fail)) {
-                if (time != 0)
-                    result = TradeResult.Lack;
+            if (!result.equals(TradeResult.Success)) {
+                if (time != 0) {
+                    if(times == 64 * 48)
+                        result = TradeResult.Lack;
+                    else
+                        result = TradeResult.Success;
+                }
                 resultTime = time;
                 break;
-            } else if (result.equals(TradeResult.Fail))
-                failed = true;
+            }
         }
-        //結果に対するエフェクトを表示
-        if (times != 1 && failed)
-            result = TradeResult.Lack;
         playResultEffect(p, result);
         saveTradeOption();
         return resultTime;

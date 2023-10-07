@@ -1,6 +1,5 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.player;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,8 +27,6 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
-
-import java.util.LinkedHashMap;
 
 public class SearchTradeListener implements Listener {
     @EventHandler
@@ -160,7 +157,7 @@ public class SearchTradeListener implements Listener {
                 shop.setEditting(true);
             } else {
                 //取引画面を開く
-                if (!shop.isTradableShop(p)) return;
+                if (!shop.isOpenableShop(p)) return;
                 ShopTradeGui gui = shop.getPage(Integer.parseInt(NBTUtil.getNMSStringTag(item, "Page")));
                 if (gui == null) {
                     SoundUtil.playFailSound(p);

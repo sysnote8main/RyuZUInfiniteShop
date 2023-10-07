@@ -650,7 +650,7 @@ public class Shop {
         return false;
     }
 
-    public boolean isTradableShop(Player p) {
+    public boolean isOpenableShop(Player p) {
         return (!isLock() || isSearchable(p)) && !isEditting(p) && !isEmpty(p);
     }
 

@@ -16,9 +16,33 @@ public class SelectSearchItemGui extends ModeGui {
         Inventory inv = Bukkit.createInventory(new ModeHolder(ShopMode.SEARCH, this), 9, ChatColor.DARK_BLUE + LanguageKey.INVENTORY_SEARCH_TRADE.getMessage());
 
         for (int i = 1; i < 8; i++) inv.setItem(i, ShopTrade.getFilter());
-        inv.setItem(0, ItemUtil.getNamedItem(ItemUtil.getColoredItem("RED_STAINED_GLASS_PANE"), ChatColor.RED + LanguageKey.ITEM_SEARCH_BY_VALUE.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_LORE_SEARCH_BY_NAME.getMessage()));
-        inv.setItem(8, ItemUtil.getNamedItem(ItemUtil.getColoredItem("GREEN_STAINED_GLASS_PANE"), ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_PRODUCT.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_LORE_SEARCH_BY_NAME.getMessage()));
-        inv.setItem(4, ItemUtil.getNamedItem(ItemUtil.getColoredItem("WHITE_STAINED_GLASS_PANE"), ChatColor.BLUE + LanguageKey.ITEM_SEARCH_BY_CLICK.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_LORE_SEARCH_BY_NPC.getMessage()));
+        inv.setItem(
+                0,
+                ItemUtil.getNamedItem(
+                        ItemUtil.getColoredItem("RED_STAINED_GLASS_PANE"),
+                        ChatColor.RED + LanguageKey.ITEM_SEARCH_BY_VALUE.getMessage(),
+                        ChatColor.YELLOW + LanguageKey.ITEM_LORE_SEARCH_BY_ITEM.getMessage(),
+                        ChatColor.YELLOW + LanguageKey.ITEM_LORE_SEARCH_BY_NAME.getMessage()
+                )
+        );
+        inv.setItem(
+                8,
+                ItemUtil.getNamedItem(
+                        ItemUtil.getColoredItem("GREEN_STAINED_GLASS_PANE"),
+                        ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_PRODUCT.getMessage(),
+                        ChatColor.YELLOW + LanguageKey.ITEM_LORE_SEARCH_BY_ITEM.getMessage(),
+                        ChatColor.YELLOW + LanguageKey.ITEM_LORE_SEARCH_BY_NAME.getMessage()
+                )
+        );
+        inv.setItem(
+                4,
+                ItemUtil.getNamedItem(
+                        ItemUtil.getColoredItem("WHITE_STAINED_GLASS_PANE"),
+                        ChatColor.BLUE + LanguageKey.ITEM_SEARCH_INFO.getMessage(),
+                        ChatColor.YELLOW + LanguageKey.ITEM_SEARCH_REGISTER.getMessage(),
+                        ChatColor.YELLOW + LanguageKey.ITEM_LORE_SEARCH_BY_NPC.getMessage()
+                )
+        );
 
         return inv;
     }
