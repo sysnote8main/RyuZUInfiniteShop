@@ -1,5 +1,6 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 //ショップエディターのメインページ
+@Getter
 public class ShopEditorGui extends ShopGui {
     public enum ShopSettings {
         Age,
@@ -59,10 +61,6 @@ public class ShopEditorGui extends ShopGui {
         setDisplay(inv);
 
         return inv;
-    }
-
-    public List<ShopTrade> getTrades() {
-        return this.trades;
     }
 
     //エディターに装備を置く
@@ -113,9 +111,8 @@ public class ShopEditorGui extends ShopGui {
     }
 
     private void setShopOperation(Inventory inv) {
-        inv.setItem(5 * 9 + 4, ItemUtil.getNamedItem(Material.BARRIER, ChatColor.RED + LanguageKey.ITEM_EDITOR_SHOP_DELETE.getMessage()));
-        inv.setItem(5 * 9 + 5, ItemUtil.getNamedItem(Material.NETHER_STAR, ChatColor.YELLOW + LanguageKey.ITEM_EDITOR_UPDATE_SHOP.getMessage()));
-        inv.setItem(5 * 9 + 6, ItemUtil.getNamedItem(Material.EMERALD, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_CONVERT_TRADE_TO_ITEMS.getMessage()));
+        inv.setItem(5 * 9 + 5, ItemUtil.getNamedItem(Material.BARRIER, ChatColor.RED + LanguageKey.ITEM_EDITOR_SHOP_DELETE.getMessage()));
+        inv.setItem(5 * 9 + 6, ItemUtil.getNamedItem(Material.NETHER_STAR, ChatColor.YELLOW + LanguageKey.ITEM_EDITOR_UPDATE_SHOP.getMessage()));
         inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.DIAMOND, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_CONVERT_SHOP_TO_ITEMS.getMessage()));
         inv.setItem(5 * 9 + 8, ItemUtil.getNamedEnchantedItem(ShopTrade.getFilter(), ChatColor.GREEN + LanguageKey.ITEM_EDITOR_LOAD_TRADES.getMessage()));
     }
@@ -367,7 +364,4 @@ public class ShopEditorGui extends ShopGui {
             return -1;
     }
 
-    public HashMap<Integer, ShopSettings> getSettingsMap() {
-        return SettingsMap;
-    }
 }

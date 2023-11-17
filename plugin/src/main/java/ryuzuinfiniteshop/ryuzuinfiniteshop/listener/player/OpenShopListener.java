@@ -92,8 +92,8 @@ public class OpenShopListener implements Listener {
             // ショップのマージ
             if (!p.hasPermission("sis.op")) return;
             if (shop.isEditting(p)) return;
-            String tag = NBTUtil.getNMSStringTag(item, "ShopType");
-            if (!(shop.getShopType().equals(ShopType.TwotoOne) || ShopType.valueOf(tag).equals(shop.getShopType()))) {
+            ShopType type = ShopType.valueOf(NBTUtil.getNMSStringTag(item, "ShopType"));
+            if (!(shop.getShopType().equals(ShopType.TwotoOne) || type.equals(shop.getShopType()))) {
                 SoundUtil.playFailSound(p);
                 p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_MATCH.getMessage());
                 return;

@@ -16,6 +16,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.config.LanguageKey;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.editor.ShopEditorGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopHolder;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.holder.ShopMode;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.data.gui.trade.ShopTradeGui;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.Shop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops.ShopType;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.FileUtil;
@@ -26,7 +27,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.TradeUtil;
 
-//ショップのNPCの装備を変更する
+//ショップをアイテム化およびロードする
 public class ConvartListener implements Listener {
     @EventHandler
     public void convert(InventoryClickEvent event) {
@@ -40,10 +41,37 @@ public class ConvartListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
         int slot = event.getSlot();
-        if (slot != 5 * 9 + 6 && slot != 5 * 9 + 7) return;
+        if (slot != 5 * 9 + 7) return;
 
         //コンバート
-        ItemStack item = slot == 5 * 9 + 6 ? shop.convertTradesToItemStack() : shop.convertShopToItemStack();
+        ItemStack item = shop.convertShopToItemStack();
+        if (ItemUtil.ableGive(p.getInventory(), item)) {
+            p.getInventory().addItem(item);
+            SoundUtil.playSuccessSound(p);
+        } else
+            SoundUtil.playFailSound(p);
+    }
+
+    //トレードをアイテム化する
+    @EventHandler
+    public void convertTradeOne(InventoryClickEvent event) {
+        //インベントリがショップなのかチェック
+        ShopHolder holder = ShopUtil.getShopHolder(event);
+        if (holder == null) return;
+        if (!(holder.getGui() instanceof ShopTradeGui)) return;
+        if (!holder.getMode().equals(ShopMode.EDIT)) return;
+        if (event.getClickedInventory() == null) return;
+        int slot = event.getSlot();
+        if (!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
+
+        Player p = (Player) event.getWhoClicked();
+        ItemStack item = holder.getShop().convertShopToItemStack(event.getClickedInventory(), slot);
+        //トレードをアイテム化する
+        if (!event.isShiftClick()) return;
+        if (ItemUtil.isAir(item)) {
+            SoundUtil.playFailSound(p);
+            return;
+        }
         if (ItemUtil.ableGive(p.getInventory(), item)) {
             p.getInventory().addItem(item);
             SoundUtil.playSuccessSound(p);
@@ -63,7 +91,7 @@ public class ConvartListener implements Listener {
 
         //必要なデータを取得
         Player p = (Player) event.getWhoClicked();
-        ClickType type = event.getClick();
+        ClickType click = event.getClick();
         Shop shop = holder.getShop();
         ItemStack item = event.getCursor();
         String tag = NBTUtil.getNMSStringTag(item, "ShopType");
@@ -74,14 +102,15 @@ public class ConvartListener implements Listener {
             SoundUtil.playFailSound(p);
             return;
         }
-        if (!(shop.getShopType().equals(ShopType.TwotoOne) || ShopType.valueOf(tag).equals(shop.getShopType()))) {
+        ShopType type = ShopType.valueOf(tag);
+        if (!type.equals(ShopType.TwotoOne) && !type.equals(shop.getShopType())) {
             SoundUtil.playFailSound(p);
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_NOT_MATCH.getMessage());
             return;
         }
 
-//トレードを読み込む
-        if ((type.isRightClick() || type.isLeftClick()) && !type.isShiftClick()) {
+        //トレードを読み込む
+        if ((click.isRightClick() || click.isLeftClick()) && !click.isShiftClick()) {
             boolean duplication = shop.loadTrades(item, p);
 
             //音を出す

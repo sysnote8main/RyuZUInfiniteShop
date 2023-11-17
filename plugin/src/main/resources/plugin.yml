@@ -9,8 +9,9 @@ softdepend:
   - Vault
 
 commands:
-  sis:
+  searchableinfiniteshop:
     description: SearchableInfiniteShopのコマンド
+    aliases: sis
 
 permissions:
   sis.player:

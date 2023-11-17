@@ -55,33 +55,6 @@ public class EditTradePageListener implements Listener {
             p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_TRADE_DUPLICATE.getMessage());
     }
 
-    //トレードをアイテム化する
-    @EventHandler
-    public void convertTradeOne(InventoryClickEvent event) {
-        //インベントリがショップなのかチェック
-        ShopHolder holder = ShopUtil.getShopHolder(event);
-        if (holder == null) return;
-        if (!(holder.getGui() instanceof ShopTradeGui)) return;
-        if (!holder.getMode().equals(ShopMode.EDIT)) return;
-        if (event.getClickedInventory() == null) return;
-        int slot = event.getSlot();
-        if (!((ShopTradeGui) holder.getGui()).isConvertSlot(slot)) return;
-
-        Player p = (Player) event.getWhoClicked();
-        ItemStack item = holder.getShop().convertTrade(event.getClickedInventory(), slot);
-        //トレードをアイテム化する
-        if (!event.isShiftClick()) return;
-        if (ItemUtil.isAir(item)) {
-            SoundUtil.playFailSound(p);
-            return;
-        }
-        if (ItemUtil.ableGive(p.getInventory(), item)) {
-            p.getInventory().addItem(item);
-            SoundUtil.playSuccessSound(p);
-        } else
-            SoundUtil.playFailSound(p);
-    }
-
     //ショップの取引編集ページを開く
     @EventHandler
     public void openTradePage(InventoryClickEvent event) {

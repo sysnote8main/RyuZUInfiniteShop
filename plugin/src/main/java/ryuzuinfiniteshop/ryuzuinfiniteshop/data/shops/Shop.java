@@ -225,21 +225,6 @@ public class Shop {
         return TradeUtil.getTrade(inv, slot - type.getSubtractSlot(), type);
     }
 
-    //トレードをアイテム化する
-    public ItemStack convertTrade(Inventory inv, int slot) {
-        ShopTrade trade = getTrade(inv, slot);
-        if (trade == null) return null;
-
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + LanguageKey.ITEM_TRADE_COMPRESSION_GEM.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + type.getShopTypeDisplay());
-        item = NBTUtil.setNMSTag(item, "ShopType", type.toString());
-        item = NBTUtil.setNMSTag(item, "TradesSize", String.valueOf(1));
-        item = NBTUtil.setNMSTag(item, "Give" + 0, ItemUtil.toStringFromItemStackArray(trade.getGiveItems()));
-        item = NBTUtil.setNMSTag(item, "Take" + 0, ItemUtil.toStringFromItemStackArray(trade.getTakeItems()));
-        ItemUtil.withItemInfo(item, new LinkedHashMap<>(Map.of(trade.getFirstGiveTakeItem().getKey(), trade.getFirstGiveTakeItem().getValue())));
-        return item;
-    }
-
-
     public HashMap<String, String> convertTradesToMap() {
         HashMap<String, String> trades = new HashMap<>();
         trades.put("ShopType", type.toString());
@@ -251,35 +236,29 @@ public class Shop {
         return trades;
     }
 
-    public ItemStack convertTradesToItemStack() {
-        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.EMERALD, ChatColor.GREEN + LanguageKey.ITEM_TRADE_COMPRESSION_GEM.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + type.getShopTypeDisplay());
-        ItemUtil.withItemInfo(item, getTrades().stream().limit(5).map(ShopTrade::getFirstGiveTakeItem).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new)));
-        item = NBTUtil.setNMSTag(item, convertTradesToMap());
-        return item;
-    }
+    public HashMap<String, String> convertOneTradeToMap(Inventory inv, int slot) {
+        ShopTrade trade = getTrade(inv, slot);
+        if (trade == null) return null;
 
-    public boolean loadTrades(ItemStack item, Player p) {
-        List<ShopTrade> temp = TradeUtil.convertTradesToList(item);
-        if (temp == null) return false;
-        boolean duplication = temp.stream().anyMatch(trade -> trades.contains(trade));
-        trades.addAll(temp);
-        temp.forEach(trade -> LogUtil.log(LogUtil.LogType.ADDTRADE, p.getName(), getID(), trade, trade.getLimit()));
-        if (duplication) trades = trades.stream().distinct().collect(Collectors.toList());
-        updateTradeContents();
-        return duplication;
-    }
-
-    public HashMap<String, String> convertShopToMap() {
-        HashMap<String, String> shop = new HashMap<>();
-        shop.put("ShopData", convertShopToString());
-        shop.putAll(convertTradesToMap());
-        return shop;
+        HashMap<String, String> trades = new HashMap<>();
+        trades.put("ShopType", type.toString());
+        trades.put("TradesSize", String.valueOf(1));
+        trades.put("Give" + 0, ItemUtil.toStringFromItemStackArray(trade.getGiveItems()));
+        trades.put("Take" + 0, ItemUtil.toStringFromItemStackArray(trade.getTakeItems()));
+        return trades;
     }
 
     public String convertShopToString() {
         YamlConfiguration yaml = saveYaml();
         yaml.set("Trades", null);
         return saveYaml().saveToString();
+    }
+
+    public HashMap<String, String> convertShopToMap(HashMap<String, String> trades) {
+        HashMap<String, String> shop = new HashMap<>();
+        shop.put("ShopData", convertShopToString());
+        shop.putAll(trades);
+        return shop;
     }
 
     public ItemStack convertShopToItemStack() {
@@ -289,8 +268,32 @@ public class Shop {
                                                         ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + type.getShopTypeDisplay()
         );
         ItemUtil.withItemInfo(item, getTrades().stream().limit(5).map(ShopTrade::getFirstGiveTakeItem).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new)));
-        item = NBTUtil.setNMSTag(item, convertShopToMap());
+        item = NBTUtil.setNMSTag(item, convertShopToMap(convertTradesToMap()));
         return item;
+    }
+
+    public ItemStack convertShopToItemStack(Inventory inv, int slot) {
+        ItemStack item = ItemUtil.getNamedEnchantedItem(Material.DIAMOND, ChatColor.AQUA + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_NAME.getMessage() + ChatColor.GREEN + getDisplayNameOrElseNone(),
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_CLICK.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_MEARGE.getMessage(),
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
+                                                        ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + type.getShopTypeDisplay()
+        );
+        ItemUtil.withItemInfo(item, getTrades().stream().limit(5).map(ShopTrade::getFirstGiveTakeItem).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new)));
+        item = NBTUtil.setNMSTag(item, convertShopToMap(convertOneTradeToMap(inv, slot)));
+        return item;
+    }
+
+    public boolean loadTrades(ItemStack item, Player p) {
+        ShopType type = ShopType.valueOf(NBTUtil.getNMSStringTag(item, "ShopType"));
+        if(!getShopType().equals(type) && !getShopType().equals(ShopType.TwotoOne)) return false;
+        List<ShopTrade> temp = TradeUtil.convertTradesToList(item);
+        if (temp == null) return false;
+        boolean duplication = temp.stream().anyMatch(trade -> trades.contains(trade));
+        trades.addAll(temp);
+        temp.forEach(trade -> LogUtil.log(LogUtil.LogType.ADDTRADE, p.getName(), getID(), trade, trade.getLimit()));
+        if (duplication) trades = trades.stream().distinct().collect(Collectors.toList());
+        updateTradeContents();
+        return duplication;
     }
 
     public void removeShop() {
