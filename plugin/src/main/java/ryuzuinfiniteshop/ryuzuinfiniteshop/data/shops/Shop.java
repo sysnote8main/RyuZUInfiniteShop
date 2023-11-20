@@ -490,6 +490,7 @@ public class Shop {
         this.location.setPitch(0);
 //        this.npc = EntityUtil.spawnEntity(LocationUtil.toBlockLocationFromLocation(location), entityType);
         this.npc = EntityUtil.spawnEntity(LocationUtil.getMiddleLocation(location), entityType);
+        this.npc.teleport(LocationUtil.toBlockLocationFromLocation(location));
         setNpcMeta();
     }
 
