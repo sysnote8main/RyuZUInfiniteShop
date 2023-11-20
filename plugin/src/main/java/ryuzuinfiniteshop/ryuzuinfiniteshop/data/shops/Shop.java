@@ -61,7 +61,6 @@ public class Shop {
     @Getter
     protected List<ShopTrade> trades = new ArrayList<>();
     protected ConfigurationSection shopkeepersConfig;
-    protected int yaw;
 
     @Setter
     @Getter
@@ -136,8 +135,7 @@ public class Shop {
             }
             this.displayName = yaml.getString("Npc.Options.DisplayName");
             this.invisible = yaml.getBoolean("Npc.Options.Invisible", false);
-            this.yaw = yaml.getInt("Npc.Status.Yaw", 0);
-            this.location.setYaw(yaw);
+            this.location.setYaw((float) yaml.getDouble("Npc.Status.Yaw", 0));
             this.type = ShopType.valueOf(yaml.getString("Shop.Options.ShopType", "TwotoOne"));
             this.lock = yaml.getBoolean("Npc.Status.Lock", false);
             this.searchable = yaml.getBoolean("Npc.Status.Searchable", true);
@@ -747,7 +745,6 @@ public class Shop {
 //                npc.teleport(location.clone().add(0, -0.5, 0));
             if (npc instanceof LivingEntity)
                 NBTBuilder.setInvisible(invisible);
-            this.location.setYaw(yaw);
         }
     }
 
