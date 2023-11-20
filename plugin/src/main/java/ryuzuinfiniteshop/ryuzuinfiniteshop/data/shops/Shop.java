@@ -58,6 +58,7 @@ public class Shop {
     protected UUID citizen;
     protected String entityType;
     protected ShopType type;
+    @Getter
     protected List<ShopTrade> trades = new ArrayList<>();
     protected ConfigurationSection shopkeepersConfig;
     protected int yaw;
@@ -278,7 +279,11 @@ public class Shop {
                                                         ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACELORE.getMessage() + ChatColor.GREEN + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_PLACE.getMessage(),
                                                         ChatColor.YELLOW + LanguageKey.ITEM_SHOP_COMPRESSION_GEM_TYPE.getMessage() + type.getShopTypeDisplay()
         );
-        ItemUtil.withItemInfo(item, getTrades().stream().limit(5).map(ShopTrade::getFirstGiveTakeItem).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new)));
+
+        ShopTrade trade = getTrade(inv, slot);
+        if (trade == null) return null;
+
+        ItemUtil.withItemInfo(item, new LinkedHashMap<>(Map.of(trade.getFirstGiveTakeItem().getKey(), trade.getFirstGiveTakeItem().getValue())));
         item = NBTUtil.setNMSTag(item, convertShopToMap(convertOneTradeToMap(inv, slot)));
         return item;
     }
@@ -307,10 +312,6 @@ public class Shop {
     public void removeShop(Player p) {
         LogUtil.log(LogUtil.LogType.REMOVESHOP, p.getName(), getID());
         removeShop();
-    }
-
-    public List<ShopTrade> getTrades() {
-        return trades;
     }
 
     public List<ShopTrade> getTrades(int page) {

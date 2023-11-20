@@ -248,7 +248,7 @@ public class CommandChain {
                 )
                 .permissions("sis.search", "sis.op")
                 .tabCompleteConditon(data -> isPlayer(data.getSender()) && !FileUtil.isSaveBlock(data));
-        HashMap<String, BiFunction<Integer, Integer, Integer>> limitargs2 = new HashMap<String, BiFunction<Integer, Integer, Integer>>() {{
+        HashMap<String, BiFunction<Integer, Integer, Integer>> limitargs2 = new HashMap<>() {{
             put("increase", (a, b) -> a + b);
             put("decrease", (a, b) -> a - b);
             put("set", (a, b) -> b);

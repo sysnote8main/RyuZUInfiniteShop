@@ -84,10 +84,6 @@ public class ShopEditorGui extends ShopGui {
             inv.setItem(newslot, ItemUtil.getNamedItem(ItemUtil.getColoredItem("WHITE_STAINED_GLASS_PANE"), ChatColor.YELLOW + LanguageKey.ITEM_EDITOR_NEW_PAGE.getMessage()));
     }
 
-    public void setDisplayName(Inventory inv) {
-        inv.setItem(5 * 9 + 3, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SET_NAME.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_CURRENT_NAME.getMessage(getShop().getDisplayNameOrElseNone())));
-    }
-
     private void setTeleport(Inventory inv) {
         inv.setItem(2 * 9 + 8, ItemUtil.getNamedItem(Material.COMPASS, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_TELEPORT_TO_NPC.getMessage()));
     }
@@ -111,6 +107,7 @@ public class ShopEditorGui extends ShopGui {
     }
 
     private void setShopOperation(Inventory inv) {
+        inv.setItem(5 * 9 + 4, ItemUtil.getNamedItem(Material.NAME_TAG, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_SET_NAME.getMessage(), ChatColor.YELLOW + LanguageKey.ITEM_CURRENT_NAME.getMessage(getShop().getDisplayNameOrElseNone())));
         inv.setItem(5 * 9 + 5, ItemUtil.getNamedItem(Material.BARRIER, ChatColor.RED + LanguageKey.ITEM_EDITOR_SHOP_DELETE.getMessage()));
         inv.setItem(5 * 9 + 6, ItemUtil.getNamedItem(Material.NETHER_STAR, ChatColor.YELLOW + LanguageKey.ITEM_EDITOR_UPDATE_SHOP.getMessage()));
         inv.setItem(5 * 9 + 7, ItemUtil.getNamedItem(Material.DIAMOND, ChatColor.GREEN + LanguageKey.ITEM_EDITOR_CONVERT_SHOP_TO_ITEMS.getMessage()));
@@ -125,7 +122,6 @@ public class ShopEditorGui extends ShopGui {
         if (!(MythicInstanceProvider.isLoaded() && getShop().getMythicmob() != null)) {
             setEquipment(inv);
             if (!(CitizensHandler.isLoaded() && getShop().getCitizen() != null)) {
-                setDisplayName(inv);
                 setSettings(inv);
             }
         }

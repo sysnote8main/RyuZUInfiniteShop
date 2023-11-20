@@ -34,7 +34,7 @@ public class ChangeDisplayNameListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Shop shop = holder.getShop();
         int slot = event.getSlot();
-        if (slot != 5 * 9 + 3) return;
+        if (slot != 5 * 9 + 4) return;
         //チャット入力待機
         SchedulerListener.setSchedulers(p, holder.getShop().getID(), event.getClickedInventory(), (message) -> {
             //成功時の処理

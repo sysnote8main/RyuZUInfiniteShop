@@ -43,8 +43,7 @@ public class SearchTradeListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         int slot = event.getSlot();
         ClickType type = event.getClick();
-        ItemStack searchItem = event.getView().getTopInventory().getItem(4);
-        ItemStack panel = ItemUtil.getNamedItem(ItemUtil.getColoredItem("WHITE_STAINED_GLASS_PANE"), ChatColor.BLUE + LanguageKey.ITEM_SEARCH_BY_ITEM_CLICK.getMessage(), ChatColor.GREEN + LanguageKey.ITEM_SEARCH_BY_NPC_NAME.getMessage());
+        SelectSearchItemGui gui = (SelectSearchItemGui) holder.getGui();
         if (slot != 0 && slot != 4 && slot != 8) return;
 
         ShopMode mode = p.hasPermission("sis.op") ? ShopMode.EDIT : ShopMode.SEARCH;
@@ -61,9 +60,10 @@ public class SearchTradeListener implements Listener {
                     p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());
 
                 } else if (ItemUtil.isAir(event.getCursor()))
-                    event.setCurrentItem(panel);
+                    event.setCurrentItem(SelectSearchItemGui.getPanel());
                 else
                     event.setCurrentItem(ItemUtil.getOneItemStack(event.getCursor()));
+                gui.setSearchItem(event.getCurrentItem());
                 SoundUtil.playClickShopSound(p);
             } else {
                 if (event.isShiftClick()) {
@@ -73,12 +73,11 @@ public class SearchTradeListener implements Listener {
                     p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());
 
                 } else {
-                    if (panel.equals(searchItem))
-                        // アイテム未設定
+                    if (ItemUtil.isAir(gui.getSearchItem()))
                         SoundUtil.playFailSound(p);
                     else {
                         // アイテムで検索
-                        SchedulerListener.setSearchScheduler(p, () -> slot == 0 ? TradeUtil.getTradesFromTake(searchItem, mode) : TradeUtil.getTradesFromGive(searchItem, mode), mode, holder);
+                        SchedulerListener.setSearchScheduler(p, () -> slot == 0 ? TradeUtil.getTradesFromTake(gui.getSearchItem(), mode) : TradeUtil.getTradesFromGive(gui.getSearchItem(), mode), mode, holder);
                     }
                 }
             }
