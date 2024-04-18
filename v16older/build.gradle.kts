@@ -29,4 +29,12 @@ dependencies {
     compileOnly("io.lumine.xikage:MythicMobs:4.12.0")
 }
 
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType<Javadoc> {
+    options.encoding = "UTF-8"
+}
+
 description = "Searchable Infinite Shop V16Older"

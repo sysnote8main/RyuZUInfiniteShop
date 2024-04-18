@@ -41,8 +41,9 @@ public class ChangeNpcTypeListener implements Listener {
             try {
                 shop.setNpcType(EntityType.valueOf(message.toUpperCase()).name());
                 ShopUtil.reloadShop(shop);
+                ShopUtil.getShop(shop.getID()).respawnNPC();
             } catch (IllegalArgumentException e) {
-                if (message.equalsIgnoreCase("Block"))
+                if (message.equalsIgnoreCase("BLOCK"))
                     shop.setBlock();
                 else {
                     p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_ERROR_INVALID_ENTITY_TYPE.getMessage());

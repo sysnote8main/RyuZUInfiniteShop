@@ -65,7 +65,7 @@ public class ShopEditorGui extends ShopGui {
 
     //エディターに装備を置く
     private void setEquipment(Inventory inv) {
-        if (getShop().getNpc() instanceof LivingEntity) {
+        if (getShop().getEntity() instanceof LivingEntity) {
             for (Integer slot : EquipmentUtil.getEquipmentsSlot().keySet()) {
                 inv.setItem(slot, getShop().getEquipmentDisplayItem(EquipmentUtil.getEquipmentSlot(slot)));
             }
@@ -121,7 +121,7 @@ public class ShopEditorGui extends ShopGui {
         setTeleport(inv);
         if (!(MythicInstanceProvider.isLoaded() && getShop().getMythicmob() != null)) {
             setEquipment(inv);
-            if (!(CitizensHandler.isLoaded() && getShop().getCitizen() != null)) {
+            if (!getShop().getNpcType().equals(NpcType.CITIZEN)) {
                 setSettings(inv);
             }
         }
@@ -329,7 +329,7 @@ public class ShopEditorGui extends ShopGui {
 
 
     private void setVisible(Inventory inv) {
-        if (!(getShop().getNpc() instanceof LivingEntity)) return;
+        if (!(getShop().getEntity() instanceof LivingEntity)) return;
         ItemStack item = getShop().isInvisible() ?
                 ItemUtil.getNamedItem(Material.GLASS, ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_VISIBILITY_INVISIBLE.getMessage()) :
                 ItemUtil.getNamedItem(XMaterial.matchXMaterial("POLISHED_ANDESITE").get().parseMaterial(), ChatColor.GREEN + LanguageKey.ITEM_SETTINGS_VISIBILITY_VISIBLE.getMessage());

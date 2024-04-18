@@ -233,7 +233,7 @@ public class ChangeIndividualSettingsListener implements Listener {
         ShopEditorGui editor = (ShopEditorGui) holder.getGui();
 
         if (!editor.getSettingsMap().get(slot).equals(ShopEditorGui.ShopSettings.Visible)) return;
-        if (!(holder.getShop().getNpc() instanceof LivingEntity)) return;
+        if (!(holder.getShop().getEntity() instanceof LivingEntity)) return;
 
         //透明か変更
         holder.getShop().changeInvisible();

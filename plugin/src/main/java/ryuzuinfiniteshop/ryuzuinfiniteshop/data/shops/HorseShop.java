@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 
 import java.util.Arrays;
@@ -19,12 +20,14 @@ public class HorseShop extends AgeableShop {
 
     public void setStyle(Horse.Style style) {
         this.style = style;
+        Entity npc = getEntity();
         if (npc == null) return;
         ((Horse) npc).setStyle(style);
     }
 
     public void setColor(Horse.Color color) {
         this.color = color;
+        Entity npc = getEntity();
         if (npc == null) return;
         ((Horse) npc).setColor(color);
 //        NBTBuilder.setVariant(color.name().toLowerCase(), style.name().toLowerCase());

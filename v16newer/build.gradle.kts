@@ -31,37 +31,8 @@ dependencies {
     compileOnly("io.lumine:Mythic-Dist:5.2.1")
 }
 
+tasks.withType<JavaCompile>().configureEach {
+    options.encoding = "UTF-8"
+}
+
 description = "Searchable Infinite Shop V16Newer"
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(16))
-    }
-}
-
-configurations {
-    runtimeElements {
-        isCanBeConsumed = true
-        isCanBeResolved = false
-        attributes {
-            attribute(org.gradle.api.attributes.java.TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 8)
-        }
-    }
-}
-
-
-//def targetJavaVersion = 8
-//java {
-//    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-//    sourceCompatibility = javaVersion
-//    targetCompatibility = javaVersion
-//    if (JavaVersion.current() < javaVersion) {
-//        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-//    }
-//}
-//
-//tasks.withType(JavaCompile).configureEach {
-//    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-//        options.release = targetJavaVersion
-//    }
-//}

@@ -1,14 +1,24 @@
 package ryuzuinfiniteshop.ryuzuinfiniteshop.listener.canceller;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.WanderingTrader;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.MerchantInventory;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.data.system.SpawnShopData;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.LocationUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.entity.EntityUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.NBTUtil;
+import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ShopUtil;
 
 public class CancelAffectNpc implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
@@ -32,6 +42,15 @@ public class CancelAffectNpc implements Listener {
         if(!EntityUtil.entityQueue.peek().contains(e)) return;
         e.setCancelled(false);
         EntityUtil.entityQueue.poll();
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void cancelVillagerTradeInventory(InventoryOpenEvent e) {
+        if(!(e.getInventory() instanceof MerchantInventory)) return;
+        if(!(e.getInventory().getHolder() instanceof AbstractVillager)) return;
+        AbstractVillager villager = (AbstractVillager) e.getInventory().getHolder();
+        if(ShopUtil.getShop(LocationUtil.toStringFromLocation(villager.getLocation())) == null) return;
+        e.setCancelled(true);
     }
 
     private void cancel(Cancellable e, Entity entity) {

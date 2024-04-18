@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Slime;
 
 import java.util.function.Consumer;
@@ -18,6 +19,7 @@ public class SlimeShop extends Shop {
 
     public void setSize(int size) {
         this.size = size;
+        Entity npc = getEntity();
         if (npc == null) return;
         ((Slime) npc).setSize(size);
 //        NBTBuilder.setIsBaby(!look);

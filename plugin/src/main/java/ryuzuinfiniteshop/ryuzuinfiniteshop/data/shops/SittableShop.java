@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Sittable;
 
 import java.util.function.Consumer;
@@ -18,6 +19,7 @@ public class SittableShop extends Shop {
 
     public void setSitting(boolean sitting) {
         this.sitting = sitting;
+        Entity npc = getEntity();
         if (npc == null) return;
         ((Sittable) npc).setSitting(sitting);
 //        NBTBuilder.setIsBaby(!look);

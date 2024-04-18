@@ -5,6 +5,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.ItemStack;
@@ -26,6 +27,7 @@ public class DyeableShop extends Shop {
 
     public void setColor(DyeColor color) {
         this.color = color;
+        Entity npc = getEntity();
         if (npc == null) return;
         if (npc instanceof Colorable) ((Colorable) npc).setColor(color);
         if (npc instanceof Wolf) {
@@ -38,6 +40,7 @@ public class DyeableShop extends Shop {
 
     public void setOptionalInfo(boolean optionalInfo) {
         this.optionalInfo = optionalInfo;
+        Entity npc = getEntity();
         if (npc == null) return;
         if (npc instanceof Wolf) {
             if (color.equals(DyeColor.WHITE))

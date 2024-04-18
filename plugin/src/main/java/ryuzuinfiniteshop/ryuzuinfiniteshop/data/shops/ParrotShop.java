@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Parrot;
 import org.bukkit.inventory.ItemStack;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.ItemUtil;
@@ -19,6 +20,7 @@ public class ParrotShop extends SittableShop {
 
     public void setColor(Parrot.Variant color) {
         this.color = color;
+        Entity npc = getEntity();
         if (npc == null) return;
         ((Parrot) npc).setVariant(color);
 //        NBTBuilder.setVariant(color.ordinal());

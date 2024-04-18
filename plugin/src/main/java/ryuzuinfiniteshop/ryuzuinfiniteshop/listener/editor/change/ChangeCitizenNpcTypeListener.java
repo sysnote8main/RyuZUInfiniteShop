@@ -60,20 +60,22 @@ public class ChangeCitizenNpcTypeListener implements Listener {
             //成功時の処理
             //NPCを再構築する
             if (!CitizensHandler.isNPC(entity)) {
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "そのEntityはCitizenのNPCではありません");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_NPC_NOT_CITIZEN.getMessage());
                 SoundUtil.playFailSound(p);
                 return;
             }
             if (CitizensHandler.getCitizensShopString(entity) != null) {
-                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + "すでに登録されているNPCです");
+                p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.RED + LanguageKey.MESSAGE_NPC_ALREADY_REGISTERED.getMessage());
                 SoundUtil.playFailSound(p);
                 return;
             }
-            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "登録が完了しました");
+            p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_NPC_REGISTRATION_COMPLETE.getMessage());
             SoundUtil.playSuccessSound(p);
             shop.setCitizen(entity);
+            ShopUtil.reloadShop(shop);
+            ShopUtil.getShop(shop.getID()).respawnNPC();
         });
-        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + "登録したいCitizenのNPCを右クリックしてください");
+        p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_NPC_TO_REGISTER.getMessage());
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());
 
 

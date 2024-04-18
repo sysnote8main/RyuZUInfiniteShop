@@ -5,6 +5,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.TropicalFish;
 
 import java.util.Arrays;
@@ -22,18 +23,21 @@ public class TropicalFishShop extends Shop {
 
     public void setBodyColor(DyeColor bodyColor) {
         this.bodyColor = bodyColor;
+        Entity npc = getEntity();
         if (npc == null) return;
         ((TropicalFish) npc).setBodyColor(bodyColor);
     }
 
     public void setPatternColor(DyeColor patternColor) {
         this.patternColor = patternColor;
+        Entity npc = getEntity();
         if (npc == null) return;
         ((TropicalFish) npc).setBodyColor(patternColor);
     }
 
     public void setPattern(TropicalFish.Pattern pattern) {
         this.pattern = pattern;
+        Entity npc = getEntity();
         if (npc == null) return;
         ((TropicalFish) npc).setPattern(pattern);
     }

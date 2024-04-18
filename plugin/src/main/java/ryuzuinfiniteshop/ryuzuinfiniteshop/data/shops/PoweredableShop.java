@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Entity;
 
 import java.util.function.Consumer;
 
@@ -20,6 +21,7 @@ public class PoweredableShop extends Shop {
 
     public void setPowered(boolean powered) {
         this.powered = powered;
+        Entity npc = getEntity();
         if (npc == null) return;
         ((Creeper) npc).setPowered(powered);
 //        NBTBuilder.setPowered(powered);

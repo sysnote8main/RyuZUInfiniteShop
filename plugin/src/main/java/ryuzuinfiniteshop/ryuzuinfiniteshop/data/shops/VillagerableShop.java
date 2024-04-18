@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.ZombieVillager;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.RyuZUInfiniteShop;
@@ -12,6 +13,7 @@ import ryuzuinfiniteshop.ryuzuinfiniteshop.util.configuration.JavaUtil;
 import ryuzuinfiniteshop.ryuzuinfiniteshop.util.inventory.XMaterial;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -31,6 +33,7 @@ public class VillagerableShop extends AgeableShop {
 
     public void setProfession(Villager.Profession profession) {
         this.profession = profession;
+        Entity npc = getEntity();
         if (npc == null) return;
         if (npc instanceof Villager) {
             if(RyuZUInfiniteShop.VERSION < 14){
@@ -39,6 +42,7 @@ public class VillagerableShop extends AgeableShop {
             }
             else
                 ((Villager) npc).setProfession(profession);
+            ((Villager) npc).setRecipes(new ArrayList<>());
         }
         else
             ((ZombieVillager) npc).setVillagerProfession(profession);
@@ -47,6 +51,7 @@ public class VillagerableShop extends AgeableShop {
 
     public void setBiome(Villager.Type villagertype) {
         this.biome = villagertype;
+        Entity npc = getEntity();
         if (npc == null) return;
         if (npc instanceof Villager)
             ((Villager) npc).setVillagerType(villagertype);
@@ -57,6 +62,7 @@ public class VillagerableShop extends AgeableShop {
 
     public void setLevel(int level) {
         this.level = level;
+        Entity npc = getEntity();
         if (npc == null) return;
         if (npc instanceof Villager)
             ((Villager) npc).setVillagerLevel(level);

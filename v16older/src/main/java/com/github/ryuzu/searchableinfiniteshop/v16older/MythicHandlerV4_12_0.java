@@ -9,6 +9,7 @@ import io.lumine.xikage.mythicmobs.items.MythicItem;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -70,12 +71,20 @@ public class MythicHandlerV4_12_0 implements IMythicHandler, Listener {
     }
 
     @Override
-    public Entity spawnMythicMob(String id, Location location) {
+    public Entity spawnMythicMob(Location location, String id) {
         try {
             return getMythicMobsInstance().getAPIHelper().spawnMythicMob(id, location);
         } catch (InvalidMobTypeException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            return null;
         }
+    }
+
+    @Override
+    public EntityType getEntityType(String id) {
+        if(!exsistsMythicMob(id)) return null;
+        return EntityType.valueOf(getMythicMobsInstance().getMobManager().getMythicMob(id).getEntityType().toUpperCase());
     }
 
     @Override

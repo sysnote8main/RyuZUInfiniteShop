@@ -47,6 +47,7 @@ public class ChangeMythicMobTypeListener implements Listener {
             SoundUtil.playSuccessSound(p);
             shop.setMythicType(message);
             ShopUtil.reloadShop(shop);
+            ShopUtil.getShop(shop.getID()).respawnNPC();
         });
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_MYTHICMOBID.getMessage());
         p.sendMessage(RyuZUInfiniteShop.prefixCommand + ChatColor.GREEN + LanguageKey.MESSAGE_ENTER_CANCEL.getMessage());

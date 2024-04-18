@@ -3,6 +3,7 @@ package ryuzuinfiniteshop.ryuzuinfiniteshop.data.shops;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Rabbit;
 
 import java.util.Arrays;
@@ -17,6 +18,7 @@ public class RabbitShop extends Shop {
 
     public void setRabbitType(Rabbit.Type type) {
         this.type = type;
+        Entity npc = getEntity();
         if (npc == null) return;
         ((Rabbit) npc).setRabbitType(type);
     }

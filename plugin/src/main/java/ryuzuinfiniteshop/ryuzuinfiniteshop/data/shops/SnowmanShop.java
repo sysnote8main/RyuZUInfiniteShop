@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Snowman;
 
 import java.util.function.Consumer;
@@ -19,6 +20,7 @@ public class SnowmanShop extends Shop {
 
     public void setDerp(boolean derp) {
         this.derp = derp;
+        Entity npc = getEntity();
         if (npc == null) return;
         ((Snowman) npc).setDerp(derp);
     }

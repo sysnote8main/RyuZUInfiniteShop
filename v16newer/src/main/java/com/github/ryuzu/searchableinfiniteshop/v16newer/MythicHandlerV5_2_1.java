@@ -1,12 +1,11 @@
 package com.github.ryuzu.searchableinfiniteshop.v16newer;
 
 import com.github.ryuzu.searchableinfiniteshop.api.IMythicHandler;
-import io.lumine.mythic.api.mobs.MythicMob;
-import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.api.exceptions.InvalidMobTypeException;
 import io.lumine.mythic.bukkit.MythicBukkit;
-import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -47,19 +46,20 @@ public class MythicHandlerV5_2_1 implements IMythicHandler {
     }
 
     @Override
-    public Entity spawnMythicMob(String id, Location location) {
-        MythicMob mob = getMythicMobsInstance().getMobManager().getMythicMob("SkeletalKnight").orElse(null);
-        if (mob != null) {
-            ActiveMob knight = mob.spawn(BukkitAdapter.adapt(location), 1);
-            return knight.getEntity().getBukkitEntity();
-        } else
+    public Entity spawnMythicMob(Location location, String id) {
+        try {
+            return getMythicMobsInstance().getAPIHelper().spawnMythicMob(id, location);
+        } catch (InvalidMobTypeException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
             return null;
+        }
+    }
 
-//        try {
-//            return getMythicMobsInstance().getAPIHelper().spawnMythicMob(id, location);
-//        } catch (InvalidMobTypeException e) {
-//            throw new RuntimeException(e);
-//        }
+    @Override
+    public EntityType getEntityType(String id) {
+        if(!exsistsMythicMob(id)) return null;
+        return EntityType.valueOf(getMythicMobsInstance().getMobManager().getMythicMob(id).get().getEntityTypeString().toUpperCase());
     }
 
     @Override

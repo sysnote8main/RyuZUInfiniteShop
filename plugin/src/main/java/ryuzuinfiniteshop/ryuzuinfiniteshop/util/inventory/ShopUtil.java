@@ -84,14 +84,17 @@ public class ShopUtil {
                 } catch (IOException | InvalidConfigurationException e) {
                     e.printStackTrace();
                 }
-                Optional<String> mmid = Optional.ofNullable(config.getString("Npc.Options.MythicMob"));
-                Optional<String> citizen = Optional.ofNullable(config.getString("Npc.Options.Citizen"));
-                if (mmid.isPresent() && MythicInstanceProvider.isLoaded() && MythicInstanceProvider.getInstance().exsistsMythicMob(mmid.get()))
-                    new Shop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), mmid.get());
-                else if (citizen.isPresent() && CitizensHandler.isLoaded() && CitizensHandler.isCitizensNPC(UUID.fromString(citizen.get())))
-                    new Shop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), UUID.fromString(citizen.get()), true);
+                Location location = LocationUtil.toLocationFromString(f.getName().replace(".yml", ""));
+
+                String type = config.getString("Npc.Options.EntityType", "VILLAGER");
+                String mythicmob = config.getString("Npc.Options.MythicMob");
+                String citizen = config.getString("Npc.Options.Citizen");
+                if (mythicmob != null)
+                    new Shop(location, mythicmob);
+                if (citizen != null)
+                    new Shop(location, UUID.fromString(citizen), false);
                 else
-                    createNewShop(LocationUtil.toLocationFromString(f.getName().replace(".yml", "")), config.getString("Npc.Options.EntityType", "VILLAGER"), null);
+                    createNewShop(location, type, null);
             } catch (Exception e) {
                 throw new RuntimeException(LanguageKey.ERROR_FILE_LOADING.getMessage(f.getName()), e);
             }
@@ -280,9 +283,9 @@ public class ShopUtil {
         String type = config.getString("Npc.Options.EntityType", "VILLAGER");
         String mythicmob = config.getString("Npc.Options.MythicMob");
         String citizen = config.getString("Npc.Options.Citizen");
-        if (mythicmob != null && MythicInstanceProvider.getInstance().exsistsMythicMob(mythicmob))
+        if (mythicmob != null)
             return new Shop(location, mythicmob);
-        if (citizen != null && CitizensHandler.isLoaded() && CitizensHandler.isCitizensNPC(UUID.fromString(citizen)))
+        if (citizen != null)
             return new Shop(location, UUID.fromString(citizen), false);
         else
             return createNewShop(location, type, null);

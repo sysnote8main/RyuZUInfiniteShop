@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Cat;
+import org.bukkit.entity.Entity;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -17,6 +18,7 @@ public class CatShop extends SittableShop {
 
     public void setCatType(Cat.Type type) {
         this.type = type;
+        Entity npc = getEntity();
         if (npc == null) return;
         ((Cat) npc).setCatType(type);
     }
