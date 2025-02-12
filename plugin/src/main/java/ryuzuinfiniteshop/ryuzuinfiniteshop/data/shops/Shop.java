@@ -204,17 +204,17 @@ public class Shop {
                 // 取引を追加
                 trades.add(expectedTrade);
                 expectedTrade.setTradeOption(option, false);
-//                LogUtil.log(LogUtil.LogType.ADDTRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), expectedTrade, expectedTrade.getLimit());
+                LogUtil.log(LogUtil.LogType.ADDTRADE, inv.getViewers().get(0).getName(), getID(), expectedTrade, expectedTrade.getLimit());
             } else if (available) {
                 // 取引を上書き
-//                if (!(trade.equals(expectedTrade) && trade.getOption().equals(option)))
-//                    LogUtil.log(LogUtil.LogType.REPLACETRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), trade, expectedTrade, trade.getOption(), expectedTrade.getOption());
+                if (!(trade.equals(expectedTrade) && trade.getOption().equals(option)))
+                    LogUtil.log(LogUtil.LogType.REPLACETRADE, inv.getViewers().get(0).getName(), getID(), trade, expectedTrade, trade.getOption(), expectedTrade.getOption());
                 trade.setTrade(expectedTrade);
                 trade.setTradeOption(option, true);
             } else if (trade != null) {
                 // 取引を削除する
                 emptyTrades.add(trade);
-//                LogUtil.log(LogUtil.LogType.REMOVETRADE, inv.getViewers().stream().findFirst().map(HumanEntity::getName).orElse("null"), getID(), trade, trade.getLimit());
+                LogUtil.log(LogUtil.LogType.REMOVETRADE, inv.getViewers().get(0).getName(), getID(), trade, trade.getLimit());
             }
         }
         this.trades.removeAll(emptyTrades);
