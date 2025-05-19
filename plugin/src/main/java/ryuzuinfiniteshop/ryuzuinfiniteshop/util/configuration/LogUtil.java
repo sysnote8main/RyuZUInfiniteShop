@@ -85,14 +85,10 @@ public class LogUtil {
 
     private static void log(String log) {
         File file = FileUtil.initializeFile("log.csv");
-        List<String> logs = getLog();
-        logs.add(log);
 
         Bukkit.getScheduler().runTaskAsynchronously(RyuZUInfiniteShop.getPlugin(), () -> {
-            try (FileWriter fileWriter = new FileWriter(file)) {
-                for (String l : logs) {
-                    fileWriter.write(l + System.lineSeparator());
-                }
+            try (FileWriter fileWriter = new FileWriter(file, true)) {
+                fileWriter.write(log + System.lineSeparator());
             } catch (IOException e) {
                 if (!Config.readOnlyIgnoreIOException) throw new RuntimeException(e);
             }
